@@ -62,6 +62,6 @@ def index():
         f = request.files['input_file']
         filename = secure_filename(f.filename)
         f.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename
-        ))
+                            ))
     else:
         return render_template('index.html', form=form)
