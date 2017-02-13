@@ -7,4 +7,4 @@ class UploadForm(Form):
     input_file = FileField('', validators=[
         FileRequired()
     ])
-    submit = SubmitField(label="Convert")
+    submit = SubmitField(label="Run")
