@@ -6,7 +6,6 @@ from .forms import TaskForm
 from .. import tasks
 
 
-from forms import UploadForm
 from flask import request
 
 bp = Blueprint('main', __name__)
