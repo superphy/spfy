@@ -3,6 +3,17 @@
 
 {% block content %}
 <div class="row">
+    <form class="form-inline center-block" action="/" method="POST" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+        <div class="input-group">
+            <label id="browsebutton" class="btn btn-default input-group-addon" for="my-file-selector">
+                {{ form.input_file(id="my-file-selector") }}
+                Browse...
+            </label>
+            <input type="text" class="form-control" readonly>
+        </div>
+        {{ form.submit(class_="btn btn-primary") }}
+    </form>
     <form class="form" id="taskForm" method="POST">
       {{ form.hidden_tag() }}
       {{ wtf.form_field(form.task) }}
