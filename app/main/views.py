@@ -64,5 +64,6 @@ def index():
         filepath = os.path.join(current_app.config['UPLOAD_FOLDER'], filename
                             )
         f.save(filepath)
+        return redirect('www.google.ca')
     else:
         return render_template('index.html', form=form)
