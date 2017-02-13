@@ -6,7 +6,6 @@
         <!-- Default panel contents -->
         <div class="panel-heading">Select task to run</div>
         <div class="panel-body">
-          <div class="col-md-3">
             <div class="row">
                 <form class="form-inline center-block" action="/" method="POST" enctype="multipart/form-data">
                     {{ form.hidden_tag() }}
@@ -20,7 +19,6 @@
                     {{ form.submit(class_="btn btn-primary") }}
                 </form>
             </div>
-          </div>
         </div>
       </div>
 {% endblock %}
