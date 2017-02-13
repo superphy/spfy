@@ -1,6 +1,6 @@
 import redis
 import os
-from flask import Blueprint, render_template, request, jsonify, current_app, g, url_for
+from flask import Blueprint, render_template, request, jsonify, current_app, g, url_for, redirect
 from rq import push_connection, pop_connection, Queue
 
 from .forms import UploadForm
