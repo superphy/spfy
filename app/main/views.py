@@ -61,8 +61,7 @@ def index():
     if request.method == 'POST' and form.validate_on_submit():
         f = request.files['input_file']
         filename = secure_filename(f.filename)
-        f.save(os.path.join(
-            current_app.instance_path, current_app.config['UPLOAD_FOLDER'], filename
+        f.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename
         ))
     else:
         return render_template('index.html', form=form)
