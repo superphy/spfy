@@ -1,3 +1,6 @@
+##vagrant
+.vagrant/
+
 ##Flask
 .DS_Store
 *.pyc
