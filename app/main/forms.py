@@ -15,11 +15,7 @@ class TaskForm(Form):
         self.task.choices = [(task, task) for task in current_app.config['TASKS']]
 
 class UploadForm(Form):
-
-    validators = [
-        FileRequired(message='There was no file!'),
-        FileAllowed(['txt'], message='Must be a txt file!')
-    ]
-
-    input_file = FileField('', validators=validators)
-    submit = SubmitField(label="Upload")
+    upload = FileField('', validators=[
+        FileRequired(),
+        FileAllowed(current_app.config['ALLOWED_EXTENSIONS'],'fna only')
+    ])

@@ -64,11 +64,12 @@ def index():
 
 @bp.route('/upload', methods=['GET', 'POST'])
 def upload():
-    form = UploadForm()
-
     if form.validate_on_submit():
-        filename = secure_filename(form.file.data.filename)
-        form.file.data.save('uploads/' + filename)
-        return redirect(url_for('upload'))
+        f = form.photo.data
+        filename = secure_filename(f.filename)
+        f.save(os.path.join(
+            app.instance_path, current_app.config['UPLOAD_FOLDER'], filename
+        ))
+        return redirect(url_for('index'))
 
     return render_template('upload.html', form=form)
