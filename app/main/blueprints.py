@@ -1,5 +1,4 @@
 import redis
-import tasks
 from flask import Blueprint, render_template, request, jsonify, current_app, g, url_for
 from rq import push_connection, pop_connection, Queue
 
