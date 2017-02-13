@@ -1,0 +1,17 @@
+{%- extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block main %}
+      <div class="panel panel-default">
+        <!-- Default panel contents -->
+        <div class="panel-heading">Select task to run</div>
+        <div class="panel-body">
+            <div class="row">
+                <form method="POST" enctype="multipart/form-data">
+                    {{ form.hidden_tag() }}
+                    {{wtf.quick_form(form)}}
+                </form>
+            </div>
+        </div>
+      </div>
+{% endblock %}
