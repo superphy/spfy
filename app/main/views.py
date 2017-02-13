@@ -6,10 +6,8 @@ from .forms import TaskForm
 from .. import tasks
 
 
-from flask_wtf import FlaskForm
-from flask_wtf.file import FileField, FileRequired
-from werkzeug.utils import secure_filename
-from .forms import PhotoForm
+from forms import UploadForm
+from flask import request
 
 bp = Blueprint('main', __name__)
 
@@ -63,13 +61,9 @@ def index():
 
 @bp.route('/upload', methods=['GET', 'POST'])
 def upload():
-    form = PhotoForm()
-    if form.validate_on_submit():
-        f = form.photo.data
-        filename = secure_filename(f.filename)
-        f.save(os.path.join(
-            app.instance_path, 'photos', filename
-        ))
-        return redirect(url_for('index'))
-
-    return render_template('upload.html', form=form)
+    form = UploadForm()
+        if request.method == 'POST' and form.validate_on_submit():
+            input_file = request.files['input_file']
+            # Do stuff
+        else:
+            return render_template('upload.html', form=form)

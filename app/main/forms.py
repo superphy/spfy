@@ -2,9 +2,9 @@ from flask import current_app
 from flask_wtf import Form
 from wtforms import SelectField
 
-from flask_wtf import FlaskForm
-from flask_wtf.file import FileField, FileRequired
-from werkzeug.utils import secure_filename
+from flask_wtf import Form
+from flask_wtf.file import FileField, FileAllowed, FileRequired
+from wtforms import SubmitField
 
 
 class TaskForm(Form):
@@ -14,5 +14,12 @@ class TaskForm(Form):
         super(Form, self).__init__(*args, **kwargs)
         self.task.choices = [(task, task) for task in current_app.config['TASKS']]
 
-class PhotoForm(FlaskForm):
-    photo = FileField(validators=[FileRequired()])
+class UploadForm(Form):
+
+    validators = [
+        FileRequired(message='There was no file!'),
+        FileAllowed(['txt'], message='Must be a txt file!')
+    ]
+
+    input_file = FileField('', validators=validators)
+    submit = SubmitField(label="Upload")

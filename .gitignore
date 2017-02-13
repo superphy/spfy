@@ -1,3 +1,6 @@
+##uploads
+app/uploads/
+
 ##vagrant
 .vagrant/
 
