@@ -9,7 +9,5 @@ from wtforms import SubmitField
 
 class UploadForm(Form):
     input_file = FileField('', validators=[
-        FileRequired(),
-        FileAllowed(['fna, fsa_nt'])
+        FileRequired()
     ])
-    submit = SubmitField(label="Upload")
