@@ -24,5 +24,6 @@
 {% endblock %}
 
 {% block app_scripts %}
+{{super()}}
   <script src="{{ url_for('static', filename='js/inputFileButton.js') }}" ></script>
 {% endblock %}

@@ -3,8 +3,8 @@ this is the app factory
 '''
 
 from flask import Flask
+from flask_bootstrap import Bootstrap
 from . import config
-from .extensions import bootstrap, redis
 from .main.views import bp as main
 from flask_uploads import UploadSet, IMAGES, configure_uploads
 
@@ -14,7 +14,7 @@ def create_app():
     app.config.from_envvar('LOCAL_SETTINGS', silent=True)
 
     # add extensions to app
-    bootstrap.init_app(app)
+    Bootstrap(app)
 
     app.register_blueprint(main)
 
