@@ -3,11 +3,3 @@ body {
     min-height: 2000px;
     padding-top: 70px;
 }
-
-#browsebutton {
-    background-color: white;
-}
-
-#my-file-selector {
-    display: none;
-}
