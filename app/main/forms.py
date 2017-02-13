@@ -6,6 +6,6 @@ from wtforms import SelectField
 class TaskForm(Form):
     task = SelectField('Task')
 
-    def __init__(self, *args, **kwargs)
-        super(TaskForm, self).__init__(*args, **kwargs)
+    def __init__(self, *args, **kwargs):
+        super(Form, self).__init__(*args, **kwargs)
         self.task.choices = [(task, task) for task in current_app.config['TASKS']]
