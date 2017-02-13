@@ -2,7 +2,7 @@ import redis
 from flask import Blueprint, render_template, request, jsonify, current_app, g, url_for
 from rq import push_connection, pop_connection, Queue
 
-from .forms import TaskForm
+from .forms import TaskForm, UploadForm
 from .. import tasks
 
 
@@ -55,7 +55,7 @@ def run_task():
 
 @bp.route('/', methods=['GET', 'POST'])
 def index():
-    form = TaskForm()
+    form = UploadForm()
     if request.method == 'POST' and form.validate_on_submit():
         input_file = request.files['input_file']
         # Do stuff
