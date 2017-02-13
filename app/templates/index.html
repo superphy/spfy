@@ -11,7 +11,7 @@
                     {{ form.hidden_tag() }}
                     <div class="input-group">
                         <label id="browsebutton" class="btn btn-default input-group-addon" for="my-file-selector">
-                            {{ form.input_file(id="my-file-selector") }}
+                            {{ wttf.form_field(form.input_file(id="my-file-selector")) }}
                             Browse...
                         </label>
                         <input type="text" class="form-control" readonly>
