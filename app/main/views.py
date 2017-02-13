@@ -60,11 +60,9 @@ def index():
     form = UploadForm()
     if request.method == 'POST' and form.validate_on_submit():
         f = request.files['input_file']
-        print f
         filename = secure_filename(f.filename)
         f.save(os.path.join(
             current_app.instance_path, current_app.config['UPLOAD_FOLDER'], filename
         ))
-        print input_file
     else:
         return render_template('index.html', form=form)
