@@ -9,6 +9,7 @@ from .. import tasks
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileRequired
 from werkzeug.utils import secure_filename
+from .forms import PhotoForm
 
 bp = Blueprint('main', __name__)
 
@@ -62,6 +63,7 @@ def index():
 
 @bp.route('/upload', methods=['GET', 'POST'])
 def upload():
+    form = PhotoForm()
     if form.validate_on_submit():
         f = form.photo.data
         filename = secure_filename(f.filename)
