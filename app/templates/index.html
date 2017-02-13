@@ -1,27 +1,37 @@
 {%- extends "base.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
 
-{% block content %}
-<div class="row">
-    <form class="form-inline center-block" action="/" method="POST" enctype="multipart/form-data">
-        {{ form.hidden_tag() }}
-        <div class="input-group">
-            <label id="browsebutton" class="btn btn-default input-group-addon" for="my-file-selector">
-                {{ form.input_file(id="my-file-selector") }}
-                Browse...
-            </label>
-            <input type="text" class="form-control" readonly>
+{% block main %}
+      <div class="panel panel-default">
+        <!-- Default panel contents -->
+        <div class="panel-heading">Select task to run</div>
+        <div class="panel-body">
+          <div class="col-md-3">
+            <form class="form" id="taskForm" method="POST">
+              {{ form.hidden_tag() }}
+              {{ wtf.form_field(form.task) }}
+              <div class="form-group">
+                <button type="button" class="btn btn-default" id="submit">Run</button>
+              </div>
+            </form>
+          </div>
+          {% block content %}
+          <div class="row">
+              <form class="form-inline center-block" action="/" method="POST" enctype="multipart/form-data">
+                  {{ form.hidden_tag() }}
+                  <div class="input-group">
+                      <label id="browsebutton" class="btn btn-default input-group-addon" for="my-file-selector">
+                          {{ form.input_file(id="my-file-selector") }}
+                          Browse...
+                      </label>
+                      <input type="text" class="form-control" readonly>
+                  </div>
+                  {{ form.submit(class_="btn btn-primary") }}
+              </form>
+          </div>
+          {% endblock %}
         </div>
-        {{ form.submit(class_="btn btn-primary") }}
-    </form>
-    <form class="form" id="taskForm" method="POST">
-      {{ form.hidden_tag() }}
-      {{ wtf.form_field(form.task) }}
-      <div class="form-group">
-        <button type="button" class="btn btn-default" id="submit">Run</button>
       </div>
-    </form>
-</div>
 {% endblock %}
 
 {% block app_scripts %}
