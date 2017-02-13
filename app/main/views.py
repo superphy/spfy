@@ -62,7 +62,7 @@ def index():
     else:
         return render_template('index.html', form=form)
 
-@app.route('/upload', methods=['GET', 'POST'])
+@bp.route('/upload', methods=['GET', 'POST'])
 def upload():
     form = UploadForm()
 
