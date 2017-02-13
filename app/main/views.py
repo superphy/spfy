@@ -54,16 +54,11 @@ def run_task():
     return jsonify({}), 202, {'Location': url_for('main.job_status', job_id=job.get_id())}
 
 
-@bp.route('/')
+@bp.route('/', methods=['GET', 'POST'])
 def index():
     form = TaskForm()
-    return render_template('index.html', form=form)
-
-@bp.route('/upload', methods=['GET', 'POST'])
-def upload():
-    form = UploadForm()
     if request.method == 'POST' and form.validate_on_submit():
         input_file = request.files['input_file']
         # Do stuff
     else:
-        return render_template('upload.html', form=form)
+        return render_template('index.html', form=form)

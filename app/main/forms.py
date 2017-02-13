@@ -10,12 +10,6 @@ from wtforms import SubmitField
 class TaskForm(Form):
     task = SelectField('Task')
 
-    def __init__(self, *args, **kwargs):
-        super(Form, self).__init__(*args, **kwargs)
-        self.task.choices = [(task, task) for task in current_app.config['TASKS']]
-
-class UploadForm(Form):
-
     validators = [
         FileRequired(message='There was no file!'),
         FileAllowed(['txt'], message='Must be a txt file!')
@@ -23,3 +17,7 @@ class UploadForm(Form):
 
     input_file = FileField('', validators=validators)
     submit = SubmitField(label="Upload")
+
+    def __init__(self, *args, **kwargs):
+        super(Form, self).__init__(*args, **kwargs)
+        self.task.choices = [(task, task) for task in current_app.config['TASKS']]
