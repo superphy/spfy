@@ -7,13 +7,6 @@ from flask_wtf.file import FileField, FileAllowed, FileRequired
 from wtforms import SubmitField
 
 
-class TaskForm(Form):
-    task = SelectField('Task')
-
-    def __init__(self, *args, **kwargs):
-        super(Form, self).__init__(*args, **kwargs)
-        self.task.choices = [(task, task) for task in current_app.config['TASKS']]
-
 class UploadForm(Form):
     input_file = FileField('', validators=[
         FileRequired(),

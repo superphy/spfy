@@ -57,20 +57,11 @@ def run_task():
 def index():
     form = UploadForm()
     if request.method == 'POST' and form.validate_on_submit():
-        input_file = request.files['input_file']
-        print input_file
-    else:
-        return render_template('index.html', form=form)
-
-@bp.route('/upload', methods=['GET', 'POST'])
-def upload():
-    form = UploadForm()
-    if form.validate_on_submit():
-        f = form.photo.data
+        f = request.files['input_file']
         filename = secure_filename(f.filename)
         f.save(os.path.join(
             app.instance_path, current_app.config['UPLOAD_FOLDER'], filename
         ))
-        return redirect(url_for('index'))
-
-    return render_template('upload.html', form=form)
+        print input_file
+    else:
+        return render_template('index.html', form=form)
