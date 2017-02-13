@@ -9,11 +9,10 @@ from .blueprints import bp as main
 
 def create_app():
     app = Flask(__name__)
-    app.config.from_object(settings)
+    app.config.from_object(config)
 
     # add extensions to app
     bootstrap.init_app(app)
-    redis.init_app(app)
 
     app.register_blueprint(main)
 
