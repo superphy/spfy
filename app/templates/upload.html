@@ -9,6 +9,7 @@
             <div class="row">
                 <form method="POST" enctype="multipart/form-data">
                     {{ form.hidden_tag() }}
+                    {{wtf.quick_form(form)}}
                 </form>
             </div>
         </div>
