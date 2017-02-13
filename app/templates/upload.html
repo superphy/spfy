@@ -1,0 +1,24 @@
+{%- extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block main %}
+      <div class="panel panel-default">
+        <!-- Default panel contents -->
+        <div class="panel-heading">Select task to run</div>
+        <div class="panel-body">
+          <div class="col-md-3">
+            <form class="form" id="photoForm" method="POST" enctype="multipart/form-data">
+              {{ form.hidden_tag() }}
+              {{ wtf.form_field(form.task) }}
+              <div class="form-group">
+                <button type="button" class="btn btn-default" id="submit">Run</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+{% endblock %}
+
+{% block app_scripts %}
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+{% endblock %}

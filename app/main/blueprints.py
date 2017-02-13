@@ -54,3 +54,15 @@ def run_task():
 def index():
     form = TaskForm()
     return render_template('index.html', form=form)
+
+@bp.route('/upload', methods=['GET', 'POST'])
+def upload():
+    if form.validate_on_submit():
+        f = form.photo.data
+        filename = secure_filename(f.filename)
+        f.save(os.path.join(
+            app.instance_path, 'photos', filename
+        ))
+        return redirect(url_for('index'))
+
+    return render_template('upload.html', form=form)
