@@ -63,7 +63,7 @@ def index():
         print f
         filename = secure_filename(f.filename)
         f.save(os.path.join(
-            app.instance_path, current_app.config['UPLOAD_FOLDER'], filename
+            current_app.instance_path, current_app.config['UPLOAD_FOLDER'], filename
         ))
         print input_file
     else:
