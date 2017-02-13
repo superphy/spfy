@@ -7,5 +7,5 @@ class TaskForm(Form):
     task = SelectField('Task')
 
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+        super().__init__(TaskForm, self)
         self.task.choices = [(task, task) for task in current_app.config['TASKS']]
