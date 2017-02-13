@@ -16,13 +16,9 @@
                         </label>
                         <input type="text" class="form-control" readonly>
                     </div>
-                    {{ form.submit(class_="btn btn-primary") }}
+                    <input type="submit">
                 </form>
             </div>
         </div>
       </div>
-{% endblock %}
-
-{% block app_scripts %}
-  <script src="{{ url_for('static', filename='js/inputFileButton.js') }}" ></script>
 {% endblock %}
