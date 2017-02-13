@@ -64,6 +64,7 @@ def index():
 
 @bp.route('/upload', methods=['GET', 'POST'])
 def upload():
+    form = UploadForm()
     if form.validate_on_submit():
         f = form.photo.data
         filename = secure_filename(f.filename)
