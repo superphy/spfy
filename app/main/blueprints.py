@@ -5,6 +5,11 @@ from rq import push_connection, pop_connection, Queue
 from .forms import TaskForm
 from .. import tasks
 
+
+from flask_wtf import FlaskForm
+from flask_wtf.file import FileField, FileRequired
+from werkzeug.utils import secure_filename
+
 bp = Blueprint('main', __name__)
 
 
