@@ -4,6 +4,7 @@ from flask import Blueprint, render_template, request, jsonify, current_app, g, 
 from rq import push_connection, pop_connection, Queue
 
 from .main.forms import TaskForm
+from .. import tasks
 
 bp = Blueprint('main', __name__)
 
