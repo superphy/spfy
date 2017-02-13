@@ -58,6 +58,7 @@ def index():
     form = UploadForm()
     if form.validate_on_submit():
         f = request.files['input_file']
+        print f
         filename = secure_filename(f.filename)
         f.save(os.path.join(
             app.instance_path, current_app.config['UPLOAD_FOLDER'], filename
