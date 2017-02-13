@@ -62,8 +62,8 @@ def index():
 @bp.route('/upload', methods=['GET', 'POST'])
 def upload():
     form = UploadForm()
-        if request.method == 'POST' and form.validate_on_submit():
-            input_file = request.files['input_file']
-            # Do stuff
-        else:
-            return render_template('upload.html', form=form)
+    if request.method == 'POST' and form.validate_on_submit():
+        input_file = request.files['input_file']
+        # Do stuff
+    else:
+        return render_template('upload.html', form=form)
