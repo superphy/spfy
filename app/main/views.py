@@ -58,6 +58,6 @@ def index():
     form = UploadForm()
     if request.method == 'POST' and form.validate_on_submit():
         input_file = request.files['input_file']
-        # Do stuff
+        print input_file
     else:
         return render_template('index.html', form=form)
