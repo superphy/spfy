@@ -56,7 +56,7 @@ def run_task():
 @bp.route('/', methods=['GET', 'POST'])
 def index():
     form = UploadForm()
-    if form.validate_on_submit():
+    if request.method == 'POST' and form.validate_on_submit():
         f = request.files['input_file']
         print f
         filename = secure_filename(f.filename)
