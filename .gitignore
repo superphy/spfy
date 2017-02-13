@@ -1,5 +1,5 @@
 ##uploads
-app/uploads/
+instance/uploads/
 
 ##vagrant
 .vagrant/
