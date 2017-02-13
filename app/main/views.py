@@ -5,6 +5,7 @@ from rq import push_connection, pop_connection, Queue
 from .forms import UploadForm
 from .. import tasks
 
+from werkzeug.utils import secure_filename
 
 from flask import request
 
