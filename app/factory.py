@@ -13,10 +13,6 @@ def create_app():
     app.config.from_object(config)
     app.config.from_envvar('LOCAL_SETTINGS', silent=True)
 
-    #Upload
-    images = UploadSet('images', IMAGES)
-    configure_uploads(app, images)
-
     # add extensions to app
     bootstrap.init_app(app)
 
