@@ -5,7 +5,7 @@ this is the app factory
 from flask import Flask
 from . import config
 from .extensions import bootstrap, redis
-from .blueprints import bp as main
+from .main.blueprints import bp as main
 
 def create_app():
     app = Flask(__name__)
