@@ -4,10 +4,10 @@ body {
     padding-top: 70px;
 }
 
-#browsebutton {
+browsebutton {
     background-color: white;
 }
 
-#my-file-selector {
+my-file-selector {
     display: none;
 }
