@@ -17,5 +17,5 @@ class TaskForm(Form):
 class UploadForm(Form):
     upload = FileField('', validators=[
         FileRequired(),
-        FileAllowed(current_app.config['ALLOWED_EXTENSIONS'],'fna only')
+        FileAllowed(['fna'],'fna only')
     ])
