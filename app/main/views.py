@@ -48,29 +48,28 @@ def job_status(job_id):
     return jsonify(response)
 
 
-@bp.route('/_run_task', methods=['POST'])
-def run_task():
-
-
 @bp.route('/upload', methods=['POST'])
 def upload():
     if request.method == 'POST':
         file = request.files['file']
         if file and allowed_file(file.filename):
-            #for saving file
+            # for saving file
             now = datetime.now()
-            filename = os.path.join(current_app.config['UPLOAD_FOLDER'], "%s.%s" % (now.strftime("%Y-%m-%d-%H-%M-%S-%f"), file.filename.rsplit('.', 1)[1]))
+            filename = os.path.join(current_app.config['UPLOAD_FOLDER'], "%s.%s" % (
+                now.strftime("%Y-%m-%d-%H-%M-%S-%f"), file.filename.rsplit('.', 1)[1]))
             file.save(filename)
 
-            #for enqueing task
+            # for enqueing task
             task = request.form.get('task')
             q = Queue()
             job = q.enqueue(tasks.run, task)
-            return jsonify({}), 202, {'Location': url_for('main.job_status', job_id=job.get_id())}
+    return jsonify({}), 202, {'Location': url_for('main.job_status', job_id=job.get_id())}
+
 
 @bp.route('/', methods=['GET', 'POST'])
 def index():
     return render_template("index.html")
+
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1] in current_app.config['ALLOWED_EXTENSIONS']
