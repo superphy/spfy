@@ -65,6 +65,6 @@ def index():
         filepath = os.path.join(current_app.config['UPLOAD_FOLDER'], filename
                             )
         f.save(filepath)
-        print subprocess.call(['app/bin/spfy.py', filepath])
+        print subprocess.call(['app/bin/spfy.py', '-i', filepath])
     else:
         return render_template('index.html', form=form)
