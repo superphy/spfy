@@ -63,6 +63,7 @@ def upload():
             task = request.form.get('task')
             q = Queue()
             job = q.enqueue(tasks.run, task)
+            print job
             return jsonify({}), 202, {'Location': url_for('main.job_status', job_id=job.get_id())}
     return jsonify({'status': 'unknown'})
 
