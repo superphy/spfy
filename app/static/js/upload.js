@@ -9,7 +9,6 @@ $(function() {
         maxfilesize: 5,
         url: '/upload',
         uploadFinished: function(i, file, response) {
-            $.data(file).addClass('done');
             var status_url = response.getResponseHeader('Location');
             check_job_status(status_url);
         },
