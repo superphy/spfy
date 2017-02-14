@@ -34,7 +34,7 @@ def pop_rq_connection(exception=None):
 
 @bp.route('/status/<job_id>')
 def job_status(job_id):
-    q = Queue()
+    q = Queue('low')
     job = q.fetch_job(job_id)
     if job is None:
         response = {'status': 'unknown'}
@@ -60,7 +60,6 @@ def upload():
             file.save(filename)
 
             # for enqueing task
-            q = Queue()
             job = spfy.spfy({'i':filename, 'disable_serotype':False, 'disable_amr':False,'disable_vf':False})
             print job
             return jsonify({'location': url_for('main.job_status', job_id=job.get_id())})
