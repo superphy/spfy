@@ -63,7 +63,7 @@ def upload():
             q = Queue()
             job = spfy.spfy({'i':filename, 'disable_serotype':False, 'disable_amr':False,'disable_vf':False})
             print job
-            return jsonify({'Location': url_for('main.job_status', job_id=job.get_id())})
+            return jsonify({'location': url_for('main.job_status', job_id=job.get_id())})
     return jsonify({'success': false})
 
 
