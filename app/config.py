@@ -1,11 +1,10 @@
 import os
 
-SECRET_KEY = 'can-you-keep-a-secret'
+SECRET_KEY = 'is-that-daisy'
 REDIS_URL = '0.0.0.0/6379'
 QUEUES = ['high,medium,low,default']
 BOOTSTRAP_SERVE_LOCAL = True
-TASKS = ['Short task', 'Long task', 'Task raises error']
 MAX_TIME_TO_WAIT = 10
 
-UPLOAD_FOLDER = 'app/bin/tmp'
+UPLOAD_FOLDER = 'app/tmp'
 ALLOWED_EXTENSIONS = ['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif']

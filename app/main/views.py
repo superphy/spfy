@@ -5,7 +5,7 @@ from flask import Blueprint, render_template, request, jsonify, current_app, g, 
 from rq import push_connection, pop_connection, Queue
 
 from .forms import UploadForm
-from .. import tasks
+from .. import spfy
 
 from werkzeug.utils import secure_filename
 
@@ -60,12 +60,11 @@ def upload():
             file.save(filename)
 
             # for enqueing task
-            task = request.form.get('task')
             q = Queue()
-            job = q.enqueue(tasks.run, task)
+            job = spfy.spfy({'i':filename})
             print job
             return jsonify({}), 202, {'Location': url_for('main.job_status', job_id=job.get_id())}
-    return jsonify({'status': 'unknown'})
+    return jsonify({'status': 'failed'})
 
 
 @bp.route('/', methods=['GET', 'POST'])

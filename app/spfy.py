@@ -4,6 +4,7 @@
 import logging
 import time
 import os
+from flask import current_app
 
 # Redis Queue
 from redis import Redis
@@ -42,17 +43,18 @@ def blob_savvy(args_dict):
         for f in os.listdir(args_dict['i']):
             single_dict = dict(args_dict.items() + {'uriIsolate': args_dict['uris'][f][
                                'uriIsolate'], 'uriGenome': args_dict['uris'][f]['uriGenome'], 'i': args_dict['i'] + f, 'uris': None}.items())
-            high.enqueue(savvy, dict(single_dict.items() +
+            job = high.enqueue(savvy, dict(single_dict.items() +
                                      {'disable_amr': True}.items()),result_ttl=-1)
             low.enqueue(savvy, dict(single_dict.items() +
                                     {'disable_vf': True, 'disable_serotype': True}.items()),result_ttl=-1)
     else:
         # run the much faster vf and serotyping separately of amr
-        high.enqueue(savvy, dict(args_dict.items() +
+        job = high.enqueue(savvy, dict(args_dict.items() +
                                  {'disable_amr': True}.items()),result_ttl=-1)
         low.enqueue(savvy, dict(args_dict.items() +
                                 {'disable_vf': True, 'disable_serotype': True}.items()),result_ttl=-1)
 
+    return job
 
 def monitor():
     '''
@@ -160,7 +162,7 @@ def spfy(args_dict):
 
     print 'Starting blob_savvy call'
     logging.info('Starting blob_savvy call...')
-    blob_savvy(args_dict)
+    job = blob_savvy(args_dict)
     logging.info('blob_savvy enqueues finished')
 
     '''
@@ -169,6 +171,8 @@ def spfy(args_dict):
     print 'monitor exited...in spfy()'
     logging.info('monitor exited...in spfy()')
     '''
+
+    return job
 
 if __name__ == "__main__":
     import argparse
