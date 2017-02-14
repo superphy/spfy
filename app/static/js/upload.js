@@ -9,7 +9,7 @@ $(function() {
         maxfilesize: 5,
         url: '/upload',
         uploadFinished: function(i, file, response, time) {
-						var status_url = respose.location
+						var status_url = response.location
             check_job_status(status_url);
         },
 
