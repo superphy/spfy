@@ -50,20 +50,23 @@ def job_status(job_id):
 
 @bp.route('/_run_task', methods=['POST'])
 def run_task():
-    task = request.form.get('task')
-    q = Queue()
-    job = q.enqueue(tasks.run, task)
-    return jsonify({}), 202, {'Location': url_for('main.job_status', job_id=job.get_id())}
+
 
 @bp.route('/upload', methods=['POST'])
 def upload():
     if request.method == 'POST':
         file = request.files['file']
         if file and allowed_file(file.filename):
+            #for saving file
             now = datetime.now()
             filename = os.path.join(current_app.config['UPLOAD_FOLDER'], "%s.%s" % (now.strftime("%Y-%m-%d-%H-%M-%S-%f"), file.filename.rsplit('.', 1)[1]))
             file.save(filename)
-            return jsonify({"success":True})
+
+            #for enqueing task
+            task = request.form.get('task')
+            q = Queue()
+            job = q.enqueue(tasks.run, task)
+            return jsonify({}), 202, {'Location': url_for('main.job_status', job_id=job.get_id())}
 
 @bp.route('/', methods=['GET', 'POST'])
 def index():
