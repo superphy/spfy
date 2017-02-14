@@ -14,6 +14,6 @@
 
 {% block scripts %}
 {{ super() }}
-<script type="text/javascript" src="static/js/jquery.filedrop.js"></script>
-<script type="text/javascript" src="static/js/upload.js"></script>
+<script src="{{ url_for('static', filename='js/jquery.filedrop.js') }}"></script>
+<script src="{{ url_for('static', filename='js/upload.js') }}"></script>
 {% endblock %}
