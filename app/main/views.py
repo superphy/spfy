@@ -9,7 +9,7 @@ from .. import tasks
 
 from werkzeug.utils import secure_filename
 
-from flask import request
+from datetime import datetime
 
 bp = Blueprint('main', __name__)
 
@@ -55,16 +55,19 @@ def run_task():
     job = q.enqueue(tasks.run, task)
     return jsonify({}), 202, {'Location': url_for('main.job_status', job_id=job.get_id())}
 
+@bp.route('/upload', methods=['POST'])
+def upload():
+    if request.method == 'POST':
+        file = request.files['file']
+        if file and allowed_file(file.filename):
+            now = datetime.now()
+            filename = os.path.join(app.config['UPLOAD_FOLDER'], "%s.%s" % (now.strftime("%Y-%m-%d-%H-%M-%S-%f"), file.filename.rsplit('.', 1)[1]))
+            file.save(filename)
+            return jsonify({"success":True})
 
 @bp.route('/', methods=['GET', 'POST'])
 def index():
-    form = UploadForm()
-    if request.method == 'POST' and form.validate_on_submit():
-        f = request.files['input_file']
-        filename = secure_filename(f.filename)
-        filepath = os.path.join(current_app.config['UPLOAD_FOLDER'], filename
-                            )
-        f.save(filepath)
-        print subprocess.check_output(['app/bin/spfy.py', '-i', 'tmp/' + filename])
-    else:
-        return render_template('index.html', form=form)
+    return render_template("index.html")
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS

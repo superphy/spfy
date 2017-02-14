@@ -8,3 +8,4 @@ TASKS = ['Short task', 'Long task', 'Task raises error']
 MAX_TIME_TO_WAIT = 10
 
 UPLOAD_FOLDER = 'app/bin/tmp'
+ALLOWED_EXTENSIONS = ['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif']

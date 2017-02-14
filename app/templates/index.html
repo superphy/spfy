@@ -6,17 +6,9 @@
         <div class="panel-heading">Select task to run</div>
         <div class="panel-body">
             <div class="row">
-              <form class="form-inline center-block" action="/" method="POST" enctype="multipart/form-data">
-                  {{ form.hidden_tag() }}
-                  <div class="input-group">
-                      <label id="browsebutton" class="btn btn-default input-group-addon" for="my-file-selector">
-                          {{ form.input_file(id="my-file-selector") }}
-                          Browse...
-                      </label>
-                      <input type="text" class="form-control" readonly>
-                  </div>
-                  {{ form.submit(class_="btn btn-primary") }}
-              </form>
+              <div id="dropbox">
+                <span class="message">Drop images here to upload.</span>
+              </div>
             </div>
         </div>
       </div>
@@ -24,5 +16,6 @@
 
 {% block scripts %}
 {{ super() }}
-<script src="{{ url_for('static', filename='js/inputFileButton.js') }}" ></script>
+<script type="text/javascript" src="static/js/jquery.filedrop.js"></script>
+<script type="text/javascript" src="static/js/upload.js"></script>
 {% endblock %}
