@@ -7,4 +7,4 @@ BOOTSTRAP_SERVE_LOCAL = True
 MAX_TIME_TO_WAIT = 10
 
 UPLOAD_FOLDER = 'app/tmp'
-ALLOWED_EXTENSIONS = ['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif']
+ALLOWED_EXTENSIONS = ['fna']

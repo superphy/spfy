@@ -30,13 +30,6 @@ $(function() {
             }
         },
 
-        beforeEach: function(file) {
-            if (!file.type.match(/^image\//)) {
-                alert('Only images are allowed!');
-                return false;
-            }
-        },
-
         uploadStarted: function(i, file, len) {
             createImage(file);
         },
