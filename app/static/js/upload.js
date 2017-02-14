@@ -9,7 +9,7 @@ $(function() {
         maxfilesize: 5,
         url: '/upload',
         uploadFinished: function(i, file, response) {
-            var obj = JSON.parse(reponse);
+            var obj = JSON.parse(response);
 						var status_url = obj.location
             check_job_status(status_url);
         },
