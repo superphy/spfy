@@ -1,5 +1,6 @@
 import redis
 import os
+import subprocess
 from flask import Blueprint, render_template, request, jsonify, current_app, g, url_for, redirect
 from rq import push_connection, pop_connection, Queue
 
@@ -64,6 +65,6 @@ def index():
         filepath = os.path.join(current_app.config['UPLOAD_FOLDER'], filename
                             )
         f.save(filepath)
-        return redirect('www.google.ca')
+        print subprocess.call(['app/bin/spfy.py', filepath])
     else:
         return render_template('index.html', form=form)
