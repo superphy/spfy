@@ -72,7 +72,7 @@ $(function() {
                     // queued/started/deferred
                     setTimeout(function() {
                         check_job_status(status_url);
-                    }, 500);
+                    }, 500000);
             }
         });
     }
