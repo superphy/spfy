@@ -37,7 +37,7 @@ def call_ectyper(graph, args_dict):
     # concurrency is handled at the batch level, not here (note: this might change)
     # we only use ectyper for serotyping and vf, amr is handled by rgi directly
     if not args_dict['disable_serotype'] or not args_dict['disable_vf']:
-        ectyper_dict = subprocess.check_output(['app/ecoli_serotyping/src/Tools_Controller/tools_controller.py',
+        ectyper_dict = subprocess.check_output(['./app/ecoli_serotyping/src/Tools_Controller/tools_controller.py',
                                                 '-in', args_dict['i'],
                                                 '-s', str(
                                                     int(not args_dict['disable_serotype'])),
