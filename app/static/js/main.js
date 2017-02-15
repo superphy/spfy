@@ -19,24 +19,11 @@
       var userInput = $scope.url;
 
       // fire the API request
-      $http({
-            method: 'POST',
-            url: '/upload',
-            headers: {
-                'Content-Type': 'multipart/form-data'
-            },
-            data: $scope.url,
-            transformRequest: function (data, headersGetter) {
-                var formData = new FormData();
-                angular.forEach(data, function (value, key) {
-                    formData.append(key, value);
-                });
-
-                var headers = headersGetter();
-                delete headers['Content-Type'];
-
-                return formData;
-            }
+      var fd = new FormData();
+        fd.append('file', userInput);
+        $http.post('/upload', fd, {
+            transformRequest: angular.identity,
+            headers: {'Content-Type': undefined}
         })
         .success(function(results) {
           $log.log(results);
