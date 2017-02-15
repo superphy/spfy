@@ -15,13 +15,17 @@
 
       $log.log('test');
 
+      // get the URL from the input
+      var userInput = $scope.url;
+
       // fire the API request
       $http({
             method: 'POST',
             url: '/upload',
-            data: {
-                upload: $scope.url
+            headers: {
+                'Content-Type': 'multipart/form-data'
             },
+            data: $scope.url,
             transformRequest: function (data, headersGetter) {
                 var formData = new FormData();
                 angular.forEach(data, function (value, key) {
