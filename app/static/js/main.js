@@ -19,7 +19,9 @@
       var userInput = $scope.url;
 
       // fire the API request
-      $http.post('/upload', {'url': userInput}).
+      $http.post('/upload', {headers: {
+                'Content-Type': 'multipart/form-data'
+            },'data': userInput}).
         success(function(results) {
           $log.log(results);
           getWordCount(results);
