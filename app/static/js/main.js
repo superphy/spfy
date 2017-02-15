@@ -21,7 +21,7 @@
       // fire the API request
       $http({
             method: 'POST',
-            url: '/upload-file',
+            url: '/upload',
             headers: {
                 'Content-Type': 'multipart/form-data'
             },
