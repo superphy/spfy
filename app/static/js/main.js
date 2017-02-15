@@ -57,7 +57,7 @@ var app =  angular.module('WordcountApp', [])
             }
             // continue to call the poller() function every 2 seconds
             // until the timeout is cancelled
-            timeout = $timeout(poller, 2000);
+            timeout = $timeout(poller, 300000);
           }).
           error(function(error) {
             $log.log(error);
