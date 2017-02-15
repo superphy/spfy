@@ -15,7 +15,7 @@
           <br>
           <form role="form" ng-submit="getResults()">
             <div class="form-group">
-              <input type="input" name="url" class="form-control" id="url-box" placeholder="Enter URL..." style="max-width: 300px;" ng-model="url" required>
+              <input type="file" name="url" class="form-control" id="url-box" placeholder="Enter URL..." style="max-width: 300px;" ng-model="url" required>
             </div>
             {% raw %}
               <button type="submit" class="btn btn-primary" ng-disabled="loading">{{ submitButtonText }}</button>
