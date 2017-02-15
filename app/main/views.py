@@ -34,18 +34,11 @@ def pop_rq_connection(exception=None):
 
 @bp.route('/results/<job_id>')
 def job_status(job_id):
-    q = Queue('low')
-    job = q.fetch_job(job_id)
-    if job is None:
-        response = {'status': 'unknown'}
+    job = Job.fetch(job_key, connection=conn)
+    if job.is_finished:
+        return jsonify(job.result)
     else:
-        response = {
-            'status': job.get_status(),
-            'result': job.result,
-        }
-        if job.is_failed:
-            response['message'] = job.exc_info.strip().split('\n')[-1]
-    return jsonify(response)
+        return "Nay!", 202
 
 
 @bp.route('/upload', methods=['POST'])
