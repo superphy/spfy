@@ -47,7 +47,7 @@
           $scope.loading = true;
           $scope.submitButtonText = 'Loading...';
           $scope.urlerror = false;
-        }).
+        })
         .error(function(error) {
           $log.log(error);
         });
