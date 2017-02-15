@@ -35,7 +35,7 @@ def pop_rq_connection(exception=None):
 
 @bp.route('/results/<job_id>')
 def job_status(job_id):
-    job = Job.fetch(job_key, connection=conn)
+    job = Job.fetch(job_id, connection=conn)
     if job.is_finished:
         return jsonify(job.result)
     else:
