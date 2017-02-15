@@ -62,8 +62,8 @@ def upload():
             # for enqueing task
             job = spfy.spfy({'i':filename, 'disable_serotype':False, 'disable_amr':False,'disable_vf':False})
             print job
-            return jsonify({'location': url_for('main.job_status', job_id=job.get_id())})
-    return jsonify({'success': false})
+            return job.get_id()
+    return jsonify({'success': False})
 
 
 @bp.route('/', methods=['GET', 'POST'])

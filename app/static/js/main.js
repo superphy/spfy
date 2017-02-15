@@ -25,7 +25,7 @@ var app =  angular.module('WordcountApp', [])
         })
         .success(function(results) {
           $log.log(results);
-          getWordCount(results.getResponseHeader('Location'));
+          getWordCount(results);
           $scope.wordcounts = null;
           $scope.loading = true;
           $scope.submitButtonText = 'Loading...';
@@ -37,13 +37,13 @@ var app =  angular.module('WordcountApp', [])
 
     };
 
-    function getWordCount(jobLocation) {
+    function getWordCount(jobID) {
 
       var timeout = '';
 
       var poller = function() {
         // fire another request
-        $http.get(jobLocation).
+        $http.get('/results/'+jobID).
           success(function(data, status, headers, config) {
             if(status === 202) {
               $log.log(data, status);
