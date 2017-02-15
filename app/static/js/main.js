@@ -1,10 +1,8 @@
-(function () {
 
-  'use strict';
 
-  angular.module('WordcountApp', [])
+var app =  angular.module('WordcountApp', [])
 
-  .controller('WordcountController', ['$scope', '$log', '$http', '$timeout',
+  app.controller('WordcountController', ['$scope', '$log', '$http', '$timeout',
     function($scope, $log, $http, $timeout) {
 
     $scope.submitButtonText = 'Submit';
@@ -75,7 +73,7 @@
 
   }])
 
-  .directive('wordCountChart', ['$parse', function ($parse) {
+  app.directive('wordCountChart', ['$parse', function ($parse) {
     return {
       restrict: 'E',
       replace: true,
