@@ -15,18 +15,12 @@
 
       $log.log('test');
 
-      // get the URL from the input
-      var userInput = $scope.url;
-
       // fire the API request
       $http({
             method: 'POST',
             url: '/upload',
-            headers: {
-                'Content-Type': 'multipart/form-data'
-            },
             data: {
-                upload: userInput
+                upload: $scope.url
             },
             transformRequest: function (data, headersGetter) {
                 var formData = new FormData();
@@ -117,7 +111,5 @@
       }
      };
   }]);
-
-
 
 }());
