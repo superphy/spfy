@@ -19,9 +19,7 @@
       var userInput = $scope.url;
 
       // fire the API request
-      $http({
-            method: 'POST',
-            url: '/upload',
+      $http.post('/upload',{
             headers: {
                 'Content-Type': 'multipart/form-data'
             },
