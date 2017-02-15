@@ -3,6 +3,7 @@ import os
 import subprocess
 from flask import Blueprint, render_template, request, jsonify, current_app, g, url_for, redirect
 from rq import push_connection, pop_connection, Queue
+from rq.job import Job
 
 from .forms import UploadForm
 from .. import spfy
