@@ -32,7 +32,7 @@ def pop_rq_connection(exception=None):
     pop_connection()
 
 
-@bp.route('/status/<job_id>')
+@bp.route('/results/<job_id>')
 def job_status(job_id):
     q = Queue('low')
     job = q.fetch_job(job_id)
