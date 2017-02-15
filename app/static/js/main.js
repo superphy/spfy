@@ -18,7 +18,7 @@ var app =  angular.module('WordcountApp', [])
 
       // fire the API request
       var fd = new FormData();
-        fd.append('files[]', userInput);
+        fd.append('file', userInput);
         $http.post('/upload', fd, {
             transformRequest: angular.identity,
             headers: {'Content-Type': undefined}
