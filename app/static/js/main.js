@@ -14,7 +14,7 @@ var app =  angular.module('WordcountApp', [])
       $log.log('test');
 
       // get the URL from the input
-      var userInput = $scope.url;
+      var userInput = $scope.myFile;
 
       // fire the API request
       var fd = new FormData();
