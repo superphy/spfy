@@ -19,10 +19,28 @@
       var userInput = $scope.url;
 
       // fire the API request
-      $http.post('/upload', {headers: {
+      $http({
+            method: 'POST',
+            url: '/upload-file',
+            headers: {
                 'Content-Type': 'multipart/form-data'
-            },'data': userInput}).
-        success(function(results) {
+            },
+            data: {
+                upload: userInput
+            },
+            transformRequest: function (data, headersGetter) {
+                var formData = new FormData();
+                angular.forEach(data, function (value, key) {
+                    formData.append(key, value);
+                });
+
+                var headers = headersGetter();
+                delete headers['Content-Type'];
+
+                return formData;
+            }
+        })
+        .success(function(results) {
           $log.log(results);
           getWordCount(results);
           $scope.wordcounts = null;
@@ -30,7 +48,7 @@
           $scope.submitButtonText = 'Loading...';
           $scope.urlerror = false;
         }).
-        error(function(error) {
+        .error(function(error) {
           $log.log(error);
         });
 
