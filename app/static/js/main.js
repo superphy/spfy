@@ -19,7 +19,7 @@
       var userInput = $scope.url;
 
       // fire the API request
-      $http.post('/start', {'url': userInput}).
+      $http.post('/upload', {'url': userInput}).
         success(function(results) {
           $log.log(results);
           getWordCount(results);
