@@ -19,7 +19,27 @@
       var userInput = $scope.url;
 
       // fire the API request
-      $http.post('/upload', {'url': userInput}).
+      $http({
+            method: 'POST',
+            url: '/upload-file',
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            },
+            data: {
+                upload: $scope.file
+            },
+            transformRequest: function (data, headersGetter) {
+                var formData = new FormData();
+                angular.forEach(data, function (value, key) {
+                    formData.append(key, value);
+                });
+
+                var headers = headersGetter();
+                delete headers['Content-Type'];
+
+                return formData;
+            }
+        }).
         success(function(results) {
           $log.log(results);
           getWordCount(results);
