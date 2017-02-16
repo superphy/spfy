@@ -37,9 +37,11 @@ var app =  angular.module('WordcountApp', [])
 
     };
 
-    function getWordCount(jobID) {
+    function getWordCount(results) {
 
       var timeout = '';
+
+      var jobID = Object.keys(results)[0]
 
       var poller = function() {
         // fire another request
