@@ -17,16 +17,9 @@ def fetch_job(job_id):
     Iterates through all queues looking for the job.
     '''
     for queue in current_app.config['QUEUES']:
-        print 'checking'
-        print queue
         q = Queue(queue,connection=Redis())
         job = q.fetch_job(job_id)
-        #debugging
-        print 'in fetch job'
-        print job
         if job is not None:
-            print 'fetch job returning'
-            print job.job_id
             return job
 
 @bp.route('/results/<job_id>')
