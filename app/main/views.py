@@ -1,7 +1,7 @@
-import redis
 import os
 from flask import Blueprint, render_template, request, jsonify, current_app, g, url_for, redirect
 from rq import Queue
+from redis import Redis
 
 from .forms import UploadForm
 from .. import spfy
@@ -12,25 +12,9 @@ from datetime import datetime
 
 bp = Blueprint('main', __name__)
 
-def get_redis_connection():
-    redis_connection = getattr(g, '_redis_connection', None)
-    if redis_connection is None:
-        redis_url = current_app.config['REDIS_URL']
-        redis_connection = g._redis_connection = redis.from_url(redis_url)
-    return redis_connection
-
-@bp.before_request
-def push_rq_connection():
-    push_connection(get_redis_connection())
-
-
-@bp.teardown_request
-def pop_rq_connection(exception=None):
-    pop_connection()
-
 @bp.route('/results/<job_id>')
 def job_status(job_id):
-    q = Queue('low')
+    q = Queue('low', connection = Redis())
     job = q.fetch_job(job_id)
     if job.is_finished:
         return jsonify(job.result)
