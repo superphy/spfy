@@ -37,7 +37,7 @@ def job_status(job_id):
     q = Queue('low')
     job = q.fetch_job(job_id)
     if job.is_finished:
-        return jsonfiy(job.result)
+        return jsonify(job.result)
     else:
         return "Nay!", 202
 
