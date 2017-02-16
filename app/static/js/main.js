@@ -25,7 +25,7 @@ var app =  angular.module('WordcountApp', [])
         })
         .success(function(results) {
           $log.log(results);
-          $scope.wordcounts = '';
+          $scope.wordcounts = [];
           getWordCount(results);
           $scope.loading = true;
           $scope.submitButtonText = 'Loading...';
@@ -52,7 +52,7 @@ var app =  angular.module('WordcountApp', [])
               $log.log(data);
               $scope.loading = false;
               $scope.submitButtonText = "Submit";
-              $scope.wordcounts = $scope.wordcounts.concat(data);
+              $scope.wordcounts = $scope.wordcounts.push(data);
               $timeout.cancel(timeout);
               return false;
             }
