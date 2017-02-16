@@ -16,6 +16,8 @@ def fetch_job(job_id):
     '''
     Iterates through all queues looking for the job.
     '''
+    print 'received'
+    print job_id
     for queue in current_app.config['QUEUES']:
         q = Queue(queue,connection=Redis())
         job = q.fetch_job(job_id)
