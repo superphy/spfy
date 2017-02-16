@@ -65,7 +65,7 @@ var app =  angular.module('WordcountApp', [])
             $scope.submitButtonText = "Submit";
             $scope.urlerror = true;
           });
-      };
+      }
 );
 
     }
