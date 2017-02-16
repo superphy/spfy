@@ -54,7 +54,7 @@ def blob_savvy(args_dict):
         job_low = low.enqueue(savvy, dict(args_dict.items() +
                                 {'disable_vf': True, 'disable_serotype': True}.items()),result_ttl=-1)
 
-    return [{job_high.get_id():'Virulence Factors and Serotype'}, {job_low.get_id():'Antimicrobial Resistance'}]
+    return {job_high.get_id():'Virulence Factors and Serotype', job_low.get_id():'Antimicrobial Resistance'}
 
 def spfyids_single(args_dict):
     from settings import database
