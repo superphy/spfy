@@ -41,7 +41,7 @@ var app =  angular.module('WordcountApp', [])
 
       var timeout = '';
 
-      var poller = function(value, key) {
+      angular.forEach(results, function(value, key) {
         // fire another request
         $http.get('/results/'+key).
           success(function(data, status, headers, config) {
@@ -66,8 +66,7 @@ var app =  angular.module('WordcountApp', [])
             $scope.urlerror = true;
           });
       };
-
-      angular.forEach(results, poller(value, key));
+);
 
     }
 
