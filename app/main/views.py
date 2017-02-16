@@ -12,6 +12,12 @@ from datetime import datetime
 
 bp = Blueprint('main', __name__)
 
+def get_redis_connection():
+    redis_connection = getattr(g, '_redis_connection', None)
+    if redis_connection is None:
+        redis_url = current_app.config['REDIS_URL']
+        redis_connection = g._redis_connection = redis.from_url(redis_url)
+    return redis_connection
 
 @bp.route('/results/<job_id>')
 def job_status(job_id):
