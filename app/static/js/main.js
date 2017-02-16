@@ -43,6 +43,7 @@ var app =  angular.module('WordcountApp', [])
 
       var poller = function(key) {
         // fire another request
+        if(key !== undefined){
         $http.get('/results/'+key).
           success(function(data, status, headers, config) {
             if(status === 202) {
@@ -57,6 +58,7 @@ var app =  angular.module('WordcountApp', [])
             }
             // continue to call the poller() function every 2 seconds
             // until the timeout is cancelled
+            $log.log('still working')
             timeout = $timeout(poller, 2000);
           }).
           error(function(error) {
@@ -66,9 +68,11 @@ var app =  angular.module('WordcountApp', [])
             $scope.urlerror = true;
           });
       };
+    }
 
-      poller(Object.keys(results)[0])
-      poller(Object.keys(results)[1])
+      angular.forEach(results, function(value, key){
+        $log.log(value,key);
+        poller(key)});
 
     }
 
