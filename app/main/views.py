@@ -3,7 +3,6 @@ import os
 import subprocess
 from flask import Blueprint, render_template, request, jsonify, current_app, g, url_for, redirect
 from rq import push_connection, pop_connection, Queue
-from rq.job import Job
 
 from .forms import UploadForm
 from .. import spfy
@@ -35,12 +34,12 @@ def pop_rq_connection(exception=None):
 
 @bp.route('/results/<job_id>')
 def job_status(job_id):
-    job = Job.fetch(job_id, connection=conn)
+    q = Queue('low')
+    job = q.fetch_job(job_id)
     if job.is_finished:
-        return jsonify(job.result)
+        return jsonfiy(job.result)
     else:
         return "Nay!", 202
-
 
 @bp.route('/upload', methods=['POST'])
 def upload():
