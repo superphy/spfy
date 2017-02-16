@@ -41,9 +41,9 @@ var app =  angular.module('WordcountApp', [])
 
       var timeout = '';
 
-      var poller = function(description, jobID) {
+      var poller = function(value key) {
         // fire another request
-        $http.get('/results/'+jobID).
+        $http.get('/results/'+key).
           success(function(data, status, headers, config) {
             if(status === 202) {
               $log.log(data, status);
