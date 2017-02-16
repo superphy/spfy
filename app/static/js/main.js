@@ -67,7 +67,9 @@ var app =  angular.module('WordcountApp', [])
           });
       };
 
-      angular.forEach(results, function(value, key){poller(key)});
+      angular.forEach(results, function(value, key){
+        $log.log(key);
+        poller(key)});
 
     }
 
