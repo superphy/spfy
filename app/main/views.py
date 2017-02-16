@@ -12,14 +12,16 @@ from datetime import datetime
 
 bp = Blueprint('main', __name__)
 
+
 @bp.route('/results/<job_id>')
 def job_status(job_id):
-    q = Queue('low', connection = Redis())
+    q = Queue('low', connection=Redis())
     job = q.fetch_job(job_id)
     if job.is_finished:
         return jsonify(job.result)
     else:
         return "Nay!", 202
+
 
 @bp.route('/upload', methods=['POST'])
 def upload():
@@ -33,7 +35,8 @@ def upload():
             file.save(filename)
 
             # for enqueing task
-            jobs_dict = spfy.spfy({'i':filename, 'disable_serotype':False, 'disable_amr':False,'disable_vf':False})
+            jobs_dict = spfy.spfy(
+                {'i': filename, 'disable_serotype': False, 'disable_amr': False, 'disable_vf': False})
             print jobs_dict
             return jsonify(jobs_dict)
     return 500
