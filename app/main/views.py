@@ -19,6 +19,15 @@ def get_redis_connection():
         redis_connection = g._redis_connection = redis.from_url(redis_url)
     return redis_connection
 
+@bp.before_request
+def push_rq_connection():
+    push_connection(get_redis_connection())
+
+
+@bp.teardown_request
+def pop_rq_connection(exception=None):
+    pop_connection()
+
 @bp.route('/results/<job_id>')
 def job_status(job_id):
     q = Queue('low')
