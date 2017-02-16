@@ -17,6 +17,8 @@ def fetch_job(job_id):
     Iterates through all queues looking for the job.
     '''
     for queue in current_app.config['QUEUES']:
+        print 'checking'
+        print queue
         q = Queue(queue,connection=Redis())
         job = q.fetch_job(job_id)
         #debugging
