@@ -21,7 +21,7 @@ def fetch_job(job_id):
         job = q.fetch_job(job_id)
         #debugging
         print job
-        if job not None:
+        if job is not None:
             return job
 
 @bp.route('/results/<job_id>')
