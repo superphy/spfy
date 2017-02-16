@@ -67,7 +67,7 @@ var app =  angular.module('WordcountApp', [])
           });
       };
 
-      angular.forEach(Object.keys(results), poller());
+      angular.forEach(results, poller(value, jobID));
 
     }
 
