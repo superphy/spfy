@@ -41,9 +41,7 @@ var app =  angular.module('WordcountApp', [])
 
       var timeout = '';
 
-      var jobID = Object.keys(results)[0]
-
-      var poller = function() {
+      var poller = function(jobID) {
         // fire another request
         $http.get('/results/'+jobID).
           success(function(data, status, headers, config) {
@@ -53,7 +51,7 @@ var app =  angular.module('WordcountApp', [])
               $log.log(data);
               $scope.loading = false;
               $scope.submitButtonText = "Submit";
-              $scope.wordcounts = data;
+              $scope.wordcounts = $scope.wordcounts.concat(data);
               $timeout.cancel(timeout);
               return false;
             }
@@ -69,7 +67,7 @@ var app =  angular.module('WordcountApp', [])
           });
       };
 
-      poller();
+      angular.forEach(Object.keys(results), poller());
 
     }
 
