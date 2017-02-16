@@ -1,8 +1,7 @@
 import redis
 import os
-import subprocess
 from flask import Blueprint, render_template, request, jsonify, current_app, g, url_for, redirect
-from rq import push_connection, pop_connection, Queue
+from rq import Queue
 
 from .forms import UploadForm
 from .. import spfy
@@ -12,24 +11,6 @@ from werkzeug.utils import secure_filename
 from datetime import datetime
 
 bp = Blueprint('main', __name__)
-
-
-def get_redis_connection():
-    redis_connection = getattr(g, '_redis_connection', None)
-    if redis_connection is None:
-        redis_url = current_app.config['REDIS_URL']
-        redis_connection = g._redis_connection = redis.from_url(redis_url)
-    return redis_connection
-
-
-@bp.before_request
-def push_rq_connection():
-    push_connection(get_redis_connection())
-
-
-@bp.teardown_request
-def pop_rq_connection(exception=None):
-    pop_connection()
 
 
 @bp.route('/results/<job_id>')
