@@ -11,7 +11,7 @@
     <div class="container">
       <div class="row">
         <div class="col-sm-5 col-sm-offset-1">
-          <h1>Wordcount 3000</h1>
+          <h1>Upload Genome File</h1>
           <br>
           <form role="form" ng-submit="getResults()">
             <div class="form-group">
@@ -24,19 +24,19 @@
           <div class="alert alert-danger" role="alert" ng-show='urlError'>
             <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
             <span class="sr-only">Error:</span>
-            <span>There was an error submitting your URL.<br>
+            <span>There was an error submitting your file.<br>
             Please check to make sure it is valid before trying again.</span>
           </div>
         </div>
         <div class="col-sm-5 col-sm-offset-1">
-          <h2>Frequencies</h2>
+          <h2>Query</h2>
           <br>
           <div id="results">
             <table class="table table-striped">
               <thead>
                 <tr>
-                  <th>Word</th>
-                  <th>Count</th>
+                  <th>SpfyID</th>
+                  <th>Results</th>
                 </tr>
               </thead>
               <tbody>
