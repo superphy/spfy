@@ -43,44 +43,18 @@ def blob_savvy(args_dict):
         for f in os.listdir(args_dict['i']):
             single_dict = dict(args_dict.items() + {'uriIsolate': args_dict['uris'][f][
                                'uriIsolate'], 'uriGenome': args_dict['uris'][f]['uriGenome'], 'i': args_dict['i'] + f, 'uris': None}.items())
-            high.enqueue(savvy, dict(single_dict.items() +
+            job_high= high.enqueue(savvy, dict(single_dict.items() +
                                      {'disable_amr': True}.items()),result_ttl=-1)
-            job = low.enqueue(savvy, dict(single_dict.items() +
+            job_low = low.enqueue(savvy, dict(single_dict.items() +
                                     {'disable_vf': True, 'disable_serotype': True}.items()),result_ttl=-1)
     else:
         # run the much faster vf and serotyping separately of amr
-        high.enqueue(savvy, dict(args_dict.items() +
+        job_high = high.enqueue(savvy, dict(args_dict.items() +
                                  {'disable_amr': True}.items()),result_ttl=-1)
-        job = low.enqueue(savvy, dict(args_dict.items() +
+        job_low = low.enqueue(savvy, dict(args_dict.items() +
                                 {'disable_vf': True, 'disable_serotype': True}.items()),result_ttl=-1)
 
-    return job
-
-def monitor():
-    '''
-    DOESN'T WORK
-    Meant to run until all jobs are finished. Monitors queues and adds completed graphs to Blazegraph.
-    '''
-    sregistry = StartedJobRegistry(connection=redis_conn)
-    fregistry = FinishedJobRegistry(connection=redis_conn)
-    print high.get_job_ids()
-    print sregistry.get_job_ids()
-    while sregistry.get_job_ids():
-        print 'in sregistry...'
-        print fregistry.get_job_ids()
-        for job_id in fregistry.get_job_ids():
-            job = Job.fetch(job_id, connection=redis_conn)
-            # sanity check
-            if type(job.result) is Graph:
-                print ('inserting', job_id, job)
-                logging.info('inserting', job_id, job)
-                insert(job.result)
-        print 'sleeping 5'
-        time.sleep(5)
-
-    print 'all jobs complete'
-    logging.info('monitor() exiting...all jobs complete')
-
+    return {job_high.get_id():'Virulence Factors and Serotype', job_low.get_id():'Antimicrobial Resistance'}
 
 def spfyids_single(args_dict):
     from settings import database
@@ -162,17 +136,10 @@ def spfy(args_dict):
 
     print 'Starting blob_savvy call'
     logging.info('Starting blob_savvy call...')
-    job = blob_savvy(args_dict)
+    jobs_dict = blob_savvy(args_dict)
     logging.info('blob_savvy enqueues finished')
 
-    '''
-    logging.info('starting monitor()...')
-    monitor()
-    print 'monitor exited...in spfy()'
-    logging.info('monitor exited...in spfy()')
-    '''
-
-    return job
+    return jobs_dict
 
 if __name__ == "__main__":
     import argparse

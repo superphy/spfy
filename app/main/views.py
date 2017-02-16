@@ -34,10 +34,10 @@ def upload():
             file.save(filename)
 
             # for enqueing task
-            job = spfy.spfy({'i':filename, 'disable_serotype':False, 'disable_amr':False,'disable_vf':False})
-            print job
-            return job.get_id()
-    return jsonify({'success': False})
+            jobs_dict = spfy.spfy({'i':filename, 'disable_serotype':False, 'disable_amr':False,'disable_vf':False})
+            print jobs_dict
+            return jsonify(jobs_dict)
+    return 500
 
 
 @bp.route('/', methods=['GET', 'POST'])
