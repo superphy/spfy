@@ -43,6 +43,7 @@ var app =  angular.module('WordcountApp', [])
 
       var poller = function(key) {
         // fire another request
+        if!(key == None){
         $http.get('/results/'+key).
           success(function(data, status, headers, config) {
             if(status === 202) {
@@ -66,6 +67,7 @@ var app =  angular.module('WordcountApp', [])
             $scope.urlerror = true;
           });
       };
+    }
 
       angular.forEach(results, function(value, key){
         $log.log(value,key);
