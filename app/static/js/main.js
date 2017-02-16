@@ -51,7 +51,7 @@ var app =  angular.module('WordcountApp', [])
               $log.log(data);
               $scope.loading = false;
               $scope.submitButtonText = "Submit";
-              angular.extend($scope.wordcounts,data);
+              $scope.wordcounts.push(data);
               $log.log($scope.wordcounts)
               $timeout.cancel(timeout);
               return false;
