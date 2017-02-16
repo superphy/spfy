@@ -12,6 +12,7 @@ from datetime import datetime
 
 bp = Blueprint('main', __name__)
 
+
 def fetch_job(job_id):
     '''
     Iterates through all queues looking for the job.
@@ -19,10 +20,11 @@ def fetch_job(job_id):
     print 'received'
     print job_id
     for queue in current_app.config['QUEUES']:
-        q = Queue(queue,connection=Redis())
+        q = Queue(queue, connection=Redis())
         job = q.fetch_job(job_id)
         if job is not None:
             return job
+
 
 @bp.route('/results/<job_id>')
 def job_status(job_id):
