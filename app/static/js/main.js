@@ -25,8 +25,8 @@ var app =  angular.module('WordcountApp', [])
         })
         .success(function(results) {
           $log.log(results);
+          $scope.wordcounts = '';
           getWordCount(results);
-          $scope.wordcounts = null;
           $scope.loading = true;
           $scope.submitButtonText = 'Loading...';
           $scope.urlerror = false;
