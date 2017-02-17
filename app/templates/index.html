@@ -6,6 +6,12 @@
     <!-- styles -->
     <link href="//netdna.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" media="screen">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
+    <!-- scripts -->
+    <script src="//d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    <script src="//code.jquery.com/jquery-2.2.1.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.min.js"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
     <style>
 /* Hide Angular JS elements before initializing */
 .ng-cloak {
@@ -63,11 +69,6 @@
       <word-count-chart data="wordcounts"></word-count-chart>
     </div>
     <br><br>
-    <!-- scripts -->
-    <script src="//d3js.org/d3.v3.min.js" charset="utf-8"></script>
-    <script src="//code.jquery.com/jquery-2.2.1.min.js"></script>
-    <script src="//netdna.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.min.js"></script>
-    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
   </body>
 </html>
