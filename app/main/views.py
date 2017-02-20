@@ -40,7 +40,7 @@ def job_status(job_id):
 def upload():
     if request.method == 'POST':
         file = request.files['file']
-        if file and allowed_file(file.filename):
+        if file:
             # for saving file
             now = datetime.now()
 
