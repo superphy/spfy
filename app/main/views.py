@@ -44,7 +44,6 @@ def upload():
             # for saving file
             now = datetime.now()
             now = now.strftime("%Y-%m-%d-%H-%M-%S-%f")
-            filename = ''
             fname = secure_filename(file.filename)
             if tarfile.is_tarfile(fname):
                 ftar = os.path.join(current_app.config['UPLOAD_FOLDER'], now + '-' + secure_filename(file.filename))
@@ -57,10 +56,15 @@ def upload():
                     if not secure_filename(member.name):
                         return 'invalid upload', 500
                 tar.extractall(path=d)
+                tar.close()
+
                 #set filename to dir for spfy call
                 # tar.extractall will create a another folder at targer directory under filename
-                filename = d + '/' + tar.name
-                tar.close()
+                #edge case .tar.gz
+                if '.tar.gz' in fname:
+                    filename = d + '/' + fname.strip('.tar.gz')
+                else:
+                    filename = d + '/' + os.path.splittext(fname)[0]
 
                 print 'filename in if is ' + filename
             else:
