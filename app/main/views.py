@@ -51,13 +51,13 @@ def upload():
                 ftar = os.path.join(current_app.config['UPLOAD_FOLDER'], now + secure_filename(file.filename))
                 file.save(ftar)
                 tar = tarfile.open(ftar)
+                print tar
                 d = os.mkdir(current_app.config['UPLOAD_FOLDER'] + '/' + now)
                 print d
                 for member in tar.getmembers():
                     print member.name
-                    if not secure_filename(member.name):
-                        break
-                tar.extractall(path=d)
+                    if secure_filename(member.name):
+                        tar.extract(member, path=d)
                 tar.close()
                 #set filename to dir for spfy call
                 filename = d
