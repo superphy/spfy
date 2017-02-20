@@ -106,7 +106,11 @@ def spfyids_directory(args_dict):
     for f in files:
         file_dict = {}
         file_dict['basename'] = f
-        file_dict['withpath'] = args_dict['i'] + f
+        #case the path to dir was passed w/o a trailing /
+        if args_dict['i'][-1] is not '/':
+            file_dict['withpath'] = args_dict['i'] + '/' + f
+        else:
+            file_dict['withpath'] = args_dict['i'] + f
         file_dict['count'] = count
         files_list.append(file_dict)
         count += 1
