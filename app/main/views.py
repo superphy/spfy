@@ -49,8 +49,10 @@ def upload():
                 tar = tarfile.open(fname)
                 d = os.mkdir(current_app.config['UPLOAD_FOLDER'] + '/' + "%s.%s" % (
                     now.strftime("%Y-%m-%d-%H-%M-%S-%f")))
+                print d
                 for member in tar.getmembers():
                     f = tar.extractfile(member)
+                    print f
                     f.save(os.path.join(d, secure_filename(f.filename)))
                 #set filename to dir for spfy call
                 filename = d
