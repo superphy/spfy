@@ -1,4 +1,5 @@
 import os
+import tarfile
 from flask import Blueprint, render_template, request, jsonify, current_app, g, url_for, redirect
 from rq import Queue
 from redis import Redis
@@ -42,9 +43,21 @@ def upload():
         if file and allowed_file(file.filename):
             # for saving file
             now = datetime.now()
-            filename = os.path.join(current_app.config['UPLOAD_FOLDER'], "%s.%s" % (
-                now.strftime("%Y-%m-%d-%H-%M-%S-%f"), secure_filename(file.filename).rsplit('.', 1)[1]))
-            file.save(filename)
+
+            fname = secure_filename(file.filename)
+            if fname.endswith(('gzip,tar,gz')):
+                tar = tarfile.open(fname)
+                d = os.mkdir(current_app.config['UPLOAD_FOLDER'] + '/' + "%s.%s" % (
+                    now.strftime("%Y-%m-%d-%H-%M-%S-%f")))
+                for member in tar.getmembers():
+                    f = tar.extractfile(member)
+                    f.save(os.path.join(d, secure_filename(f.filename)))
+                #set filename to dir for spfy call
+                filename = d
+            else:
+                filename = os.path.join(current_app.config['UPLOAD_FOLDER'], "%s.%s" % (
+                    now.strftime("%Y-%m-%d-%H-%M-%S-%f"), file.filename.rsplit('.', 1)[1]))
+                file.save(filename)
 
             # for enqueing task
             jobs_dict = spfy.spfy(
