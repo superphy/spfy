@@ -63,6 +63,7 @@ def upload():
                 # tar.extractall will create a another folder at targer directory under filename
                 #edge case .tar.gz
                 print file.filename
+                print file.filename.strip('.tar.gz')
                 if '.tar.gz' in filename:
                     filename = extracted_dir + '/' + file.filename.strip('.tar.gz')
                 else:
