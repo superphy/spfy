@@ -55,9 +55,9 @@ def upload():
                 d = current_app.config['UPLOAD_FOLDER'] + '/' + now
                 os.mkdir(d)
                 for member in tar.getmembers():
-                    print member.name
-                    if secure_filename(member.name):
-                        tar.extractall(path=d, members=member)
+                    if not secure_filename(member.name):
+                        return 'invalid upload', 500
+                tar.extractall(path=d)
                 tar.close()
                 #set filename to dir for spfy call
                 filename = d
