@@ -111,6 +111,7 @@ def spfyids_directory(args_dict):
         files_list.append(file_dict)
         count += 1
     # TODO: write-out count
+    print files_list
 
     # hasing and make uris
     p = Pool(cpu_count())
