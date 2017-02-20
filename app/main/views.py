@@ -46,7 +46,6 @@ def upload():
             now = now.strftime("%Y-%m-%d-%H-%M-%S-%f")
             filename = ''
             fname = secure_filename(file.filename)
-            print tarfile.is_tarfile(fname)
             if tarfile.is_tarfile(fname):
                 ftar = os.path.join(current_app.config['UPLOAD_FOLDER'], now + '-' + secure_filename(file.filename))
                 file.save(ftar)
@@ -61,10 +60,12 @@ def upload():
                 tar.close()
                 #set filename to dir for spfy call
                 filename = d
+                print 'filename in if is ' + filename
             else:
                 filename = os.path.join(current_app.config['UPLOAD_FOLDER'], now + file.filename.rsplit('.', 1)[1])
                 file.save(filename)
 
+            print 'filename before call is' + filename
             # for enqueing task
             jobs_dict = spfy.spfy(
                 {'i': filename, 'disable_serotype': False, 'disable_amr': False, 'disable_vf': False})
