@@ -60,7 +60,7 @@ def upload():
                 tar.close()
                 #set filename to dir for spfy call
                 # tar.extractall will create a another folder at targer directory under filename
-                filename = d + '/' os.path.basename(fname)
+                filename = d + '/' + os.path.basename(fname)
                 print 'filename in if is ' + filename
             else:
                 filename = os.path.join(current_app.config['UPLOAD_FOLDER'], now + file.filename.rsplit('.', 1)[1])
