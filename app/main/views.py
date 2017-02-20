@@ -43,17 +43,17 @@ def upload():
         if file:
             # for saving file
             now = datetime.now()
+            now = now.strftime("%Y-%m-%d-%H-%M-%S-%f")
+            print now
 
             fname = secure_filename(file.filename)
             print fname
             print fname.endswith(('gzip','tar','gz'))
             if fname.endswith(('gzip','tar','gz')):
-                ftar = os.path.join(current_app.config['UPLOAD_FOLDER'], "%s.%s" % (
-                    now.strftime("%Y-%m-%d-%H-%M-%S-%f"), secure_filename(file.filename)))
+                ftar = os.path.join(current_app.config['UPLOAD_FOLDER'], now + secure_filename(file.filename))
                 file.save(ftar)
                 tar = tarfile.open(ftar)
-                d = os.mkdir(current_app.config['UPLOAD_FOLDER'] + '/' + "%s.%s" % (
-                    now.strftime("%Y-%m-%d-%H-%M-%S-%f")))
+                d = os.mkdir(current_app.config['UPLOAD_FOLDER'] + '/' + now)
                 print d
                 for member in tar.getmembers():
                     f = tar.extractfile(member)
@@ -62,8 +62,7 @@ def upload():
                 #set filename to dir for spfy call
                 filename = d
             else:
-                filename = os.path.join(current_app.config['UPLOAD_FOLDER'], "%s.%s" % (
-                    now.strftime("%Y-%m-%d-%H-%M-%S-%f"), file.filename.rsplit('.', 1)[1]))
+                filename = os.path.join(current_app.config['UPLOAD_FOLDER'], now + file.filename.rsplit('.', 1)[1])
                 file.save(filename)
 
             # for enqueing task
