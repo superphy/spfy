@@ -43,7 +43,7 @@ def upload():
             # for saving file
             now = datetime.now()
             filename = os.path.join(current_app.config['UPLOAD_FOLDER'], "%s.%s" % (
-                now.strftime("%Y-%m-%d-%H-%M-%S-%f"), file.filename.rsplit('.', 1)[1]))
+                now.strftime("%Y-%m-%d-%H-%M-%S-%f"), secure_filename(file.filename).rsplit('.', 1)[1]))
             file.save(filename)
 
             # for enqueing task
