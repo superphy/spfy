@@ -62,10 +62,9 @@ def upload():
                 #set filename to dir for spfy call
                 # tar.extractall will create a another folder at targer directory under filename
                 #edge case .tar.gz
-                s = file.filename
-                if '.tar.gz' in filename:
-                    filename = extracted_dir + '/' + s.strip('.tar.gz')
-                    print filename
+                if '.tar.gz' in file.filename:
+                    filename = extracted_dir + '/' + file.filename.strip('.tar.gz')
+                    print 'stripped .tar.gz'
                 else:
                     filename = d + '/' + os.path.splitext(s)[0]
 
