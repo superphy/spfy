@@ -47,18 +47,16 @@ def upload():
             print now
 
             fname = secure_filename(file.filename)
-            print fname
-            print fname.endswith(('gzip','tar','gz'))
-            if fname.endswith(('gzip','tar','gz')):
+            if tarfile.is_tarfile(fname):
                 ftar = os.path.join(current_app.config['UPLOAD_FOLDER'], now + secure_filename(file.filename))
                 file.save(ftar)
                 tar = tarfile.open(ftar)
                 d = os.mkdir(current_app.config['UPLOAD_FOLDER'] + '/' + now)
                 print d
                 for member in tar.getmembers():
-                    f = tar.extractfile(member)
-                    print f
-                    f.save(os.path.join(d, secure_filename(f.filename)))
+                    if secure_filename(member.name):
+                        tar.extract(member, path=d)
+                tar.close()
                 #set filename to dir for spfy call
                 filename = d
             else:
