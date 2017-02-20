@@ -1,6 +1,10 @@
+#!/usr/bin/env python2
+# -*- coding: UTF-8 -*-
+
 import logging
 import time
 import os
+from flask import current_app
 
 # Redis Queue
 from redis import Redis
@@ -35,47 +39,27 @@ def blob_savvy(args_dict):
     '''
     Handles savvy.py's pipeline.
     '''
+    d = {}
     if os.path.isdir(args_dict['i']):
         for f in os.listdir(args_dict['i']):
             single_dict = dict(args_dict.items() + {'uriIsolate': args_dict['uris'][f][
                                'uriIsolate'], 'uriGenome': args_dict['uris'][f]['uriGenome'], 'i': args_dict['i'] + f, 'uris': None}.items())
-            high.enqueue(savvy, dict(single_dict.items() +
+            job_high= high.enqueue(savvy, dict(single_dict.items() +
                                      {'disable_amr': True}.items()),result_ttl=-1)
-            low.enqueue(savvy, dict(single_dict.items() +
+            job_low = low.enqueue(savvy, dict(single_dict.items() +
                                     {'disable_vf': True, 'disable_serotype': True}.items()),result_ttl=-1)
+            d[job_high.get_id()] = {'file':f, 'analysis':'Virulence Factors and Serotype'}
+            d[job_low.get_id()] = {'file':f, 'analysis': 'Antimicrobial Resistance'}
     else:
         # run the much faster vf and serotyping separately of amr
-        high.enqueue(savvy, dict(args_dict.items() +
+        job_high = high.enqueue(savvy, dict(args_dict.items() +
                                  {'disable_amr': True}.items()),result_ttl=-1)
-        low.enqueue(savvy, dict(args_dict.items() +
+        job_low = low.enqueue(savvy, dict(args_dict.items() +
                                 {'disable_vf': True, 'disable_serotype': True}.items()),result_ttl=-1)
+        d[job_high.get_id()] = {'file':args_dict['i'], 'analysis':'Virulence Factors and Serotype'}
+        d[job_low.get_id()] = {'file':args_dict['i'], 'analysis': 'Antimicrobial Resistance'}
 
-
-def monitor():
-    '''
-    DOESN'T WORK
-    Meant to run until all jobs are finished. Monitors queues and adds completed graphs to Blazegraph.
-    '''
-    sregistry = StartedJobRegistry(connection=redis_conn)
-    fregistry = FinishedJobRegistry(connection=redis_conn)
-    print high.get_job_ids()
-    print sregistry.get_job_ids()
-    while sregistry.get_job_ids():
-        print 'in sregistry...'
-        print fregistry.get_job_ids()
-        for job_id in fregistry.get_job_ids():
-            job = Job.fetch(job_id, connection=redis_conn)
-            # sanity check
-            if type(job.result) is Graph:
-                print ('inserting', job_id, job)
-                logging.info('inserting', job_id, job)
-                insert(job.result)
-        print 'sleeping 5'
-        time.sleep(5)
-
-    print 'all jobs complete'
-    logging.info('monitor() exiting...all jobs complete')
-
+    return d
 
 def spfyids_single(args_dict):
     from settings import database
@@ -151,21 +135,18 @@ def spfy(args_dict):
     # check if a directory was passed or a just a single file
     # updates args_dict with appropriate rdflib.URIRef's
     if os.path.isdir(args_dict['i']):
+        if args_dict['i'][-1] is not '/':
+            args_dict['i'] = args_dict['i'] + '/'
         args_dict = spfyids_directory(args_dict)
     else:
         args_dict = spfyids_single(args_dict)
 
     print 'Starting blob_savvy call'
     logging.info('Starting blob_savvy call...')
-    blob_savvy(args_dict)
+    jobs_dict = blob_savvy(args_dict)
     logging.info('blob_savvy enqueues finished')
 
-    '''
-    logging.info('starting monitor()...')
-    monitor()
-    print 'monitor exited...in spfy()'
-    logging.info('monitor exited...in spfy()')
-    '''
+    return jobs_dict
 
 if __name__ == "__main__":
     import argparse

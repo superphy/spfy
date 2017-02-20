@@ -1,0 +1,27 @@
+version: '2'
+services:
+  web:
+    build: .
+    image: backend
+    container_name: backend_web
+    environment:
+      LOCAL_SETTINGS: /app/config.py
+    command: python manage.py runserver --host 0.0.0.0
+    ports:
+    - "5000:5000"
+    volumes:
+    - .:/app
+    depends_on:
+    - redis
+  worker:
+    image: backend
+    container_name: rq_worker
+    environment:
+      LOCAL_SETTINGS: /app/config.py
+    command: python manage.py runworker
+    volumes:
+    - .:/app
+    depends_on:
+    - redis
+  redis:
+    image: redis:3.2

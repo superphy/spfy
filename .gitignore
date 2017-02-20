@@ -1,3 +1,13 @@
+##spfy logs
+outputs/
+
+##uploads
+instance/uploads/
+app/tmp/
+
+##vagrant
+.vagrant/
+
 ##Flask
 .DS_Store
 *.pyc
