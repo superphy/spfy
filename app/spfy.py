@@ -48,16 +48,16 @@ def blob_savvy(args_dict):
                                      {'disable_amr': True}.items()),result_ttl=-1)
             job_low = low.enqueue(savvy, dict(single_dict.items() +
                                     {'disable_vf': True, 'disable_serotype': True}.items()),result_ttl=-1)
-            d[job_high] = {'file':f, 'analysis':'Virulence Factors and Serotype'}
-            d[job_low] = {'file':f, 'analysis': 'Antimicrobial Resistance'}
+            d[job_high.get_id()] = {'file':f, 'analysis':'Virulence Factors and Serotype'}
+            d[job_low.get_id()] = {'file':f, 'analysis': 'Antimicrobial Resistance'}
     else:
         # run the much faster vf and serotyping separately of amr
         job_high = high.enqueue(savvy, dict(args_dict.items() +
                                  {'disable_amr': True}.items()),result_ttl=-1)
         job_low = low.enqueue(savvy, dict(args_dict.items() +
                                 {'disable_vf': True, 'disable_serotype': True}.items()),result_ttl=-1)
-        d[job_high] = {'file':args_dict['i'], 'analysis':'Virulence Factors and Serotype'}
-        d[job_low] = {'file':args_dict['i'], 'analysis': 'Antimicrobial Resistance'}
+        d[job_high.get_id()] = {'file':args_dict['i'], 'analysis':'Virulence Factors and Serotype'}
+        d[job_low.get_id()] = {'file':args_dict['i'], 'analysis': 'Antimicrobial Resistance'}
 
     return d
 
