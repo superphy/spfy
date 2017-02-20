@@ -65,6 +65,7 @@ def upload():
                 s = file.filename
                 if '.tar.gz' in filename:
                     filename = extracted_dir + '/' + s.strip('.tar.gz')
+                    print filename
                 else:
                     filename = d + '/' + os.path.splitext(s)[0]
 
