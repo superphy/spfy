@@ -45,6 +45,8 @@ def upload():
             now = datetime.now()
 
             fname = secure_filename(file.filename)
+            print fname
+            print fname.endswith(('gzip,tar,gz'))
             if fname.endswith(('gzip,tar,gz')):
                 tar = tarfile.open(fname)
                 d = os.mkdir(current_app.config['UPLOAD_FOLDER'] + '/' + "%s.%s" % (
