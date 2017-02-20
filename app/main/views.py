@@ -45,30 +45,28 @@ def upload():
             now = datetime.now()
             now = now.strftime("%Y-%m-%d-%H-%M-%S-%f")
 
-            filename = os.path.join(current_app.config['UPLOAD_FOLDER'], now + '-' + secure_filename(file.filename))
+            filename = os.path.join(current_app.config[
+                                    'UPLOAD_FOLDER'], now + '-' + secure_filename(file.filename))
             file.save(filename)
 
             if tarfile.is_tarfile(filename):
                 tar = tarfile.open(filename)
-                extracted_dir = os.path.join(current_app.config['UPLOAD_FOLDER'] + '/' + now)
+                extracted_dir = os.path.join(
+                    current_app.config['UPLOAD_FOLDER'] + '/' + now)
                 os.mkdir(extracted_dir)
                 for member in tar.getmembers():
                     if not secure_filename(member.name):
                         return 'invalid upload', 500
-                        #TODO: wipe temp data
+                        # TODO: wipe temp data
                 tar.extractall(path=extracted_dir)
                 tar.close()
 
-                #set filename to dir for spfy call
+                # set filename to dir for spfy call
                 filename = extracted_dir
 
-                print 'filename in if is ' + filename
-
-            print 'filename before call is' + filename
             # for enqueing task
             jobs_dict = spfy.spfy(
                 {'i': filename, 'disable_serotype': False, 'disable_amr': False, 'disable_vf': False})
-            print jobs_dict
             return jsonify(jobs_dict)
     return 500
 
