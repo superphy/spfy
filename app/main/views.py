@@ -60,7 +60,7 @@ def upload():
                 tar.close()
 
                 #set filename to dir for spfy call
-                filename = d
+                filename = extracted_dir
 
                 print 'filename in if is ' + filename
 
