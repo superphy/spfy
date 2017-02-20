@@ -54,6 +54,7 @@ def upload():
                 d = os.mkdir(current_app.config['UPLOAD_FOLDER'] + '/' + now)
                 print d
                 for member in tar.getmembers():
+                    print member.name
                     if secure_filename(member.name):
                         tar.extract(member, path=d)
                 tar.close()
