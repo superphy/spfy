@@ -44,15 +44,14 @@ def upload():
             # for saving file
             now = datetime.now()
             now = now.strftime("%Y-%m-%d-%H-%M-%S-%f")
-            print now
 
             fname = secure_filename(file.filename)
             if tarfile.is_tarfile(fname):
-                ftar = os.path.join(current_app.config['UPLOAD_FOLDER'], now + secure_filename(file.filename))
+                ftar = os.path.join(current_app.config['UPLOAD_FOLDER'], now + '-' + secure_filename(file.filename))
                 file.save(ftar)
                 tar = tarfile.open(ftar)
                 print tar
-                d = current_app.config['UPLOAD_FOLDER'] + '/' + now
+                d = os.path.join(current_app.config['UPLOAD_FOLDER'] + '/' + now)
                 os.mkdir(d)
                 for member in tar.getmembers():
                     if not secure_filename(member.name):
