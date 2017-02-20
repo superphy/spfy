@@ -48,7 +48,8 @@ def upload():
             print fname
             print fname.endswith(('gzip','tar','gz'))
             if fname.endswith(('gzip','tar','gz')):
-                tar = tarfile.open(file)
+                ftar = file.save(secure_filename(file.filename))
+                tar = tarfile.open(ftar)
                 d = os.mkdir(current_app.config['UPLOAD_FOLDER'] + '/' + "%s.%s" % (
                     now.strftime("%Y-%m-%d-%H-%M-%S-%f")))
                 print d
