@@ -44,10 +44,9 @@ def upload():
             # for saving file
             now = datetime.now()
             now = now.strftime("%Y-%m-%d-%H-%M-%S-%f")
-
             filename = ''
-
             fname = secure_filename(file.filename)
+            print tarfile.is_tarfile(fname)
             if tarfile.is_tarfile(fname):
                 ftar = os.path.join(current_app.config['UPLOAD_FOLDER'], now + '-' + secure_filename(file.filename))
                 file.save(ftar)
