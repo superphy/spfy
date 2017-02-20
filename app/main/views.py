@@ -57,11 +57,11 @@ def upload():
                     if not secure_filename(member.name):
                         return 'invalid upload', 500
                 tar.extractall(path=d)
-                tar.close()
                 #set filename to dir for spfy call
                 # tar.extractall will create a another folder at targer directory under filename
-                tname, textension = os.path.splitext(fname)
-                filename = d + '/' + tname
+                filename = d + '/' + tar.name
+                tar.close()
+
                 print 'filename in if is ' + filename
             else:
                 filename = os.path.join(current_app.config['UPLOAD_FOLDER'], now + file.filename.rsplit('.', 1)[1])
