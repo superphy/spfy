@@ -44,32 +44,31 @@ def upload():
             # for saving file
             now = datetime.now()
             now = now.strftime("%Y-%m-%d-%H-%M-%S-%f")
-            fname = secure_filename(file.filename)
-            if tarfile.is_tarfile(fname):
-                ftar = os.path.join(current_app.config['UPLOAD_FOLDER'], now + '-' + secure_filename(file.filename))
-                file.save(ftar)
-                tar = tarfile.open(ftar)
+
+            filename = os.path.join(current_app.config['UPLOAD_FOLDER'], now + secure_filename(file.filename)
+            file.save(filename)
+
+            if tarfile.is_tarfile(filename):
+                tar = tarfile.open(filename)
                 print tar
                 d = os.path.join(current_app.config['UPLOAD_FOLDER'] + '/' + now)
                 os.mkdir(d)
                 for member in tar.getmembers():
                     if not secure_filename(member.name):
                         return 'invalid upload', 500
+                        #TODO: wipe temp data
                 tar.extractall(path=d)
                 tar.close()
 
                 #set filename to dir for spfy call
                 # tar.extractall will create a another folder at targer directory under filename
                 #edge case .tar.gz
-                if '.tar.gz' in fname:
-                    filename = d + '/' + fname.strip('.tar.gz')
+                if '.tar.gz' in filename:
+                    filename = d + '/' + filename.strip('.tar.gz')
                 else:
                     filename = d + '/' + os.path.splittext(fname)[0]
 
                 print 'filename in if is ' + filename
-            else:
-                filename = os.path.join(current_app.config['UPLOAD_FOLDER'], now + file.filename.rsplit('.', 1)[1])
-                file.save(filename)
 
             print 'filename before call is' + filename
             # for enqueing task
