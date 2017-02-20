@@ -55,8 +55,9 @@ def upload():
                 print d
                 for member in tar.getmembers():
                     print member.name
-                    if secure_filename(member.name):
-                        tar.extract(member, path=d)
+                    if not secure_filename(member.name):
+                        break
+                tar.extractall(path=d)
                 tar.close()
                 #set filename to dir for spfy call
                 filename = d
