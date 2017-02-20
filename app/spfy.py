@@ -106,16 +106,11 @@ def spfyids_directory(args_dict):
     for f in files:
         file_dict = {}
         file_dict['basename'] = f
-        #case the path to dir was passed w/o a trailing /
-        if args_dict['i'][-1] is not '/':
-            file_dict['withpath'] = args_dict['i'] + '/' + f
-        else:
-            file_dict['withpath'] = args_dict['i'] + f
+        file_dict['withpath'] = args_dict['i'] + f
         file_dict['count'] = count
         files_list.append(file_dict)
         count += 1
     # TODO: write-out count
-    print files_list
 
     # hasing and make uris
     p = Pool(cpu_count())
@@ -140,6 +135,8 @@ def spfy(args_dict):
     # check if a directory was passed or a just a single file
     # updates args_dict with appropriate rdflib.URIRef's
     if os.path.isdir(args_dict['i']):
+        if args_dict['i'][-1] is not '/':
+            args_dict['i'] = args_dict['i'] + '/'
         args_dict = spfyids_directory(args_dict)
     else:
         args_dict = spfyids_single(args_dict)
