@@ -96,26 +96,3 @@ app.directive('fileModel', [
         };
     }
 ]);
-
-app.directive('graph', [
-    '$parse',
-    function($parse) {
-        return {
-            restrict: 'E',
-            replace: true,
-            template: '<div id="graph"></div>',
-            link: function(scope) {
-                scope.$watch('wordcounts', function() {
-                    d3.select('#graph').selectAll('*').remove();
-                    var res = scope.wordcounts;
-                        jsonldVis(res, '#graph', {
-                            w: 800,
-                            h: 600,
-                            maxLabelWidth: 250
-                        });
-
-                }, true);
-            }
-        };
-    }
-]);
