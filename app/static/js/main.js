@@ -1,5 +1,3 @@
-import {jsonldVis} from 'jsonld-vis';
-
 var app = angular.module('WordcountApp', [])
 
 app.controller('WordcountController', [
