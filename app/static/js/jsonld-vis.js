@@ -2,10 +2,6 @@
 /* globals d3 */
 /* eslint no-shadow: "off" */
 
-export default function (d3) {
-  d3.jsonldVis = jsonldVis;
-}
-
 function jsonldVis (jsonld, selector, config = {}) {
   if (!jsonld && !selector) return jsonldVis;
 
