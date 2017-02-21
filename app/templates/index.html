@@ -57,7 +57,10 @@
                         {% raw %}
                         <tr ng-repeat="(index, dict) in wordcounts">
                             <td>{{index}}</td>
-                            <td>{{dict}}</td>
+                            <td>{{dict.filename}}</td>
+                            <td>{{dict.contigid}}</td>
+                            <td>{{dict.analysis}}</td>
+                            <td>{{dict.hits}}</td>
                         </tr>
                         {% endraw %}
                     </tbody>
