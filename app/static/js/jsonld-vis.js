@@ -2,11 +2,6 @@
 /* globals d3 */
 /* eslint no-shadow: "off" */
 
-import d3 from 'd3';
-import d3Tip from 'd3-tip';
-
-d3Tip(d3);
-
 export default function (d3) {
   d3.jsonldVis = jsonldVis;
 }
