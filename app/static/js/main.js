@@ -1,3 +1,5 @@
+var jsonldVis = require('jsonld-vis.js')
+
 var app = angular.module('WordcountApp', [])
 
 app.controller('WordcountController', [
