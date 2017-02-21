@@ -7,6 +7,7 @@
 import settings
 from turtle_utils import generate_uri as gu, uri_to_basename
 from rdflib import Namespace, Graph, Literal, plugin
+from rdflib.serializer import Serializer
 from Bio import SeqIO
 from os.path import basename
 
@@ -118,3 +119,6 @@ def generate_file_output(graph, destination):
     graph.serialize(destination=destination+'-xml', format="xml")
     graph.serialize(destination=destination+'-prettyxml', format="pretty-xml")
     graph.serialize(destination=destination+'-jsonld', format="json-ld", indent=4)
+
+def generate_jsonld(graph):
+    return graph.serialize(format="json-ld", indent=4)
