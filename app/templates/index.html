@@ -55,10 +55,9 @@
                     </thead>
                     <tbody>
                         {% raw %}
-                        <tr ng-repeat="(key, val) in wordcounts">
-                            <td>{{key}}</td>
-                            <td>{{val}}</td>
-                            <tr ng-repeat="(key,val) in wordcounts">
+                        <tr ng-repeat="(index, dict) in wordcounts">
+                            <td>{{index}}</td>
+                            <tr ng-repeat="(key,val) in dict">
                               <td>{{key}}</td>
                               <td>{{val}}</td>
                         </tr>
