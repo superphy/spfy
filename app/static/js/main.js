@@ -1,7 +1,3 @@
-import d3 from 'd3';
-import jsonldVis from 'jsonld-vis';
-jsonldVis(d3);
-
 var app = angular.module('WordcountApp', [])
 
 app.controller('WordcountController', [
