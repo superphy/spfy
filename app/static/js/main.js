@@ -108,7 +108,7 @@ app.directive('graph', [
                 scope.$watch('wordcounts', function() {
                     d3.select('#graph').selectAll('*').remove();
                     var res = scope.wordcounts;
-                        d3.jsonldVis(res, '#graph', {
+                        jsonldVis(res, '#graph', {
                             w: 800,
                             h: 600,
                             maxLabelWidth: 250
