@@ -147,6 +147,24 @@ def generate_amr(graph, uriGenome, fasta_file):
 
     return {'graph':graph,'amr_dict':amr_dict}
 
+def json_return(args_dict, gene_dict):
+    json_r = []
+    for analysis in gene_dict:
+        for contig_id, gene_results in gene_dict[analysis].iteritems():
+            # where gene_results is a list of dicts
+            instance_dict = {}
+            instance_dict['filename']=os.path.basename(args_dict['i'])
+            instance_dict['contigid']=contig_id
+            instance_dict['analysis']=analysis
+            if analysis is 'Serotype':
+                hits = []
+                for value in gene_results.values():
+                    hits.append({'GENE_NAME':value})
+                instance_dict['hits']=hits
+            else:
+                instance_dict['hits']=gene_results
+            json_r.append(instance_dict)
+    return json_r
 
 def savvy(args_dict):
     '''
@@ -188,7 +206,7 @@ def savvy(args_dict):
     #remove('outputs/' + __name__ + args_dict['i'].split('/')[-1] + '.log')
     print upload_graph(graph)
     generate_file_output(graph, args_dict['i'])
-    return {args_dict['uriIsolate']: ectyper_result['ectyper_dict']}
+    return json_return(args_dict, ectyper_result['ectyper_dict'])
 
 if __name__ == "__main__":
     import argparse
