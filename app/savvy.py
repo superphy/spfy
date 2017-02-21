@@ -153,7 +153,7 @@ def json_return(args_dict, gene_dict):
         for contig_id, gene_results in gene_dict[analysis].iteritems():
             # where gene_results is a list of dicts
             instance_dict = {}
-            instance_dict['filename']=os.path.basename(args_dict['i'])
+            instance_dict['filename']=basename(args_dict['i'])
             instance_dict['contigid']=contig_id
             instance_dict['analysis']=analysis
             if analysis is 'Serotype':
