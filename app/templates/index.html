@@ -42,8 +42,15 @@
                 <table class="table table-striped">
                     <thead>
                         <tr>
-                            <th>SpfyID</th>
-                            <th>Results</th>
+                            <th>Index</th>
+                            <th>Filename</th>
+                            <th>Contig ID</th>
+                            <th>Analysis</th>
+                            <th>Name</th>
+                            <th>Orientation</th>
+                            <th>Start</th>
+                            <th>Stop</th>
+                            <th>Cutoff</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -51,6 +58,9 @@
                         <tr ng-repeat="(key, val) in wordcounts">
                             <td>{{key}}</td>
                             <td>{{val}}</td>
+                            <tr ng-repeat="(key,val) in wordcounts">
+                              <td>{{key}}</td>
+                              <td>{{val}}</td>
                         </tr>
                         {% endraw %}
                     </tbody>
