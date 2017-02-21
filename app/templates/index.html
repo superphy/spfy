@@ -19,47 +19,49 @@
 <body ng-controller="WordcountController">
     <div class="container">
         <div class="row">
-                <h1>Upload Genome File</h1>
-                <br>
-                <form role="form" ng-submit="getResults()">
-                    <div class="form-group">
-                        <input type="file" file-model="myFile" name="url" class="form-control" id="url-box" placeholder="Enter URL..." style="max-width: 300px;" ng-model="url" required>
-                    </div>
-                    {% raw %}
-                    <button type="submit" class="btn btn-primary" ng-disabled="loading">{{ submitButtonText }}</button> {% endraw %}
-                </form>
-                <div class="alert alert-danger" role="alert" ng-show='urlError'>
-                    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-                    <span class="sr-only">Error:</span>
-                    <span>There was an error submitting your file.<br>
+            <h1>Upload Genome File</h1>
+            <br>
+            <form role="form" ng-submit="getResults()">
+                <div class="form-group">
+                    <input type="file" file-model="myFile" name="url" class="form-control" id="url-box" placeholder="Enter URL..." style="max-width: 300px;" ng-model="url" required>
+                </div>
+                {% raw %}
+                <button type="submit" class="btn btn-primary" ng-disabled="loading">{{ submitButtonText }}</button> {% endraw %}
+            </form>
+            <div class="alert alert-danger" role="alert" ng-show='urlError'>
+                <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                <span class="sr-only">Error:</span>
+                <span>There was an error submitting your file.<br>
             Please check to make sure it is valid before trying again.</span>
-                </div>
-          </div>
-          <div class="row">
-                <h2>Query</h2>
-                <br>
-                <div id="results">
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>SpfyID</th>
-                                <th>Results</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% raw %}
-                            <tr ng-repeat="(key, val) in wordcounts">
-                                <td>{{key}}</td>
-                                <td>{{val}}</td>
-                            </tr>
-                            {% endraw %}
-                        </tbody>
-                    </table>
-                </div>
-                <img class="col-sm-3 col-sm-offset-4" src="{{ url_for('static',
+            </div>
+        </div>
+        <div class="row">
+            <h2>Query</h2>
+            <br>
+            <div id="results">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>SpfyID</th>
+                            <th>Results</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% raw %}
+                        <tr ng-repeat="(key, val) in wordcounts">
+                            <td>{{key}}</td>
+                            <td>{{val}}</td>
+                        </tr>
+                        {% endraw %}
+                    </tbody>
+                </table>
+            </div>
+            <img class="col-sm-3 col-sm-offset-4" src="{{ url_for('static',
             filename='img/spinner.gif') }}" ng-show="loading">
         </div>
-        <br>
+        <div class="container">
+            <div id="graph"></div>
+        </div>
 
     </div>
     <br><br>
