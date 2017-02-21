@@ -154,15 +154,19 @@ def json_return(args_dict, gene_dict):
             # where gene_results is a list of dicts
             instance_dict = {}
             instance_dict['filename']=basename(args_dict['i'])
-            instance_dict['contigid']=contig_id
+
             instance_dict['analysis']=analysis
             if analysis is 'Serotype':
                 hits = []
                 for value in gene_results.values():
                     hits.append({'GENE_NAME':value})
                 instance_dict['hits']=hits
+
+                instance_dict['contigid'] = ''
             else:
                 instance_dict['hits']=gene_results
+
+                instance_dict['contigid']=contig_id
             json_r.append(instance_dict)
     return json_r
 
