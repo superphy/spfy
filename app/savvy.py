@@ -14,7 +14,7 @@ import datastruct_savvy
 
 from rdflib import Graph
 from turtle_utils import generate_uri as gu
-from turtle_grapher import generate_output, generate_graph, generate_turtle_skeleton
+from turtle_grapher import generate_output, generate_graph, generate_turtle_skeleton, generate_file_output
 
 from os.path import basename
 
@@ -187,6 +187,7 @@ def savvy(args_dict):
     # thousand of these)
     #remove('outputs/' + __name__ + args_dict['i'].split('/')[-1] + '.log')
     print upload_graph(graph)
+    generate_file_output(graph, args_dict[i])
     return {args_dict['uriIsolate']: ectyper_result['ectyper_dict']}
 
 if __name__ == "__main__":

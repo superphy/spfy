@@ -114,4 +114,6 @@ def generate_file_output(graph, destination):
         file this module belongs to
     """
 
-    graph.serialize(destination=destination, format="turtle")
+    graph.serialize(destination=destination+'-turtle', format="turtle")
+    graph.serialize(destination=destination+'-xml', format="xml")
+    graph.serialize(destination=destination+'-prettyxml', format="pretty-xml")
