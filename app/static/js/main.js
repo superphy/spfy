@@ -90,7 +90,7 @@ var app =  angular.module('WordcountApp', [])
             d3.select('#chart')
               .append('div')
               .selectAll('div')
-              .data(word[1])
+              .data(word[0])
               .enter()
               .append('div')
               .style('width', function() {

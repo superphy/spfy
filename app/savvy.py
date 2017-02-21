@@ -265,4 +265,4 @@ if __name__ == "__main__":
     args_dict['uriIsolate'] = uriIsolate
     args_dict['uriGenome'] = uriGenome
 
-    return savvy(args_dict)
+    print savvy(args_dict)
