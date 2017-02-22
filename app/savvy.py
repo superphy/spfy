@@ -153,7 +153,7 @@ def json_return(args_dict, gene_dict):
         print 'making json for'
         print analysis
         print type(analysis)
-        if analysis is 'Serotype':
+        if analysis == 'Serotype':
             instance_dict = {}
             instance_dict['filename']=basename(args_dict['i'])
             instance_dict['hitname']=str(gene_dict[analysis].values())
@@ -184,7 +184,7 @@ def json_return(args_dict, gene_dict):
                         instance_dict['hitorientation']=item['ORIENTATION']
                         instance_dict['hitstart']=item['START']
                         instance_dict['hitstop']=item['STOP']
-                        if analysis is 'Antimicrobial Resistance':
+                        if analysis == 'Antimicrobial Resistance':
                             instance_dict['hitcutoff']=item['CUT_OFF']
                             print instance_dict['hitcutoff']
                         else:
