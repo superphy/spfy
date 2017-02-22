@@ -30,11 +30,15 @@
 
 .glyphicon.glyphicon-cloud-upload {
     font-size: 75px;
-    color: #d9534f;
+    color: #66729c;
 }
 
 .row.row-gutter{
    margin-top: 20px;
    margin-bottom: 20px;
-   background-color: #7b6392;
+}
+
+.glyphicon.glyphicon-glyphicon-signal {
+    font-size: 75px;
+    color: #66729c;
 }
