@@ -6,6 +6,17 @@ def generate_hash(filename):
         # regardless of order
         return sha1(str(sorted(f.readlines()))).hexdigest()
 
+def slugify(value):
+    """
+    from Django
+    Normalizes string, converts to lowercase, removes non-alpha characters,
+    and converts spaces to hyphens.
+    """
+    import unicodedata
+    value = unicodedata.normalize('NFKD', value).encode('ascii', 'ignore')
+    value = unicode(re.sub('[^\w\s-]', '', value).strip().lower())
+    value = unicode(re.sub('[-\s]+', '-', value))
+    return value
 
 def generate_uri(uri, s=''):
     """
@@ -23,10 +34,13 @@ def generate_uri(uri, s=''):
 
     # if you call with a uri already
     if isinstance(uri, URIRef):
+        s = slugify(s)
         return URIRef(str(uri) + s)
 
     prefix = uri.split(':')[0]
     postfix = uri.split(':')[1]
+
+    postfix = slugify(postfix)
 
     if prefix == '':  # this is our : case
         return URIRef(settings.namespaces['root'] + postfix)
