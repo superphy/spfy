@@ -150,6 +150,8 @@ def generate_amr(graph, uriGenome, fasta_file):
 def json_return(args_dict, gene_dict):
     json_r = []
     for analysis in gene_dict:
+        print 'making json for'
+        print analysis
         if analysis is 'Serotype':
             instance_dict = {}
             instance_dict['filename']=basename(args_dict['i'])
@@ -166,6 +168,7 @@ def json_return(args_dict, gene_dict):
                 #where gene_results is a list for amr/vf
                 for item in gene_dict[analysis][contig_id]:
                     #for w/e reason vf, has a '0' int in the list of dicts
+                    #TODO: bug fix^
                     if type(item) is dict:
                         instance_dict = {}
                         instance_dict['filename']=basename(args_dict['i'])
