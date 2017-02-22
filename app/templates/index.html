@@ -56,10 +56,15 @@
                     <tbody>
                         {% raw %}
                         <tr ng-repeat="resp in wordcounts">
-                                <td>{{resp.filname}}</td>
+                                <td>{{resp.filename}}</td>
                                 <td>{{resp.contigid}}</td>
                                 <td>{{resp.analysis}}</td>
-                                <td>{{resp.hits}}</td>
+                                <tr ng-repeat="h in resp.hits">
+                                <td>{{h.GENE_NAME}}</td>
+                                <td>{{h.ORIENTATION}}</td>
+                                <td>{{h.START}}</td>
+                                <td>{{h.STOP}}</td>
+                              </tr>
                         </tr>
                         {% endraw %}
                     </tbody>
