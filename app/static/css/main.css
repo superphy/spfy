@@ -27,3 +27,7 @@
   color: white;
   box-shadow: 2px 2px 2px gray;
 }
+
+.glyphicon.glyphicon-cloud-upload {
+    font-size: 75px;
+}
