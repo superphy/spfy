@@ -58,12 +58,11 @@
                                 <td>{{resp.filename}}</td>
                                 <td>{{resp.contigid}}</td>
                                 <td>{{resp.analysis}}</td>
-                                <tr ng-repeat="h in resp.hits">
-                                <td>{{h.GENE_NAME}}</td>
-                                <td>{{h.ORIENTATION}}</td>
-                                <td>{{h.START}}</td>
-                                <td>{{h.STOP}}</td>
-                              </tr>
+                                <td>{{resp.hitname}}</td>
+                                <td>{{resp.hitorientation}}</td>
+                                <td>{{resp.hitstart}}</td>
+                                <td>{{resp.hitstop}}</td>
+                                <td>{{resp.hitcutoff}}</td>
                         </tr>
                         {% endraw %}
                     </tbody>
