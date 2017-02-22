@@ -152,6 +152,7 @@ def json_return(args_dict, gene_dict):
     for analysis in gene_dict:
         print 'making json for'
         print analysis
+        print type(analysis)
         if analysis is 'Serotype':
             instance_dict = {}
             instance_dict['filename']=basename(args_dict['i'])
@@ -166,6 +167,9 @@ def json_return(args_dict, gene_dict):
             print instance_dict
             json_r.append(instance_dict)
         else:
+            print 'in else'
+            print analysis
+            print type(analysis)
             for contig_id in gene_dict[analysis]:
                 #where gene_results is a list for amr/vf
                 for item in gene_dict[analysis][contig_id]:
