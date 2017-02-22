@@ -13,11 +13,11 @@
 <body ng-controller="WordcountController">
     <div class="container-fluid">
         <div class="row">
-            <div class=".col-md-4">
+            <div class="col-md-2">
                 <span class="glyphicon glyphicon-cloud-upload"></span>
             </div>
 
-            <div class=".col-md-8">
+            <div class="col-md-8">
                 <form role="form" ng-submit="getResults()">
                     <div class="form-group">
                         <input type="file" file-model="myFile" name="url" class="form-control" id="url-box" placeholder="Enter URL..." style="max-width: 300px;" ng-model="url" required>
@@ -35,10 +35,10 @@
 
         </div>
         <div class="row">
-          <div class=".col-md-4">
+          <div class="col-md-2">
             <h2>Query</h2>
           </div>
-          <div class=".col-md-8">
+          <div class="col-md-8">
             <div id="results">
                 <button class="btn btn-primary" export-to-csv>Download</button>
                 <table class="table table-striped">
