@@ -151,23 +151,33 @@ def json_return(args_dict, gene_dict):
     json_r = []
     for analysis in gene_dict:
         for contig_id, gene_results in gene_dict[analysis].iteritems():
-            # where gene_results is a list of dicts
-            instance_dict = {}
-            instance_dict['filename']=basename(args_dict['i'])
-
-            instance_dict['analysis']=analysis
+            #where gene_results is a list for amr/vf
             if analysis is 'Serotype':
-                hits = []
-                for key, value in gene_results.iteritems():
-                    hits.append({'GENE_NAME':value})
-                instance_dict['hits']=hits
-
-                instance_dict['contigid'] = ''
+                instance_dict = {}
+                instance_dict['filename']=basename(args_dict['i'])
+                instance_dict['hitname']=str(gene_results.values())
+                instance_dict['contigid'] = 'n/a'
+                instance_dict['analysis']=analysis
+                instance_dict['hitorientation'] = 'n/a'
+                instance_dict['hitstart']='n/a'
+                instance_dict['hitstop']='n/a'
+                instance_dict['hitcutoff']='n/a'
+                json_r.append(instance_dict)
             else:
-                instance_dict['hits']=gene_results
-
-                instance_dict['contigid']=contig_id
-            json_r.append(instance_dict)
+                for item in gene_results:
+                    instance_dict = {}
+                    instance_dict['filename']=basename(args_dict['i'])
+                    instance_dict['contigid']=contig_id
+                    instance_dict['analysis']=analysis
+                    instance_dict['hitname']=item['GENE_NAME']
+                    instance_dict['hitorientation']=item['ORIENTATION']
+                    instance_dict['hitstart']=item['START']
+                    instance_dict['hitstop']=item['STOP']
+                    if analysis is 'Antimicrobial Resistance':
+                        instance_dict['hitcutoff']=item['CUT_OFF']
+                    else:
+                        instance_dict['hitcutoff']='n/a'
+                    json_r.append(instance_dict)
     return json_r
 
 def savvy(args_dict):
