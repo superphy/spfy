@@ -49,7 +49,7 @@ app.controller('WordcountController', [
                             $log.log(data);
                             $scope.loading = false;
                             $scope.submitButtonText = "Submit";
-                            $scope.wordcounts.push(data);
+                            $scope.wordcounts = $scope.wordcounts.concat(data);
                             $log.log($scope.wordcounts)
                             $timeout.cancel(timeout);
                             return false;
