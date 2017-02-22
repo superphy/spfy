@@ -149,6 +149,8 @@ def generate_amr(graph, uriGenome, fasta_file):
 
 def json_return(args_dict, gene_dict):
     json_r = []
+    print 'json is getting'
+    print gene_dict
     for analysis in gene_dict.keys():
         if analysis is 'Serotype':
             instance_dict = {}
