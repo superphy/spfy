@@ -31,8 +31,7 @@ def call_ectyper(graph, args_dict):
     from ast import literal_eval
     from os.path import splitext
 
-
-    ectyper_dict={}
+    ectyper_dict = {}
     #logging.info('calling ectyper from fun call_ectyper')
     # concurrency is handled at the batch level, not here (note: this might change)
     # we only use ectyper for serotyping and vf, amr is handled by rgi directly
@@ -81,12 +80,13 @@ def call_ectyper(graph, args_dict):
     if not args_dict['disable_amr']:
         # amr
         #logging.info('generating amr')
-        amr_result = generate_amr(graph, args_dict['uriGenome'], args_dict['i'])
+        amr_result = generate_amr(
+            graph, args_dict['uriGenome'], args_dict['i'])
         graph = amr_result['graph']
         ectyper_dict['Antimicrobial Resistance'] = amr_result['amr_dict']
         #logging.info('amr generation okay')
 
-    return {'graph':graph, 'ectyper_dict':ectyper_dict}
+    return {'graph': graph, 'ectyper_dict': ectyper_dict}
 
 
 def generate_amr(graph, uriGenome, fasta_file):
@@ -145,52 +145,48 @@ def generate_amr(graph, uriGenome, fasta_file):
 
     graph = datastruct_savvy.parse_gene_dict(graph, amr_dict, uriGenome)
 
-    return {'graph':graph,'amr_dict':amr_dict}
+    return {'graph': graph, 'amr_dict': amr_dict}
+
 
 def json_return(args_dict, gene_dict):
     json_r = []
     for analysis in gene_dict:
-        print 'making json for'
-        print analysis
-        print type(analysis)
         if analysis == 'Serotype':
             instance_dict = {}
-            instance_dict['filename']=basename(args_dict['i'])
-            instance_dict['hitname']=str(gene_dict[analysis].values())
+            instance_dict['filename'] = basename(args_dict['i'])
+            instance_dict['hitname'] = str(gene_dict[analysis].values())
             instance_dict['contigid'] = 'n/a'
-            instance_dict['analysis']=analysis
+            instance_dict['analysis'] = analysis
             instance_dict['hitorientation'] = 'n/a'
-            instance_dict['hitstart']='n/a'
-            instance_dict['hitstop']='n/a'
-            instance_dict['hitcutoff']='n/a'
-            print 'appending'
-            print instance_dict
+            instance_dict['hitstart'] = 'n/a'
+            instance_dict['hitstop'] = 'n/a'
+            instance_dict['hitcutoff'] = 'n/a'
             json_r.append(instance_dict)
         else:
             print 'in else'
             print analysis
             print type(analysis)
             for contig_id in gene_dict[analysis]:
-                #where gene_results is a list for amr/vf
+                # where gene_results is a list for amr/vf
                 for item in gene_dict[analysis][contig_id]:
-                    #for w/e reason vf, has a '0' int in the list of dicts
-                    #TODO: bug fix^
+                    # for w/e reason vf, has a '0' int in the list of dicts
+                    # TODO: bug fix^
                     if type(item) is dict:
                         instance_dict = {}
-                        instance_dict['filename']=basename(args_dict['i'])
-                        instance_dict['contigid']=contig_id
-                        instance_dict['analysis']=analysis
-                        instance_dict['hitname']=item['GENE_NAME']
-                        instance_dict['hitorientation']=item['ORIENTATION']
-                        instance_dict['hitstart']=item['START']
-                        instance_dict['hitstop']=item['STOP']
+                        instance_dict['filename'] = basename(args_dict['i'])
+                        instance_dict['contigid'] = contig_id
+                        instance_dict['analysis'] = analysis
+                        instance_dict['hitname'] = item['GENE_NAME']
+                        instance_dict['hitorientation'] = item['ORIENTATION']
+                        instance_dict['hitstart'] = item['START']
+                        instance_dict['hitstop'] = item['STOP']
                         if analysis == 'Antimicrobial Resistance':
-                            instance_dict['hitcutoff']=item['CUT_OFF']
-                            print instance_dict['hitcutoff']
+                            instance_dict['hitcutoff'] = item['CUT_OFF']
                         else:
-                            instance_dict['hitcutoff']='n/a'
+                            instance_dict['hitcutoff'] = 'n/a'
                         json_r.append(instance_dict)
     return json_r
+
 
 def savvy(args_dict):
     '''
