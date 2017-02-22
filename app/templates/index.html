@@ -19,50 +19,63 @@
 <body ng-controller="WordcountController">
     <div class="container">
         <div class="row">
-            <div class="col-sm-5 col-sm-offset-1">
-                <h1>Upload Genome File</h1>
-                <br>
-                <form role="form" ng-submit="getResults()">
-                    <div class="form-group">
-                        <input type="file" file-model="myFile" name="url" class="form-control" id="url-box" placeholder="Enter URL..." style="max-width: 300px;" ng-model="url" required>
-                    </div>
-                    {% raw %}
-                    <button type="submit" class="btn btn-primary" ng-disabled="loading">{{ submitButtonText }}</button> {% endraw %}
-                </form>
-                <div class="alert alert-danger" role="alert" ng-show='urlError'>
-                    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-                    <span class="sr-only">Error:</span>
-                    <span>There was an error submitting your file.<br>
+            <h1>Upload Genome File</h1>
+            <br>
+            <form role="form" ng-submit="getResults()">
+                <div class="form-group">
+                    <input type="file" file-model="myFile" name="url" class="form-control" id="url-box" placeholder="Enter URL..." style="max-width: 300px;" ng-model="url" required>
+                </div>
+                {% raw %}
+                <button type="submit" class="btn btn-primary" ng-disabled="loading">{{ submitButtonText }}</button> {% endraw %}
+            </form>
+            <div class="alert alert-danger" role="alert" ng-show='urlError'>
+                <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                <span class="sr-only">Error:</span>
+                <span>There was an error submitting your file.<br>
             Please check to make sure it is valid before trying again.</span>
-                </div>
-            </div>
-            <div class="col-sm-5 col-sm-offset-1">
-                <h2>Query</h2>
-                <br>
-                <div id="results">
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>SpfyID</th>
-                                <th>Results</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% raw %}
-                            <tr ng-repeat="(key, val) in wordcounts">
-                                <td>{{key}}</td>
-                                <td>{{val}}</td>
-                            </tr>
-                            {% endraw %}
-                        </tbody>
-                    </table>
-                </div>
-                <img class="col-sm-3 col-sm-offset-4" src="{{ url_for('static',
-            filename='img/spinner.gif') }}" ng-show="loading">
             </div>
         </div>
-        <br>
-        <word-count-chart data="wordcounts"></word-count-chart>
+        <div class="row">
+            <h2>Query</h2>
+            <br>
+            <div id="results">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Filename</th>
+                            <th>Contig ID</th>
+                            <th>Analysis</th>
+                            <th>Name</th>
+                            <th>Orientation</th>
+                            <th>Start</th>
+                            <th>Stop</th>
+                            <th>Cutoff</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% raw %}
+                        <tr ng-repeat="resp in wordcounts">
+                            <td>{{resp.filename}}</td>
+                            <td>{{resp.contigid}}</td>
+                            <td>{{resp.analysis}}</td>
+                            <td>{{resp.hitname}}</td>
+                            <td>{{resp.hitorientation}}</td>
+                            <td>{{resp.hitstart}}</td>
+                            <td>{{resp.hitstop}}</td>
+                            <td>{{resp.hitcutoff}}</td>
+                        </tr>
+                        {% endraw %}
+                    </tbody>
+                </table>
+            </div>
+            <img class="col-sm-3 col-sm-offset-4" src="{{ url_for('static',
+            filename='img/spinner.gif') }}" ng-show="loading">
+        </div>
+        <div class="container">
+            <div id="graph"></div>
+            <graph data="wordcounts"></graph>
+        </div>
+
     </div>
     <br><br>
     <!-- scripts -->
@@ -71,6 +84,7 @@
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.min.js"></script>
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
 </body>
 
 </html>
