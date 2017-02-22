@@ -56,7 +56,7 @@
                     <tbody>
                         {% raw %}
                         <tr ng-repeat="dict in wordcounts">
-                            <td>{{dict.filename}}</td>
+                            <td ng-repeat='resp in dict'>{{resp.filename}}</td>
                             <td>{{dict.contigid}}</td>
                             <td>{{dict.analysis}}</td>
                             <td>{{dict.hits}}</td>
