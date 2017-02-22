@@ -162,7 +162,8 @@ def json_return(args_dict, gene_dict):
             instance_dict['hitstart']='n/a'
             instance_dict['hitstop']='n/a'
             instance_dict['hitcutoff']='n/a'
-            print appending instance_dict
+            print 'appending'
+            print instance_dict
             json_r.append(instance_dict)
         else:
             for contig_id in gene_dict[analysis]:
