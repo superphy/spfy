@@ -56,12 +56,13 @@
                     <tbody>
                         {% raw %}
                         <tr ng-repeat="dict in wordcounts">
-                            <td ng-repeat='resp in dict'>{{resp.filename}}</td>
-                            <td>{{dict.contigid}}</td>
-                            <td>{{dict.analysis}}</td>
-                            <td>{{dict.hits}}</td>
-                        </tr>
-                        {% endraw %}
+                            <tr ng-repeat='resp in dict'>
+                                <td>{{resp.filname}}</td>
+                                <td>{{resp.contigid}}</td>
+                                <td>{{resp.analysis}}</td>
+                                <td>{{resp.hits}}</td>
+                            </tr>
+                            {% endraw %}
                     </tbody>
                 </table>
             </div>
