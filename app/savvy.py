@@ -149,7 +149,7 @@ def generate_amr(graph, uriGenome, fasta_file):
 
 def json_return(args_dict, gene_dict):
     json_r = []
-    for analysis in gene_dict:
+    for analysis in gene_dict.keys():
         if analysis is 'Serotype':
             instance_dict = {}
             instance_dict['filename']=basename(args_dict['i'])
@@ -219,7 +219,6 @@ def savvy(args_dict):
     # thousand of these)
     #remove('outputs/' + __name__ + args_dict['i'].split('/')[-1] + '.log')
     print upload_graph(graph)
-    generate_file_output(graph, args_dict['i'])
     return json_return(args_dict, ectyper_result['ectyper_dict'])
 
 if __name__ == "__main__":
