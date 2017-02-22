@@ -55,8 +55,7 @@
                     </thead>
                     <tbody>
                         {% raw %}
-                        <tr ng-repeat="(index, dict) in wordcounts">
-                            <td>{{index}}</td>
+                        <tr ng-repeat="dict in wordcounts">
                             <td>{{dict.filename}}</td>
                             <td>{{dict.contigid}}</td>
                             <td>{{dict.analysis}}</td>
