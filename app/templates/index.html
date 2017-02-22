@@ -4,20 +4,14 @@
 <head>
     <title>spfy</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="{{ url_for('static', filename='img/superphy.svg') }}">
     <!-- styles -->
     <link href="//netdna.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" media="screen">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
-    <style>
-        /* Hide Angular JS elements before initializing */
-
-        .ng-cloak {
-            display: none;
-        }
-    </style>
 </head>
 
 <body ng-controller="WordcountController">
-    <div class="container-fluid">
+    <div class="container">
         <div class="row">
             <div class=".col-md-4">
                 <span class="glyphicon glyphicon-cloud-upload"></span>
@@ -79,7 +73,7 @@
             <img class="col-sm-3 col-sm-offset-4" src="{{ url_for('static',
             filename='img/spinner.gif') }}" ng-show="loading">
         </div>
-        
+
         </div>
     </div>
     <br><br>
