@@ -165,20 +165,21 @@ def json_return(args_dict, gene_dict):
             for contig_id in gene_dict[analysis]:
                 #where gene_results is a list for amr/vf
                 for item in gene_dict[analysis][contig_id]:
-                    print item
-                    instance_dict = {}
-                    instance_dict['filename']=basename(args_dict['i'])
-                    instance_dict['contigid']=contig_id
-                    instance_dict['analysis']=analysis
-                    instance_dict['hitname']=item['GENE_NAME']
-                    instance_dict['hitorientation']=item['ORIENTATION']
-                    instance_dict['hitstart']=item['START']
-                    instance_dict['hitstop']=item['STOP']
-                    if analysis is 'Antimicrobial Resistance':
-                        instance_dict['hitcutoff']=item['CUT_OFF']
-                    else:
-                        instance_dict['hitcutoff']='n/a'
-                    json_r.append(instance_dict)
+                    #for w/e reason vf, has a '0' int in the list of dicts
+                    if type(item) is dict:
+                        instance_dict = {}
+                        instance_dict['filename']=basename(args_dict['i'])
+                        instance_dict['contigid']=contig_id
+                        instance_dict['analysis']=analysis
+                        instance_dict['hitname']=item['GENE_NAME']
+                        instance_dict['hitorientation']=item['ORIENTATION']
+                        instance_dict['hitstart']=item['START']
+                        instance_dict['hitstop']=item['STOP']
+                        if analysis is 'Antimicrobial Resistance':
+                            instance_dict['hitcutoff']=item['CUT_OFF']
+                        else:
+                            instance_dict['hitcutoff']='n/a'
+                        json_r.append(instance_dict)
     return json_r
 
 def savvy(args_dict):
