@@ -150,20 +150,20 @@ def generate_amr(graph, uriGenome, fasta_file):
 def json_return(args_dict, gene_dict):
     json_r = []
     for analysis in gene_dict:
-        for contig_id, gene_results in gene_dict[analysis].iteritems():
-            #where gene_results is a list for amr/vf
-            if analysis is 'Serotype':
-                instance_dict = {}
-                instance_dict['filename']=basename(args_dict['i'])
-                instance_dict['hitname']=str(gene_results.values())
-                instance_dict['contigid'] = 'n/a'
-                instance_dict['analysis']=analysis
-                instance_dict['hitorientation'] = 'n/a'
-                instance_dict['hitstart']='n/a'
-                instance_dict['hitstop']='n/a'
-                instance_dict['hitcutoff']='n/a'
-                json_r.append(instance_dict)
-            else:
+        if analysis is 'Serotype':
+            instance_dict = {}
+            instance_dict['filename']=basename(args_dict['i'])
+            instance_dict['hitname']=str(gene_dict[analysis].values())
+            instance_dict['contigid'] = 'n/a'
+            instance_dict['analysis']=analysis
+            instance_dict['hitorientation'] = 'n/a'
+            instance_dict['hitstart']='n/a'
+            instance_dict['hitstop']='n/a'
+            instance_dict['hitcutoff']='n/a'
+            json_r.append(instance_dict)
+        else:
+            for contig_id, gene_results in gene_dict[analysis].iteritems():
+                #where gene_results is a list for amr/vf
                 for item in gene_results:
                     instance_dict = {}
                     instance_dict['filename']=basename(args_dict['i'])
