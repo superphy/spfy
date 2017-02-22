@@ -149,9 +149,7 @@ def generate_amr(graph, uriGenome, fasta_file):
 
 def json_return(args_dict, gene_dict):
     json_r = []
-    print 'json is getting'
-    print str(gene_dict.keys())
-    for analysis in gene_dict.keys():
+    for analysis in gene_dict:
         if analysis is 'Serotype':
             instance_dict = {}
             instance_dict['filename']=basename(args_dict['i'])
@@ -164,9 +162,9 @@ def json_return(args_dict, gene_dict):
             instance_dict['hitcutoff']='n/a'
             json_r.append(instance_dict)
         else:
-            for contig_id, gene_results in gene_dict[analysis].iteritems():
+            for contig_id in gene_dict[analysis]:
                 #where gene_results is a list for amr/vf
-                for item in gene_results:
+                for item in gene_results[contig_id]:
                     print item
                     instance_dict = {}
                     instance_dict['filename']=basename(args_dict['i'])
