@@ -169,7 +169,8 @@ def json_return(args_dict, gene_dict):
                     instance_dict['filename']=basename(args_dict['i'])
                     instance_dict['contigid']=contig_id
                     instance_dict['analysis']=analysis
-                    instance_dict['hitname']=item['GENE_NAME']
+                    instance_dict['hitname']=item
+                    '''
                     instance_dict['hitorientation']=item['ORIENTATION']
                     instance_dict['hitstart']=item['START']
                     instance_dict['hitstop']=item['STOP']
@@ -177,6 +178,7 @@ def json_return(args_dict, gene_dict):
                         instance_dict['hitcutoff']=item['CUT_OFF']
                     else:
                         instance_dict['hitcutoff']='n/a'
+                    '''
                     json_r.append(instance_dict)
     return json_r
 
