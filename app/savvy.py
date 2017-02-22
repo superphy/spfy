@@ -164,7 +164,7 @@ def json_return(args_dict, gene_dict):
         else:
             for contig_id in gene_dict[analysis]:
                 #where gene_results is a list for amr/vf
-                for item in gene_results[contig_id]:
+                for item in gene_dict[analysis][contig_id]:
                     print item
                     instance_dict = {}
                     instance_dict['filename']=basename(args_dict['i'])
