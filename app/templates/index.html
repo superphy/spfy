@@ -17,27 +17,27 @@
 </head>
 
 <body ng-controller="WordcountController">
-    <div class="container">
+    <div class="container-fluid">
         <div class="row">
-          <div class=".col-md-3">
-
-            <h1>Upload Genome File</h1>
-          </div>
-          <div class=".col-md-6">
-            <form role="form" ng-submit="getResults()">
-                <div class="form-group">
-                    <input type="file" file-model="myFile" name="url" class="form-control" id="url-box" placeholder="Enter URL..." style="max-width: 300px;" ng-model="url" required>
-                </div>
-                {% raw %}
-                <button type="submit" class="btn btn-primary" ng-disabled="loading">{{ submitButtonText }}</button> {% endraw %}
-            </form>
-            <div class="alert alert-danger" role="alert" ng-show='urlError'>
-                <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-                <span class="sr-only">Error:</span>
-                <span>There was an error submitting your file.<br>
-            Please check to make sure it is valid before trying again.</span>
+            <div class=".col-md-4">
+                <span class="glyphicons glyphicons-file-cloud-upload"></span>
             </div>
-          </div>
+
+            <div class=".col-md-8">
+                <form role="form" ng-submit="getResults()">
+                    <div class="form-group">
+                        <input type="file" file-model="myFile" name="url" class="form-control" id="url-box" placeholder="Enter URL..." style="max-width: 300px;" ng-model="url" required>
+                    </div>
+                    {% raw %}
+                    <button type="submit" class="btn btn-primary" ng-disabled="loading">{{ submitButtonText }}</button> {% endraw %}
+                </form>
+                <div class="alert alert-danger" role="alert" ng-show='urlError'>
+                    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                    <span class="sr-only">Error:</span>
+                    <span>There was an error submitting your file.<br>
+            Please check to make sure it is valid before trying again.</span>
+                </div>
+            </div>
 
         </div>
         <div class="row">
@@ -81,7 +81,6 @@
             <div id="graph"></div>
             <graph data="wordcounts"></graph>
         </div>
-
     </div>
     <br><br>
     <!-- scripts -->
