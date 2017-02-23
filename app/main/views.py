@@ -60,7 +60,7 @@ def upload():
                         # TODO: wipe temp data
                 tar.extractall(path=extracted_dir)
                 for fn in os.listdir(extracted_dir):
-                    os.rename(extracted_dir +'/' + fn, extracted_dir +'/'+ now + fn)
+                    os.rename(extracted_dir +'/' + fn, extracted_dir +'/'+ now + '-' + fn)
                 tar.close()
 
                 # set filename to dir for spfy call
