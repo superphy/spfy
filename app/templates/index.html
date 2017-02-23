@@ -4,42 +4,43 @@
 <head>
     <title>spfy</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="{{ url_for('static', filename='img/superphy.ico') }}">
     <!-- styles -->
     <link href="//netdna.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" media="screen">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
-    <style>
-        /* Hide Angular JS elements before initializing */
-
-        .ng-cloak {
-            display: none;
-        }
-    </style>
 </head>
 
 <body ng-controller="WordcountController">
-    <div class="container">
-        <div class="row">
-            <h1>Upload Genome File</h1>
-            <br>
-            <form role="form" ng-submit="getResults()">
-                <div class="form-group">
-                    <input type="file" file-model="myFile" name="url" class="form-control" id="url-box" placeholder="Enter URL..." style="max-width: 300px;" ng-model="url" required>
-                </div>
-                {% raw %}
-                <button type="submit" class="btn btn-primary" ng-disabled="loading">{{ submitButtonText }}</button> {% endraw %}
-            </form>
-            <div class="alert alert-danger" role="alert" ng-show='urlError'>
-                <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-                <span class="sr-only">Error:</span>
-                <span>There was an error submitting your file.<br>
-            Please check to make sure it is valid before trying again.</span>
+    <div class="container-fluid">
+        <div class="row row-gutter">
+            <div class="col-md-2 col-gutter">
+                <span class="glyphicon glyphicon-cloud-upload"></span>
             </div>
+
+            <div class="col-md-8">
+                <form role="form" ng-submit="getResults()">
+                    <div class="form-group">
+                        <input type="file" file-model="myFile" name="url" class="form-control" id="url-box" placeholder="Enter URL..." style="max-width: 300px;" ng-model="url" required>
+                    </div>
+                    {% raw %}
+                    <button type="submit" class="btn btn-primary" ng-disabled="loading">{{ submitButtonText }}</button> {% endraw %}
+                </form>
+                <div class="alert alert-danger" role="alert" ng-show='urlError'>
+                    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                    <span class="sr-only">Error:</span>
+                    <span>There was an error submitting your file.<br>
+            Please check to make sure it is valid before trying again.</span>
+                </div>
+            </div>
+
         </div>
         <div class="row">
-            <h2>Query</h2>
-            <br>
+          <div class="col-md-2 col-gutter">
+            <span class="glyphicon glyphicon-signal"></span>
+          </div>
+          <div class="col-md-8">
             <div id="results">
-                <button export-to-csv>Download</button>
+                <button class="btn btn-success" export-to-csv>Download</button>
                 <table class="table table-striped">
                     <thead>
                         <tr>
@@ -72,11 +73,8 @@
             <img class="col-sm-3 col-sm-offset-4" src="{{ url_for('static',
             filename='img/spinner.gif') }}" ng-show="loading">
         </div>
-        <div class="container">
-            <div id="graph"></div>
-            <graph data="wordcounts"></graph>
-        </div>
 
+        </div>
     </div>
     <br><br>
     <!-- scripts -->

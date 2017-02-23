@@ -154,7 +154,7 @@ def json_return(args_dict, gene_dict):
         if analysis == 'Serotype':
             instance_dict = {}
             instance_dict['filename'] = basename(args_dict['i'])
-            instance_dict['hitname'] = str(gene_dict[analysis].values())
+            instance_dict['hitname'] = str(gene_dict[analysis].values()).replace(',', ' ')
             instance_dict['contigid'] = 'n/a'
             instance_dict['analysis'] = analysis
             instance_dict['hitorientation'] = 'n/a'

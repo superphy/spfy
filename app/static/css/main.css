@@ -27,3 +27,23 @@
   color: white;
   box-shadow: 2px 2px 2px gray;
 }
+
+.glyphicon.glyphicon-cloud-upload {
+    font-size: 75px;
+    color: #66729c;
+}
+
+.row.row-gutter{
+   margin-top: 20px;
+   margin-bottom: 20px;
+   border-bottom: 1px solid #ccc;
+}
+
+.col-md-2.col-gutter{
+   border-right: 1px solid #ccc;
+}
+
+.glyphicon.glyphicon-signal {
+    font-size: 75px;
+    color: #66729c;
+}
