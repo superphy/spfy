@@ -153,7 +153,7 @@ def json_return(args_dict, gene_dict):
     for analysis in gene_dict:
         if analysis == 'Serotype':
             instance_dict = {}
-            instance_dict['filename'] = basename(args_dict['i'])
+            instance_dict['filename'] = basename(args_dict['i'])[27:]
             instance_dict['hitname'] = str(gene_dict[analysis].values()).replace(',', ' ')
             instance_dict['contigid'] = 'n/a'
             instance_dict['analysis'] = analysis
@@ -163,9 +163,6 @@ def json_return(args_dict, gene_dict):
             instance_dict['hitcutoff'] = 'n/a'
             json_r.append(instance_dict)
         else:
-            print 'in else'
-            print analysis
-            print type(analysis)
             for contig_id in gene_dict[analysis]:
                 # where gene_results is a list for amr/vf
                 for item in gene_dict[analysis][contig_id]:
@@ -173,7 +170,7 @@ def json_return(args_dict, gene_dict):
                     # TODO: bug fix^
                     if type(item) is dict:
                         instance_dict = {}
-                        instance_dict['filename'] = basename(args_dict['i'])
+                        instance_dict['filename'] = basename(args_dict['i'])[27:]
                         instance_dict['contigid'] = contig_id
                         instance_dict['analysis'] = analysis
                         instance_dict['hitname'] = item['GENE_NAME']
