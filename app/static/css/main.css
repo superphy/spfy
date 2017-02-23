@@ -39,7 +39,7 @@
    border-bottom: 1px solid #ccc;
 }
 
-.col.col-gutter{
+.col-md-2.col-gutter{
    border-right: 1px solid #ccc;
 }
 
