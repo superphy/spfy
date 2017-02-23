@@ -7,6 +7,7 @@
     <link rel="icon" href="{{ url_for('static', filename='img/superphy.ico') }}">
     <!-- styles -->
     <link href="//netdna.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
 </head>
 
@@ -45,7 +46,7 @@
                       <div class="form-group">
                           <div class="input-group">
                               <div class="input-group-addon"><i class="fa fa-search"></i></div>
-                              <input type="text" class="form-control" placeholder="Search da Fish" ng-model="searchFish">
+                              <input type="text" class="form-control" placeholder="Search..." ng-model="searchSpfy">
                           </div>
                       </div>
                   </form>
@@ -115,7 +116,7 @@
                         </thead>
                         <tbody>
                             {% raw %}
-                            <tr ng-repeat="resp in wordcounts | orderBy:sortType:sortReverse | filter:searchFish">
+                            <tr ng-repeat="resp in wordcounts | orderBy:sortType:sortReverse | filter:searchSpfy">
                                 <td>{{resp.filename}}</td>
                                 <td>{{resp.contigid}}</td>
                                 <td>{{resp.analysis}}</td>
