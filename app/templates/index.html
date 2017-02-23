@@ -40,6 +40,8 @@
             </div>
             <div class="col-md-8">
                 <div id="results">
+
+                    <button class="btn btn-success" export-to-csv>Download</button>
                     <form>
                         <div class="form-group">
                             <div class="input-group">
@@ -48,7 +50,6 @@
                             </div>
                         </div>
                     </form>
-                    <button class="btn btn-success" export-to-csv>Download</button>
                     <table class="table table-striped">
                         <thead>
                             <tr>
@@ -112,7 +113,7 @@
                         </thead>
                         <tbody>
                             {% raw %}
-                            <tr ng-repeat="resp in wordcounts">
+                            <tr ng-repeat="resp in wordcounts | orderBy:sortType:sortReverse | filter:searchFish">
                                 <td>{{resp.filename}}</td>
                                 <td>{{resp.contigid}}</td>
                                 <td>{{resp.analysis}}</td>

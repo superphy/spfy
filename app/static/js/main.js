@@ -11,6 +11,11 @@ app.controller('WordcountController', [
         $scope.loading = false;
         $scope.urlerror = false;
 
+        // for table sort/search
+        $scope.sortType     = 'filename'; // set the default sort type
+        $scope.sortReverse  = false;  // set the default sort order
+        $scope.searchFish   = '';     // set the default search/filter term
+
         $scope.getResults = function() {
 
             // get the URL from the input
