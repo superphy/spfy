@@ -109,7 +109,7 @@ app.directive('exportToCsv', function() {
                 var table = e.target.nextElementSibling;
                 var csvString = '';
                 for (var i = 0; i < table.rows.length; i++) {
-                    var rowData = table.rows[i].cells.innerHTML;
+                    var rowData = table.rows[i].cells;
                     for (var j = 0; j < rowData.length; j++) {
                         csvString = csvString + rowData[j].innerHTML + ",";
                     }
