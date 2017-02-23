@@ -55,7 +55,7 @@
   background: #F1F2F1;
 }
 
-.site-wrap.site-canvas {
+.site-wrap .site-canvas {
   position: relative;
   z-index: 8888;
   transition: all 450ms ease;
@@ -67,7 +67,7 @@
   background: #F1F2F1;
 }
 
-.site-wrap.site-canvas main {
+.site-wrap .site-canvas main {
   min-height: 69vh;
   background: #F1F2F1;
   -webkit-transform: none;
@@ -86,7 +86,7 @@
   box-sizing: border-box;
 }
 
-.col-md-1.super-side {
+.col-md-1 .super-side {
   margin-top: 20px;
   width: 180px;
   height: 100%;
