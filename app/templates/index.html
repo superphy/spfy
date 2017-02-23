@@ -53,7 +53,7 @@
                 </div>
                 <div class="row">
                   {% raw %}
-                  <button type="submit" class="btn btn-primary" ng-disabled="loading">{{ submitButtonText }}</button> {% endraw %}
+                  <button type="submit" class="btn btn-primary pull-right" ng-disabled="loading">{{ submitButtonText }}</button> {% endraw %}
                 </div>
               </form>
               <div class="alert alert-danger" role="alert" ng-show='urlError'>
@@ -79,7 +79,7 @@
                   </div>
                 </form>
 
-                <button class="btn btn-success" export-to-csv>Download</button>
+                <button class="btn btn-success pull-right" export-to-csv>Download</button>
 
                 <table class="table table-striped">
                   <thead>
