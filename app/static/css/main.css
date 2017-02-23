@@ -55,7 +55,7 @@
   background: #F1F2F1;
 }
 
-.site-wrap .site-canvas {
+.site-wrap.site-canvas {
   position: relative;
   z-index: 8888;
   transition: all 450ms ease;
@@ -65,6 +65,18 @@
   transform: none;
   overflow: hidden;
   background: #F1F2F1;
+}
+
+.site-wrap.site-canvas main {
+  min-height: 69vh;
+  background: #F1F2F1;
+  -webkit-transform: none;
+  -moz-transform: none;
+  -ms-transform: none;
+  transform: none;
+  -webkit-transition: .3s ease all;
+  -moz-transition: .3s ease all;
+  transition: .3s ease all;
 }
 
 *,
@@ -87,16 +99,4 @@
   -webkit-transition: .3s cubic-bezier(.165, .84, .44, 1) -webkit-transform;
   -moz-transition: .3s cubic-bezier(.165, .84, .44, 1) -moz-transform;
   transition: .3s cubic-bezier(.165, .84, .44, 1) transform;
-}
-
-.site-wrap .site-canvas main {
-  min-height: 69vh;
-  background: #F1F2F1;
-  -webkit-transform: none;
-  -moz-transform: none;
-  -ms-transform: none;
-  transform: none;
-  -webkit-transition: .3s ease all;
-  -moz-transition: .3s ease all;
-  transition: .3s ease all;
 }
