@@ -41,15 +41,17 @@
             <div class="col-md-8">
                 <div id="results">
 
+                  <form>
+                      <div class="form-group">
+                          <div class="input-group">
+                              <div class="input-group-addon"><i class="fa fa-search"></i></div>
+                              <input type="text" class="form-control" placeholder="Search da Fish" ng-model="searchFish">
+                          </div>
+                      </div>
+                  </form>
+
                     <button class="btn btn-success" export-to-csv>Download</button>
-                    <form>
-                        <div class="form-group">
-                            <div class="input-group">
-                                <div class="input-group-addon"><i class="fa fa-search"></i></div>
-                                <input type="text" class="form-control" placeholder="Search da Fish" ng-model="searchFish">
-                            </div>
-                        </div>
-                    </form>
+
                     <table class="table table-striped">
                         <thead>
                             <tr>
