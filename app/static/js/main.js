@@ -111,7 +111,7 @@ app.directive('exportToCsv', function() {
                 for (var i = 0; i < table.rows.length; i++) {
                     var rowData = table.rows[i].cells;
                     for (var j = 0; j < rowData.length; j++) {
-                        csvString = csvString + rowData[j].textContent + ",";
+                        csvString = csvString + rowData[j].textContent.trim() + ",";
                     }
                     csvString = csvString.substring(0, csvString.length - 1);
                     csvString = csvString + "\n";
