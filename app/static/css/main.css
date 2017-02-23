@@ -48,6 +48,7 @@
   position: relative;
   overflow: hidden;
   width: 100%;
+  background: #F1F2F1;
 }
 
 .site-wrap .site-canvas {
@@ -59,10 +60,12 @@
   -ms-transform: none;
   transform: none;
   overflow: hidden;
+  background: #F1F2F1;
 }
 
 .site-wrap .site-canvas main {
   min-height: 69vh;
+  background: #F1F2F1;
   -webkit-transform: none;
   -moz-transform: none;
   -ms-transform: none;
