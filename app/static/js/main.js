@@ -108,6 +108,8 @@ app.directive('exportToCsv', function() {
             element.bind('click', function(e) {
                 var table = e.target.nextElementSibling;
                 var csvString = '';
+                $log.log(table.rows.length);
+                $log.log(table.rows);
                 for (var i = 0; i < table.rows.length; i++) {
                     var rowData = table.rows[i].cells;
                     for (var j = 0; j < rowData.length; j++) {
