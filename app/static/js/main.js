@@ -1,6 +1,6 @@
-var app = angular.module('WordcountApp', [])
+var app = angular.module('SpfyApp', [])
 
-app.controller('WordcountController', [
+app.controller('SpfyController', [
     '$scope',
     '$log',
     '$http',
@@ -10,6 +10,11 @@ app.controller('WordcountController', [
         $scope.submitButtonText = 'Submit';
         $scope.loading = false;
         $scope.urlerror = false;
+
+        // for table sort/search
+        $scope.sortType     = 'filename'; // set the default sort type
+        $scope.sortReverse  = false;  // set the default sort order
+        $scope.searchFish   = '';     // set the default search/filter term
 
         $scope.getResults = function() {
 
@@ -26,8 +31,8 @@ app.controller('WordcountController', [
                 }
             }).success(function(results) {
                 $log.log(results);
-                $scope.wordcounts = [];
-                getWordCount(results);
+                $scope.spits = [];
+                getSpfySpit(results);
                 $scope.loading = true;
                 $scope.submitButtonText = 'Loading...';
                 $scope.urlerror = false;
@@ -37,7 +42,7 @@ app.controller('WordcountController', [
 
         };
 
-        function getWordCount(results) {
+        function getSpfySpit(results) {
 
             var timeout = '';
 
@@ -49,8 +54,8 @@ app.controller('WordcountController', [
                             $log.log(data);
                             $scope.loading = false;
                             $scope.submitButtonText = "Submit";
-                            $scope.wordcounts = $scope.wordcounts.concat(data);
-                            $log.log($scope.wordcounts)
+                            $scope.spits = $scope.spits.concat(data);
+                            $log.log($scope.spits)
                             $timeout.cancel(timeout);
                             return false;
                         }
@@ -106,7 +111,7 @@ app.directive('exportToCsv', function() {
                 for (var i = 0; i < table.rows.length; i++) {
                     var rowData = table.rows[i].cells;
                     for (var j = 0; j < rowData.length; j++) {
-                        csvString = csvString + rowData[j].innerHTML + ",";
+                        csvString = csvString + rowData[j].textContent.trim() + ",";
                     }
                     csvString = csvString.substring(0, csvString.length - 1);
                     csvString = csvString + "\n";
