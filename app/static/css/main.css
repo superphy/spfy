@@ -39,6 +39,10 @@
    border-bottom: 1px solid #ccc;
 }
 
+.col.col-gutter{
+   border-right: 1px solid #ccc;
+}
+
 .glyphicon.glyphicon-signal {
     font-size: 75px;
     color: #66729c;
