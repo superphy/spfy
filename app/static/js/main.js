@@ -1,6 +1,6 @@
-var app = angular.module('WordcountApp', [])
+var app = angular.module('SpfyApp', [])
 
-app.controller('WordcountController', [
+app.controller('SpfyController', [
     '$scope',
     '$log',
     '$http',
@@ -31,8 +31,8 @@ app.controller('WordcountController', [
                 }
             }).success(function(results) {
                 $log.log(results);
-                $scope.wordcounts = [];
-                getWordCount(results);
+                $scope.spits = [];
+                getSpfySpit(results);
                 $scope.loading = true;
                 $scope.submitButtonText = 'Loading...';
                 $scope.urlerror = false;
@@ -42,7 +42,7 @@ app.controller('WordcountController', [
 
         };
 
-        function getWordCount(results) {
+        function getSpfySpit(results) {
 
             var timeout = '';
 
@@ -54,8 +54,8 @@ app.controller('WordcountController', [
                             $log.log(data);
                             $scope.loading = false;
                             $scope.submitButtonText = "Submit";
-                            $scope.wordcounts = $scope.wordcounts.concat(data);
-                            $log.log($scope.wordcounts)
+                            $scope.spits = $scope.spits.concat(data);
+                            $log.log($scope.spits)
                             $timeout.cancel(timeout);
                             return false;
                         }

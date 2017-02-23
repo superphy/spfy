@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html ng-app="WordcountApp">
+<html ng-app="SpfyApp">
 
 <head>
     <title>spfy</title>
@@ -11,7 +11,7 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
 </head>
 
-<body ng-controller="WordcountController">
+<body ng-controller="SpfyController">
     <div class="container-fluid">
         <div class="row row-gutter">
             <div class="col-md-2 col-gutter">
@@ -116,7 +116,7 @@
                         </thead>
                         <tbody>
                             {% raw %}
-                            <tr ng-repeat="resp in wordcounts | orderBy:sortType:sortReverse | filter:searchSpfy">
+                            <tr ng-repeat="resp in spits | orderBy:sortType:sortReverse | filter:searchSpfy">
                                 <td>{{resp.filename}}</td>
                                 <td>{{resp.contigid}}</td>
                                 <td>{{resp.analysis}}</td>
