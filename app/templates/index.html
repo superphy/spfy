@@ -34,7 +34,7 @@
                     </div>
                   </div>
                   <!-- form options -->
-                  <div class="col-md-7">
+                  <div class="col-md-6">
                     <div class="form-group">
                       Options:
                       <label>
@@ -50,11 +50,12 @@
                                   </label>
                     </div>
                   </div>
+                  <div class="col-md-1">
+                    {% raw %}
+                    <button type="submit" class="btn btn-primary pull-right" ng-disabled="loading">{{ submitButtonText }}</button> {% endraw %}
+                  </div>
                 </div>
-                <div class="row">
-                  {% raw %}
-                  <button type="submit" class="btn btn-primary pull-right" ng-disabled="loading">{{ submitButtonText }}</button> {% endraw %}
-                </div>
+
               </form>
               <div class="alert alert-danger" role="alert" ng-show='urlError'>
                 <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
