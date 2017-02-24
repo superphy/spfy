@@ -56,7 +56,7 @@ def upload():
 
             if tarfile.is_tarfile(filename):
                 # set filename to dir for spfy call
-                filename = handle_tar(filename)
+                filename = handle_tar(filename, now)
 
             # for enqueing task
             jobs_dict = spfy.spfy(
@@ -73,7 +73,7 @@ def index():
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1] in current_app.config['ALLOWED_EXTENSIONS']
 
-def handle_tar(filename):
+def handle_tar(filename, now):
     if tarfile.is_tarfile(filename):
         tar = tarfile.open(filename)
         extracted_dir = os.path.join(
