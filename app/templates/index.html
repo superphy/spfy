@@ -73,7 +73,9 @@
 
             <div class="col-md-10">
               <div id="results">
-
+                <div class ="row">
+                  <!-- search bar-->
+                  <div class ="col-md-9">
                 <form>
                   <div class="form-group">
                     <div class="input-group">
@@ -82,6 +84,12 @@
                     </div>
                   </div>
                 </form>
+              </div>
+              <!-- spinner -->
+              <img class="img-responsive" src="{{ url_for('static',
+            filename='img/spinner.gif') }}" ng-show="loading">
+
+              </div>
 
 
 
@@ -164,8 +172,7 @@
                   </tbody>
                 </table>
               </div>
-              <img class="col-sm-3 col-sm-offset-4" src="{{ url_for('static',
-            filename='img/spinner.gif') }}" ng-show="loading">
+
             </div>
           </div>
         </main>
