@@ -48,7 +48,7 @@ def upload():
 
         print "=== Form Data ==="
         for key, value in form.items():
-            print key '==>' value
+            print key, '==>', value
             #we need to convert lower-case true/false in js to upper case in python
             if type(value) is str:
                 #remember, we also have numbers
