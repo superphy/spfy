@@ -56,7 +56,7 @@ def upload():
                 options['amr']=value
             elif key == 'options.vf':
                 options['vf']=value
-            elif key == 'options.serotype'
+            elif key == 'options.serotype':
                 options['serotype']=value
 
         file = request.files['file']
