@@ -156,9 +156,9 @@ def json_return(args_dict, gene_dict):
     for analysis in gene_dict:
         if analysis == 'Serotype' and args_dict['disable_serotype']:
             del gene_dict['Serotype']
-        elif analysis == 'Antimicrobial Resistance' and args_dict['disable_amr']:
+        if analysis == 'Antimicrobial Resistance' and args_dict['disable_amr']:
             del gene_dict['Antimicrobial Resistance']
-        elif analysis == 'Virulence Factors' and args_dict['disable_vf']:
+        if analysis == 'Virulence Factors' and args_dict['disable_vf']:
             del gene_dict['Virulence Factors']
 
     for analysis in gene_dict:
