@@ -40,9 +40,28 @@ def job_status(job_id):
 def upload():
     if request.method == 'POST':
         form = request.form
+        options = {}
+        #defaults
+        options['amr']=True
+        options['vf']=True
+        options['serotype']=True
+
         print "=== Form Data ==="
         for key, value in form.items():
-            print key, "=>", value
+            print key, '==>', value
+            #we need to convert lower-case true/false in js to upper case in python
+                #remember, we also have numbers
+            if not value.isdigit():
+                if value.lower() == 'false':
+                    value = False
+                else:
+                    value = True
+                if key == 'options.amr':
+                    options['amr']=value
+                if key == 'options.vf':
+                    options['vf']=value
+                if key == 'options.serotype':
+                    options['serotype']=value
 
         file = request.files['file']
         if file:
@@ -60,7 +79,24 @@ def upload():
 
             # for enqueing task
             jobs_dict = spfy.spfy(
-                {'i': filename, 'disable_serotype': False, 'disable_amr': False, 'disable_vf': False})
+                {'i': filename, 'disable_serotype': not options['serotype'], 'disable_amr': not options['amr'], 'disable_vf': not options['vf']})
+
+            print jobs_dict
+            #strip jobs that the user doesn't want to see
+            # we run them anyways cause we want the data analyzed on our end
+            for job_id, descrip_dict in jobs_dict.items():
+                print job_id, descrip_dict
+                print options
+                if (not options['serotype']) and (not options['vf']):
+                    if descrip_dict['analysis'] == 'Virulence Factors and Serotype':
+                        print 'deleteing s/vf'
+                        del jobs_dict[job_id]
+                if (not options['amr']):
+                    print 'in amr del'
+                    if descrip_dict['analysis'] == 'Antimicrobial Resistance':
+                        print 'deleting amr'
+                        del jobs_dict[job_id]
+
             return jsonify(jobs_dict)
     return 500
 

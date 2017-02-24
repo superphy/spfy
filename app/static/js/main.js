@@ -33,7 +33,7 @@ app.controller('SpfyController', [
             fd.append('file', userInput);
             fd.append('options.vf', $scope.formData.options.vf);
             fd.append('options.amr', $scope.formData.options.amr);
-            fd.append('options.sero', $scope.formData.options.serotype);
+            fd.append('options.serotype', $scope.formData.options.serotype);
             fd.append('options.pi', $scope.formData.options.pi);
             $log.log(fd);
             $http.post('/upload', fd, {
