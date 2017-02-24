@@ -154,13 +154,15 @@ def json_return(args_dict, gene_dict):
 
     # strip gene_dicts that user doesn't want to see
     # remember, we want to run all analysis on our end so we have that data in blazegraph
+    d = dict(gene_dict)
     for analysis in gene_dict:
         if analysis == 'Serotype' and not args_dict['options']['serotype']:
-            del gene_dict['Serotype']
+            del d['Serotype']
         if analysis == 'Antimicrobial Resistance' and not args_dict['options']['amr']:
-            del gene_dict['Antimicrobial Resistance']
+            del d['Antimicrobial Resistance']
         if analysis == 'Virulence Factors' and not args_dict['options']['vf']:
-            del gene_dict['Virulence Factors']
+            del d['Virulence Factors']
+    gene_dict = d
 
     for analysis in gene_dict:
         if analysis == 'Serotype':

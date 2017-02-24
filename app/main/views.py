@@ -85,7 +85,7 @@ def upload():
             jobs_dict = spfy.spfy(
                 {'i': filename, 'disable_serotype': False, 'disable_amr': False, 'disable_vf': False, 'pi':options['pi'], 'options':options})
 
-            print jobs_dict
+            d = dict(jobs_dict)
             #strip jobs that the user doesn't want to see
             # we run them anyways cause we want the data analyzed on our end
             for job_id, descrip_dict in jobs_dict.items():
@@ -94,12 +94,13 @@ def upload():
                 if (not options['serotype']) and (not options['vf']):
                     if descrip_dict['analysis'] == 'Virulence Factors and Serotype':
                         print 'deleteing s/vf'
-                        del jobs_dict[job_id]
+                        del d[job_id]
                 if (not options['amr']):
                     print 'in amr del'
                     if descrip_dict['analysis'] == 'Antimicrobial Resistance':
                         print 'deleting amr'
-                        del jobs_dict[job_id]
+                        del d[job_id]
+            jobs_dict = d
 
             return jsonify(jobs_dict)
     return 500
