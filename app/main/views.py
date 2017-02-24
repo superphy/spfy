@@ -51,7 +51,7 @@ def upload():
             print key, '==>', value
             #we need to convert lower-case true/false in js to upper case in python
             print type(value)
-            if type(value) is str:
+            if type(str(value)) is str:
                 #remember, we also have numbers
                 value = value.title()
             if key == 'options.amr':
