@@ -52,16 +52,16 @@ def upload():
             #we need to convert lower-case true/false in js to upper case in python
                 #remember, we also have numbers
             if not value.isdigit():
-                if value == 'false':
+                if value.lower() == 'false':
                     value = False
                 else:
                     value == True
-            if key == 'options.amr':
-                options['amr']=value
-            elif key == 'options.vf':
-                options['vf']=value
-            elif key == 'options.serotype':
-                options['serotype']=value
+                if key == 'options.amr':
+                    options['amr']=value
+                if key == 'options.vf':
+                    options['vf']=value
+                if key == 'options.serotype':
+                    options['serotype']=value
 
         file = request.files['file']
         if file:
