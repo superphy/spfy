@@ -220,6 +220,8 @@ def savvy(args_dict):
     # setting up graph
     graph = generate_graph()
 
+    ectyper_result={}
+
     #logging.info('generating barebones ttl from file')
     graph = generate_turtle_skeleton(
         graph, args_dict['i'], args_dict['uriIsolate'], args_dict['uriGenome'])
