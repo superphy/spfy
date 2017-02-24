@@ -18,6 +18,7 @@ app.controller('SpfyController', [
         // define form in scope
         $scope.formData={};
         // set defaults
+        $scope.formData.options={};
         $scope.formData.options.vf=true
         $scope.formData.options.amr=true
         $scope.formData.options.serotype=true
