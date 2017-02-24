@@ -38,7 +38,8 @@ app.controller('SpfyController', [
                 getSpfySpit(results);
                 $scope.loading = true;
                 $scope.urlerror = false;
-                $scope.message = data.message;
+                //will have to add this in server resp
+                //$scope.message = data.message;
             }).error(function(error) {
                 $log.log(error);
             });
