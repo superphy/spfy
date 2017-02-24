@@ -7,7 +7,6 @@ app.controller('SpfyController', [
     '$timeout',
     function($scope, $log, $http, $timeout) {
 
-        $scope.submitButtonText = 'Submit';
         $scope.loading = false;
         $scope.urlerror = false;
 
@@ -15,6 +14,9 @@ app.controller('SpfyController', [
         $scope.sortType     = 'filename'; // set the default sort type
         $scope.sortReverse  = false;  // set the default sort order
         $scope.searchFish   = '';     // set the default search/filter term
+
+        // define form in scope
+        $scope.formData={};
 
         $scope.getResults = function() {
 
@@ -34,8 +36,8 @@ app.controller('SpfyController', [
                 $scope.spits = [];
                 getSpfySpit(results);
                 $scope.loading = true;
-                $scope.submitButtonText = 'Loading...';
                 $scope.urlerror = false;
+                $scope.message = data.message;
             }).error(function(error) {
                 $log.log(error);
             });
@@ -52,7 +54,7 @@ app.controller('SpfyController', [
                     $http.get('/results/' + key).success(function(data, status, headers, config) {
                         if (status === 202) {} else if (status === 200) {
                             $log.log(data);
-                            $scope.loading = false;
+
                             $scope.submitButtonText = "Submit";
                             $scope.spits = $scope.spits.concat(data);
                             $log.log($scope.spits)
@@ -69,6 +71,7 @@ app.controller('SpfyController', [
                         $scope.urlerror = true;
                     });
                 };
+                $scope.loading = false;
             }
 
             angular.forEach(results, function(value, key) {

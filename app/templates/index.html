@@ -22,6 +22,7 @@
       </div>
       <div class="col-md-10">
         <main>
+          <div class="row" ng-show="message">{{ message }}</div>
           <div class="row row-gutter">
 
 
@@ -30,7 +31,8 @@
                 <div class="row">
                   <div class="col-md-3">
                     <div class="form-group">
-                      <input type="file" file-model="myFile" name="url" class="form-control" id="url-box" placeholder="Enter URL..." style="max-width: 300px;" ng-model="url" required>
+                      <input type="file" file-model="myFile" name="file" class="form-control" id="url-box" placeholder="Select file" style="max-width: 300px;" ng-model="formData.name" required>
+                      <span class="help-block"></span>
                     </div>
                   </div>
                   <!-- form options -->
@@ -38,21 +40,22 @@
                     <div class="form-group">
                       Options:
                       <label>
-                                    <input type="checkbox" ng-model="formData.options.serotype" name="options">
+                                    <input class="form-control" type="checkbox" ng-model="formData.options.serotype" name="options">
                                     Serotype
                                   </label>
 
-                      <label><input type="checkbox" ng-model="formData.options.vf" name="options" />Virulence Factors</label>
-                      <label><input type="checkbox" ng-model="formData.options.amr" name="options" />Antimicrobial Resistance</label>
+                      <label><input class="form-control" type="checkbox" ng-model="formData.options.vf" name="options" />Virulence Factors</label>
+                      <label><input class="form-control" type="checkbox" ng-model="formData.options.amr" name="options" />Antimicrobial Resistance</label>
                       <label>
-                                    <input type="number" ng-model="formData.options.pi" name="options" style="max-width: 50px;">
+                                    <input class="form-control" type="number" ng-model="formData.options.pi" name="options" style="max-width: 50px;" placeholder="default is 90%">
                                     %Identity
                                   </label>
                     </div>
+                    <span class="help-block"></span>
                   </div>
                   <div class="col-md-1 pull-right">
                     {% raw %}
-                    <button type="submit" class="btn btn-primary pull-right" ng-disabled="loading">{{ submitButtonText }}</button> {% endraw %}
+                    <button type="submit" class="btn btn-primary pull-right" ng-disabled="loading">Submit</button> {% endraw %}
                   </div>
                 </div>
 
@@ -79,7 +82,7 @@
                     </div>
                   </div>
                 </form>
-      
+
 
 
                 <button class="btn btn-success pull-right" export-to-csv>Download</button>
@@ -96,7 +99,7 @@
                       </th>
                       <th>
                         <a href="#" ng-click="sortType = 'contigid'; sortReverse = !sortReverse">
-                                      ContigID
+                                      Contig ID
                                       <span ng-show="sortType == 'contigid' && !sortReverse" class="fa fa-caret-down"></span>
                                       <span ng-show="sortType == 'contigid' && sortReverse" class="fa fa-caret-up"></span>
                                     </a>
@@ -110,7 +113,7 @@
                       </th>
                       <th>
                         <a href="#" ng-click="sortType = 'hitname'; sortReverse = !sortReverse">
-                                      Name
+                                      Hit
                                       <span ng-show="sortType == 'hitname' && !sortReverse" class="fa fa-caret-down"></span>
                                       <span ng-show="sortType == 'hitname' && sortReverse" class="fa fa-caret-up"></span>
                                     </a>
