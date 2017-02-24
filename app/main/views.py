@@ -85,9 +85,11 @@ def upload():
                 print job_id, descrip_dict
                 if (not options['serotype']) and (not options['vf']):
                     if descrip_dict['analysis'] == 'Virulence Factors and Serotype':
+                        print 'deleteing s/vf'
                         del jobs_dict[job_id]
                 if (not options['amr']):
                     if descrip_dict['analysis'] == 'Antimicrobial Resistance':
+                        print 'deleting amr'
                         del jobs_dict[job_id]
 
             return jsonify(jobs_dict)
