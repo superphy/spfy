@@ -53,7 +53,7 @@ def upload():
             print type(value)
             if type(str(value)) is str:
                 #remember, we also have numbers
-                value = value.title()
+                value = str(value).title()
             if key == 'options.amr':
                 options['amr']=value
             elif key == 'options.vf':
