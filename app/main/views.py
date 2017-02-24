@@ -50,10 +50,9 @@ def upload():
         for key, value in form.items():
             print key, '==>', value
             #we need to convert lower-case true/false in js to upper case in python
-            print type(value)
-            if type(str(value)) is str:
                 #remember, we also have numbers
-                value = str(value).title()
+            if not value.isdigit():
+                value = bool(value)
             if key == 'options.amr':
                 options['amr']=value
             elif key == 'options.vf':
