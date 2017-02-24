@@ -7,7 +7,6 @@ app.controller('SpfyController', [
     '$timeout',
     function($scope, $log, $http, $timeout) {
 
-        $scope.submitButtonText = 'Submit';
         $scope.loading = false;
         $scope.urlerror = false;
 
@@ -15,6 +14,9 @@ app.controller('SpfyController', [
         $scope.sortType     = 'filename'; // set the default sort type
         $scope.sortReverse  = false;  // set the default sort order
         $scope.searchFish   = '';     // set the default search/filter term
+
+        // define form in scope
+        $scope.formData={};
 
         $scope.getResults = function() {
 
@@ -34,8 +36,8 @@ app.controller('SpfyController', [
                 $scope.spits = [];
                 getSpfySpit(results);
                 $scope.loading = true;
-                $scope.submitButtonText = 'Loading...';
                 $scope.urlerror = false;
+                $scope.message = data.message;
             }).error(function(error) {
                 $log.log(error);
             });
@@ -50,7 +52,7 @@ app.controller('SpfyController', [
                 // fire another request
                 if (key !== undefined) {
                     $http.get('/results/' + key).success(function(data, status, headers, config) {
-                        if (status === 202) {} else if (status === 200) {
+                        if (status === 200) {
                             $log.log(data);
                             $scope.loading = false;
                             $scope.submitButtonText = "Submit";
@@ -58,6 +60,8 @@ app.controller('SpfyController', [
                             $log.log($scope.spits)
                             $timeout.cancel(timeout);
                             return false;
+                        } else if (status == 202){
+                          $scope.loading = true;
                         }
                         // continue to call the poller() function every 2 seconds
                         // until the timeout is cancelled
@@ -67,8 +71,10 @@ app.controller('SpfyController', [
                         $scope.loading = false;
                         $scope.submitButtonText = "Submit";
                         $scope.urlerror = true;
+
                     });
                 };
+
             }
 
             angular.forEach(results, function(value, key) {
