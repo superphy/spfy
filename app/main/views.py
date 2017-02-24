@@ -52,7 +52,10 @@ def upload():
             #we need to convert lower-case true/false in js to upper case in python
                 #remember, we also have numbers
             if not value.isdigit():
-                value = bool(value)
+                if value == 'false':
+                    value = False
+                else:
+                    value == True
             if key == 'options.amr':
                 options['amr']=value
             elif key == 'options.vf':
