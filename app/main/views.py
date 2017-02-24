@@ -55,7 +55,7 @@ def upload():
                 if value.lower() == 'false':
                     value = False
                 else:
-                    value == True
+                    value = True
                 if key == 'options.amr':
                     options['amr']=value
                 if key == 'options.vf':
