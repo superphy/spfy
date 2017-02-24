@@ -39,6 +39,11 @@ def job_status(job_id):
 @bp.route('/upload', methods=['POST'])
 def upload():
     if request.method == 'POST':
+        form = request.form
+        print "=== Form Data ==="
+        for key, value in form.items():
+            print key, "=>", value
+
         file = request.files['file']
         if file:
             # for saving file
