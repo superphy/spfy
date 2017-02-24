@@ -45,6 +45,7 @@ def upload():
         options['amr']=True
         options['vf']=True
         options['serotype']=True
+        options['pi']=90
 
         print "=== Form Data ==="
         for key, value in form.items():
@@ -62,6 +63,9 @@ def upload():
                     options['vf']=value
                 if key == 'options.serotype':
                     options['serotype']=value
+            else:
+                if key =='options.pi':
+                    options['pi']=int(value)
 
         file = request.files['file']
         if file:
@@ -79,7 +83,7 @@ def upload():
 
             # for enqueing task
             jobs_dict = spfy.spfy(
-                {'i': filename, 'disable_serotype': not options['serotype'], 'disable_amr': not options['amr'], 'disable_vf': not options['vf']})
+                {'i': filename, 'disable_serotype': not options['serotype'], 'disable_amr': not options['amr'], 'disable_vf': not options['vf'], 'pi':options[pi]})
 
             print jobs_dict
             #strip jobs that the user doesn't want to see
