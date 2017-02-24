@@ -26,7 +26,7 @@ app.controller('SpfyController', [
             // fire the API request
             var fd = new FormData();
             fd.append('file', userInput);
-            fd.append('options', formData.options);
+            fd.append('options', $scope.formData.options);
             $http.post('/upload', fd, {
                 transformRequest: angular.identity,
                 headers: {
