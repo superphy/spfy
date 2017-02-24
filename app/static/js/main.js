@@ -52,14 +52,16 @@ app.controller('SpfyController', [
                 // fire another request
                 if (key !== undefined) {
                     $http.get('/results/' + key).success(function(data, status, headers, config) {
-                        if (status === 202) {} else if (status === 200) {
+                        if (status === 200) {
                             $log.log(data);
-
+                            $scope.loading = false;
                             $scope.submitButtonText = "Submit";
                             $scope.spits = $scope.spits.concat(data);
                             $log.log($scope.spits)
                             $timeout.cancel(timeout);
                             return false;
+                        } else if (status == 202){
+                          $scope.loading = true;
                         }
                         // continue to call the poller() function every 2 seconds
                         // until the timeout is cancelled
@@ -69,9 +71,10 @@ app.controller('SpfyController', [
                         $scope.loading = false;
                         $scope.submitButtonText = "Submit";
                         $scope.urlerror = true;
+
                     });
                 };
-                $scope.loading = false;
+
             }
 
             angular.forEach(results, function(value, key) {
