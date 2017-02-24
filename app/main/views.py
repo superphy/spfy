@@ -81,7 +81,7 @@ def upload():
             print jobs_dict
             #strip jobs that the user doesn't want to see
             # we run them anyways cause we want the data analyzed on our end
-            for job_id, descrip_dict in jobs_dict:
+            for job_id, descrip_dict in jobs_dict.items():
                 if (not options['serotype']) and (not options['vf']):
                     if descrip_dict['analysis'] == 'Virulence Factors and Serotype':
                         del jobs_dict[job_id]
