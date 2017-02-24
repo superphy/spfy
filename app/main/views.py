@@ -43,6 +43,9 @@ def upload():
         print "=== Form Data ==="
         for key, value in form.items():
             print key, "=>", value
+        for key, value in form['options'].items():
+            print 'printing value of option'
+            print key, "=>", value
 
         file = request.files['file']
         if file:
