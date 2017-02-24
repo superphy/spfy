@@ -19,10 +19,10 @@ app.controller('SpfyController', [
         $scope.formData={};
         // set defaults
         $scope.formData.options={};
-        $scope.formData.optionsVf=true
-        $scope.formData.optionsAmr=true
-        $scope.formData.optionsSerotype=true
-        $scope.formData.optionsPi=90
+        $scope.formData.options.vf=true
+        $scope.formData.options.amr=true
+        $scope.formData.options.serotype=true
+        $scope.formData.options.pi=90
 
         $scope.getResults = function() {
 
@@ -32,10 +32,10 @@ app.controller('SpfyController', [
             // fire the API request
             var fd = new FormData();
             fd.append('file', userInput);
-            fd.append('options.vf', $scope.formData.optionsVf);
-            fd.append('options.amr', $scope.formData.optionsAmr);
-            fd.append('options.sero', $scope.formData.optionsSerotype);
-            fd.append('options.pi', $scope.formData.optionsPi);
+            fd.append('options.vf', $scope.formData.options.vf);
+            fd.append('options.amr', $scope.formData.options.amr);
+            fd.append('options.sero', $scope.formData.options.serotype);
+            fd.append('options.pi', $scope.formData.options.pi);
             $log.log(fd);
             $http.post('/upload', fd, {
                 transformRequest: angular.identity,
