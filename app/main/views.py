@@ -40,9 +40,24 @@ def job_status(job_id):
 def upload():
     if request.method == 'POST':
         form = request.form
+        options = {}
+        #defaults
+        options['amr']=True
+        options['vf']=True
+        options['serotype']=True
+
         print "=== Form Data ==="
         for key, value in form.items():
-            print key, "=>", value
+            #we need to convert lower-case true/false in js to upper case in python
+            if type(value) is str:
+                #remember, we also have numbers
+                value = value.title()
+            if key == 'options.amr':
+                options['amr']=value
+            else if key == 'options.vf':
+                options['vf']=value
+            else if key == 'options.serotype'
+                options['serotype']=value
 
         file = request.files['file']
         if file:
@@ -60,7 +75,7 @@ def upload():
 
             # for enqueing task
             jobs_dict = spfy.spfy(
-                {'i': filename, 'disable_serotype': False, 'disable_amr': False, 'disable_vf': False})
+                {'i': filename, 'disable_serotype': not options['serotype'], 'disable_amr': not options['amr'], 'disable_vf': not options['vf']})
             return jsonify(jobs_dict)
     return 500
 
