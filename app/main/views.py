@@ -89,6 +89,7 @@ def upload():
                         print 'deleteing s/vf'
                         del jobs_dict[job_id]
                 if (not options['amr']):
+                    print 'in amr del'
                     if descrip_dict['analysis'] == 'Antimicrobial Resistance':
                         print 'deleting amr'
                         del jobs_dict[job_id]
