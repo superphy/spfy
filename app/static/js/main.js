@@ -26,6 +26,7 @@ app.controller('SpfyController', [
             // fire the API request
             var fd = new FormData();
             fd.append('file', userInput);
+            fd.append('options', $scope.formData.options);
             $http.post('/upload', fd, {
                 transformRequest: angular.identity,
                 headers: {
@@ -37,7 +38,8 @@ app.controller('SpfyController', [
                 getSpfySpit(results);
                 $scope.loading = true;
                 $scope.urlerror = false;
-                $scope.message = data.message;
+                //will have to add this in server resp
+                //$scope.message = data.message;
             }).error(function(error) {
                 $log.log(error);
             });
