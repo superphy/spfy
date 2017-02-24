@@ -150,6 +150,17 @@ def generate_amr(graph, uriGenome, fasta_file):
 
 def json_return(args_dict, gene_dict):
     json_r = []
+
+    # strip gene_dicts that user doesn't want to see
+    # remember, we want to run all analysis on our end so we have that data in blazegraph
+    for analysis in gene_dict:
+        if analysis == 'Serotype' and args_dict['disable_serotype']:
+            del gene_dict['Serotype']
+        elif analysis == 'Antimicrobial Resistance' and args_dict['disable_amr']:
+            del gene_dict['Antimicrobial Resistance']
+        elif analysis == 'Virulence Factors' and args_dict['disable_vf']:
+            del gene_dict['Virulence Factors']
+
     for analysis in gene_dict:
         if analysis == 'Serotype':
             instance_dict = {}
