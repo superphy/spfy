@@ -42,7 +42,7 @@ def call_ectyper(graph, args_dict):
                                                     int(not args_dict['disable_serotype'])),
                                                 '-vf', str(
                                                     int(not args_dict['disable_vf'])),
-                                                '-pi', args_dict['pi']
+                                                '-pi', str(args_dict['pi'])
                                                 ])
         #logging.info('inner call completed')
 
