@@ -55,21 +55,8 @@ def upload():
             file.save(filename)
 
             if tarfile.is_tarfile(filename):
-                tar = tarfile.open(filename)
-                extracted_dir = os.path.join(
-                    current_app.config['UPLOAD_FOLDER'] + '/' + now)
-                os.mkdir(extracted_dir)
-                for member in tar.getmembers():
-                    if not secure_filename(member.name):
-                        return 'invalid upload', 500
-                        # TODO: wipe temp data
-                tar.extractall(path=extracted_dir)
-                for fn in os.listdir(extracted_dir):
-                    os.rename(extracted_dir +'/' + fn, extracted_dir +'/'+ now + '-' + fn)
-                tar.close()
-
                 # set filename to dir for spfy call
-                filename = extracted_dir
+                filename = handle_tar(filename, now)
 
             # for enqueing task
             jobs_dict = spfy.spfy(
@@ -85,3 +72,21 @@ def index():
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1] in current_app.config['ALLOWED_EXTENSIONS']
+
+def handle_tar(filename, now):
+    if tarfile.is_tarfile(filename):
+        tar = tarfile.open(filename)
+        extracted_dir = os.path.join(
+            current_app.config['UPLOAD_FOLDER'] + '/' + now)
+        os.mkdir(extracted_dir)
+        for member in tar.getmembers():
+            if not secure_filename(member.name):
+                return 'invalid upload', 500
+                # TODO: wipe temp data
+        tar.extractall(path=extracted_dir)
+        for fn in os.listdir(extracted_dir):
+            os.rename(extracted_dir +'/' + fn, extracted_dir +'/'+ now + '-' + fn)
+        tar.close()
+
+        # set filename to dir for spfy call
+        return extracted_dir

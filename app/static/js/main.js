@@ -13,7 +13,6 @@ app.controller('SpfyController', [
         // for table sort/search
         $scope.sortType     = 'filename'; // set the default sort type
         $scope.sortReverse  = false;  // set the default sort order
-        $scope.searchFish   = '';     // set the default search/filter term
 
         // define form in scope
         $scope.formData={};
