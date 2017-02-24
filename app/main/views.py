@@ -83,6 +83,7 @@ def upload():
             # we run them anyways cause we want the data analyzed on our end
             for job_id, descrip_dict in jobs_dict.items():
                 print job_id, descrip_dict
+                print options
                 if (not options['serotype']) and (not options['vf']):
                     if descrip_dict['analysis'] == 'Virulence Factors and Serotype':
                         print 'deleteing s/vf'
