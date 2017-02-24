@@ -17,6 +17,11 @@ app.controller('SpfyController', [
 
         // define form in scope
         $scope.formData={};
+        // set defaults
+        $scope.formData.options.vf=true
+        $scope.formData.options.amr=true
+        $scope.formData.options.serotype=true
+        $scope.formData.options.pi=90
 
         $scope.getResults = function() {
 
@@ -27,6 +32,9 @@ app.controller('SpfyController', [
             var fd = new FormData();
             fd.append('file', userInput);
             fd.append('options.vf', $scope.formData.options.vf);
+            fd.append('options.amr', $scope.formData.options.amr);
+            fd.append('options.sero', $scope.formData.options.serotype);
+            fd.append('options.pi', $scope.formData.options.pi);
             $log.log(fd);
             $http.post('/upload', fd, {
                 transformRequest: angular.identity,
