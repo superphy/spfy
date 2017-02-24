@@ -83,7 +83,7 @@ def upload():
 
             # for enqueing task
             jobs_dict = spfy.spfy(
-                {'i': filename, 'disable_serotype': not options['serotype'], 'disable_amr': not options['amr'], 'disable_vf': not options['vf'], 'pi':options[pi]})
+                {'i': filename, 'disable_serotype': not options['serotype'], 'disable_amr': not options['amr'], 'disable_vf': not options['vf'], 'pi':options['pi']})
 
             print jobs_dict
             #strip jobs that the user doesn't want to see
