@@ -41,7 +41,8 @@ def call_ectyper(graph, args_dict):
                                                 '-s', str(
                                                     int(not args_dict['disable_serotype'])),
                                                 '-vf', str(
-                                                    int(not args_dict['disable_vf']))
+                                                    int(not args_dict['disable_vf'])),
+                                                '-pi', str(args_dict['pi'])
                                                 ])
         #logging.info('inner call completed')
 
@@ -153,13 +154,15 @@ def json_return(args_dict, gene_dict):
 
     # strip gene_dicts that user doesn't want to see
     # remember, we want to run all analysis on our end so we have that data in blazegraph
+    d = dict(gene_dict)
     for analysis in gene_dict:
-        if analysis == 'Serotype' and args_dict['disable_serotype']:
-            del gene_dict['Serotype']
-        if analysis == 'Antimicrobial Resistance' and args_dict['disable_amr']:
-            del gene_dict['Antimicrobial Resistance']
-        if analysis == 'Virulence Factors' and args_dict['disable_vf']:
-            del gene_dict['Virulence Factors']
+        if analysis == 'Serotype' and not args_dict['options']['serotype']:
+            del d['Serotype']
+        if analysis == 'Antimicrobial Resistance' and not args_dict['options']['amr']:
+            del d['Antimicrobial Resistance']
+        if analysis == 'Virulence Factors' and not args_dict['options']['vf']:
+            del d['Virulence Factors']
+    gene_dict = d
 
     for analysis in gene_dict:
         if analysis == 'Serotype':
