@@ -9,6 +9,7 @@ app.controller('SpfyController', [
 
         $scope.loading = false;
         $scope.urlerror = false;
+        $scope.jobFailed = false;
 
         // for table sort/search
         $scope.sortType     = 'filename'; // set the default sort type
