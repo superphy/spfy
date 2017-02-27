@@ -90,7 +90,7 @@ app.controller('SpfyController', [
                         // continue to call the poller() function every 2 seconds
                         // until the timeout is cancelled
                         timeout = $timeout(poller(key), 2000);
-                    }).error(function(error) {
+                    }).error(function(error, status) {
                         if (status == 415){
                           $log.log('BLAHHH')
                         }
