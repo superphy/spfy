@@ -32,8 +32,10 @@ def job_status(job_id):
     job = fetch_job(job_id)
     if job.is_finished:
         return jsonify(job.result)
+    elif job.is_failed:
+        return job.exc_info, 415
     else:
-        return "Nay!", 202
+        return "Still pending", 202
 
 
 @bp.route('/upload', methods=['POST'])

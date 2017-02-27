@@ -8,7 +8,11 @@ app.controller('SpfyController', [
     function($scope, $log, $http, $timeout) {
 
         $scope.loading = false;
-        $scope.urlerror = false;
+
+        $scope.uploaderror = false;
+
+        $scope.jobfailed = false;
+        $scope.message='';
 
         // for table sort/search
         $scope.sortType     = 'filename'; // set the default sort type
@@ -74,26 +78,31 @@ app.controller('SpfyController', [
                 // fire another request
                 if (key !== undefined) {
                     $http.get('/results/' + key).success(function(data, status, headers, config) {
-                        if (status === 200) {
+                        if (status == 200) {
                             $log.log(data);
                             $scope.loading = false;
-                            $scope.submitButtonText = "Submit";
                             $scope.spits = $scope.spits.concat(data);
                             $log.log($scope.spits)
                             $timeout.cancel(timeout);
                             return false;
                         } else if (status == 202){
+                          // job result not found ie. still pending
                           $scope.loading = true;
                         }
                         // continue to call the poller() function every 2 seconds
                         // until the timeout is cancelled
                         timeout = $timeout(poller(key), 2000);
-                    }).error(function(error) {
+                    }).error(function(error, status) {
                         $log.log(error);
                         $scope.loading = false;
-                        $scope.submitButtonText = "Submit";
-                        $scope.urlerror = true;
-
+                        $log.log(status);
+                        $scope.uploaderror = true;
+                        if (status == 415){
+                          $scope.jobfailed = true;
+                          $scope.message = $scope.message + "Job failed. Key: " + key + " / ";
+                        } else {
+                          $scope.uploaderror = true;
+                        }
                     });
                 };
 

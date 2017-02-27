@@ -22,7 +22,16 @@
       </div>
       <div class="col-md-10">
         <main>
-          <div class="row" ng-show="message">{{ message }}</div>
+          <!-- show error messages-->
+          {% raw %}
+          <div id="messages" class="alert alert-danger" role="alert" ng-show="jobfailed">
+            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+            <span class="sr-only">Error:</span>
+            <span>{{message}}</span>
+          </div>
+          {% endraw %}
+
+          <!--start of input area-->
           <div class="row row-gutter">
 
 
@@ -62,14 +71,15 @@
                   </div>
                   <!-- end of submit button-->
                 </div>
-
               </form>
-              <div class="alert alert-danger" role="alert" ng-show='urlError'>
+
+              <!--error in upload-->
+              <div class="alert alert-danger" role="alert" ng-show='uploaderror'>
                 <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
                 <span class="sr-only">Error:</span>
-                <span>There was an error submitting your file.<br>
-            Please check to make sure it is valid before trying again.</span>
+                <span>There was an error when uploading your file.</span>
               </div>
+
             </div>
 
           </div>
