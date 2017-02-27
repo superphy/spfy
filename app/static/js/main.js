@@ -9,8 +9,6 @@ app.controller('SpfyController', [
 
         $scope.loading = false;
 
-        $scope.uploaderror = false;
-
         $scope.jobfailed = false;
         $scope.message='';
 
@@ -100,8 +98,6 @@ app.controller('SpfyController', [
                         if (status == 415){
                           $scope.jobfailed = true;
                           $scope.message = $scope.message + "Job failed. Key: " + key + " / ";
-                        } else {
-                          $scope.uploaderror = true;
                         }
                     });
                 };
