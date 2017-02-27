@@ -31,7 +31,8 @@
                 <div class="row">
                   <div class="col-md-3">
                     <div class="form-group">
-                      <input type="file" file-model="myFile" name="file" class="form-control" id="url-box" placeholder="Select file" style="max-width: 300px;" multiple="" required>
+                      <input type="file" id="file1" name="file" multiple
+            ng-files="getTheFiles($files)" />
                       <span class="help-block"></span>
                     </div>
                   </div>

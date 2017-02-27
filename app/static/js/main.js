@@ -23,14 +23,28 @@ app.controller('SpfyController', [
         $scope.formData.options.serotype=true
         $scope.formData.options.pi=90
 
+        var fd = new FormData();
+
+        $scope.getTheFiles = function ($files) {
+                angular.forEach($files, function (value, key) {
+                    console.log($files);
+                    console.log($files[0].type);
+                    console.log(key + ' ' + value.name);
+                    fd.append(key, value);
+                });
+            };
+
         $scope.getResults = function() {
 
             // get the URL from the input
-            var userInput = $scope.myFile;
+            //var userInput = $scope.myFile;
 
             // fire the API request
-            var fd = new FormData();
-            fd.append('file', userInput);
+
+
+
+
+            //fd.append('file', userInput);
             fd.append('options.vf', $scope.formData.options.vf);
             fd.append('options.amr', $scope.formData.options.amr);
             fd.append('options.serotype', $scope.formData.options.serotype);
@@ -145,3 +159,17 @@ app.directive('exportToCsv', function() {
         }
     }
 });
+
+app.directive('ngFiles', ['$parse', function ($parse) {
+
+            function fn_link(scope, element, attrs) {
+                var onChange = $parse(attrs.ngFiles);
+                element.on('change', function (event) {
+                    onChange(scope, { $files: event.target.files });
+                });
+            };
+
+            return {
+                link: fn_link
+            }
+        } ])
