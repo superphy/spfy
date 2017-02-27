@@ -87,12 +87,6 @@ app.controller('SpfyController', [
                         } else if (status == 202){
                           // job result not found ie. still pending
                           $scope.loading = true;
-                        } else if (status == 415){
-                          // got some message (eg. a failed job)
-                          $scope.jobfailed = true;
-                          $log.log($scope.jobfailed);
-                          $scope.message = $scope.message + 'Job has failed.';
-                          $scope.loading = false;
                         }
                         // continue to call the poller() function every 2 seconds
                         // until the timeout is cancelled
@@ -103,7 +97,7 @@ app.controller('SpfyController', [
                         $scope.urlerror = true;
                         $scope.jobfailed = true;
                         $log.log($scope.jobfailed);
-                        $scope.message = $scope.message + 'Job has failed.';
+                        $scope.message = $scope.message + 'Job has failed. Error: ' + error;
                     });
                 };
 
