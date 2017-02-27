@@ -47,9 +47,8 @@ def upload():
         options['serotype']=True
         options['pi']=90
 
-        print "=== Form Data ==="
+        # processing form data
         for key, value in form.items():
-            print key, '==>', value
             #we need to convert lower-case true/false in js to upper case in python
                 #remember, we also have numbers
             if not value.isdigit():
@@ -78,11 +77,6 @@ def upload():
 
         for file in uploaded_files:
             if file:
-                print file
-
-        for file in uploaded_files:
-            if file:
-                print file
                 # for saving file
                 filename = os.path.join(current_app.config[
                                         'UPLOAD_FOLDER'], now + '-' + secure_filename(file.filename))
@@ -101,16 +95,11 @@ def upload():
                 #strip jobs that the user doesn't want to see
                 # we run them anyways cause we want the data analyzed on our end
                 for job_id, descrip_dict in jobs_dict.items():
-                    print job_id, descrip_dict
-                    print options
                     if (not options['serotype']) and (not options['vf']):
                         if descrip_dict['analysis'] == 'Virulence Factors and Serotype':
-                            print 'deleteing s/vf'
                             del d[job_id]
                     if (not options['amr']):
-                        print 'in amr del'
                         if descrip_dict['analysis'] == 'Antimicrobial Resistance':
-                            print 'deleting amr'
                             del d[job_id]
                 jobs_dict = d
 

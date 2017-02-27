@@ -27,9 +27,6 @@ app.controller('SpfyController', [
 
         $scope.getTheFiles = function ($files) {
                 angular.forEach($files, function (value, key) {
-                    console.log($files);
-                    console.log($files[0].type);
-                    console.log(key + ' ' + value.name);
                     fd.append('file', value);
                 });
             };
