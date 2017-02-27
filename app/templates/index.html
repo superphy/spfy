@@ -23,12 +23,13 @@
       <div class="col-md-10">
         <main>
           <!-- show error messages-->
-          <div class="alert alert-danger" role="alert" ng-show="jobFailed">
+          {% raw %}
+          <div class="alert alert-danger" role="alert" ng-show="jobfailed">
             <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
             <span class="sr-only">Error:</span>
             <span>{{message}}</span>
           </div>
-
+          {% endraw %}
 
           <!--start of input area-->
           <div class="row row-gutter">

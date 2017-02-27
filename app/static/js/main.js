@@ -88,7 +88,7 @@ app.controller('SpfyController', [
                           $scope.loading = true;
                         } else {
                           // got some message (eg. a failed job)
-                          $scope.jobFailed = true;
+                          $scope.jobfailed = true;
                           $scope.message = data.message;
                           $scope.loading = false;
                         }
