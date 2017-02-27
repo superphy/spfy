@@ -9,6 +9,8 @@ app.controller('SpfyController', [
 
         $scope.loading = false;
 
+        $scope.uploaderror = false;
+
         $scope.jobfailed = false;
         $scope.message='';
 
@@ -91,13 +93,14 @@ app.controller('SpfyController', [
                         // until the timeout is cancelled
                         timeout = $timeout(poller(key), 2000);
                     }).error(function(error, status) {
-                        if (status == 415){
-                          $log.log('BLAHHH')
-                        }
                         $log.log(error);
                         $scope.loading = false;
-                        $scope.jobfailed = true;
-                        $scope.message = $scope.message + "Job failed. Key: " + key;
+                        if (status == 415){
+                          $scope.jobfailed = true;
+                          $scope.message = $scope.message + "Job failed. Key: " + key + " / ";
+                        } else {
+                          $scope.uploaderror = true;
+                        }
                     });
                 };
 

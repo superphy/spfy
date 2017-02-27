@@ -72,6 +72,14 @@
                   <!-- end of submit button-->
                 </div>
               </form>
+
+              <!--error in upload-->
+              <div class="alert alert-danger" role="alert" ng-show='uploaderror'>
+                <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                <span class="sr-only">Error:</span>
+                <span>There was an error when uploading your file.</span>
+              </div>
+
             </div>
 
           </div>
