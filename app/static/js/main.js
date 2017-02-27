@@ -97,7 +97,7 @@ app.controller('SpfyController', [
                         $scope.urlerror = true;
                         $scope.jobfailed = true;
                         $log.log($scope.jobfailed);
-                        $scope.message = $scope.message + key;
+                        $scope.message = $scope.message + "Job failed. Key: " + key;
                     });
                 };
 
