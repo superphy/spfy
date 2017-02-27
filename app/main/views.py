@@ -75,6 +75,11 @@ def upload():
         now = datetime.now()
         now = now.strftime("%Y-%m-%d-%H-%M-%S-%f")
         jobs_dict = {}
+
+        for file in uploaded_files:
+            if file:
+                print file
+
         for file in uploaded_files:
             if file:
                 print file
