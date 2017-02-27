@@ -95,6 +95,7 @@ app.controller('SpfyController', [
                     }).error(function(error, status) {
                         $log.log(error);
                         $scope.loading = false;
+                        $log.log(status);
                         if (status == 415){
                           $scope.jobfailed = true;
                           $scope.message = $scope.message + "Job failed. Key: " + key + " / ";
