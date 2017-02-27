@@ -83,7 +83,12 @@ app.controller('SpfyController', [
                             $timeout.cancel(timeout);
                             return false;
                         } else if (status == 202){
+                          // job result not found ie. still pending
                           $scope.loading = true;
+                        } else {
+                          // got some message (eg. a failed job)
+                          $scope.message = data.message;
+                          $scope.loading = false;
                         }
                         // continue to call the poller() function every 2 seconds
                         // until the timeout is cancelled
