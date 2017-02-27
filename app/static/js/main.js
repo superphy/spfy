@@ -101,7 +101,9 @@ app.controller('SpfyController', [
                         $log.log(error);
                         $scope.loading = false;
                         $scope.urlerror = true;
-
+                        $scope.jobfailed = true;
+                        $log.log($scope.jobfailed);
+                        $scope.message = $scope.message + 'Job has failed.';
                     });
                 };
 
