@@ -22,13 +22,6 @@
       </div>
       <div class="col-md-10">
         <main>
-          <!-- show error messages-->
-          <div class="alert alert-danger" role="alert" ng-show="jobFailed">
-            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-            <span class="sr-only">Error:</span>
-            <span>{{message}}</span>
-          </div>
-
 
           <!--start of input area-->
           <div class="row row-gutter">
@@ -77,6 +70,13 @@
                 <span class="sr-only">Error:</span>
                 <span>There was an error submitting your file.<br>
             Please check to make sure it is valid before trying again.</span>
+              </div>
+
+              <!-- show error messages-->
+              <div class="alert alert-danger" role="alert" ng-show="jobFailed">
+                <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                <span class="sr-only">Error:</span>
+                <span>{{message}}</span>
               </div>
             </div>
 
