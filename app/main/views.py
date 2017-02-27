@@ -77,9 +77,8 @@ def upload():
         jobs_dict = {}
         for file in uploaded_files:
             if file:
+                print file
                 # for saving file
-
-
                 filename = os.path.join(current_app.config[
                                         'UPLOAD_FOLDER'], now + '-' + secure_filename(file.filename))
                 file.save(filename)
