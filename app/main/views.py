@@ -114,7 +114,7 @@ def upload():
                             del d[job_id]
                 jobs_dict = d
 
-            return jsonify(jobs_dict)
+        return jsonify(jobs_dict)
     return 500
 
 
