@@ -70,7 +70,11 @@ def upload():
         uploaded_files = request.files.getlist("file")
         print uploaded_files
 
+        for file in uploaded_files:
+            print file
+
         file = request.files['file']
+        print file
         if file:
             # for saving file
             now = datetime.now()
