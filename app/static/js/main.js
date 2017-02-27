@@ -1,4 +1,4 @@
-var app = angular.module('SpfyApp', [])
+fvar app = angular.module('SpfyApp', [])
 
 app.controller('SpfyController', [
     '$scope',
@@ -8,7 +8,6 @@ app.controller('SpfyController', [
     function($scope, $log, $http, $timeout) {
 
         $scope.loading = false;
-        $scope.urlerror = false;
 
         $scope.jobfailed = false;
         $scope.message='';
@@ -92,12 +91,13 @@ app.controller('SpfyController', [
                         // until the timeout is cancelled
                         timeout = $timeout(poller(key), 2000);
                     }).error(function(error) {
+                        if (status == 415){
+                          $log.log('BLAHHH')
+                        }
                         $log.log(error);
                         $scope.loading = false;
-                        $scope.urlerror = true;
                         $scope.jobfailed = true;
-                        $log.log($scope.jobfailed);
-                        $scope.message = $scope.message + "Job failed. Key: " + key + "\n";
+                        $scope.message = $scope.message + "Job failed. Key: " + key;
                     });
                 };
 

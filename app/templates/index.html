@@ -27,7 +27,7 @@
           <div id="messages" class="alert alert-danger" role="alert" ng-show="jobfailed">
             <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
             <span class="sr-only">Error:</span>
-            <p>{{message}}</p>
+            <span>{{message}}</span>
           </div>
           {% endraw %}
 
@@ -72,13 +72,6 @@
                   <!-- end of submit button-->
                 </div>
               </form>
-
-              <div class="alert alert-danger" role="alert" ng-show='urlError'>
-                <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-                <span class="sr-only">Error:</span>
-                <span>There was an error submitting your file.<br>
-            Please check to make sure it is valid before trying again.</span>
-              </div>
             </div>
 
           </div>
