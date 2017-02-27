@@ -67,47 +67,48 @@ def upload():
                 if key =='options.pi':
                     options['pi']=int(value)
 
+        # get a list of files submitted
         uploaded_files = request.files.getlist("file")
         print uploaded_files
 
+        #set up constants for identifying this sessions
+        now = datetime.now()
+        now = now.strftime("%Y-%m-%d-%H-%M-%S-%f")
+        jobs_dict = {}
         for file in uploaded_files:
-            print file
+            if file:
+                # for saving file
 
-        file = request.files['file']
-        print file
-        if file:
-            # for saving file
-            now = datetime.now()
-            now = now.strftime("%Y-%m-%d-%H-%M-%S-%f")
 
-            filename = os.path.join(current_app.config[
-                                    'UPLOAD_FOLDER'], now + '-' + secure_filename(file.filename))
-            file.save(filename)
+                filename = os.path.join(current_app.config[
+                                        'UPLOAD_FOLDER'], now + '-' + secure_filename(file.filename))
+                file.save(filename)
 
-            if tarfile.is_tarfile(filename):
-                # set filename to dir for spfy call
-                filename = handle_tar(filename, now)
+                if tarfile.is_tarfile(filename):
+                    # set filename to dir for spfy call
+                    filename = handle_tar(filename, now)
 
-            # for enqueing task
-            jobs_dict = spfy.spfy(
-                {'i': filename, 'disable_serotype': False, 'disable_amr': False, 'disable_vf': False, 'pi':options['pi'], 'options':options})
+                # for enqueing task
+                jobs_enqueued = spfy.spfy(
+                    {'i': filename, 'disable_serotype': False, 'disable_amr': False, 'disable_vf': False, 'pi':options['pi'], 'options':options})
+                jobs_dict.update(jobs_enqueued)
 
-            d = dict(jobs_dict)
-            #strip jobs that the user doesn't want to see
-            # we run them anyways cause we want the data analyzed on our end
-            for job_id, descrip_dict in jobs_dict.items():
-                print job_id, descrip_dict
-                print options
-                if (not options['serotype']) and (not options['vf']):
-                    if descrip_dict['analysis'] == 'Virulence Factors and Serotype':
-                        print 'deleteing s/vf'
-                        del d[job_id]
-                if (not options['amr']):
-                    print 'in amr del'
-                    if descrip_dict['analysis'] == 'Antimicrobial Resistance':
-                        print 'deleting amr'
-                        del d[job_id]
-            jobs_dict = d
+                d = dict(jobs_dict)
+                #strip jobs that the user doesn't want to see
+                # we run them anyways cause we want the data analyzed on our end
+                for job_id, descrip_dict in jobs_dict.items():
+                    print job_id, descrip_dict
+                    print options
+                    if (not options['serotype']) and (not options['vf']):
+                        if descrip_dict['analysis'] == 'Virulence Factors and Serotype':
+                            print 'deleteing s/vf'
+                            del d[job_id]
+                    if (not options['amr']):
+                        print 'in amr del'
+                        if descrip_dict['analysis'] == 'Antimicrobial Resistance':
+                            print 'deleting amr'
+                            del d[job_id]
+                jobs_dict = d
 
             return jsonify(jobs_dict)
     return 500
