@@ -23,7 +23,8 @@
       <div class="col-md-10">
         <main>
           <!-- show error messages-->
-          <div class="row" ng-show="jobFailed" role="alert">{{ message }}</div>
+          <span ng-show="jobFailed" role="alert">{{ message }}</span>
+
 
           <!--start of input area-->
           <div class="row row-gutter">
