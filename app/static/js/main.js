@@ -89,9 +89,8 @@ app.controller('SpfyController', [
                           $scope.loading = true;
                         } else if (status == 415){
                           // got some message (eg. a failed job)
-                          $log.log()
                           $scope.jobfailed = true;
-                          $scope.message = $scope.message.concat('Job ' + key ' has failed.');
+                          $scope.message = $scope.message + ('Job ' + key ' has failed.');
                           $scope.loading = false;
                         }
                         // continue to call the poller() function every 2 seconds
