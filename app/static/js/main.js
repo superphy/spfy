@@ -30,7 +30,7 @@ app.controller('SpfyController', [
                     console.log($files);
                     console.log($files[0].type);
                     console.log(key + ' ' + value.name);
-                    fd.append(key, value);
+                    fd.append('file', value);
                 });
             };
 
