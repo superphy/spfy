@@ -90,6 +90,7 @@ app.controller('SpfyController', [
                         } else if (status == 415){
                           // got some message (eg. a failed job)
                           $scope.jobfailed = true;
+                          $log.log($scope.jobfailed);
                           $scope.message = $scope.message + 'Job has failed.';
                           $scope.loading = false;
                         }
