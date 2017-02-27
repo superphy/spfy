@@ -1,4 +1,4 @@
-fvar app = angular.module('SpfyApp', [])
+var app = angular.module('SpfyApp', [])
 
 app.controller('SpfyController', [
     '$scope',
