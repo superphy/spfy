@@ -67,6 +67,9 @@ def upload():
                 if key =='options.pi':
                     options['pi']=int(value)
 
+        uploaded_files = request.files.getlist("file")
+        print uploaded_files
+
         file = request.files['file']
         if file:
             # for saving file
