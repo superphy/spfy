@@ -33,7 +33,7 @@ def job_status(job_id):
     if job.is_finished:
         return jsonify(job.result)
     elif job.is_failed:
-        return jsonify({'message': job_id + ' has failed. Exect Info: ' + job.exc_info})
+        return job.exc_info, 415
     else:
         return "Still pending", 202
 
