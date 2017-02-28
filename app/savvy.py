@@ -151,7 +151,6 @@ def generate_amr(graph, uriGenome, fasta_file):
     return {'graph': graph, 'amr_dict': amr_dict}
 
 def check_alleles(gene_dict):
-    d = dict(gene_dict)
     for analysis in gene_dict:
         if not analysis == 'Serotype':
             for contig_id in gene_dict[analysis]:
