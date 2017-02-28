@@ -183,6 +183,7 @@ def json_return(args_dict, gene_dict):
                     # for w/e reason vf, has a '0' int in the list of dicts
                     # TODO: bug fix^
                     if type(item) is dict:
+                        #allele checking
                         instance_dict = {}
                         instance_dict['filename'] = basename(args_dict['i'])[27:]
                         instance_dict['contigid'] = contig_id
@@ -194,7 +195,7 @@ def json_return(args_dict, gene_dict):
                         if analysis == 'Antimicrobial Resistance':
                             instance_dict['hitcutoff'] = item['CUT_OFF']
                         else:
-                            instance_dict['hitcutoff'] = 'n/a'
+                            instance_dict['hitcutoff'] = args_dict['pi']
                         json_r.append(instance_dict)
     return json_r
 
