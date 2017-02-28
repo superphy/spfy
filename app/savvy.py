@@ -155,21 +155,16 @@ def check_alleles(gene_dict):
     for analysis in gene_dict:
         if not analysis == 'Serotype':
             for contig_id in gene_dict[analysis]:
-                # where gene_results is a list for amr/vf
-                for item in gene_dict[analysis][contig_id]:
-                    # for w/e reason vf, has a '0' int in the list of dicts
-                    # TODO: bug fix^
-                    if type(item) is dict:
-                        hits = pd.DataFrame(item['hits'])
-                        new_hits = []
-                        for gene in hits.hitname.unique():
-                            alleles = hits.loc[hits['hitname']==gene]
-                            widest = alleles.iloc[0]
-                            for index, row in alleles.iterrows():
-                                if abs(row.hitstart - row.hitstop) > abs(widest.hitstart - widest.hitstop):
-                                    widest = row
-                            new_hits.append(dict(widest))
-                        gene_dict[analysis][contig_id]['hits'] = new_hits
+                hits = pd.DataFrame(gene_dict[analysis][contig_id]['hits'])
+                new_hits = []
+                for gene in hits.hitname.unique():
+                    alleles = hits.loc[hits['hitname']==gene]
+                    widest = alleles.iloc[0]
+                    for index, row in alleles.iterrows():
+                        if abs(row.hitstart - row.hitstop) > abs(widest.hitstart - widest.hitstop):
+                            widest = row
+                    new_hits.append(dict(widest))
+                gene_dict[analysis][contig_id]['hits'] = new_hits
     return gene_dict
 
 
@@ -187,8 +182,6 @@ def json_return(args_dict, gene_dict):
         if analysis == 'Virulence Factors' and not args_dict['options']['vf']:
             del d['Virulence Factors']
     gene_dict = d
-
-    gene_dict = check_alleles(gene_dict)
 
     for analysis in gene_dict:
         if analysis == 'Serotype':
@@ -222,6 +215,8 @@ def json_return(args_dict, gene_dict):
                         else:
                             instance_dict['hitcutoff'] = args_dict['pi']
                         json_r.append(instance_dict)
+    json_r = check_alleles(json_r)
+
     return json_r
 
 
