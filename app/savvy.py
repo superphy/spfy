@@ -169,7 +169,7 @@ def check_alleles(gene_dict):
                 #select by gene
                 for gene in hits.hitname.unique():
                     alleles = hits[(hits['hitname']==gene) & (hits['filename']==filename) & (hits['contigid']==contigid)]
-                    if not alleles.empty():
+                    if not alleles.empty:
                         print alleles
                         widest = alleles.iloc[0]
                         for index, row in alleles.iterrows():
