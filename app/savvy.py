@@ -157,7 +157,7 @@ def check_alleles(gene_dict):
 
     # we're not interested in checking serotype, so we drop it
     if 'Serotype' in hits.analysis.unique():
-        new_hits.append(dict(hits[hits['analysis']=='Serotype'])
+        new_hits.append(dict(hits[hits['analysis']=='Serotype']))
         hits = hits[hits['analysis'] != 'Serotype']
 
     # select by analysis
