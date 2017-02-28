@@ -157,8 +157,12 @@ def check_alleles(gene_dict):
 
     # we're not interested in checking serotype, so we drop it
     if 'Serotype' in hits.analysis.unique():
-        new_hits.append(dict(hits[hits['analysis']=='Serotype']))
+        new_hits.append(dict(hits[hits['analysis']=='Serotype'].iloc[0]))
         hits = hits[hits['analysis'] != 'Serotype']
+
+    #strip allele info from data
+    # assumes if an underscore is in a gene name, that anything after the underscore refers to an allele
+    hits['hitname'] = hits['hitname'].apply(lambda x: x.split('_')[0])
 
     # select by analysis
     for analysis in hits.analysis.unique():
@@ -180,7 +184,7 @@ def check_alleles(gene_dict):
                                 widest = row
                         new_hits.append(dict(widest))
 
-    return gene_dict
+    return new_hits
 
 
 def json_return(args_dict, gene_dict):
