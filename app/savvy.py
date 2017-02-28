@@ -155,7 +155,7 @@ def check_alleles(gene_dict):
     for analysis in gene_dict:
         if not analysis == 'Serotype':
             for contig_id in gene_dict[analysis]:
-                hits = pd.DataFrame(gene_dict[analysis][contig_id])
+                hits = pd.DataFrame(gene_dict[analysis][contig_id]['hits'])
                 new_hits = []
                 for gene in hits.hitname.unique():
                     alleles = hits.loc[hits['hitname']==gene]
