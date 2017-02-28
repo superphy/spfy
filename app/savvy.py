@@ -150,18 +150,22 @@ def generate_amr(graph, uriGenome, fasta_file):
 
     return {'graph': graph, 'amr_dict': amr_dict}
 
-def check_alleles(args_dict,gene_dict):
+def check_alleles(gene_dict):
     d = dict(gene_dict)
     for analysis in gene_dict:
         if not analysis == 'Serotype':
             for contig_id in gene_dict[analysis]:
-                hits = sorted(gene_dict[analysis][contig_id], key=lambda k: k['hitstop'], reverse=True)
-                hits_t = []
-                i = 0;
-                while i < len(hits) - 1 :
-                    if (hits[i]['hitname'] == hits[i+1]['hitname']) and (hits[i]['hitstart'] == hits[i+1]['hitstart']):
-                        hits_t.append(hits[i])
-                        i = i + 1
+                hits = pd.DataFrame(gene_dict[analysis][contig_id])
+                new_hits = []
+                for gene in hits.hitname.unique():
+                    alleles = hits.loc[hits['hitname']==gene]
+                    widest = alleles.iloc[0]
+                    for index, row in alleles.iterrows():
+                        if abs(row.hitstart - row.hitstop) > abs(widest.hitstart - widest.hitstop):
+                            widest = row
+                    new_hits.append(dict(widest))
+                gene_dict[analysis][contig_id]['hits'] = new_hits
+    return gene_dict
 
 
 def json_return(args_dict, gene_dict):
@@ -178,6 +182,8 @@ def json_return(args_dict, gene_dict):
         if analysis == 'Virulence Factors' and not args_dict['options']['vf']:
             del d['Virulence Factors']
     gene_dict = d
+
+    gene_dict = check_alleles(gene_dict)
 
     for analysis in gene_dict:
         if analysis == 'Serotype':
