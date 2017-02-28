@@ -10,7 +10,7 @@
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
 </head>
 
-<body ng-cloak ng-controller="SpfyController">
+<body ng-controller="SpfyController">
   <div class="site-wrap">
     <div class="site-canvas">
       <div class="col-md-1 super-slide">
@@ -24,7 +24,7 @@
         <main>
           <!-- show error messages-->
           {% raw %}
-          <div id="messages" class="alert alert-danger" role="alert" ng-show="jobfailed">
+          <div ng-cloak id="messages" class="alert alert-danger" role="alert" ng-show="jobfailed">
             <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
             <span class="sr-only">Error:</span>
             <span>{{message}}</span>
@@ -93,7 +93,7 @@
                 </form>
               </div>
               <!-- spinner -->
-              <img class="img-responsive pull-right" src="{{ url_for('static',
+              <img ng-cloak class="img-responsive pull-right" src="{{ url_for('static',
             filename='img/spinner.gif') }}" ng-show="loading">
 
               </div>
@@ -102,7 +102,7 @@
 
                 <button class="btn btn-success pull-right" export-to-csv>Download</button>
 
-                <table class="table table-striped">
+                <table  ng-cloak class="table table-striped">
                   <thead>
                     <tr>
                       <th>
