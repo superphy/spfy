@@ -170,7 +170,7 @@ def check_alleles(gene_dict):
         hits = hits[hits['analysis'] != 'Serotype']
 
     #strip allele info from data
-    hits = hits['hitname'].apply(strip_alleles)
+    hits['hitname'] = hits['hitname'].apply(strip_alleles)
 
     # select by analysis
     for analysis in hits.analysis.unique():
