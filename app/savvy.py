@@ -12,6 +12,8 @@ import logging
 # long function calls, cause datastruct_savvy is important
 import datastruct_savvy
 
+import pandas as pd
+
 from rdflib import Graph
 from turtle_utils import generate_uri as gu
 from turtle_grapher import generate_output, generate_graph, generate_turtle_skeleton, generate_file_output
@@ -148,6 +150,38 @@ def generate_amr(graph, uriGenome, fasta_file):
 
     return {'graph': graph, 'amr_dict': amr_dict}
 
+def check_alleles(gene_dict):
+    #we are working with the new dict format that is directly converted to json
+    hits = pd.DataFrame(gene_dict)
+    new_hits = []
+
+    # we're not interested in checking serotype, so we drop it
+    if 'Serotype' in hits.analysis.unique():
+        new_hits.append(dict(hits[hits['analysis']=='Serotype']))
+        hits = hits[hits['analysis'] != 'Serotype']
+
+    # select by analysis
+    for analysis in hits.analysis.unique():
+        by_analysis=hits[hits['analysis']==analysis]
+        # select by filename
+        for filename in by_analysis.filename.unique():
+            by_filename=by_analysis[by_analysis['filename']==filename]
+            #select by contigid
+            for contigid in hits.contigid.unique():
+                by_contigid=by_filename[by_filename['contigid']==contigid]
+                #select by gene
+                for gene in by_contigid.hitname.unique():
+                    alleles = by_contigid[by_contigid['hitname']==gene]
+                    if not alleles.empty:
+                        print alleles
+                        widest = alleles.iloc[0]
+                        for index, row in alleles.iterrows():
+                            if abs(row.hitstart - row.hitstop) > abs(widest.hitstart - widest.hitstop):
+                                widest = row
+                        new_hits.append(dict(widest))
+
+    return gene_dict
+
 
 def json_return(args_dict, gene_dict):
     json_r = []
@@ -163,6 +197,8 @@ def json_return(args_dict, gene_dict):
         if analysis == 'Virulence Factors' and not args_dict['options']['vf']:
             del d['Virulence Factors']
     gene_dict = d
+
+
 
     for analysis in gene_dict:
         if analysis == 'Serotype':
@@ -183,7 +219,6 @@ def json_return(args_dict, gene_dict):
                     # for w/e reason vf, has a '0' int in the list of dicts
                     # TODO: bug fix^
                     if type(item) is dict:
-                        #allele checking
                         instance_dict = {}
                         instance_dict['filename'] = basename(args_dict['i'])[27:]
                         instance_dict['contigid'] = contig_id
@@ -197,6 +232,8 @@ def json_return(args_dict, gene_dict):
                         else:
                             instance_dict['hitcutoff'] = args_dict['pi']
                         json_r.append(instance_dict)
+    json_r = check_alleles(json_r)
+
     return json_r
 
 
