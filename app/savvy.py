@@ -184,7 +184,7 @@ def check_alleles(gene_dict):
                                 widest = row
                         new_hits.append(dict(widest))
 
-    return gene_dict
+    return new_hits
 
 
 def json_return(args_dict, gene_dict):
