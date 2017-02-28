@@ -150,15 +150,6 @@ def generate_amr(graph, uriGenome, fasta_file):
 
     return {'graph': graph, 'amr_dict': amr_dict}
 
-def strip_alleles(gene_name):
-    '''
-    assumes if an underscore is in a gene name, that anything after the underscore refers to an allele
-    '''
-    if '_' in gene_name:
-        return gene_name.split('_')[0]
-    else:
-        return gene_name
-
 def check_alleles(gene_dict):
     #we are working with the new dict format that is directly converted to json
     hits = pd.DataFrame(gene_dict)
@@ -170,7 +161,8 @@ def check_alleles(gene_dict):
         hits = hits[hits['analysis'] != 'Serotype']
 
     #strip allele info from data
-    hits['hitname'] = hits['hitname'].apply(strip_alleles)
+    # assumes if an underscore is in a gene name, that anything after the underscore refers to an allele
+    hits['hitname'] = hits['hitname'].apply(lambda x: x.split('_')[0])
 
     # select by analysis
     for analysis in hits.analysis.unique():
