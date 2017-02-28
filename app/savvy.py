@@ -151,19 +151,30 @@ def generate_amr(graph, uriGenome, fasta_file):
     return {'graph': graph, 'amr_dict': amr_dict}
 
 def check_alleles(gene_dict):
-    for analysis in gene_dict:
-        if not analysis == 'Serotype':
-            for contig_id in gene_dict[analysis]:
-                hits = pd.DataFrame(gene_dict[analysis][contig_id]['hits'])
-                new_hits = []
+    #we are working with the new dict format that is directly converted to json
+    hits = pd.DataFrame(gene_dict)
+    new_hits = []
+
+    # we're not interested in checking serotype, so we drop it
+    if 'Serotype' in hits.analysis.unique():
+        new_hits.append(dict(hits.loc['analysis']=='Serotype'))
+        hits = hits[hits['analysis'] != 'Serotype']
+
+    # select by analysis
+    for analysis in hits.analysis.unique():
+        # select by filename
+        for filename in hits.filename.unique():
+            #select by contigid
+            for contigid in hits.contigid.unique():
+                #select by gene
                 for gene in hits.hitname.unique():
-                    alleles = hits.loc[hits['hitname']==gene]
+                    alleles = hits.loc[(hits['hitname']==gene) & (hits['filename']==filename) & (hits['contigid']==contigid)]
                     widest = alleles.iloc[0]
                     for index, row in alleles.iterrows():
                         if abs(row.hitstart - row.hitstop) > abs(widest.hitstart - widest.hitstop):
                             widest = row
                     new_hits.append(dict(widest))
-                gene_dict[analysis][contig_id]['hits'] = new_hits
+
     return gene_dict
 
 
@@ -181,6 +192,8 @@ def json_return(args_dict, gene_dict):
         if analysis == 'Virulence Factors' and not args_dict['options']['vf']:
             del d['Virulence Factors']
     gene_dict = d
+
+
 
     for analysis in gene_dict:
         if analysis == 'Serotype':
