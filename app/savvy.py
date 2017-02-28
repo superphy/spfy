@@ -12,6 +12,8 @@ import logging
 # long function calls, cause datastruct_savvy is important
 import datastruct_savvy
 
+import pandas as pd
+
 from rdflib import Graph
 from turtle_utils import generate_uri as gu
 from turtle_grapher import generate_output, generate_graph, generate_turtle_skeleton, generate_file_output
@@ -148,6 +150,19 @@ def generate_amr(graph, uriGenome, fasta_file):
 
     return {'graph': graph, 'amr_dict': amr_dict}
 
+def check_alleles(args_dict,gene_dict):
+    d = dict(gene_dict)
+    for analysis in gene_dict:
+        if not analysis == 'Serotype':
+            for contig_id in gene_dict[analysis]:
+                hits = sorted(gene_dict[analysis][contig_id], key=lambda k: k['hitstop'], reverse=True)
+                hits_t = []
+                i = 0;
+                while i < len(hits) - 1 :
+                    if (hits[i]['hitname'] == hits[i+1]['hitname']) and (hits[i]['hitstart'] == hits[i+1]['hitstart']):
+                        hits_t.append(hits[i])
+                        i = i + 1
+
 
 def json_return(args_dict, gene_dict):
     json_r = []
@@ -183,7 +198,6 @@ def json_return(args_dict, gene_dict):
                     # for w/e reason vf, has a '0' int in the list of dicts
                     # TODO: bug fix^
                     if type(item) is dict:
-                        #allele checking
                         instance_dict = {}
                         instance_dict['filename'] = basename(args_dict['i'])[27:]
                         instance_dict['contigid'] = contig_id
