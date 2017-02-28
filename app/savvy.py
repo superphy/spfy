@@ -162,13 +162,16 @@ def check_alleles(gene_dict):
 
     # select by analysis
     for analysis in hits.analysis.unique():
+        by_analysis=hits[hits['analysis']==analysis]
         # select by filename
-        for filename in hits.filename.unique():
+        for filename in by_analysis.filename.unique():
+            by_filename=by_analysis[by_analysis['filename']==filename]
             #select by contigid
             for contigid in hits.contigid.unique():
+                by_contigid=by_filename[by_filename['contigid']==contigid]
                 #select by gene
-                for gene in hits.hitname.unique():
-                    alleles = hits[(hits['hitname']==gene) & (hits['filename']==filename) & (hits['contigid']==contigid)]
+                for gene in by_contigid.hitname.unique():
+                    alleles = by_contigid[by_contigid['hitname']==gene]
                     if not alleles.empty:
                         print alleles
                         widest = alleles.iloc[0]
