@@ -155,16 +155,21 @@ def check_alleles(gene_dict):
     for analysis in gene_dict:
         if not analysis == 'Serotype':
             for contig_id in gene_dict[analysis]:
-                hits = pd.DataFrame(gene_dict[analysis][contig_id]['hits'])
-                new_hits = []
-                for gene in hits.hitname.unique():
-                    alleles = hits.loc[hits['hitname']==gene]
-                    widest = alleles.iloc[0]
-                    for index, row in alleles.iterrows():
-                        if abs(row.hitstart - row.hitstop) > abs(widest.hitstart - widest.hitstop):
-                            widest = row
-                    new_hits.append(dict(widest))
-                gene_dict[analysis][contig_id]['hits'] = new_hits
+                # where gene_results is a list for amr/vf
+                for item in gene_dict[analysis][contig_id]:
+                    # for w/e reason vf, has a '0' int in the list of dicts
+                    # TODO: bug fix^
+                    if type(item) is dict:
+                        hits = pd.DataFrame(item['hits'])
+                        new_hits = []
+                        for gene in hits.hitname.unique():
+                            alleles = hits.loc[hits['hitname']==gene]
+                            widest = alleles.iloc[0]
+                            for index, row in alleles.iterrows():
+                                if abs(row.hitstart - row.hitstop) > abs(widest.hitstart - widest.hitstop):
+                                    widest = row
+                            new_hits.append(dict(widest))
+                        gene_dict[analysis][contig_id]['hits'] = new_hits
     return gene_dict
 
 
