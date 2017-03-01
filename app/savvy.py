@@ -176,13 +176,19 @@ def check_alleles(gene_dict):
                 #select by gene
                 for gene in by_contigid.hitname.unique():
                     alleles = by_contigid[by_contigid['hitname']==gene]
+                    # this check prob isn't necessary
                     if not alleles.empty:
-                        print alleles
-                        widest = alleles.iloc[0]
+                        # we create a list as a gene may be in multiple locations
+                        widest = []
+                        widest.append(alleles.iloc[0])
                         for index, row in alleles.iterrows():
-                            if abs(row.hitstart - row.hitstop) > abs(widest.hitstart - widest.hitstop):
-                                widest = row
-                        new_hits.append(dict(widest))
+                            for i, element in enumerate(widest):
+                                # if either position is the same, we assume same occurance of the gene
+                                if (row.hitstart == element.hitstart) or (row.hitstop == element.hitstop):
+                                    if abs(row.hitstart - row.hitstop) > abs(widest.hitstart - widest.hitstop):
+                                        widest[i] = row
+                        for element in widest:
+                            new_hits.append(dict(element))
 
     return new_hits
 
