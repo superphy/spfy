@@ -183,6 +183,8 @@ def check_alleles(gene_dict):
                         widest.append(alleles.iloc[0])
                         for index, row in alleles.iterrows():
                             for i, element in enumerate(widest):
+                                print '#$@#$@#$@#$@#$@$#'
+                                print i, element
                                 # if either position is the same, we assume same occurance of the gene
                                 if (row.hitstart == element.hitstart) or (row.hitstop == element.hitstop):
                                     if abs(row.hitstart - row.hitstop) > abs(element.hitstart - element.hitstop):
