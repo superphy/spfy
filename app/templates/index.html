@@ -10,7 +10,7 @@
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
 </head>
 
-<body ng-controller="SpfyController">
+<body class="home" ng-controller="SpfyController" ng-cloak>
   <div class="site-wrap">
     <div class="site-canvas">
       <div class="col-md-1 super-slide">
@@ -80,7 +80,7 @@
 
             <div class="col-md-10">
               <div id="results">
-                <div class ="row">
+                <div class ="row search-bar">
                   <!-- search bar-->
                   <div class ="col-md-9">
                 <form>
@@ -93,7 +93,7 @@
                 </form>
               </div>
               <!-- spinner -->
-              <img class="img-responsive pull-right" src="{{ url_for('static',
+              <img id="spinner" class="pull-right" src="{{ url_for('static',
             filename='img/spinner.gif') }}" ng-show="loading">
 
               </div>
