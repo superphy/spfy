@@ -102,9 +102,13 @@
 }
 
 #spinner {
-  height: 100%
+  height: 100%;
 }
 
 .row.search-bar{
-  height: 80px
+  height: 80px;
+}
+
+.home {
+  background: #F1F2F1;
 }
