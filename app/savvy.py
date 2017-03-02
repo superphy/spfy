@@ -187,11 +187,16 @@ def check_alleles_multiple(hits, new_hits):
             # this comparison assumes that BLAST will always return a hit with the largest coverage
             # thus we just need to filter out smaller hits within the same region
             at_intersection = True
+            flag_nonoverlap = True
         else:
             at_intersection = False
+            flag_nonoverlap = False
 
         # at any intersection the reading_frame should have the gene hit with the largest, non-overlapping coverage
         if at_intersection:
+            if flag_nonoverlap:
+                print 'NonOverlap found'
+                print row1, row2
             #when we hit an intersection, we append the current reading frame and before moving it forwards
             new_hits.append(dict(reading_frame))
             reading_frame = row2
