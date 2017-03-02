@@ -244,7 +244,7 @@ def check_alleles_multiple(hits, new_hits):
             #ie we found an overlap
             #expand the reading_window
             reading_window['min']=min(reading_window['min'],row2.hitstart,row2.hitstop)
-            reading_window['max']=min(reading_window['max'],row2.hitstart,row2.hitstop)
+            reading_window['max']=max(reading_window['max'],row2.hitstart,row2.hitstop)
             reading_list.append(row2)
 
             #check for end of iteration
