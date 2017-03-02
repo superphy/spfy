@@ -253,6 +253,20 @@ def check_alleles_multiple(hits, new_hits):
 
     return new_hits
 
+def substring_cut(hits):
+    '''
+    iterrows should return deep copies, not sure if this will work properly
+    '''
+    for i1, row1 in hits.iterrows():
+        subframe = hits.loc[hits.index>i1]
+        for i2, row2 in subframe.iterrows():
+            if (row1.hitname.lower() in row2.hitname.lower()) or (row2.hitname.lower() in row1.hitname.lower()):
+                if len(row1.hitname) > len(row2.hitname):
+                    hits.loc[i1,'hitname']=row2.hitname
+                elif len(row1.hitname) < len(row2.hitname):
+                    hits.loc[i2, 'hitname']=row1.hitname
+    return hits
+
 def check_alleles(gene_dict):
     #we are working with the new dict format that is directly converted to json
     hits = pd.DataFrame(gene_dict)
@@ -266,6 +280,8 @@ def check_alleles(gene_dict):
     #strip allele info from data
     # assumes if an underscore is in a gene name, that anything after the underscore refers to an allele
     hits['hitname'] = hits['hitname'].apply(lambda x: x.split('_')[0])
+
+    hits = substring_cut(hits)
 
     #this checks for alleles overlap
     new_hits = check_alleles_multiple(hits, new_hits)
