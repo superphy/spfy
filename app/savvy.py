@@ -164,7 +164,7 @@ def check_alleles_multiple(hits, new_hits):
     checks for multiple hits of the same gene and appends to new_hits. also strips out overlap
     '''
     #this checks for alleles overlap
-    hits.sort_values(by['analysis','filename','contigid','hitname','start'], inplace=True)
+    hits.sort_values(['analysis','filename','contigid','hitname','start'], inplace=True)
     # set the reading_frame to the first row
     #sanity check
     if not hits.empty:
