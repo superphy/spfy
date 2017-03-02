@@ -183,7 +183,7 @@ def check_alleles_multiple(hits, new_hits):
             at_intersection = True
         elif row1.hitname != row2.hitname:
             at_intersection = True
-        elif (not (min(row2.hitstart,row2.hitstop) <= row1.hitstart <= max(row2.hitstart,row2.hitstop))) and (not (min(row2.hitstart,row2.hitstop) <= row1.hitstop <= max(row2.hitstart,row2.hitstop)))
+        elif (not (min(row2.hitstart,row2.hitstop) <= row1.hitstart <= max(row2.hitstart,row2.hitstop))) and (not (min(row2.hitstart,row2.hitstop) <= row1.hitstop <= max(row2.hitstart,row2.hitstop))):
             # this comparison assumes that BLAST will always return a hit with the largest coverage
             # thus we just need to filter out smaller hits within the same region
             at_intersection = True
