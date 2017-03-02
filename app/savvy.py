@@ -224,6 +224,7 @@ def check_alleles_multiple(hits, new_hits):
         if at_intersection:
             if flag_nonoverlap:
                 print '!!!!!!!!!!!!!!Found non-overlapping'
+                print reading_window
                 print '*******First row'
                 print row1
                 print '*******Second row'
