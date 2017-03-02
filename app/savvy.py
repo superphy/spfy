@@ -173,6 +173,8 @@ def check_alleles_multiple(hits, new_hits):
     else:
         return new_hits
 
+    flag_nonoverlap = False
+
     for (i1, row1), (i2, row2) in pairwise(hits.iterrows()):
         if row1.analysis != row2.analysis:
             # at intersection between two hits
