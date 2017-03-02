@@ -23,6 +23,9 @@ from os.path import basename
 # bruteforce
 from insert import upload_graph
 
+# for pairwise comparison of rows in panadas
+from itertools import tee, izip
+
 
 def call_ectyper(graph, args_dict):
     # i don't intend to import anything from ECTyper (there are a lot of
@@ -150,6 +153,56 @@ def generate_amr(graph, uriGenome, fasta_file):
 
     return {'graph': graph, 'amr_dict': amr_dict}
 
+def pairwise(iterable):
+    "s -> (s0,s1), (s1,s2), (s2, s3), ..."
+    a, b = tee(iterable)
+    next(b, None)
+    return izip(a, b)
+
+def check_alleles_multiple(hits, new_hits):
+    '''
+    checks for multiple hits of the same gene and appends to new_hits. also strips out overlap
+    '''
+    #this checks for alleles overlap
+    hits.sort_values(by['analysis','filename','contigid','hitname','start'], inplace=True)
+    # set the reading_frame to the first row
+    #sanity check
+    if not hits.empty:
+        reading_frame = hits.iloc[0]
+    else:
+        return new_hits
+
+    for (i1, row1), (i2, row2) in pairwise(hits.iterrows()):
+        if row1.analysis != row2.analysis:
+            # at intersection between two hits
+            at_intersection = True
+        elif row1.filename != row2.filename:
+            at_intersection = True
+        elif row1.contigid != row2.contigid:
+            at_intersection = True
+        elif row1.hitname != row2.hitname:
+            at_intersection = True
+        # this comparison assumes that BLAST will always return a hit with the largest coverage
+        # thus we just need to filter out smaller hits within the same region
+        elif (row1.start != row2.start) or (row1.stop != row2.stop):
+            at_intersection = True
+        else:
+            at_intersection = False
+
+        # at any intersection the reading_frame should have the gene hit with the largest, non-overlapping coverage
+        if at_intersection:
+            new_hits.append(dict(reading_frame))
+        #otherwise, we're not at an intersection and we do a compairon of length
+        else:
+            if abs(row2.hitstart - row2.hitstop) > abs(reading_frame.hitstart - reading_frame.hitstop):
+                reading_frame = row2
+
+        #end of list check
+        if cmp(new_hits[-1], dict(reading_frame)) != 0:
+            new_hits.append(dict(reading_frame))
+
+        return new_hits
+
 def check_alleles(gene_dict):
     #we are working with the new dict format that is directly converted to json
     hits = pd.DataFrame(gene_dict)
@@ -164,33 +217,8 @@ def check_alleles(gene_dict):
     # assumes if an underscore is in a gene name, that anything after the underscore refers to an allele
     hits['hitname'] = hits['hitname'].apply(lambda x: x.split('_')[0])
 
-    # select by analysis
-    for analysis in hits.analysis.unique():
-        by_analysis=hits[hits['analysis']==analysis]
-        # select by filename
-        for filename in by_analysis.filename.unique():
-            by_filename=by_analysis[by_analysis['filename']==filename]
-            #select by contigid
-            for contigid in hits.contigid.unique():
-                by_contigid=by_filename[by_filename['contigid']==contigid]
-                #select by gene
-                for gene in by_contigid.hitname.unique():
-                    alleles = by_contigid[by_contigid['hitname']==gene]
-                    # this check prob isn't necessary
-                    if not alleles.empty:
-                        # we create a list as a gene may be in multiple locations
-                        widest = []
-                        widest.append(alleles.iloc[0])
-                        for index, row in alleles.iterrows():
-                            for i, element in enumerate(widest):
-                                print '#$@#$@#$@#$@#$@$#'
-                                print i, element
-                                # if either position is the same, we assume same occurance of the gene
-                                if (row.hitstart == element.hitstart) or (row.hitstop == element.hitstop):
-                                    if abs(row.hitstart - row.hitstop) > abs(element.hitstart - element.hitstop):
-                                        widest[i] = row
-                        for element in widest:
-                            new_hits.append(dict(element))
+    #this checks for alleles overlap
+    new_hits = check_alleles_multiple(hits, new_hits)
 
     return new_hits
 
