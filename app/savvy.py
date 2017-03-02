@@ -238,6 +238,8 @@ def check_alleles_multiple(hits, new_hits):
             else:
                 new_hits.append(dict(widest(reading_list)))
             reading_list = []
+            reading_window['min'] = min(row2.hitstart, row2.hitstop)
+            reading_window['max'] = max(row2.hitstart, row2.hitstop)
         else:
             #ie we found an overlap
             #expand the reading_window
