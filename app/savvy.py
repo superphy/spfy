@@ -173,6 +173,7 @@ def check_alleles_multiple(hits, new_hits):
         return new_hits
 
     for (i1, row1), (i2, row2) in pairwise(hits.iterrows()):
+        print row1, row2
         if row1.analysis != row2.analysis:
             # at intersection between two hits
             at_intersection = True
