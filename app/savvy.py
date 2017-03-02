@@ -185,9 +185,9 @@ def check_alleles_multiple(hits, new_hits):
             at_intersection = True
         elif row1.hitname != row2.hitname:
             at_intersection = True
-        # this comparison assumes that BLAST will always return a hit with the largest coverage
-        # thus we just need to filter out smaller hits within the same region
-        elif (row1.start != row2.start) or (row1.stop != row2.stop):
+        elif (row1.hitstart != row2.hitstart) or (row1.hitstop != row2.hitstop):
+            # this comparison assumes that BLAST will always return a hit with the largest coverage
+            # thus we just need to filter out smaller hits within the same region
             at_intersection = True
         else:
             at_intersection = False
@@ -196,8 +196,8 @@ def check_alleles_multiple(hits, new_hits):
         if at_intersection:
             print 'INTERSECTION'
             new_hits.append(dict(reading_frame))
-        #otherwise, we're not at an intersection and we do a compairon of length
         else:
+            #otherwise, we're not at an intersection and we do a compairon of length
             if abs(row2.hitstart - row2.hitstop) > abs(reading_frame.hitstart - reading_frame.hitstop):
                 reading_frame = row2
 
