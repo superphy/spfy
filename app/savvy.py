@@ -191,6 +191,7 @@ def check_alleles_multiple(hits, new_hits):
 
         # at any intersection the reading_frame should have the gene hit with the largest, non-overlapping coverage
         if at_intersection:
+            print 'hit an intersection'
             new_hits.append(dict(reading_frame))
         #otherwise, we're not at an intersection and we do a compairon of length
         else:
