@@ -159,6 +159,32 @@ def pairwise(iterable):
     next(b, None)
     return izip(a, b)
 
+def widest(reading_list):
+    '''
+    Finds the gene with the widest coverage
+    args:
+        reading_list(list(pandas.DataFrame))
+    return:
+        (panadas.DataFrame)
+    '''
+    #sanity check
+    if reading_list:
+        w = reading_list[0]
+        for element in reading_list:
+            if abs(element.hitstart - element.hitstop) > abs(w.hitstart - w.hitstop):
+                w = element
+        return w
+    else:
+        return reading_list
+
+def overlap(row2, reading_window):
+    '''
+    returns true is either end (ie. anypart) of row2 overlaps with the reading_window
+    '''
+    row2_min_overlaps = reading_window['min'] <= min(row2.hitstart,row2.hitstop) <= reading_window['max']
+    row2_max_overlaps = reading_window['min'] <= max(row2.hitstart,row2.hitstop) <= reading_window['max']
+    return row2_min_overlaps or row2_max_overlaps
+
 def check_alleles_multiple(hits, new_hits):
     '''
     checks for multiple hits of the same gene and appends to new_hits. also strips out overlap
@@ -169,11 +195,11 @@ def check_alleles_multiple(hits, new_hits):
     # set the reading_frame to the first row
     #sanity check
     if not hits.empty:
-        reading_frame = hits.iloc[0]
+        reading_list = []
+        reading_window = {'min':min(hits.iloc[0].hitstart,hits.iloc[0].hitstop),'max':max(hits.iloc[0].hitstart,hits.iloc[0].hitstop)}
     else:
+        raise ValueError
         return new_hits
-
-    flag_nonoverlap = False
 
     for (i1, row1), (i2, row2) in pairwise(hits.iterrows()):
         if row1.analysis != row2.analysis:
@@ -185,31 +211,29 @@ def check_alleles_multiple(hits, new_hits):
             at_intersection = True
         elif row1.hitname != row2.hitname:
             at_intersection = True
-        elif (not (min(row2.hitstart,row2.hitstop) <= row1.hitstart <= max(row2.hitstart,row2.hitstop))) and (not (min(row2.hitstart,row2.hitstop) <= row1.hitstop <= max(row2.hitstart,row2.hitstop))):
-            # this comparison assumes that BLAST will always return a hit with the largest coverage
-            # thus we just need to filter out smaller hits within the same region
+        elif not overlap(row2, reading_window):
+            #is not overlap, then at this pt we're are a 2nd non-overlapping (& possibly doubly expressed) occurance of the gene
             at_intersection = True
-            flag_nonoverlap = True
         else:
             at_intersection = False
-            flag_nonoverlap = False
 
-        # at any intersection the reading_frame should have the gene hit with the largest, non-overlapping coverage
         if at_intersection:
-            if flag_nonoverlap:
-                print 'NonOverlap found'
-                print row1, row2
-            #when we hit an intersection, we append the current reading frame and before moving it forwards
-            new_hits.append(dict(reading_frame))
-            reading_frame = row2
+            if not reading_list:
+                #ie reading_list is empty
+                # in this case since we're already at an intersection, then row1 is unique
+                new_hits.append(dict(row1))
+            new_hits.append(dict(widest(reading_list)))
+            reading_list = []
         else:
-            #otherwise, we're not at an intersection and we do a compairon of length
-            if abs(row2.hitstart - row2.hitstop) > abs(reading_frame.hitstart - reading_frame.hitstop):
-                reading_frame = row2
+            #ie we found an overlap
+            #expand the reading_window
+            reading_window['min']=min(reading_window['min'],row2.hitstart,row2.hitstop)
+            reading_window['max']=min(reading_window['max'],row2.hitstart,row2.hitstop)
+            reading_list.append(row2)
 
-    #end of list check
-    if cmp(new_hits[-1], dict(reading_frame)) != 0:
-        new_hits.append(dict(reading_frame))
+            #check for end of iteration
+            if cmp(dict(row2),dict(hit.iloc[-1])) == 0:
+                new_hits.append(dict(widest(reading_list)))
 
     return new_hits
 
