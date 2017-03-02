@@ -201,8 +201,6 @@ def check_alleles_multiple(hits, new_hits):
         raise ValueError
         return new_hits
 
-    flag_nonoverlap = False
-
     for (i1, row1), (i2, row2) in pairwise(hits.iterrows()):
         if row1.analysis != row2.analysis:
             # at intersection between two hits
@@ -215,22 +213,11 @@ def check_alleles_multiple(hits, new_hits):
             at_intersection = True
         elif not overlap(row2, reading_window):
             #is not overlap, then at this pt we're are a 2nd non-overlapping (& possibly doubly expressed) occurance of the gene
-            flag_nonoverlap = True
             at_intersection = True
         else:
             at_intersection = False
-            flag_nonoverlap = False
 
         if at_intersection:
-            if flag_nonoverlap:
-                print '!!!!!!!!!!!!!!Found non-overlapping'
-                print reading_window
-                print '*******First row'
-                print row1
-                print '*******Second row'
-                print row2
-                print '!!!!!!!!!!!!!!END'
-                flag_nonoverlap = False
             if not reading_list:
                 #ie reading_list is empty
                 # in this case since we're already at an intersection, then row1 is unique
