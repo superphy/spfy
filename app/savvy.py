@@ -232,7 +232,7 @@ def check_alleles_multiple(hits, new_hits):
             reading_list.append(row2)
 
             #check for end of iteration
-            if cmp(dict(row2),dict(hit.iloc[-1])) == 0:
+            if cmp(dict(row2),dict(hits.iloc[-1])) == 0:
                 new_hits.append(dict(widest(reading_list)))
 
     return new_hits
