@@ -260,7 +260,7 @@ def substring_cut(hits):
     for i1, row1 in hits.iterrows():
         subframe = hits.loc[hits.index>i1]
         for i2, row2 in subframe.iterrows():
-            if (row1.hitname in row2.hitname) or (row2.hitname in row1.hitname):
+            if (row1.hitname.lower() in row2.hitname.lower()) or (row2.hitname.lower() in row1.hitname.lower()):
                 if len(row1.hitname) > len(row2.hitname):
                     hits.loc[i1,'hitname']=row2.hitname
                 elif len(row1.hitname) < len(row2.hitname):
