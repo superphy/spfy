@@ -164,11 +164,8 @@ def check_alleles_multiple(hits, new_hits):
     checks for multiple hits of the same gene and appends to new_hits. also strips out overlap
     '''
     #this checks for alleles overlap
-    print 'before sort'
-    print hits
     hits.sort_values(['analysis','filename','contigid','hitname','hitstart'], inplace=True)
-    print 'after sort'
-    print hits
+
     # set the reading_frame to the first row
     #sanity check
     if not hits.empty:
@@ -177,6 +174,7 @@ def check_alleles_multiple(hits, new_hits):
         return new_hits
 
     for (i1, row1), (i2, row2) in pairwise(hits.iterrows()):
+        print 'PRINTING ROW1 ROW2'
         print row1, row2
         if row1.analysis != row2.analysis:
             # at intersection between two hits
@@ -196,18 +194,18 @@ def check_alleles_multiple(hits, new_hits):
 
         # at any intersection the reading_frame should have the gene hit with the largest, non-overlapping coverage
         if at_intersection:
-            print 'hit an intersection'
+            print 'INTERSECTION'
             new_hits.append(dict(reading_frame))
         #otherwise, we're not at an intersection and we do a compairon of length
         else:
             if abs(row2.hitstart - row2.hitstop) > abs(reading_frame.hitstart - reading_frame.hitstop):
                 reading_frame = row2
 
-        #end of list check
-        if cmp(new_hits[-1], dict(reading_frame)) != 0:
-            new_hits.append(dict(reading_frame))
+    #end of list check
+    if cmp(new_hits[-1], dict(reading_frame)) != 0:
+        new_hits.append(dict(reading_frame))
 
-        return new_hits
+    return new_hits
 
 def check_alleles(gene_dict):
     #we are working with the new dict format that is directly converted to json
