@@ -174,8 +174,6 @@ def check_alleles_multiple(hits, new_hits):
         return new_hits
 
     for (i1, row1), (i2, row2) in pairwise(hits.iterrows()):
-        print 'PRINTING ROW1 ROW2'
-        print row1, row2
         if row1.analysis != row2.analysis:
             # at intersection between two hits
             at_intersection = True
@@ -184,10 +182,6 @@ def check_alleles_multiple(hits, new_hits):
         elif row1.contigid != row2.contigid:
             at_intersection = True
         elif row1.hitname != row2.hitname:
-            at_intersection = True
-        elif (row1.hitstart != row2.hitstart) or (row1.hitstop != row2.hitstop):
-            # this comparison assumes that BLAST will always return a hit with the largest coverage
-            # thus we just need to filter out smaller hits within the same region
             at_intersection = True
         else:
             at_intersection = False
