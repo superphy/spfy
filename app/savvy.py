@@ -165,6 +165,7 @@ def check_alleles_multiple(hits, new_hits):
     '''
     #this checks for alleles overlap
     hits.sort_values(['analysis','filename','contigid','hitname','hitstart'], inplace=True)
+    print hits
     # set the reading_frame to the first row
     #sanity check
     if not hits.empty:
