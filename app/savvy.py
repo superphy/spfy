@@ -23,6 +23,9 @@ from os.path import basename
 # bruteforce
 from insert import upload_graph
 
+# for pairwise comparison of rows in panadas
+from itertools import tee, izip
+
 
 def call_ectyper(graph, args_dict):
     # i don't intend to import anything from ECTyper (there are a lot of
@@ -150,6 +153,106 @@ def generate_amr(graph, uriGenome, fasta_file):
 
     return {'graph': graph, 'amr_dict': amr_dict}
 
+def pairwise(iterable):
+    "s -> (s0,s1), (s1,s2), (s2, s3), ..."
+    a, b = tee(iterable)
+    next(b, None)
+    return izip(a, b)
+
+def widest(reading_list):
+    '''
+    Finds the gene with the widest coverage
+    args:
+        reading_list(list(pandas.DataFrame))
+    return:
+        (panadas.DataFrame)
+    '''
+    #sanity check
+    if reading_list:
+        w = reading_list[0]
+        for element in reading_list:
+            if abs(element.hitstart - element.hitstop) > abs(w.hitstart - w.hitstop):
+                w = element
+        return w
+    else:
+        return reading_list
+
+def overlap(row2, reading_window):
+    '''
+    returns true is either end (ie. anypart) of row2 overlaps with the reading_window
+    '''
+    row2_min_overlaps = reading_window['min'] <= min(row2.hitstart,row2.hitstop) <= reading_window['max']
+    row2_max_overlaps = reading_window['min'] <= max(row2.hitstart,row2.hitstop) <= reading_window['max']
+    return row2_min_overlaps or row2_max_overlaps
+
+def check_alleles_multiple(hits, new_hits):
+    '''
+    checks for multiple hits of the same gene and appends to new_hits. also strips out overlap
+    '''
+    #this checks for alleles overlap
+    hits.sort_values(['analysis','filename','contigid','hitname','hitstart','hitstop'], inplace=True)
+
+    # set the reading_frame to the first row
+    #sanity check
+    if not hits.empty:
+        reading_list = []
+        reading_window = {'min':min(hits.iloc[0].hitstart,hits.iloc[0].hitstop),'max':max(hits.iloc[0].hitstart,hits.iloc[0].hitstop)}
+    else:
+        raise ValueError
+        return new_hits
+
+    flag_nonoverlap = False
+
+    for (i1, row1), (i2, row2) in pairwise(hits.iterrows()):
+        if row1.analysis != row2.analysis:
+            # at intersection between two hits
+            at_intersection = True
+        elif row1.filename != row2.filename:
+            at_intersection = True
+        elif row1.contigid != row2.contigid:
+            at_intersection = True
+        elif row1.hitname != row2.hitname:
+            at_intersection = True
+        elif not overlap(row2, reading_window):
+            #is not overlap, then at this pt we're are a 2nd non-overlapping (& possibly doubly expressed) occurance of the gene
+            flag_nonoverlap = True
+            at_intersection = True
+        else:
+            at_intersection = False
+            flag_nonoverlap = False
+
+        if at_intersection:
+            if flag_nonoverlap:
+                print '!!!!!!!!!!!!!!Found non-overlapping'
+                print reading_window
+                print '*******First row'
+                print row1
+                print '*******Second row'
+                print row2
+                print '!!!!!!!!!!!!!!END'
+                flag_nonoverlap = False
+            if not reading_list:
+                #ie reading_list is empty
+                # in this case since we're already at an intersection, then row1 is unique
+                new_hits.append(dict(row1))
+            else:
+                new_hits.append(dict(widest(reading_list)))
+            reading_list = []
+            reading_window['min'] = min(row2.hitstart, row2.hitstop)
+            reading_window['max'] = max(row2.hitstart, row2.hitstop)
+        else:
+            #ie we found an overlap
+            #expand the reading_window
+            reading_window['min']=min(reading_window['min'],row2.hitstart,row2.hitstop)
+            reading_window['max']=max(reading_window['max'],row2.hitstart,row2.hitstop)
+            reading_list.append(row2)
+
+            #check for end of iteration
+            if cmp(dict(row2),dict(hits.iloc[-1])) == 0:
+                new_hits.append(dict(widest(reading_list)))
+
+    return new_hits
+
 def check_alleles(gene_dict):
     #we are working with the new dict format that is directly converted to json
     hits = pd.DataFrame(gene_dict)
@@ -164,25 +267,8 @@ def check_alleles(gene_dict):
     # assumes if an underscore is in a gene name, that anything after the underscore refers to an allele
     hits['hitname'] = hits['hitname'].apply(lambda x: x.split('_')[0])
 
-    # select by analysis
-    for analysis in hits.analysis.unique():
-        by_analysis=hits[hits['analysis']==analysis]
-        # select by filename
-        for filename in by_analysis.filename.unique():
-            by_filename=by_analysis[by_analysis['filename']==filename]
-            #select by contigid
-            for contigid in hits.contigid.unique():
-                by_contigid=by_filename[by_filename['contigid']==contigid]
-                #select by gene
-                for gene in by_contigid.hitname.unique():
-                    alleles = by_contigid[by_contigid['hitname']==gene]
-                    if not alleles.empty:
-                        print alleles
-                        widest = alleles.iloc[0]
-                        for index, row in alleles.iterrows():
-                            if abs(row.hitstart - row.hitstop) > abs(widest.hitstart - widest.hitstop):
-                                widest = row
-                        new_hits.append(dict(widest))
+    #this checks for alleles overlap
+    new_hits = check_alleles_multiple(hits, new_hits)
 
     return new_hits
 
