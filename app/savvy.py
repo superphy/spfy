@@ -229,6 +229,7 @@ def check_alleles_multiple(hits, new_hits):
                 print '*******Second row'
                 print row2
                 print '!!!!!!!!!!!!!!END'
+                flag_nonoverlap = False
             if not reading_list:
                 #ie reading_list is empty
                 # in this case since we're already at an intersection, then row1 is unique
