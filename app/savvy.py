@@ -264,7 +264,7 @@ def substring_cut(hits):
                 if len(row1.hitname) > len(row2.hitname):
                     hits.loc[i1,'hitname']=row2.hitname
                 elif len(row1.hitname) < len(row2.hitname):
-                    hits.loc[i2, 'hitname']=row2.hitname
+                    hits.loc[i2, 'hitname']=row1.hitname
     return hits
 
 def check_alleles(gene_dict):
