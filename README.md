@@ -22,8 +22,16 @@ add
 
 ```
 [Unit]
-Description=uWSGI instance to serve spfyapp[Service]
+Description=uWSGI instance to serve spfyapp
+[Service]
 ExecStartPre=-/usr/bin/bash -c 'mkdir -p /run/uwsgi; chown nginx /run/uwsgi'
-ExecStart=/usr/bin/bash -c 'cd /opt/backend; source backend activate; uwsgi --ini spfyapp.ini'
-[Install] WantedBy=multi-user.target
+ExecStart=/usr/bin/bash -c 'cd /opt/backend; source /opt/miniconda2/envs/backend/bin/activate backend; uwsgi --ini spfyapp.ini'
+[Install]
+WantedBy=multi-user.target
 ```
+
+Now, you can start the service by running:
+`sudo systemctl start uwsgi`
+
+To check the status of service, run:
+`sudo systemctl status uwsgi`

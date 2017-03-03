@@ -4,7 +4,6 @@ from flask import Blueprint, render_template, request, jsonify, current_app, g, 
 from rq import Queue
 from redis import Redis
 
-from .forms import UploadForm
 from .. import spfy
 
 from werkzeug.utils import secure_filename
