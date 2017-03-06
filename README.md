@@ -25,8 +25,8 @@ add
 Description=uWSGI Emperor service
 
 [Service]
-ExecStartPre=/usr/bin/bash -c 'source /opt/miniconda2/envs/backend/bin/activate backend; mkdir -p /run/uwsgi; chown spfy:nginx /run/uwsgi'
-ExecStart=/opt/miniconda2/bin/uwsgi --emperor /opt/backend/uwsgi
+ExecStartPre=/usr/bin/bash -c 'source /opt/miniconda2/envs/backend/bin/activate backend; mkdir -p /run/uwsgi; chown spfy:nginx /run/uwsgi; export PYTHONPATH=/opt/miniconda2/envs/backend/bin/python; export PATH=/opt/miniconda2/envs/backend/bin'
+ExecStart=/usr/bin/bash -c 'source /opt/miniconda2/envs/backend/bin/activate backend; export PYTHONPATH=/opt/miniconda2/envs/backend/bin/python; export PATH=/opt/miniconda2/envs/backend/bin; /opt/miniconda2/bin/uwsgi --emperor /opt/backend/uwsgi'
 Restart=always
 KillSignal=SIGQUIT
 Type=notify
