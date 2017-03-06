@@ -83,7 +83,7 @@ http {
     include /etc/nginx/conf.d/*.conf;
 
     server {
-	listen       80 default_server;
+	     listen       80 default_server;
         listen       [::]:80 default_server;
         server_name  _;
 
@@ -97,4 +97,21 @@ http {
     }
 
 }
+```
+
+
+```
+[Unit]
+Description=Single RQ Worker service
+
+[Service]
+ExecStartPre=/usr/bin/bash -c 'source /opt/miniconda2/envs/backend/bin/activate backend; export PYTHONPATH=/opt/miniconda2/envs/backend/bin/python; export PATH=/opt/miniconda2/envs/backend/bin; export PYTHONHOME=/opt/miniconda2/envs/backend/bin/python'
+ExecStart=/usr/bin/bash -c 'source /opt/miniconda2/envs/backend/bin/activate backend; export PYTHONPATH=/opt/miniconda2/envs/backend/bin/python; export PATH=/opt/miniconda2/envs/backend/bin; nohup rq worker high low &'
+Restart=always
+KillSignal=SIGQUIT
+Type=notify
+NotifyAccess=all
+
+[Install]
+WantedBy=multi-user.target
 ```
