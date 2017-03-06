@@ -92,12 +92,8 @@ http {
            uwsgi_pass unix:/run/uwsgi/backend.sock;
         }
 
-        error_page 404 /404.html;
-            location = /40x.html {
-        }
-
-        error_page 500 502 503 504 /50x.html;
-            location = /50x.html {
+        location /static {
+          alias /opt/backend/app/static;
         }
     }
 }
