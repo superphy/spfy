@@ -23,10 +23,11 @@ add
 ```
 [Unit]
 Description=uWSGI Emperor service
+After=network.target
 
 [Service]
-ExecStartPre=/usr/bin/bash -c 'source /opt/miniconda2/envs/backend/bin/activate backend; mkdir -p /run/uwsgi; chown spfy:nginx /run/uwsgi; export PYTHONPATH=/opt/miniconda2/envs/backend/bin/python; export PATH=/opt/miniconda2/envs/backend/bin; which python; which rgi; echo $PATH; export PYTHONHOME=/opt/miniconda2/envs/backend/bin/python'
-ExecStart=/usr/bin/bash -c 'source /opt/miniconda2/envs/backend/bin/activate backend; export PYTHONPATH=/opt/miniconda2/envs/backend/bin/python; export PATH=/opt/miniconda2/envs/backend/bin; /opt/miniconda2/bin/uwsgi --emperor /opt/backend/uwsgi'
+ExecStartPre=/usr/bin/bash -c 'source /opt/miniconda2/envs/backend/bin/activate backend; mkdir -p /run/uwsgi; chown spfy:deployments /run/uwsgi; export PYTHONPATH=/opt/miniconda2/envs/backend/bin/python; export PATH=/opt/miniconda2/envs/backend/bin; which python; which rgi; echo $PATH; export PYTHONHOME=/opt/miniconda2/envs/backend/bin/python'
+ExecStart=/usr/bin/bash -c 'source /opt/miniconda2/envs/backend/bin/activate backend; export PYTHONPATH=/opt/miniconda2/envs/backend/bin/python; export PATH=/opt/miniconda2/envs/backend/bin; /opt/miniconda2/bin/uwsgi --ini /opt/backend/spfyapp.ini'
 Restart=always
 KillSignal=SIGQUIT
 Type=notify
@@ -45,7 +46,7 @@ To check the status of service, run:
 nginx.conf
 ```
 # from /etc/nginx/nginx.conf
-user nginx;
+user spfy;
 worker_processes auto;
 error_log /var/log/nginx/error.log;
 pid /run/nginx.pid;
