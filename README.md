@@ -25,7 +25,7 @@ add
 Description=uWSGI Emperor service
 
 [Service]
-ExecStartPre=/usr/bin/bash -c 'source /opt/miniconda2/envs/backend/bin/activate backend; mkdir -p /run/uwsgi; chown spfy:nginx /run/uwsgi'
+ExecStartPre=/usr/bin/bash -c 'source /opt/miniconda2/envs/backend/bin/activate backend; which rgi; mkdir -p /run/uwsgi; chown spfy:nginx /run/uwsgi'
 ExecStart=/opt/miniconda2/bin/uwsgi --emperor /opt/backend/uwsgi
 Restart=always
 KillSignal=SIGQUIT
