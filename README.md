@@ -93,7 +93,7 @@ http {
     include /etc/nginx/conf.d/*.conf;
 
     server {
-      client_max_body_size 20M;
+      client_max_body_size 200M;
 	     listen       80 default_server;
         listen       [::]:80 default_server;
         server_name  _;
