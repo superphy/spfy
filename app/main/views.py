@@ -25,7 +25,7 @@ def fetch_job(job_id):
         if job is not None:
             return job
 
-
+@bp.route('/superphy/results/<job_id>')
 @bp.route('/results/<job_id>')
 def job_status(job_id):
     job = fetch_job(job_id)
@@ -36,7 +36,7 @@ def job_status(job_id):
     else:
         return "Still pending", 202
 
-
+@bp.route('/superphy/upload', methods=['POST'])
 @bp.route('/upload', methods=['POST'])
 def upload():
     if request.method == 'POST':
@@ -107,7 +107,7 @@ def upload():
         return jsonify(jobs_dict)
     return 500
 
-
+@bp.route('/superphy/', methods=['GET', 'POST'])
 @bp.route('/', methods=['GET', 'POST'])
 def index():
     return render_template("index.html")
