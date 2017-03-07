@@ -50,7 +50,7 @@ app.controller('SpfyController', [
             fd.append('options.pi', $scope.formData.options.pi);
             $log.log(fd);
             $scope.loading = true;
-            $http.post('superphy/upload', fd, {
+            $http.post('/upload', fd, {
                 transformRequest: angular.identity,
                 headers: {
                     'Content-Type': undefined
@@ -76,7 +76,7 @@ app.controller('SpfyController', [
             var poller = function(key) {
                 // fire another request
                 if (key !== undefined) {
-                    $http.get('superphy/results/' + key).success(function(data, status, headers, config) {
+                    $http.get('/results/' + key).success(function(data, status, headers, config) {
                         if (status == 200) {
                             $log.log(data);
                             $scope.loading = false;
