@@ -3,19 +3,18 @@
 <head>
   <title>spfy</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" href="{{ url_for('static', filename='img/superphy.ico') }}">
+  <link rel="icon" href="static/img/superphy.ico">
   <!-- styles -->
   <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" media="screen">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
-  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
+  <link rel="stylesheet" type="text/css" href="static/css/main.css">
 </head>
 
 <body class="home" ng-controller="SpfyController" ng-cloak>
   <div class="site-wrap">
     <div class="site-canvas">
       <div class="col-md-1 super-slide">
-        <img class="img-responsive" src="{{ url_for('static',
-      filename='img/spfy.png') }}" alt="spfy">
+        <img class="img-responsive" src="static/img/spfy.png" alt="spfy">
         <p class="text-center">
           v0.01
         </p>
@@ -93,8 +92,7 @@
                 </form>
               </div>
               <!-- spinner -->
-              <img id="spinner" class="pull-right" src="{{ url_for('static',
-            filename='img/spinner.gif') }}" ng-show="loading">
+              <img id="spinner" class="pull-right" src="static/img/spinner.gif" ng-show="loading">
 
               </div>
 
