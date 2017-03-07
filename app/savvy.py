@@ -109,9 +109,11 @@ def generate_amr(graph, uriGenome, fasta_file):
 
     # differs from ectyper as we dont care about the temp results, just the final .tsv
     # direct (the main) call
-    subprocess.call(['rgi',
+    print subprocess.call(['rgi',
                      '-i', fasta_file,
                      '-o', 'outputs/' + outputname])
+
+    print fasta_file
 
     # the rgi_json call in rgitool.py isn't needed for us
     # this generates the .tsv we want
