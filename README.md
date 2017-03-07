@@ -99,7 +99,6 @@ http {
         listen       [::]:80 default_server;
 	listen       [::]:443 ssl http2 default_server;
 	server_name  superphy.corefacility.ca;
-	server_name  lfz.corefacility.ca/superphy;
         # Load configuration files for the default server block.
         include /etc/nginx/default.d/*.conf;
 
@@ -107,17 +106,40 @@ http {
 	    include uwsgi_params;
 	    uwsgi_pass 127.0.0.1:8080;
 	}
+
 	location /superphy {
 	    include uwsgi_params;
 	    uwsgi_pass 127.0.0.1:8080;
 	}
+
+
+    }
+
+    server {
+        client_max_body_size 200m;
+        listen       80;
+        listen       443 ssl http2;
+        listen       [::]:80;
+        listen       [::]:443 ssl http2;
+        server_name  lfz.corefacility.ca;
+        # Load configuration files for the default server block.
+        include /etc/nginx/default.d/*.conf;
+
+        location / {
+            include uwsgi_params;
+            uwsgi_pass 127.0.0.1:8080;
+        }
+        location /superphy {
+            include uwsgi_params;
+            uwsgi_pass 127.0.0.1:8080;
+        }
+
 
     }
 
 
 
 }
-
 
 ```
 
