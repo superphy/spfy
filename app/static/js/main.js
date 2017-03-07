@@ -50,7 +50,7 @@ app.controller('SpfyController', [
             fd.append('options.pi', $scope.formData.options.pi);
             $log.log(fd);
             $scope.loading = true;
-            $http.post('upload/', fd, {
+            $http.post('upload', fd, {
                 transformRequest: angular.identity,
                 headers: {
                     'Content-Type': undefined
