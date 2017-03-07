@@ -1,0 +1,78 @@
+.row.row-gutter {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #ccc;
+}
+
+.col-md-2.col-gutter {
+  border-right: 1px solid #ccc;
+}
+
+.site-wrap {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  background: #F1F2F1;
+}
+
+.site-wrap .site-canvas {
+  position: relative;
+  z-index: 8888;
+  transition: all 450ms ease;
+  -webkit-transform: none;
+  -moz-transform: none;
+  -ms-transform: none;
+  transform: none;
+  overflow: hidden;
+  background: #F1F2F1;
+}
+
+.site-wrap .site-canvas main {
+  min-height: 69vh;
+  background: #F1F2F1;
+  -webkit-transform: none;
+  -moz-transform: none;
+  -ms-transform: none;
+  transform: none;
+  -webkit-transition: .3s ease all;
+  -moz-transition: .3s ease all;
+  transition: .3s ease all;
+}
+
+*,
+:after,
+:before {
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.col-md-1 .super-side {
+  margin-top: 20px;
+  width: 180px;
+  height: 100%;
+  background: #333;
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 999;
+  -webkit-transition: .3s cubic-bezier(.165, .84, .44, 1) -webkit-transform;
+  -moz-transition: .3s cubic-bezier(.165, .84, .44, 1) -moz-transform;
+  transition: .3s cubic-bezier(.165, .84, .44, 1) transform;
+}
+
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+  display: none !important;
+}
+
+#spinner {
+  height: 100%;
+}
+
+.row.search-bar{
+  height: 80px;
+}
+
+.home {
+  background: #F1F2F1;
+}
