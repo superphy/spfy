@@ -1,4 +1,14 @@
-`cd ~/backend`
+`cd /opt`
+
+`sudo groupadd deployments`
+`sudo useradd spfy`
+`sudo usermod -aG deployments spfy`
+`sudo passwd spfy`
+`su - spfy`
+
+`git clonehttps://github.com/superphy/backend.git`
+
+`cd backend/`
 
 # Blazegraph
 `bash superphy/database/scripts/start.sh`
@@ -100,6 +110,9 @@ http {
 }
 ```
 
+perms for nginx uploads
+`sudo chown -R spfy:deployments /var/lib/nginx/`
+
 
 ```
 [Unit]
@@ -116,3 +129,11 @@ NotifyAccess=all
 [Install]
 WantedBy=multi-user.target
 ```
+
+if you need to debug
+`rq dashboard`
+
+open port: (this is specific to Cent7)
+* check which zone you're in `firewall-cmd --get-active-zones`
+* add the port (note the zone here was `public`) `firewall-cmd --zone=public --add-port=9181/tcp --permanent`
+* reload the firewall `sudo firewall-cmd --reload`
