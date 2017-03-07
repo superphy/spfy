@@ -327,7 +327,10 @@ def json_return(args_dict, gene_dict):
                         else:
                             instance_dict['hitcutoff'] = args_dict['pi']
                         json_r.append(instance_dict)
-    json_r = check_alleles(json_r)
+
+    #added to hot fix a bug whne AMR is run separately
+    if not (args_dict['disable_serotype'] and args_dict['disable_vf'] and args_dict['disable_amr']):
+        json_r = check_alleles(json_r)
 
     return json_r
 
