@@ -93,21 +93,32 @@ http {
     include /etc/nginx/conf.d/*.conf;
 
     server {
-      client_max_body_size 200M;
-	     listen       80 default_server;
+	client_max_body_size 200m;
+	listen       80 default_server;
+	listen       443 ssl http2 default_server;
         listen       [::]:80 default_server;
-        server_name  _;
-
+	listen       [::]:443 ssl http2 default_server;
+	server_name  superphy.corefacility.ca;
+	server_name  lfz.corefacility.ca/superphy;
         # Load configuration files for the default server block.
         include /etc/nginx/default.d/*.conf;
 
-        location / {
+	location / {
 	    include uwsgi_params;
-            uwsgi_pass 127.0.0.1:8080;
-        }
+	    uwsgi_pass 127.0.0.1:8080;
+	}
+	location /superphy {
+	    include uwsgi_params;
+	    uwsgi_pass 127.0.0.1:8080;
+	}
+
     }
 
+
+
 }
+
+
 ```
 
 perms for nginx uploads
