@@ -16,7 +16,7 @@ def create_app():
 
     # add extensions to app
     Bootstrap(app)
-    recaptcha = Recaptcha()
+    recaptcha = ReCaptcha()
     recaptcha.init_app(app)
 
     app.register_blueprint(main)
