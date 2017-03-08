@@ -52,9 +52,8 @@ Now, you can start the service by running:
 To check the status of service, run:
 `sudo systemctl status uwsgi`
 
-nginx.conf
+from /etc/nginx/nginx.conf
 ```
-# from /etc/nginx/nginx.conf
 # For more information on configuration, see:
 #   * Official English Documentation: http://nginx.org/en/docs/
 #   * Official Russian Documentation: http://nginx.org/ru/docs/
@@ -99,26 +98,52 @@ http {
         listen       [::]:80 default_server;
 	listen       [::]:443 ssl http2 default_server;
 	server_name  superphy.corefacility.ca;
-	server_name  lfz.corefacility.ca/superphy;
         # Load configuration files for the default server block.
         include /etc/nginx/default.d/*.conf;
 
 	location / {
-	    include uwsgi_params;
-	    uwsgi_pass 127.0.0.1:8080;
+            proxy_pass http://127.0.0.1:8081;
 	}
-	location /superphy {
-	    include uwsgi_params;
-	    uwsgi_pass 127.0.0.1:8080;
+	location /spfy {
+	    rewrite ^/spfy(.*) /$1 break;
+            include uwsgi_params;
+            uwsgi_pass 127.0.0.1:8080;
+        }
+
+
+    }
+
+    server {
+        client_max_body_size 200m;
+        listen       80;
+        listen       443 ssl http2;
+        listen       [::]:80;
+        listen       [::]:443 ssl http2;
+        server_name  lfz.corefacility.ca;
+        # Load configuration files for the default server block.
+        include /etc/nginx/default.d/*.conf;
+
+	location / {
+            proxy_pass http://127.0.0.1:8081;
 	}
+        location /superphy {
+            proxy_pass https://127.0.0.1:8081;
+        }
+	location /superphy/spfy {
+	    rewrite ^/superphy/spfy(.*) /$1 break;
+            include uwsgi_params;
+            uwsgi_pass 127.0.0.1:8080;
+        }
+	location /spfy {
+	    rewrite ^/spfy(.*) /$1 break;
+            include uwsgi_params;
+            uwsgi_pass 127.0.0.1:8080;
+        }
 
     }
 
 
-
 }
-
-
 ```
 
 perms for nginx uploads
