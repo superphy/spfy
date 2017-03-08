@@ -14,7 +14,7 @@ from flask_recaptcha import ReCaptcha
 
 
 bp = Blueprint('main', __name__)
-recaptcha = ReCaptcha(app=bp)
+
 
 
 def fetch_job(job_id):
@@ -43,6 +43,7 @@ def job_status(job_id):
 
 @bp.route('/upload', methods=['POST'])
 def upload():
+    recaptcha = ReCaptcha(app=current_app)
     if request.method == 'POST':
         if recaptcha.verify():
             form = request.form
