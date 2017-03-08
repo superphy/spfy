@@ -10,7 +10,11 @@ from werkzeug.utils import secure_filename
 
 from datetime import datetime
 
+from flask_recaptcha import ReCaptcha
+
+
 bp = Blueprint('main', __name__)
+recaptcha = ReCaptcha(app=bp)
 
 
 def fetch_job(job_id):
@@ -40,71 +44,72 @@ def job_status(job_id):
 @bp.route('/upload', methods=['POST'])
 def upload():
     if request.method == 'POST':
-        form = request.form
-        options = {}
-        #defaults
-        options['amr']=True
-        options['vf']=True
-        options['serotype']=True
-        options['pi']=90
+        if recaptcha.verify():
+            form = request.form
+            options = {}
+            #defaults
+            options['amr']=True
+            options['vf']=True
+            options['serotype']=True
+            options['pi']=90
 
-        # processing form data
-        for key, value in form.items():
-            #we need to convert lower-case true/false in js to upper case in python
-                #remember, we also have numbers
-            if not value.isdigit():
-                if value.lower() == 'false':
-                    value = False
+            # processing form data
+            for key, value in form.items():
+                #we need to convert lower-case true/false in js to upper case in python
+                    #remember, we also have numbers
+                if not value.isdigit():
+                    if value.lower() == 'false':
+                        value = False
+                    else:
+                        value = True
+                    if key == 'options.amr':
+                        options['amr']=value
+                    if key == 'options.vf':
+                        options['vf']=value
+                    if key == 'options.serotype':
+                        options['serotype']=value
                 else:
-                    value = True
-                if key == 'options.amr':
-                    options['amr']=value
-                if key == 'options.vf':
-                    options['vf']=value
-                if key == 'options.serotype':
-                    options['serotype']=value
-            else:
-                if key =='options.pi':
-                    options['pi']=int(value)
+                    if key =='options.pi':
+                        options['pi']=int(value)
 
-        # get a list of files submitted
-        uploaded_files = request.files.getlist("file")
-        print uploaded_files
+            # get a list of files submitted
+            uploaded_files = request.files.getlist("file")
+            print uploaded_files
 
-        #set up constants for identifying this sessions
-        now = datetime.now()
-        now = now.strftime("%Y-%m-%d-%H-%M-%S-%f")
-        jobs_dict = {}
+            #set up constants for identifying this sessions
+            now = datetime.now()
+            now = now.strftime("%Y-%m-%d-%H-%M-%S-%f")
+            jobs_dict = {}
 
-        for file in uploaded_files:
-            if file:
-                # for saving file
-                filename = os.path.join(current_app.config[
-                                        'UPLOAD_FOLDER'], now + '-' + secure_filename(file.filename))
-                file.save(filename)
+            for file in uploaded_files:
+                if file:
+                    # for saving file
+                    filename = os.path.join(current_app.config[
+                                            'UPLOAD_FOLDER'], now + '-' + secure_filename(file.filename))
+                    file.save(filename)
 
-                if tarfile.is_tarfile(filename):
-                    # set filename to dir for spfy call
-                    filename = handle_tar(filename, now)
+                    if tarfile.is_tarfile(filename):
+                        # set filename to dir for spfy call
+                        filename = handle_tar(filename, now)
 
-                # for enqueing task
-                jobs_enqueued = spfy.spfy(
-                    {'i': filename, 'disable_serotype': False, 'disable_amr': False, 'disable_vf': False, 'pi':options['pi'], 'options':options})
-                jobs_dict.update(jobs_enqueued)
+                    # for enqueing task
+                    jobs_enqueued = spfy.spfy(
+                        {'i': filename, 'disable_serotype': False, 'disable_amr': False, 'disable_vf': False, 'pi':options['pi'], 'options':options})
+                    jobs_dict.update(jobs_enqueued)
 
-                d = dict(jobs_dict)
-                #strip jobs that the user doesn't want to see
-                # we run them anyways cause we want the data analyzed on our end
-                for job_id, descrip_dict in jobs_dict.items():
-                    if (not options['serotype']) and (not options['vf']):
-                        if descrip_dict['analysis'] == 'Virulence Factors and Serotype':
-                            del d[job_id]
-                    if (not options['amr']):
-                        if descrip_dict['analysis'] == 'Antimicrobial Resistance':
-                            del d[job_id]
-                jobs_dict = d
+                    d = dict(jobs_dict)
+                    #strip jobs that the user doesn't want to see
+                    # we run them anyways cause we want the data analyzed on our end
+                    for job_id, descrip_dict in jobs_dict.items():
+                        if (not options['serotype']) and (not options['vf']):
+                            if descrip_dict['analysis'] == 'Virulence Factors and Serotype':
+                                del d[job_id]
+                        if (not options['amr']):
+                            if descrip_dict['analysis'] == 'Antimicrobial Resistance':
+                                del d[job_id]
+                    jobs_dict = d
 
-        return jsonify(jobs_dict)
+            return jsonify(jobs_dict)
     return 500
 
 

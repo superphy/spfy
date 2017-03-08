@@ -6,7 +6,8 @@ from flask import Flask
 from flask_bootstrap import Bootstrap
 from . import config
 from .main.views import bp as main
-from flask_uploads import UploadSet, IMAGES, configure_uploads
+from flask_recaptcha import ReCaptcha
+
 
 def create_app():
     app = Flask(__name__)
@@ -15,6 +16,8 @@ def create_app():
 
     # add extensions to app
     Bootstrap(app)
+    recaptcha = Recaptcha()
+    recaptcha.init_app(app)
 
     app.register_blueprint(main)
 
