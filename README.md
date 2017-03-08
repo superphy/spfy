@@ -52,9 +52,8 @@ Now, you can start the service by running:
 To check the status of service, run:
 `sudo systemctl status uwsgi`
 
-nginx.conf
+from /etc/nginx/nginx.conf
 ```
-# from /etc/nginx/nginx.conf
 # For more information on configuration, see:
 #   * Official English Documentation: http://nginx.org/en/docs/
 #   * Official Russian Documentation: http://nginx.org/ru/docs/
@@ -103,10 +102,13 @@ http {
         include /etc/nginx/default.d/*.conf;
 
 	location / {
-	    include uwsgi_params;
-	    uwsgi_pass 127.0.0.1:8080;
+            proxy_pass http://127.0.0.1:8081;
 	}
-
+	location /spfy {
+	    rewrite ^/spfy(.*) /$1 break;
+            include uwsgi_params;
+            uwsgi_pass 127.0.0.1:8080;
+        }
 
 
     }
@@ -139,6 +141,8 @@ http {
         }
 
     }
+
+
 }
 ```
 
