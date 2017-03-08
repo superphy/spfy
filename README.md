@@ -107,10 +107,6 @@ http {
 	    uwsgi_pass 127.0.0.1:8080;
 	}
 
-	location /superphy {
-	    include uwsgi_params;
-	    uwsgi_pass 127.0.0.1:8080;
-	}
 
 
     }
@@ -125,22 +121,25 @@ http {
         # Load configuration files for the default server block.
         include /etc/nginx/default.d/*.conf;
 
-        location / {
-            include uwsgi_params;
-            uwsgi_pass 127.0.0.1:8080;
-        }
+	location / {
+            proxy_pass http://127.0.0.1:8081;
+	}
         location /superphy {
+            proxy_pass https://127.0.0.1:8081;
+        }
+	location /superphy/spfy {
+	    rewrite ^/superphy/spfy(.*) /$1 break;
             include uwsgi_params;
             uwsgi_pass 127.0.0.1:8080;
         }
-
+	location /spfy {
+	    rewrite ^/spfy(.*) /$1 break;
+            include uwsgi_params;
+            uwsgi_pass 127.0.0.1:8080;
+        }
 
     }
-
-
-
 }
-
 ```
 
 perms for nginx uploads
