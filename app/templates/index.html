@@ -8,6 +8,7 @@
   <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" media="screen">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
   <link rel="stylesheet" type="text/css" href="static/css/main.css">
+  <script src='https://www.google.com/recaptcha/api.js'></script>
 </head>
 
 <body class="home" ng-controller="SpfyController" ng-cloak>
@@ -65,14 +66,9 @@
                   <!-- end of options-->
                   <!-- submit button-->
                   <div class="col-md-1 pull-right">
-                    <button
-class="g-recaptcha"
-data-sitekey="6LfLNRgUAAAAAAMzTNg3dAE5YhW904EbJpTt4gm_"
-data-callback="YourOnSubmitFn">
-Submit
-</button>
+
                     {% raw %}
-                    <button type="submit" class="btn btn-primary pull-right" ng-disabled="loading">Submit</button> {% endraw %}
+                    <button type="submit" class="btn btn-primary pull-right g-recaptcha" data-sitekey="6LfLNRgUAAAAAAMzTNg3dAE5YhW904EbJpTt4gm_" ng-disabled="loading">Submit</button> {% endraw %}
                   </div>
                   <!-- end of submit button-->
                 </div>
