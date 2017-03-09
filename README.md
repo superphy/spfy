@@ -101,6 +101,8 @@ http {
         # Load configuration files for the default server block.
         include /etc/nginx/default.d/*.conf;
 
+  rewrite ^([^.]*[^/])$ $1/ permanent;
+
 	location / {
             proxy_pass http://127.0.0.1:8081;
 	}
@@ -122,6 +124,8 @@ http {
         server_name  lfz.corefacility.ca;
         # Load configuration files for the default server block.
         include /etc/nginx/default.d/*.conf;
+
+        
 
 	location / {
             proxy_pass http://127.0.0.1:8081;

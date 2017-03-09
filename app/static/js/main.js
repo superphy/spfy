@@ -1,11 +1,12 @@
-var app = angular.module('SpfyApp', [])
+var app = angular.module('SpfyApp', ['vcRecaptcha'])
 
 app.controller('SpfyController', [
     '$scope',
     '$log',
     '$http',
     '$timeout',
-    function($scope, $log, $http, $timeout) {
+    'vcRecaptchaService',
+    function($scope, $log, $http, $timeout, vcRecaptchaService) {
 
         $scope.loading = false;
 
@@ -24,6 +25,31 @@ app.controller('SpfyController', [
         $scope.formData.options.amr=true
         $scope.formData.options.serotype=true
         $scope.formData.options.pi=90
+
+        //recaptcha support via github.com/VividCortex/angular-recaptcha/
+        $scope.submitted = false;
+        $scope.response = null;
+        $scope.widgetId = null;
+        $scope.setResponse = function (response) {
+                    console.info('Response available');
+                    $scope.response = response;
+                };
+        $scope.model = {
+                    key: '6LeVYhgUAAAAAKbedEJoCcRaeFaxPh-2hZfzXfFP'
+                };
+        $scope.setResponse = function (response) {
+                    console.info('Response available');
+                    $scope.response = response;
+                };
+        $scope.setWidgetId = function (widgetId) {
+                    console.info('Created widget ID: %s', widgetId);
+                    $scope.widgetId = widgetId;
+                };
+        $scope.cbExpiration = function() {
+            console.info('Captcha expired. Resetting response object');
+            vcRecaptchaService.reload($scope.widgetId);
+            $scope.response = null;
+         };
 
         var fd = new FormData();
 
@@ -48,8 +74,11 @@ app.controller('SpfyController', [
             fd.append('options.amr', $scope.formData.options.amr);
             fd.append('options.serotype', $scope.formData.options.serotype);
             fd.append('options.pi', $scope.formData.options.pi);
-            $log.log(fd);
+            fd.append('g-recaptcha-response', $scope.response);
+            $log.log($scope.response);
+            $log.log($scope.formData);
             $scope.loading = true;
+            $scope.submitted = true;
             $http.post('upload', fd, {
                 transformRequest: angular.identity,
                 headers: {
