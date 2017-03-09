@@ -27,6 +27,7 @@ app.controller('SpfyController', [
         $scope.formData.options.pi=90
 
         //recaptcha support via github.com/VividCortex/angular-recaptcha/
+        $scope.submitted = false;
         $scope.response = null;
         $scope.widgetId = null;
         $scope.setResponse = function (response) {
@@ -77,6 +78,7 @@ app.controller('SpfyController', [
             $log.log($scope.response);
             $log.log($scope.formData);
             $scope.loading = true;
+            $scope.submitted = true;
             $http.post('upload', fd, {
                 transformRequest: angular.identity,
                 headers: {
