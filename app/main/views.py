@@ -46,7 +46,7 @@ def upload():
     recaptcha = ReCaptcha(app=current_app)
     if request.method == 'POST':
         #dbug code
-        return jsonify({"request.form.get('g-recaptcha-response')":request.form.get('g-recaptcha-response'), "request.environ.get('REMOTE_ADDR')":request.environ.get('REMOTE_ADDR'), 'valid':recaptcha.verify()})
+        return jsonify({"request.form.get('g-recaptcha-response')":request.form.get('g-recaptcha-response'), "request.environ.get('REMOTE_ADDR')":request.environ.get('REMOTE_ADDR'), 'valid':recaptcha.verify(),'secret_key':self.secret_key})
         if recaptcha.verify():
             form = request.form
             options = {}
