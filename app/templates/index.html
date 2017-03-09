@@ -72,6 +72,7 @@
                 on-create="setWidgetId(widgetId)"
                 on-success="setResponse(response)"
                 on-expire="cbExpiration()"
+                ng-hide=loading
             ></div>
                     {% raw %}
                     <button type="submit" class="btn btn-primary pull-right g-recaptcha" data-sitekey="6LfLNRgUAAAAAAMzTNg3dAE5YhW904EbJpTt4gm_" ng-disabled="loading">Submit</button> {% endraw %}
@@ -79,9 +80,6 @@
                   <!-- end of submit button-->
                 </div>
               </form>
-              {% raw %}
-              {{response}}
-              {% endraw %}
             </div>
 
           </div>
