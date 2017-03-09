@@ -45,6 +45,8 @@ def job_status(job_id):
 def upload():
     recaptcha = ReCaptcha(app=current_app)
     if request.method == 'POST':
+        #dbug code
+        return jsonify({"request.form.get('g-recaptcha-response')":request.form.get('g-recaptcha-response'), "request.environ.get('REMOTE_ADDR')":request.environ.get('REMOTE_ADDR'))
         if recaptcha.verify():
             form = request.form
             options = {}
