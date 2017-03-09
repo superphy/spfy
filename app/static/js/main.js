@@ -34,7 +34,7 @@ app.controller('SpfyController', [
                     $scope.response = response;
                 };
         $scope.model = {
-                    key: '6LfPOBgUAAAAANabpYxHb4hzq1GfFy023YWQjAkO'
+                    key: '6LeVYhgUAAAAAKbedEJoCcRaeFaxPh-2hZfzXfFP'
                 };
         $scope.setResponse = function (response) {
                     console.info('Response available');
