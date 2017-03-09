@@ -1,4 +1,4 @@
-var app = angular.module('SpfyApp', [])
+var app = angular.module('SpfyApp', ['vcRecaptcha'])
 
 app.controller('SpfyController', [
     '$scope',
@@ -48,7 +48,7 @@ app.controller('SpfyController', [
             fd.append('options.amr', $scope.formData.options.amr);
             fd.append('options.serotype', $scope.formData.options.serotype);
             fd.append('options.pi', $scope.formData.options.pi);
-            $log.log($scope.gRecaptchaResponse);
+            $log.log($scope.formData.recaptchaResp);
             $log.log($scope.formData);
             $scope.loading = true;
             $http.post('upload', fd, {
