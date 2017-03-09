@@ -66,7 +66,7 @@
                   <!-- end of options-->
                   <!-- submit button-->
                   <div class="col-md-1 pull-right">
-                    <div vc-recaptcha key=“6LfPOBgUAAAAANabpYxHb4hzq1GfFy023YWQjAkO” ng-model="formData.recaptchaResp" ></div>
+                    <div vc-recaptcha key=“'6LfPOBgUAAAAANabpYxHb4hzq1GfFy023YWQjAkO'” ng-model="gRecaptchaResponse" ></div>
                     {% raw %}
                     <button type="submit" class="btn btn-primary pull-right g-recaptcha" data-sitekey="6LfLNRgUAAAAAAMzTNg3dAE5YhW904EbJpTt4gm_" ng-disabled="loading">Submit</button> {% endraw %}
                   </div>
@@ -74,7 +74,7 @@
                 </div>
               </form>
               {% raw %}
-              {{formData.recaptchaResp}}
+              {{gRecaptchaResponse}}
               {% endraw %}
             </div>
 
