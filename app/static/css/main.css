@@ -5,13 +5,6 @@ body, html {
 #sidebar {
     background-color: #252830;
     color: silver;
-    width: 10%;
-    height: 100%;
-}
-#main {
-    width: 90%;
-    height: 100%;
-    overflow: hidden;
 }
 #spinner {
   width: 70px;
