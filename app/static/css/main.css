@@ -11,6 +11,7 @@ body, html {
 #main {
     width: 90%;
     height: 100%;
+    overflow: hidden;
 }
 #spinner {
   width: 70px;
