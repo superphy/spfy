@@ -28,10 +28,7 @@ body, html {
 #spinner {
   width: 70px;
 }
-table {
-    table-layout: fixed;
-    word-wrap: break-word;
-}
+
 
 [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
   display: none !important;
