@@ -2,70 +2,79 @@
 
 <head>
   <title>spfy</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" href="static/img/superphy.ico">
-  <!-- styles -->
-  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" media="screen">
+   <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
   <link rel="stylesheet" type="text/css" href="static/css/main.css">
 </head>
 
-<body class="home" ng-controller="SpfyController" ng-cloak>
-  <div class="site-wrap">
-    <div class="site-canvas">
-      <div class="col-md-1 super-slide">
-        <img class="img-responsive" src="static/img/spfy.png" alt="spfy">
-        <p class="text-center">
-          v0.01
-        </p>
-      </div>
-      <div class="col-md-10">
-        <main>
+<body class="home" ng-controller="SpfyController">
+    <div class="container-fluid h-100">
+        <div class="row h-100">
+        <!-- sidebar -->
+        <div class="col-2 collapse d-md-flex bg-faded pt-2 h-100" id="sidebar">
+            <ul class="nav flex-column">
+                <li class="nav-item"><img class="img-responsive" src="static/img/spfy.png" alt="spfy"></li>
+                <li class="nav-item"><a class="nav-link" href="#">v0.02</a></li>
+                <li class="nav-item">
+                    <a class="nav-link collapsed" href="#submenu1" data-toggle="collapse" data-target="#submenu1">About</a>
+                    <div class="collapse" id="submenu1" aria-expanded="false">
+                        <ul class="flex-column pl-2 nav">
+                            <li class="nav-item"><p>Quick, Predictive Analytics</p></li>
+                        </ul>
+                    </div>
+                </li>
+                <li><a class="fa fa-github fa-3x" aria-hidden="true" href="https://github.com/superphy/backend"></a></li>
+            </ul>
+        </div>
+        <!-- main page-->
+        <div class="col pt-2">
           <!-- show error messages-->
-          {% raw %}
-          <div id="messages" class="alert alert-danger" role="alert" ng-show="jobfailed">
-            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-            <span class="sr-only">Error:</span>
-            <span>{{message}}</span>
-          </div>
-          {% endraw %}
+            <span class="container-fluid">
+                  {% raw %}
+                  <div id="messages" class="alert alert-danger" role="alert" ng-show="jobfailed">
+                    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                    <span class="sr-only">Error:</span>
+                    <span>{{message}}</span>
+                  </div>
+                  {% endraw %}
+            </span>
 
           <!--start of input area-->
-          <div class="row row-gutter">
-
-
-            <div class="col-md-10">
-              <form role="form" ng-submit="getResults()">
-                <div class="row">
-                  <div class="col-md-3">
+            <span class="container-fluid">
+                <form class="form-inline" ng-submit="getResults()">
+                  <!-- file input -->
                     <div class="form-group">
-                      <input type="file" id="file1" name="file" multiple
+                      <input class="form-control-file" type="file" id="file1" name="file" multiple
             ng-files="getTheFiles($files)" />
                       <span class="help-block"></span>
                     </div>
-                  </div>
                   <!-- form options -->
-                  <div class="col-md-7 form-group">
-                    <div class="form-control">
+                    <div class="form-group">
                       Options:
-                      <label>
-                                    <input  type="checkbox" ng-model="formData.options.serotype" name="options">
-                                    Serotype
-                                  </label>
-
-                      <label><input  type="checkbox" ng-model="formData.options.vf" name="options" />Virulence Factors</label>
-                      <label><input  type="checkbox" ng-model="formData.options.amr" name="options" />Antimicrobial Resistance</label>
-                      <label>
-                                    <input  type="number" ng-model="formData.options.pi" name="options" style="max-width: 120px;" placeholder="default is 90%">
-                                    %Identity
-                                  </label>
-                    </div>
+                        <label class="form-check-label">
+                            <input class="form-check-input" type="checkbox" ng-model="formData.options.serotype" name="options">Serotype
+                        </label>
+                        <label>
+                            <input class="form-check-input" type="checkbox" ng-model="formData.options.vf" name="options" />Virulence Factors
+                        </label>
+                        <label>
+                            <input class="form-check-input" type="checkbox" ng-model="formData.options.amr" name="options" />Antimicrobial Resistance
+                        </label>
+                        <label>
+                            <input  type="number" ng-model="formData.options.pi" name="options" style="max-width: 120px;" placeholder="default is 90%">%Identity
+                        </label>
                     <span class="help-block"></span>
                   </div>
                   <!-- end of options-->
-                  <!-- submit button-->
-                  <div class="col-md-1 pull-right">
-                    <div
+                  <!-- captcha-->
+                    <div class="form-group">
+                        <div
                 vc-recaptcha
                 theme="'light'"
                 key="model.key"
@@ -74,40 +83,41 @@
                 on-expire="cbExpiration()"
                 ng-hide=submitted
             ></div>
-                    {% raw %}
-                    <button type="submit" class="btn btn-primary pull-right g-recaptcha" data-sitekey="6LfLNRgUAAAAAAMzTNg3dAE5YhW904EbJpTt4gm_" ng-disabled="loading">Submit</button> {% endraw %}
-                  </div>
-                  <!-- end of submit button-->
-                </div>
-              </form>
-            </div>
-
-          </div>
-          <div class="row">
-
-            <div class="col-md-10">
-              <div id="results">
-                <div class ="row search-bar">
-                  <!-- search bar-->
-                  <div class ="col-md-9">
-                <form>
-                  <div class="form-group">
-                    <div class="input-group">
-                      <div class="input-group-addon"><i class="fa fa-search"></i></div>
-                      <input type="text" class="form-control" placeholder="Search..." ng-model="searchSpfy">
                     </div>
-                  </div>
+                    <!-- submit button -->
+                    <div class="form-group">
+                        {% raw %}
+                        <button type="submit" class="btn btn-primary pull-right g-recaptcha" data-sitekey="6LfLNRgUAAAAAAMzTNg3dAE5YhW904EbJpTt4gm_" ng-disabled="loading">Submit</button>
+                        {% endraw %}
+                    </div>
+                  <!-- end of submit button-->
                 </form>
-              </div>
+            </span>
+            <!-- search results area-->
+            <span class="container">
+                <div class = "row">
+                <!-- search area -->
+                    <div class ="col">
+                  <!-- search bar-->
+                    <form class="form">
+                    <div class="form-group">
+                        <div class="input-group">
+                          <div class="input-group-addon"><i class="fa fa-search"></i></div>
+                          <input type="text" class="form-control" placeholder="Search..." ng-model="searchSpfy">
+                        </div>
+                    </div>
+                </form>
+                </div>
               <!-- spinner -->
-              <img id="spinner" class="pull-right" src="static/img/spinner.gif" ng-show="loading">
-
-              </div>
-
-
-
+                    <div class="col">
+                    <img id="spinner" class="pull-right" src="static/img/spinner.gif" ng-show="loading">
+                </div>
+                </div>
+            </span>
+                <!-- end of search area -->
+            <!-- actual results area-->
+            <div class="container-fluid">
                 <button class="btn btn-success pull-right" export-to-csv>Download</button>
-
                 <table class="table table-striped">
                   <thead>
                     <tr>
@@ -184,15 +194,11 @@
                     {% endraw %}
                   </tbody>
                 </table>
-              </div>
-
             </div>
-          </div>
-        </main>
-      </div>
+
+        </div>
     </div>
-  </div>
-  <br><br>
+    </div>
   <!-- scripts -->
   <script src="//code.jquery.com/jquery-2.2.1.min.js"></script>
   <script src="//netdna.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
@@ -200,7 +206,6 @@
   <script src="//code.angularjs.org/1.4.5/angular-route.js"></script>
   <script src="static/js/main.js"></script>
   <script type="text/javascript" src="static/js/angular-recaptcha.min.js"></script>
-
 </body>
 
 </html>
