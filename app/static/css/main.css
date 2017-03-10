@@ -29,7 +29,8 @@ body, html {
   width: 70px;
 }
 table {
-    word-wrap: break-word;
+    table-layout: fixed;
+
 }
 
 [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
