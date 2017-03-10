@@ -29,7 +29,6 @@ body, html {
   width: 70px;
 }
 table {
-    table-layout: fixed;
     word-wrap: break-word;
 }
 
