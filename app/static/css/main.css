@@ -10,6 +10,9 @@ body, html {
 #spinner {
   width: 70px;
 }
+#spfy-logo{
+  width: 60px;
+}
 .nav-link[data-toggle].collapsed:after {
     content: "▾";
 }
