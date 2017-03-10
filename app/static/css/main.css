@@ -7,11 +7,8 @@ body, html {
     color: silver;
     max-width: 180px;
 }
-#spinner {
-  width: 70px;
-}
 #spfy-logo{
-  width: 60px;
+  width: 120px;
 }
 .nav-link[data-toggle].collapsed:after {
     content: "▾";
@@ -24,4 +21,10 @@ body, html {
 }
 .nav-link{
     color: white;
+}
+#main{
+  overflow: scroll;
+}
+#spinner {
+  width: 70px;
 }
