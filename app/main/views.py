@@ -41,6 +41,7 @@ def job_status(job_id):
         return "Still pending", 202
 
 
+@bp.route('/upload/', methods=['POST'])
 @bp.route('/upload', methods=['POST'])
 def upload():
     recaptcha = ReCaptcha(app=current_app)
