@@ -13,7 +13,7 @@
   <link rel="stylesheet" type="text/css" href="static/css/main.css">
 </head>
 
-<body class="home" ng-controller="SpfyController">
+<body class="home" ng-controller="SpfyController" ng-cloak>
     <div class="container-fluid h-100">
         <div class="row h-100">
         <!-- sidebar -->
@@ -182,14 +182,14 @@
                   <tbody>
                     {% raw %}
                     <tr ng-repeat="resp in spits | orderBy:sortType:sortReverse | filter:searchSpfy">
-                      <td>{{resp.filename}}</td>
-                      <td>{{resp.contigid}}</td>
-                      <td>{{resp.analysis}}</td>
-                      <td>{{resp.hitname}}</td>
-                      <td>{{resp.hitorientation}}</td>
-                      <td>{{resp.hitstart}}</td>
-                      <td>{{resp.hitstop}}</td>
-                      <td>{{resp.hitcutoff}}</td>
+                      <td class="col-md-7">{{resp.filename}}</td>
+                      <td class="col-md-3">{{resp.contigid}}</td>
+                      <td class="col-md-2">{{resp.analysis}}</td>
+                      <td class="col-md-2">{{resp.hitname}}</td>
+                      <td class="col-md-1">{{resp.hitorientation}}</td>
+                      <td class="col-md-2">{{resp.hitstart}}</td>
+                      <td class="col-md-2">{{resp.hitstop}}</td>
+                      <td class="col-md-1">{{resp.hitcutoff}}</td>
                     </tr>
                     {% endraw %}
                   </tbody>
