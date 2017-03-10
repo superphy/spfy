@@ -3,9 +3,17 @@ body, html {
 }
 
 #sidebar {
-    min-width: 130px;
     background-color: #252830;
     color: silver;
+    width: 10%;
+    height: 100%;
+}
+#main {
+    width: 90%;
+    height: 100%;
+}
+#spinner {
+  width: 70px;
 }
 .nav-link[data-toggle].collapsed:after {
     content: "▾";
