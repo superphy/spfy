@@ -9,6 +9,9 @@ body, html {
     font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 0.9rem;
 }
+dd{
+  font-size: 0.6rem;
+}
 #spfy-logo{
   width: 120px;
 }
