@@ -4,8 +4,10 @@ body, html {
 
 #sidebar {
     background-color: #252830;
-    color: silver;
+    color: #cfd2da
     max-width: 180px;
+    font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 0.9rem;
 }
 #spfy-logo{
   width: 120px;
