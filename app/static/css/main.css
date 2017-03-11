@@ -10,23 +10,14 @@ body, html {
 #spfy-logo{
   width: 120px;
 }
-.nav-link[data-toggle].collapsed:after {
-    content: "▾";
-}
-.nav-link[data-toggle]:not(.collapsed):after {
-    content: "▴";
-}
 .fa-github{
-    color: white;
-}
-.nav-link{
     color: white;
 }
 #main{
   overflow: scroll;
 }
 #spinner {
-  width: 70px;
+  width: 60px;
 }
 table {
     word-wrap: break-word;
