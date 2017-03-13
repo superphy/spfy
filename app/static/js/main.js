@@ -129,16 +129,16 @@ app.controller('SpfyController', [
 
                             //check for "No results found"
                             for(hit in data){
-                              $log.log('hit is:')
-                              $log.log(data[hit])
+                              $log.log('hit is:');
+                              $log.log(data[hit]);
                               if (hit.hitname === "No Results Found."){
                                 $scope.foundNull = true;
                               } else {
-                                $log.log(hit.hitname)
+                                $log.log(hit.hitname);
                               }
                             }
 
-                            $log.log($scope.spits)
+                            $log.log($scope.spits);
                             $timeout.cancel(timeout);
                             $scope.disableDownload = false;
                             return false;
@@ -155,7 +155,7 @@ app.controller('SpfyController', [
                         $log.log(status);
                         $scope.uploaderror = true;
                         $scope.jobfailed = true;
-                        $scope.message = $scope.message + "Job failed. Key: " + key " / ";
+                        $scope.message = $scope.message + "Job failed. Key: " + key + " / ";
                     });
                 };
 
