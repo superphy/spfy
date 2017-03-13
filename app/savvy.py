@@ -355,7 +355,7 @@ def json_return(args_dict, gene_dict):
             ret.append({'Virulence Factors':'No results found.'})
         if not args_dict['disable_amr']:
             ret.append({'Antimicrobial Resistance':'No results found.'})
-        return jsonify(ret)
+        return ret
     else:
         return json_r
 
