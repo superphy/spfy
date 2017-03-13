@@ -338,7 +338,7 @@ def json_return(args_dict, gene_dict):
                         json_r.append(instance_dict)
 
     json_r = check_alleles(json_r)
-    if not json_r:
+    if not json_r.empty:
         if not args_dict['disable_serotype']:
             json_r.append({'Serotype':'No results found.'})
         if not args_dict['disable_vf']:
