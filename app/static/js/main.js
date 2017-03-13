@@ -129,12 +129,9 @@ app.controller('SpfyController', [
 
                             //check for "No results found"
                             for(hit in data){
-                              $log.log('hit is:');
-                              $log.log(data[hit]);
-                              if (data[hit].hitname === "No Results Found."){
+                              if (data[hit].hitname === "No Results Found." ||
+                                  data[hit].hitname.includes("No prediction could be made for")){
                                 $scope.foundNull = true;
-                              } else {
-                                $log.log(hit.hitname);
                               }
                             }
 
