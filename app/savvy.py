@@ -348,13 +348,14 @@ def json_return(args_dict, gene_dict):
             failed = True
 
     if failed:
+        ret = []
         if not args_dict['disable_serotype']:
-            json_r.append({'Serotype':'No results found.'})
+            ret.append({'Serotype':'No results found.'})
         if not args_dict['disable_vf']:
-            json_r.append({'Virulence Factors':'No results found.'})
+            ret.append({'Virulence Factors':'No results found.'})
         if not args_dict['disable_amr']:
-            json_r.append({'Antimicrobial Resistance':'No results found.'})
-        return jsonify(json_r)
+            ret.append({'Antimicrobial Resistance':'No results found.'})
+        return jsonify(ret)
     else:
         return json_r
 
