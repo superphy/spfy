@@ -24,7 +24,7 @@ app.controller('SpfyController', [
         $scope.formData.options.vf=true
         $scope.formData.options.amr=true
         $scope.formData.options.serotype=true
-        $scope.formData.options.pi=90
+        $scope.pi=90
 
         // check at least one of options is selected
         var calculateSomeSelected = function() {
@@ -42,6 +42,7 @@ app.controller('SpfyController', [
         $scope.setResponse = function (response) {
                     console.info('Response available');
                     $scope.response = response;
+                    $scope.hasResponse = true;
                 };
         $scope.model = {
                     key: '6LeVYhgUAAAAAKbedEJoCcRaeFaxPh-2hZfzXfFP'
@@ -82,7 +83,7 @@ app.controller('SpfyController', [
             fd.append('options.vf', $scope.formData.options.vf);
             fd.append('options.amr', $scope.formData.options.amr);
             fd.append('options.serotype', $scope.formData.options.serotype);
-            fd.append('options.pi', $scope.formData.options.pi);
+            fd.append('options.pi', $scope.pi);
             fd.append('g-recaptcha-response', $scope.response);
             $log.log($scope.response);
             $log.log($scope.formData);
