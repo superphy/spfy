@@ -143,6 +143,10 @@ app.controller('SpfyController', [
                           $scope.jobfailed = true;
                           $scope.message = $scope.message + "Job failed. Key: " + key + " / ";
                         }
+                        if (status == 500){
+                          $scope.jobfailed = true;
+                          $scope.message = $scope.message + "No results found for "
+                        }
                     });
                 };
 

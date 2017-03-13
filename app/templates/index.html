@@ -24,7 +24,7 @@
               <dt>v0.06-beta</dt>
               <dt>About:</dt>
               <dd>Quick, Predictive Genomics</dd>
-              <dd>AMR is provided by <a href="https://card.mcmaster.ca/analyze/rgi">CARD</a></dd>
+              <dd>AMR is powered by <a href="https://card.mcmaster.ca/analyze/rgi">CARD</a></dd>
               <dd>For Contact, Email: chadr.laing@canada.ca</dd>
               <dt><a class="fa fa-github fa-3x" aria-hidden="true" href="https://github.com/superphy/backend"></a></dt>
           </dl>
@@ -117,7 +117,7 @@
             <!-- actual results area-->
             <div class="container-fluid">
                 <div class="alert alert-info" role="alert" ng-show="!disableDownload && loading"><i class="fa fa-cogs" aria-hidden="true"></i><strong> Heads up!</strong> Only partial results so far.</div>
-                <div class="alert alert-success" role="alert" ng-show="!disableDownload && !loading"><i class="fa fa-beer" aria-hidden="true"></i><strong> All done!</strong> You can now download the entire result.</div>
+                <div class="alert alert-success" role="alert" ng-show="!disableDownload && !loading && !jobfailed"><i class="fa fa-beer" aria-hidden="true"></i><strong> All done!</strong> You can now download the entire result.</div>
                 <button class="btn btn-success pull-right" export-to-csv ng-disabled="disableDownload">Download</button>
                 <table class="table table-striped">
                   <thead>
