@@ -194,7 +194,7 @@ def check_alleles_multiple(hits, new_hits):
     ##sanity chcek
     if hits.empty:
         return hits
-        
+
     #this checks for alleles overlap
     hits.sort_values(['analysis','filename','contigid','hitname','hitstart','hitstop'], inplace=True)
 
@@ -338,7 +338,16 @@ def json_return(args_dict, gene_dict):
                         json_r.append(instance_dict)
 
     json_r = check_alleles(json_r)
-    return json_r
+    if not json_r:
+        if not args_dict['disable_serotype']:
+            json_r.append({'Serotype':'No results found.'})
+        if not args_dict['disable_vf']:
+            json_r.append({'Virulence Factors':'No results found.'})
+        if not args_dict['disable_amr']:
+            json_r.append({'Antimicrobial Resistance':'No results found.'})
+        return jsonify(json_r)
+    else:
+        return json_r
 
 
 def savvy(args_dict):
