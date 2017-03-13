@@ -13,6 +13,9 @@ app.controller('SpfyController', [
         $scope.jobfailed = false;
         $scope.message='';
 
+        // warn is a null result was found
+        $scope.foundNull = false;
+
         // dl of table is diabled until we have at least one resp.
         $scope.disableDownload = true;
 
@@ -123,6 +126,14 @@ app.controller('SpfyController', [
                             $log.log(data);
                             $scope.loading = false;
                             $scope.spits = $scope.spits.concat(data);
+
+                            //check for "No results found"
+                            for(hit in data){
+                              if (hit.hitname == "No Results Found."){
+                                $scope.foundNull = true;
+                              }
+                            }
+
                             $log.log($scope.spits)
                             $timeout.cancel(timeout);
                             $scope.disableDownload = false;
@@ -142,10 +153,6 @@ app.controller('SpfyController', [
                         if (status == 415){
                           $scope.jobfailed = true;
                           $scope.message = $scope.message + "Job failed. Key: " + key + " / ";
-                        }
-                        if (status == 500){
-                          $scope.jobfailed = true;
-                          $scope.message = $scope.message + "No results found for ";
                         }
                     });
                 };
