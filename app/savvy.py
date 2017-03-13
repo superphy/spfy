@@ -191,17 +191,16 @@ def check_alleles_multiple(hits, new_hits):
     '''
     checks for multiple hits of the same gene and appends to new_hits. also strips out overlap
     '''
+    ##sanity chcek
+    if hits.empty:
+        return hits
+        
     #this checks for alleles overlap
     hits.sort_values(['analysis','filename','contigid','hitname','hitstart','hitstop'], inplace=True)
 
     # set the reading_frame to the first row
-    #sanity check
-    if not hits.empty:
-        reading_list = []
-        reading_window = {'min':min(hits.iloc[0].hitstart,hits.iloc[0].hitstop),'max':max(hits.iloc[0].hitstart,hits.iloc[0].hitstop)}
-    else:
-        raise ValueError
-        return new_hits
+    reading_list = []
+    reading_window = {'min':min(hits.iloc[0].hitstart,hits.iloc[0].hitstop),'max':max(hits.iloc[0].hitstart,hits.iloc[0].hitstop)}
 
     for (i1, row1), (i2, row2) in pairwise(hits.iterrows()):
         if row1.analysis != row2.analysis:
@@ -282,11 +281,13 @@ def check_alleles(gene_dict):
 
     #this checks for alleles overlap
     new_hits = check_alleles_multiple(hits, new_hits)
-
     return new_hits
 
 
 def json_return(args_dict, gene_dict):
+    """
+    this controls the actual return to Redis (& hence the result polled by the frontend)
+    """
     json_r = []
 
     # strip gene_dicts that user doesn't want to see
@@ -337,7 +338,6 @@ def json_return(args_dict, gene_dict):
                         json_r.append(instance_dict)
 
     json_r = check_alleles(json_r)
-
     return json_r
 
 
