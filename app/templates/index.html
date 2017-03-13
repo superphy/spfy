@@ -72,7 +72,8 @@
                   </div>
                   <!-- end of options-->
                   <!-- captcha-->
-                    <div class="form-group">
+                    <div class="form-group" ng-hide="submitted"
+                    ng-required="hasResponse">
                         <div
                 vc-recaptcha
                 theme="'light'"
@@ -80,8 +81,6 @@
                 on-create="setWidgetId(widgetId)"
                 on-success="setResponse(response)"
                 on-expire="cbExpiration()"
-                ng-hide="submitted"
-                ng-required="hasResponse"
             ></div>
                     </div>
                     <!-- submit button -->
@@ -117,7 +116,7 @@
                 <!-- end of search area -->
             <!-- actual results area-->
             <div class="container-fluid">
-                <button class="btn btn-success pull-right" export-to-csv>Download</button>
+                <button class="btn btn-success pull-right" export-to-csv ng-disabled="disableDownload">Download</button>
                 <table class="table table-striped">
                   <thead>
                     <tr class="stack-15115052">

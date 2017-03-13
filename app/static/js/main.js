@@ -13,6 +13,9 @@ app.controller('SpfyController', [
         $scope.jobfailed = false;
         $scope.message='';
 
+        // dl of table is diabled until we have at least one resp.
+        $scope.disableDownload = true;
+
         // for table sort/search
         $scope.sortType     = 'filename'; // set the default sort type
         $scope.sortReverse  = false;  // set the default sort order
@@ -38,6 +41,7 @@ app.controller('SpfyController', [
         //recaptcha support via github.com/VividCortex/angular-recaptcha/
         $scope.submitted = false;
         $scope.response = null;
+        $scope.hasResponse = false;
         $scope.widgetId = null;
         $scope.setResponse = function (response) {
                     console.info('Response available');
@@ -122,6 +126,7 @@ app.controller('SpfyController', [
                             $scope.spits = $scope.spits.concat(data);
                             $log.log($scope.spits)
                             $timeout.cancel(timeout);
+                            $scope.disableDownload = false;
                             return false;
                         } else if (status == 202){
                           // job result not found ie. still pending
