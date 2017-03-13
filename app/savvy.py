@@ -361,15 +361,15 @@ def json_return(args_dict, gene_dict):
 
         if not args_dict['disable_serotype']:
             t = dict(instance_dict)
-            t.update('analysis') = 'Serotype'
+            t.update({'analysis':'Serotype'})
             ret.append(t)
         if not args_dict['disable_vf']:
             t = dict(instance_dict)
-            t.update('analysis') = 'Virulence Factors'
+            t.update({'analysis':'Virulence Factors'})
             ret.append(t)
         if not args_dict['disable_amr']:
             t = dict(instance_dict)
-            t.update('analysis') = 'Antimicrobial Resistance'
+            t.update({'analysis':'Antimicrobial Resistance'})
             ret.append(t)
         return ret
     else:
