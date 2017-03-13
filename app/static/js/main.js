@@ -155,7 +155,7 @@ app.controller('SpfyController', [
                         $log.log(status);
                         $scope.uploaderror = true;
                         $scope.jobfailed = true;
-                        $scope.message = $scope.message + "Job failed. Key: " + key + " / ";
+                        $scope.message = $scope.message + "Job failed. Key: " + key + "Error Code: " + status " / ";
                     });
                 };
 
