@@ -21,9 +21,10 @@
         <div class="col-2 collapse d-md-flex bg-faded pt-2 h-100" id="sidebar">
           <dl>
               <dt><img src="static/img/spfy.png" alt="spfy" id="spfy-logo"></dt>
-              <dt>v0.05-beta</dt>
+              <dt>v0.06-beta</dt>
               <dt>About:</dt>
               <dd>Quick, Predictive Genomics</dd>
+              <dd>AMR is powered by <a href="https://card.mcmaster.ca/analyze/rgi">CARD</a></dd>
               <dd>For Contact, Email: chadr.laing@canada.ca</dd>
               <dt><a class="fa fa-github fa-3x" aria-hidden="true" href="https://github.com/superphy/backend"></a></dt>
           </dl>
@@ -115,8 +116,12 @@
                 <!-- end of search area -->
             <!-- actual results area-->
             <div class="container-fluid">
-                <div class="alert alert-info" role="alert" ng-show="!disableDownload && loading"><i class="fa fa-cogs" aria-hidden="true"></i><strong> Heads up!</strong> Only partial results are in.</div>
-                <div class="alert alert-success" role="alert" ng-show="!disableDownload && !loading"><i class="fa fa-beer" aria-hidden="true"></i><strong> All done!</strong> You can now download the entire result.</div>
+                <div class="alert alert-info" role="alert" ng-show="!disableDownload && loading"><i class="fa fa-cogs" aria-hidden="true"></i><strong> Heads up!</strong> Only partial results so far.</div>
+
+                <div class="alert alert-success" role="alert" ng-show="!disableDownload && !loading && !jobfailed && !foundNull"><i class="fa fa-beer" aria-hidden="true"></i><strong> All done!</strong> You can now download the entire result.</div>
+
+                <div class="alert alert-warning" role="alert" ng-show="!disableDownload && !loading && !jobfailed && foundNull"><i class="fa fa-hand-spock-o" aria-hidden="true"></i><i class="fa fa-hand-spock-o" aria-hidden="true"></i><strong> Warning!</strong> All done, but a null result was found.</div>
+
                 <button class="btn btn-success pull-right" export-to-csv ng-disabled="disableDownload">Download</button>
                 <table class="table table-striped">
                   <thead>
