@@ -1,4 +1,4 @@
-var app = angular.module('SpfyApp', ['vcRecaptcha'])
+var app = angular.module('SpfyApp', ['vcRecaptcha','ngMessages'])
 
 app.controller('SpfyController', [
     '$scope',
@@ -25,6 +25,15 @@ app.controller('SpfyController', [
         $scope.formData.options.amr=true
         $scope.formData.options.serotype=true
         $scope.formData.options.pi=90
+
+        // check at least one of options is selected
+        var calculateSomeSelected = function() {
+          $scope.someSelected = Object.keys($scope.formData.options).some(function(key) {
+            return $scope.formData.options[key];
+          });
+        };
+        $scope.checkboxChanged = calculateSomeSelected;
+        calculateSomeSelected();
 
         //recaptcha support via github.com/VividCortex/angular-recaptcha/
         $scope.submitted = false;
