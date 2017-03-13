@@ -349,12 +349,28 @@ def json_return(args_dict, gene_dict):
 
     if failed:
         ret = []
+        instance_dict = {}
+        instance_dict['filename'] = basename(args_dict['i'])[27:]
+        instance_dict['contigid'] = 'n/a'
+        #instance_dict['analysis'] = analysis
+        instance_dict['hitname'] = 'No Results Found.'
+        instance_dict['hitorientation'] = 'n/a'
+        instance_dict['hitstart'] = 'n/a'
+        instance_dict['hitstop'] = 'n/a'
+        instance_dict['hitcutoff'] = 'n/a'
+
         if not args_dict['disable_serotype']:
-            ret.append({'Serotype':'No results found.'})
+            t = dict(instance_dict)
+            t.update('analysis') = 'Serotype'
+            ret.append(t)
         if not args_dict['disable_vf']:
-            ret.append({'Virulence Factors':'No results found.'})
+            t = dict(instance_dict)
+            t.update('analysis') = 'Virulence Factors'
+            ret.append(t)
         if not args_dict['disable_amr']:
-            ret.append({'Antimicrobial Resistance':'No results found.'})
+            t = dict(instance_dict)
+            t.update('analysis') = 'Antimicrobial Resistance'
+            ret.append(t)
         return ret
     else:
         return json_r

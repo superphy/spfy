@@ -145,7 +145,7 @@ app.controller('SpfyController', [
                         }
                         if (status == 500){
                           $scope.jobfailed = true;
-                          $scope.message = $scope.message + "No results found for "
+                          $scope.message = $scope.message + "No results found for ";
                         }
                     });
                 };
