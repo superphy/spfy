@@ -1,4 +1,4 @@
-var app = angular.module('SpfyApp', ['vcRecaptcha'])
+var app = angular.module('SpfyApp', ['vcRecaptcha','ngMessages'])
 
 app.controller('SpfyController', [
     '$scope',
@@ -13,6 +13,9 @@ app.controller('SpfyController', [
         $scope.jobfailed = false;
         $scope.message='';
 
+        // dl of table is diabled until we have at least one resp.
+        $scope.disableDownload = true;
+
         // for table sort/search
         $scope.sortType     = 'filename'; // set the default sort type
         $scope.sortReverse  = false;  // set the default sort order
@@ -24,22 +27,29 @@ app.controller('SpfyController', [
         $scope.formData.options.vf=true
         $scope.formData.options.amr=true
         $scope.formData.options.serotype=true
-        $scope.formData.options.pi=90
+        $scope.pi=90
+
+        // check at least one of options is selected
+        var calculateSomeSelected = function() {
+          $scope.someSelected = Object.keys($scope.formData.options).some(function(key) {
+            return $scope.formData.options[key];
+          });
+        };
+        $scope.checkboxChanged = calculateSomeSelected;
+        calculateSomeSelected();
 
         //recaptcha support via github.com/VividCortex/angular-recaptcha/
         $scope.submitted = false;
         $scope.response = null;
+        $scope.noCaptcha = true;
         $scope.widgetId = null;
         $scope.setResponse = function (response) {
                     console.info('Response available');
                     $scope.response = response;
+                    $scope.noCaptcha = false;
                 };
         $scope.model = {
                     key: '6LeVYhgUAAAAAKbedEJoCcRaeFaxPh-2hZfzXfFP'
-                };
-        $scope.setResponse = function (response) {
-                    console.info('Response available');
-                    $scope.response = response;
                 };
         $scope.setWidgetId = function (widgetId) {
                     console.info('Created widget ID: %s', widgetId);
@@ -73,7 +83,7 @@ app.controller('SpfyController', [
             fd.append('options.vf', $scope.formData.options.vf);
             fd.append('options.amr', $scope.formData.options.amr);
             fd.append('options.serotype', $scope.formData.options.serotype);
-            fd.append('options.pi', $scope.formData.options.pi);
+            fd.append('options.pi', $scope.pi);
             fd.append('g-recaptcha-response', $scope.response);
             $log.log($scope.response);
             $log.log($scope.formData);
@@ -94,6 +104,9 @@ app.controller('SpfyController', [
                 //$scope.message = data.message;
             }).error(function(error) {
                 $log.log(error);
+                $scope.jobfailed = true;
+                $scope.message = $scope.message + "Upload Failed " + error;
+                $scope.loading=false;
             });
 
         };
@@ -112,6 +125,7 @@ app.controller('SpfyController', [
                             $scope.spits = $scope.spits.concat(data);
                             $log.log($scope.spits)
                             $timeout.cancel(timeout);
+                            $scope.disableDownload = false;
                             return false;
                         } else if (status == 202){
                           // job result not found ie. still pending

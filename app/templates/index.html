@@ -21,7 +21,7 @@
         <div class="col-2 collapse d-md-flex bg-faded pt-2 h-100" id="sidebar">
           <dl>
               <dt><img src="static/img/spfy.png" alt="spfy" id="spfy-logo"></dt>
-              <dt>v0.02</dt>
+              <dt>v0.05-beta</dt>
               <dt>About:</dt>
               <dd>Quick, Predictive Genomics</dd>
               <dd>For Contact, Email: chadr.laing@canada.ca</dd>
@@ -35,7 +35,7 @@
                   {% raw %}
                   <div id="messages" class="alert alert-danger" role="alert" ng-show="jobfailed">
                     <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-                    <span class="sr-only">Error:</span>
+                    <span class="sr-only">Error</span>
                     <span>{{message}}</span>
                   </div>
                   {% endraw %}
@@ -46,7 +46,7 @@
                 <form class="form-inline" ng-submit="getResults()">
                   <!-- file input -->
                     <div class="form-group">
-                      <input class="form-control-file" type="file" id="file1" name="file" multiple
+                      <input class="form-control-file" type="file" id="file1" name="file" multiple required
             ng-files="getTheFiles($files)" />
                       <span class="help-block"></span>
                     </div>
@@ -54,22 +54,25 @@
                     <div class="form-group">
                       Options:
                         <label class="form-check-label">
-                            <input class="form-check-input" type="checkbox" ng-model="formData.options.serotype" name="options">Serotype
+                            <input class="form-check-input" type="checkbox" ng-model="formData.options.serotype" name="options" ng-change="checkboxChanged()" ng-required="!someSelected">Serotype
                         </label>
                         <label>
-                            <input class="form-check-input" type="checkbox" ng-model="formData.options.vf" name="options" />Virulence Factors
+                            <input class="form-check-input" type="checkbox" ng-model="formData.options.vf" name="options" ng-change="checkboxChanged()" ng-required="!someSelected">Virulence Factors
                         </label>
                         <label>
-                            <input class="form-check-input" type="checkbox" ng-model="formData.options.amr" name="options" />Antimicrobial Resistance
+                            <input class="form-check-input" type="checkbox" ng-model="formData.options.amr" name="options" ng-change="checkboxChanged()" ng-required="!someSelected">Antimicrobial Resistance
                         </label>
                         <label>
-                            <input  type="number" ng-model="formData.options.pi" name="options" style="max-width: 120px;" placeholder="default is 90%">%Identity
+                            <input  type="number" ng-model="pi" name="options" style="max-width: 120px;" placeholder="default is 90%"
+                            ng-min="1"
+                            ng-max="100"
+                            required>%Identity
                         </label>
                     <span class="help-block"></span>
                   </div>
                   <!-- end of options-->
                   <!-- captcha-->
-                    <div class="form-group">
+                    <div class="form-group" ng-hide="submitted">
                         <div
                 vc-recaptcha
                 theme="'light'"
@@ -77,13 +80,12 @@
                 on-create="setWidgetId(widgetId)"
                 on-success="setResponse(response)"
                 on-expire="cbExpiration()"
-                ng-hide=submitted
             ></div>
                     </div>
                     <!-- submit button -->
                     <div class="form-group">
                         {% raw %}
-                        <button type="submit" class="btn btn-primary pull-right g-recaptcha" data-sitekey="6LfLNRgUAAAAAAMzTNg3dAE5YhW904EbJpTt4gm_" ng-disabled="loading">Submit</button>
+                        <button type="submit" class="btn btn-primary pull-right g-recaptcha" data-sitekey="6LfLNRgUAAAAAAMzTNg3dAE5YhW904EbJpTt4gm_" ng-disabled="submitted || noCaptcha">Submit</button>
                         {% endraw %}
                     </div>
                   <!-- end of submit button-->
@@ -113,7 +115,9 @@
                 <!-- end of search area -->
             <!-- actual results area-->
             <div class="container-fluid">
-                <button class="btn btn-success pull-right" export-to-csv>Download</button>
+                <div class="alert alert-info" role="alert" ng-show="!disableDownload && loading"><i class="fa fa-cogs" aria-hidden="true"></i><strong> Heads up!</strong> Only partial results are in.</div>
+                <div class="alert alert-success" role="alert" ng-show="!disableDownload && !loading"><i class="fa fa-beer" aria-hidden="true"></i><strong> All done!</strong> You can now download the entire result.</div>
+                <button class="btn btn-success pull-right" export-to-csv ng-disabled="disableDownload">Download</button>
                 <table class="table table-striped">
                   <thead>
                     <tr class="stack-15115052">
@@ -199,6 +203,7 @@
   <script src="//code.jquery.com/jquery-2.2.1.min.js"></script>
   <script src="//netdna.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.min.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular-messages.js"></script>
   <script src="//code.angularjs.org/1.4.5/angular-route.js"></script>
   <script src="static/js/main.js"></script>
   <script type="text/javascript" src="static/js/angular-recaptcha.min.js"></script>
