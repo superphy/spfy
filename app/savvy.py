@@ -277,7 +277,7 @@ def check_alleles(gene_dict):
     if 'Antimicrobial Resistance' in hits.analysis.unique():
         #strip allele info from data
         # assumes if an underscore is in a gene name, that anything after the underscore refers to an allele
-        hits['hitname'] = hits['hitname'].apply(lambda x: x.split('_')[0])
+        hits['hitname'] = hits['hitname'].apply(lambda x: x.split('_')[0].split('-I')[0].split('-V')[0])
         hits = substring_cut(hits)
 
     #this checks for alleles overlap
