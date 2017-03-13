@@ -51,10 +51,6 @@ app.controller('SpfyController', [
         $scope.model = {
                     key: '6LeVYhgUAAAAAKbedEJoCcRaeFaxPh-2hZfzXfFP'
                 };
-        $scope.setResponse = function (response) {
-                    console.info('Response available');
-                    $scope.response = response;
-                };
         $scope.setWidgetId = function (widgetId) {
                     console.info('Created widget ID: %s', widgetId);
                     $scope.widgetId = widgetId;
@@ -108,6 +104,8 @@ app.controller('SpfyController', [
                 //$scope.message = data.message;
             }).error(function(error) {
                 $log.log(error);
+                $scope.jobfailed = true;
+                $scope.message = $scope.message + "Upload Failed " + error;
             });
 
         };
