@@ -41,12 +41,12 @@ app.controller('SpfyController', [
         //recaptcha support via github.com/VividCortex/angular-recaptcha/
         $scope.submitted = false;
         $scope.response = null;
-        $scope.hasResponse = false;
+        $scope.noCaptcha = true;
         $scope.widgetId = null;
         $scope.setResponse = function (response) {
                     console.info('Response available');
                     $scope.response = response;
-                    $scope.hasResponse = true;
+                    $scope.noCaptcha = false;
                 };
         $scope.model = {
                     key: '6LeVYhgUAAAAAKbedEJoCcRaeFaxPh-2hZfzXfFP'
@@ -106,6 +106,7 @@ app.controller('SpfyController', [
                 $log.log(error);
                 $scope.jobfailed = true;
                 $scope.message = $scope.message + "Upload Failed " + error;
+                $scope.loading=false;
             });
 
         };

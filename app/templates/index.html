@@ -72,8 +72,7 @@
                   </div>
                   <!-- end of options-->
                   <!-- captcha-->
-                    <div class="form-group" ng-hide="submitted"
-                    ng-required="hasResponse">
+                    <div class="form-group" ng-hide="submitted">
                         <div
                 vc-recaptcha
                 theme="'light'"
@@ -86,7 +85,7 @@
                     <!-- submit button -->
                     <div class="form-group">
                         {% raw %}
-                        <button type="submit" class="btn btn-primary pull-right g-recaptcha" data-sitekey="6LfLNRgUAAAAAAMzTNg3dAE5YhW904EbJpTt4gm_" ng-disabled="submitted">Submit</button>
+                        <button type="submit" class="btn btn-primary pull-right g-recaptcha" data-sitekey="6LfLNRgUAAAAAAMzTNg3dAE5YhW904EbJpTt4gm_" ng-disabled="submitted || noCaptcha">Submit</button>
                         {% endraw %}
                     </div>
                   <!-- end of submit button-->
