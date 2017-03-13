@@ -242,6 +242,13 @@ def check_alleles_multiple(hits, new_hits):
 
     return new_hits
 
+def weird_name(subq,subp):
+    '''
+    returns true if either value is a weird name and short be ignored
+    '''
+    t = ('st','tia')
+    return (subq in t) or (subp in t)
+
 def substring_cut(hits):
     '''
     iterrows should return deep copies, not sure if this will work properly
@@ -249,7 +256,7 @@ def substring_cut(hits):
     for i1, row1 in hits.iterrows():
         subframe = hits.loc[hits.index>i1]
         for i2, row2 in subframe.iterrows():
-            if (row1.hitname.lower() in row2.hitname.lower()) or (row2.hitname.lower() in row1.hitname.lower()):
+            if ((row1.hitname.lower() in row2.hitname.lower()) or (row2.hitname.lower() in row1.hitname.lower())) and not weird_name(row1.hitname, row2.hitname):
                 if len(row1.hitname) > len(row2.hitname):
                     hits.loc[i1,'hitname']=row2.hitname
                 elif len(row1.hitname) < len(row2.hitname):
@@ -266,11 +273,12 @@ def check_alleles(gene_dict):
         new_hits.append(dict(hits[hits['analysis']=='Serotype'].iloc[0]))
         hits = hits[hits['analysis'] != 'Serotype']
 
-    #strip allele info from data
-    # assumes if an underscore is in a gene name, that anything after the underscore refers to an allele
-    hits['hitname'] = hits['hitname'].apply(lambda x: x.split('_')[0])
-
-    hits = substring_cut(hits)
+    #we've update the db for VF so an allele check is only needed for AMR
+    if 'Antimicrobial Resistance' in hits.analysis.unique():
+        #strip allele info from data
+        # assumes if an underscore is in a gene name, that anything after the underscore refers to an allele
+        hits['hitname'] = hits['hitname'].apply(lambda x: x.split('_')[0])
+        hits = substring_cut(hits)
 
     #this checks for alleles overlap
     new_hits = check_alleles_multiple(hits, new_hits)
