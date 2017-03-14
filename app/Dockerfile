@@ -5,7 +5,7 @@ ADD . /app
 WORKDIR /app
 
 # dev tools (mainly the C Compiler you'll need to uWSGI)
-RUN apt-get update && apt-get install build-essential
+RUN apt-get update && apt-get install -y build-essential
 
 # Add conda-forge channel
 RUN conda config --add channels conda-forge && conda config --add channels bioconda && conda env create -n backend -f environment.yml
