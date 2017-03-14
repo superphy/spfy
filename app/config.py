@@ -2,7 +2,7 @@ import os
 
 #for secret key, do a os.urandom(24).encode('hex')
 SECRET_KEY = 'is-that-daisy'
-REDIS_URL = '0.0.0.0/6379'
+REDIS_URL = 'redis://redis:6379/0'
 QUEUES = ['high','medium','low','default']
 BOOTSTRAP_SERVE_LOCAL = True
 MAX_TIME_TO_WAIT = 10

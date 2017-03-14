@@ -4,6 +4,10 @@
 import logging
 import time
 import os
+
+import redis
+import config
+
 from flask import current_app
 
 # Redis Queue
@@ -30,7 +34,8 @@ from savvy import savvy  # serotype/amr/vf
 # when naming queues, make sure you actually set a worker to listen to that queue
 # we use the high priority queue for things that should be immediately
 # returned to the user
-redis_conn = Redis()
+redis_url = config.REDIS_URL
+redis_conn = redis.from_url(redis_url)
 high = Queue('high', connection=redis_conn)
 low = Queue('low', connection=redis_conn, default_timeout=600)
 
