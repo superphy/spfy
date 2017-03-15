@@ -58,4 +58,7 @@ RUN conda config --add channels conda-forge && conda config --add channels bioco
 ENV PATH /opt/conda/envs/backend/bin:$PATH
 #### End Spfy
 
+RUN echo $PATH
+RUN which conda
+
 CMD ["/usr/bin/supervisord"]
