@@ -5,7 +5,7 @@ this is the app factory
 from flask import Flask
 from flask_bootstrap import Bootstrap
 from . import config
-from .main.views import bp as main
+from .spfyroutes.views import bp as spfy
 from flask_recaptcha import ReCaptcha
 
 
@@ -19,6 +19,6 @@ def create_app():
     recaptcha = ReCaptcha()
     recaptcha.init_app(app)
 
-    app.register_blueprint(main)
+    app.register_blueprint(spfy)
 
     return app
