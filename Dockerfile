@@ -59,6 +59,6 @@ ENV PATH /opt/conda/envs/backend/bin:$PATH
 #### End Spfy
 
 RUN echo $PATH
-RUN which conda
+RUN which uwsgi
 
 CMD ["/usr/bin/supervisord"]
