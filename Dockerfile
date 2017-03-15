@@ -3,7 +3,7 @@ FROM tiangolo/uwsgi-nginx-flask:flask-index-upload
 COPY ./app /app
 
 # custom supervisord config
-COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+COPY ./app/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 # dev tools (mainly the C Compiler you'll need to uWSGI)
 RUN apt-get update && apt-get install -y build-essential
