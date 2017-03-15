@@ -1,6 +1,6 @@
 FROM tiangolo/uwsgi-nginx-flask:flask-index-upload
 
-COPY . /app
+COPY ./app /app
 
 # dev tools (mainly the C Compiler you'll need to uWSGI)
 RUN apt-get update && apt-get install -y build-essential
