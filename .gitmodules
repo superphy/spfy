@@ -1,4 +1,4 @@
-[submodule "app/bin/ecoli_serotyping"]
-	path = app/bin/ecoli_serotyping
+[submodule "app/ecoli_serotyping"]
+	path = app/ecoli_serotyping
 	url = https://github.com/phac-nml/ecoli_serotyping.git
 	branch = superphy
