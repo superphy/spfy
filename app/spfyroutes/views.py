@@ -114,7 +114,7 @@ def upload():
                     jobs_dict = d
 
             return jsonify(jobs_dict)
-    return 500
+    return "boo", 500
 
 
 @bp.route('/', methods=['GET', 'POST'])

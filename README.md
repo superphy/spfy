@@ -125,7 +125,7 @@ http {
         # Load configuration files for the default server block.
         include /etc/nginx/default.d/*.conf;
 
-        
+
 
 	location / {
             proxy_pass http://127.0.0.1:8081;
@@ -177,3 +177,7 @@ open port: (this is specific to Cent7)
 * check which zone you're in `firewall-cmd --get-active-zones`
 * add the port (note the zone here was `public`) `firewall-cmd --zone=public --add-port=9181/tcp --permanent`
 * reload the firewall `sudo firewall-cmd --reload`
+
+# If stuff doesn't work, check:
+* init the submodule for ectyper?
+* copy the secret keys over?
