@@ -4,7 +4,7 @@
 # only nonspecific stuff: shouldn't contain any functions directly related
 # to data structure(rdf triple organization) of the modules you're dev'ing
 
-import settings
+import config
 from turtle_utils import generate_uri as gu, uri_to_basename
 from rdflib import Namespace, Graph, Literal, plugin
 from rdflib.serializer import Serializer
@@ -28,11 +28,11 @@ def generate_graph():
 
     graph = Graph()
 
-    for key in settings.namespaces.keys():
+    for key in config.namespaces.keys():
         if key is 'root':
-            graph.bind('', settings.namespaces['root'])
+            graph.bind('', config.namespaces['root'])
         else:
-            graph.bind(key, settings.namespaces[key])
+            graph.bind(key, config.namespaces[key])
 
     return graph
 

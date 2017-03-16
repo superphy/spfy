@@ -16,14 +16,14 @@ def upload_graph(graph):
     """
     import requests
     import os
-    import settings
+    import config
 
     from turtle_grapher import generate_output
     from SPARQLWrapper import SPARQLWrapper, JSON
     from rdflib import Graph
 
     data = graph.serialize(format="turtle")
-    url = settings.database['blazegraph_url']
+    url = config.database['blazegraph_url']
 
     headers = {'Content-Type': 'application/x-turtle'}
     request = requests.post(

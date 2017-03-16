@@ -67,7 +67,7 @@ def blob_savvy(args_dict):
     return d
 
 def spfyids_single(args_dict):
-    from settings import database
+    from config import database
 
     # this is temporary, TODO: include a spqarql query to the db
     uriIsolate = gu(':spfy' + str(database['count']))
@@ -98,7 +98,7 @@ def spfyids_directory(args_dict):
     TODO: fix that^
     TODO: make this whole thing less messy
     '''
-    from settings import database
+    from config import database
     from multiprocessing import Pool, cpu_count
 
     print 'Precomputing hashes for all files in directory, may take awhile...'

@@ -36,7 +36,7 @@ def generate_uri(uri, s=''):
     Returns:
         (rdflib.URIRef) with URI needed to add to rdflib.Graph
     """
-    import settings  # this is the settings.py
+    import config  # this is the config.py
 
     from rdflib import Namespace, URIRef, Literal
 
@@ -51,9 +51,9 @@ def generate_uri(uri, s=''):
     postfix = slugify(postfix)
 
     if prefix == '':  # this is our : case
-        return URIRef(settings.namespaces['root'] + postfix)
+        return URIRef(config.namespaces['root'] + postfix)
     else:
-        return URIRef(settings.namespaces[prefix] + postfix)
+        return URIRef(config.namespaces[prefix] + postfix)
 
 
 def uri_to_basename(uri):
@@ -66,8 +66,8 @@ def uri_to_basename(uri):
     Returns:
         (str): just the basestring (ie. everything after the : in rdf syntax)
     '''
-    import settings
-    for value in settings.namespaces.keys():
+    import config
+    for value in config.namespaces.keys():
         if value in uri:
             return str(uri).strip(value)
     # if the clean method above fails, default to '/' splitting
