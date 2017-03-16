@@ -4,4 +4,4 @@ COPY ./app /app
 
 RUN cat /app/supervisord-rq.conf >> /etc/supervisor/conf.d/supervisord.conf
 
-RUN supervisorctl update
+RUN service supervisor stop && service supervisor start
