@@ -7,6 +7,8 @@ services:
     depends_on:
     - redis
     - blazegraph
+    volumes:
+    - /app
 
   worker:
     build: .

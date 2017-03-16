@@ -181,3 +181,4 @@ open port: (this is specific to Cent7)
 # If stuff doesn't work, check:
 * init the submodule for ectyper?
 * copy the secret keys over?
+* is there a /app/tmp dir (will add a code check later)
