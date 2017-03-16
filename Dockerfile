@@ -2,4 +2,6 @@ FROM superphy/backend:working
 
 COPY ./app /app
 
-CMD /usr/bin/supervisord -c /app/supervisord-rq
+RUN cat /app/supervisord-rq >> /etc/supervisor/conf.d/supervisord.conf
+
+CMD /usr/bin/supervisord update
