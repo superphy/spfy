@@ -1,5 +1,3 @@
-import os
-
 #for secret key, do a os.urandom(24).encode('hex')
 SECRET_KEY = 'is-that-daisy'
 REDIS_URL = 'redis://redis:6379/0'
