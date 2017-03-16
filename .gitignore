@@ -1,9 +1,5 @@
-##spfy logs
-outputs/
-
 ##uploads
 instance/uploads/
-app/tmp/*
 
 ##vagrant
 .vagrant/
