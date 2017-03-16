@@ -1,4 +1,5 @@
 #this file is used to build the base Docker image for spfy
+# to be tagged as nitzoy/backend-production:latest
 FROM superphy/docker-flask-conda:latest
 
 COPY ./app /app

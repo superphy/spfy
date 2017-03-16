@@ -1,6 +1,6 @@
 #this is for RQ
 
-FROM superphy/backend:working
+FROM superphy/docker-flask-conda:latest
 
 COPY ./app /app
 
