@@ -10,4 +10,8 @@ ENV PATH /opt/conda/bin:$PATH
 
 ENV PATH /opt/conda/envs/backend/bin:$PATH
 
+RUN cat /etc/supervisor/conf.d/supervisord.conf
+RUN which python
+RUN which conda
+
 RUN service supervisor stop && service supervisor start
