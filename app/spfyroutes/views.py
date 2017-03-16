@@ -23,7 +23,7 @@ def fetch_job(job_id):
     '''
     Iterates through all queues looking for the job.
     '''
-    redis_url = app.config['REDIS_URL']
+    redis_url = current_app.config['REDIS_URL']
     redis_connection = redis.from_url(redis_url)
     for queue in current_app.config['QUEUES']:
         q = Queue(queue, connection=redis_connection)

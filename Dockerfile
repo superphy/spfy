@@ -1,3 +1,5 @@
+#this is for RQ
+
 FROM superphy/backend:working
 
 COPY ./app /app
