@@ -30,7 +30,7 @@ def fetch_job(job_id):
         job = q.fetch_job(job_id)
         if job is not None:
             return job
-
+    return "fudge muffins!", 500
 
 @bp.route('/results/<job_id>')
 def job_status(job_id):
