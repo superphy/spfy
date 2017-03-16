@@ -38,3 +38,9 @@ database['blazegraph_url'] = 'http://localhost:9000/blazegraph/namespace/superph
 # on new DB, start at 1
 database['count'] = 1
 #### end of savvy.py stuff
+
+
+# Sentry DSN for RQ; note: RQ also reads from REDIS_URL, and QUEUES
+# If you're using Sentry to collect your runtime exceptions, you can use this
+# to configure RQ for it in a single step
+#SENTRY_DSN = 'http://public:secret@example.com/1'
