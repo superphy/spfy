@@ -1,25 +1,16 @@
 version: '2'
 services:
   web-nginx-uwsgi:
-    build: ./app
-    image: backend
-    container_name: backend_web
-    environment:
-      LOCAL_SETTINGS: /app/config.py
-    command: python manage.py runserver --host 0.0.0.0
+    image: superphy/backend:working
     ports:
-    - "5000:5000"
-    volumes:
-      - /usr/src/app/
+    - "80:80"
     depends_on:
     - redis
 
   worker:
-    image: backend
+    build: .
+    image: backend-rq
     container_name: rq_worker
-    environment:
-      LOCAL_SETTINGS: /app/config.py
-    command: python manage.py runworker
     volumes_from:
       - web
     depends_on:
