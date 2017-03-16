@@ -1,0 +1,16 @@
+#this file is used to build the base Docker image for spfy
+FROM superphy/docker-flask-conda:latest
+
+COPY ./app /app
+WORKDIR /app
+
+ENV PATH /opt/conda/bin:$PATH
+
+# activate the app environment
+ENV PATH /opt/conda/envs/backend/bin:$PATH
+#### End Spfy
+
+RUN echo $PATH
+RUN which uwsgi
+
+CMD ["/usr/bin/supervisord"]
