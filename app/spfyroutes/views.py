@@ -92,6 +92,8 @@ def upload():
                                             'UPLOAD_FOLDER'], now + '-' + secure_filename(file.filename))
                     file.save(filename)
 
+                    print 'IVE SAVED YO FILE AT', str(filename)
+
                     if tarfile.is_tarfile(filename):
                         # set filename to dir for spfy call
                         filename = handle_tar(filename, now)
