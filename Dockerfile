@@ -2,7 +2,7 @@ FROM superphy/backend:working
 
 COPY ./app /app
 
-RUN cat /app/supervisord-rq.conf >> /etc/supervisor/conf.d/supervisord.conf
+COPY /app/supervisord-rq.conf /etc/supervisor/conf.d/supervisord.conf
 
 RUN echo 'export PATH=/opt/conda/bin:$PATH' > /etc/profile.d/conda.sh
 
@@ -16,4 +16,4 @@ RUN which conda
 RUN which uwsgi
 RUN which rq
 
-RUN service supervisor stop && service supervisor start
+CMD ["/usr/bin/supervisord"]
