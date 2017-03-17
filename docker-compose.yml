@@ -11,9 +11,7 @@ services:
     - /datastore
 
   worker:
-    build: .
     image: backend-rq
-    container_name: rq_worker
     volumes_from:
       - web-nginx-uwsgi
     depends_on:
