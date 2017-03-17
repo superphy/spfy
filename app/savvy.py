@@ -39,15 +39,18 @@ def call_ectyper(graph, args_dict):
     from ast import literal_eval
     from os.path import splitext
 
-    #hack to allow ectyper to run in docker
-    shutil.copyfile(args['i'], 'tmp/temp.fsa')
-    args['i']= 'tmp/temp.fsa'
+
 
     ectyper_dict = {}
     #logging.info('calling ectyper from fun call_ectyper')
     # concurrency is handled at the batch level, not here (note: this might change)
     # we only use ectyper for serotyping and vf, amr is handled by rgi directly
     if not args_dict['disable_serotype'] or not args_dict['disable_vf']:
+
+        #hack to allow ectyper to run in docker
+        shutil.copyfile(args_dict['i'], 'tmp/temp.fsa')
+        args_dict['i']= 'tmp/temp.fsa'
+
         ectyper_dict = subprocess.check_output(['./ecoli_serotyping/src/Tools_Controller/tools_controller.py',
                                                 '-in', args_dict['i'],
                                                 '-s', str(
