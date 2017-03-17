@@ -40,8 +40,8 @@ def call_ectyper(graph, args_dict):
     from os.path import splitext
 
     #hack to allow ectyper to run in docker
-    shutil.copyfile(args[i], 'tmp/temp.fsa')
-    args[i]= 'tmp/temp.fsa'
+    shutil.copyfile(args['i'], 'tmp/temp.fsa')
+    args['i']= 'tmp/temp.fsa'
 
     ectyper_dict = {}
     #logging.info('calling ectyper from fun call_ectyper')
