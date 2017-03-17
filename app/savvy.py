@@ -39,6 +39,10 @@ def call_ectyper(graph, args_dict):
     from ast import literal_eval
     from os.path import splitext
 
+    #hack to allow ectyper to run in docker
+    shutil.copyfile(args[i], 'tmp/temp.fsa')
+    args[i]= 'tmp/temp.fsa'
+
     ectyper_dict = {}
     #logging.info('calling ectyper from fun call_ectyper')
     # concurrency is handled at the batch level, not here (note: this might change)
