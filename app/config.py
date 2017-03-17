@@ -30,7 +30,7 @@ namespaces = {
 
 #database defaults
 database = {}
-database['blazegraph_url'] = 'blazegraph://blazegraph:8080/bigdata/sparql'
+database['blazegraph_url'] = 'http://blazegraph:8080/bigdata/sparql'
 #database['blazegraph_url'] = 'http://localhost:9000/blazegraph/namespace/superphy/sparql'
 #note: the convention here is database['count'] is NOT occupied
 # on new DB, start at 1
