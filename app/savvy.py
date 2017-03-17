@@ -49,7 +49,7 @@ def call_ectyper(graph, args_dict):
 
         #hack to allow ectyper to run in docker
         shutil.copyfile(args_dict['i'], '/app/tmp/temp.fna')
-        args_dict['i']= 'tmp/temp.fsa'
+        args_dict['i']= 'tmp/temp.fna'
 
         ectyper_dict = subprocess.check_output(['./ecoli_serotyping/src/Tools_Controller/tools_controller.py',
                                                 '-in', args_dict['i'],
