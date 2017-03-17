@@ -14,6 +14,8 @@ import datastruct_savvy
 
 import pandas as pd
 
+import config
+
 from rdflib import Graph
 from turtle_utils import generate_uri as gu
 from turtle_grapher import generate_output, generate_graph, generate_turtle_skeleton, generate_file_output
@@ -109,21 +111,22 @@ def generate_amr(graph, uriGenome, fasta_file):
 
     # differs from ectyper as we dont care about the temp results, just the final .tsv
     # direct (the main) call
+    output = config.DATASTORE + '/' + outputname
     print subprocess.call(['rgi',
                      '-i', fasta_file,
-                     '-o', '/app/outputs/' + outputname])
+                     '-o', output])
 
     print fasta_file
 
     # the rgi_json call in rgitool.py isn't needed for us
     # this generates the .tsv we want
     subprocess.call(['rgi_jsontab',
-                     '-i', '/app/outputs/' + outputname + '.json',
-                     '-o', '/app/outputs/' + outputname])
+                     '-i', output + '.json',
+                     '-o', output])
 
-    rename('/app/outputs/' + outputname + '.txt', '/app/outputs/' + outputname + '.tsv')
+    rename(output + '.txt', output + '.tsv')
 
-    amr_results = pandas.read_table('/app/outputs/' + outputname + '.tsv')
+    amr_results = pandas.read_table(output + '.tsv')
     amr_results = amr_results[
         ['ORF_ID', 'START', 'STOP', 'ORIENTATION', 'CUT_OFF', 'Best_Hit_ARO']]
 

@@ -89,7 +89,7 @@ def upload():
                 if file:
                     # for saving file
                     filename = os.path.join(current_app.config[
-                                            'UPLOAD_FOLDER'], now + '-' + secure_filename(file.filename))
+                                            'DATASTORE'], now + '-' + secure_filename(file.filename))
                     file.save(filename)
 
                     print 'IVE SAVED YO FILE AT', str(filename)
