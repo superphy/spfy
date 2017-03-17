@@ -118,8 +118,8 @@ def generate_amr(graph, uriGenome, fasta_file):
     # the rgi_json call in rgitool.py isn't needed for us
     # this generates the .tsv we want
     subprocess.call(['rgi_jsontab',
-                     '-i', 'outputs/' + outputname + '.json',
-                     '-o', 'outputs/' + outputname])
+                     '-i', '/app/outputs/' + outputname + '.json',
+                     '-o', '/app/outputs/' + outputname])
 
     rename('/app/outputs/' + outputname + '.txt', '/app/outputs/' + outputname + '.tsv')
 
