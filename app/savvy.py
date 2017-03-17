@@ -112,10 +112,9 @@ def generate_amr(graph, uriGenome, fasta_file):
 
     # differs from ectyper as we dont care about the temp results, just the final .tsv
     # direct (the main) call
-    output = config.DATASTORE + '/' + outputname
     print subprocess.call(['rgi',
                      '-i', fasta_file,
-                     '-o', output])
+                     '-o', outputname])
 
     print fasta_file
 
@@ -123,14 +122,14 @@ def generate_amr(graph, uriGenome, fasta_file):
     # the rgi_json call in rgitool.py isn't needed for us
     # this generates the .tsv we want
     subprocess.call(['rgi_jsontab',
-                     '-i', output + '.json',
-                     '-o', output])
+                     '-i', outputname + '.json',
+                     '-o', outputname])
 
 
 
     #rename(output + '.txt', output + '.tsv')
 
-    amr_results = pandas.read_table(outputname + '.txt')
+    amr_results = pandas.read_table('/app/' + outputname + '.txt')
     amr_results = amr_results[
         ['ORF_ID', 'START', 'STOP', 'ORIENTATION', 'CUT_OFF', 'Best_Hit_ARO']]
 
