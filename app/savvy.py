@@ -48,7 +48,7 @@ def call_ectyper(graph, args_dict):
     if not args_dict['disable_serotype'] or not args_dict['disable_vf']:
 
         #hack to allow ectyper to run in docker
-        shutil.copyfile(args_dict['i'], 'tmp/temp.fsa')
+        shutil.copyfile(args_dict['i'], '/app/tmp/temp.fna')
         args_dict['i']= 'tmp/temp.fsa'
 
         ectyper_dict = subprocess.check_output(['./ecoli_serotyping/src/Tools_Controller/tools_controller.py',
