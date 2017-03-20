@@ -48,6 +48,7 @@ def call_ectyper(graph, args_dict):
     if not args_dict['disable_serotype'] or not args_dict['disable_vf']:
 
         #hack to allow ectyper to run in docker
+        args_dict['filename'] = args_dict['i']
         shutil.copyfile(args_dict['i'], '/app/tmp/temp.fna')
         args_dict['i']= 'tmp/temp.fna'
 
@@ -320,7 +321,7 @@ def json_return(args_dict, gene_dict):
     for analysis in gene_dict:
         if analysis == 'Serotype':
             instance_dict = {}
-            instance_dict['filename'] = basename(args_dict['i'])[27:]
+            instance_dict['filename'] = basename(args_dict['filename'])[27:]
             instance_dict['hitname'] = str(gene_dict[analysis].values()).replace(',', ' ').replace("'","").strip("[").strip("]")
             if not "No prediction" in instance_dict['hitname']:
                 instance_dict['hitname'] = instance_dict['hitname'].replace(" ",":",1).replace(" ","")
@@ -339,7 +340,7 @@ def json_return(args_dict, gene_dict):
                     # TODO: bug fix^
                     if type(item) is dict:
                         instance_dict = {}
-                        instance_dict['filename'] = basename(args_dict['i'])[27:]
+                        instance_dict['filename'] = basename(args_dict['filename'])[27:]
                         instance_dict['contigid'] = contig_id
                         instance_dict['analysis'] = analysis
                         instance_dict['hitname'] = item['GENE_NAME']
