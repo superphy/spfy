@@ -48,7 +48,6 @@ def call_ectyper(graph, args_dict):
     if not args_dict['disable_serotype'] or not args_dict['disable_vf']:
 
         #hack to allow ectyper to run in docker
-        args_dict['filename'] = args_dict['i']
         shutil.copyfile(args_dict['i'], '/app/tmp/temp.fna')
         args_dict['i']= 'tmp/temp.fna'
 
@@ -412,6 +411,9 @@ def savvy(args_dict):
 
     print("Importing FASTA from: " + args_dict['i'])
     #logging.info('importing from' + args_dict['i'])
+
+    #saving copy of filename, this is req due to hack used to handle ectyper
+    args_dict['filename'] = args_dict['i']
 
     # setting up graph
     graph = generate_graph()
