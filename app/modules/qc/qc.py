@@ -31,12 +31,18 @@ def run_blast(query_file, blast_db):
                                         "-query", query_file,
                                         "-db", blast_db,
                                         "-out", blast_output_file,
-                                        "-outfmt", "5",
+                                        "-outfmt", "6",
                                         "-word_size", "11"])
     if ret_code == 0:
         return blast_output_file
     else:
         raise
+
+def parse_blast_records(blast_output_file):
+    result_handle = open(blast_output_file, 'r')
+    blast_records = Bio.Blast.NCBIXML.parse(result_handle)
+    result_handle.close()
+
 
 
 def qc(query_file):
