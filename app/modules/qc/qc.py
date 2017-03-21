@@ -1,5 +1,6 @@
 import tempfile
 import subprocess
+import argparse
 import Bio.Blast.NCBIXML
 
 def create_blast_db():
@@ -45,3 +46,8 @@ def qc(query_file):
 
     # dev code
     subprocess.call(['cat', blast_output_file])
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-i", required=True)
+    qc(args.i)
