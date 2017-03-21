@@ -55,7 +55,7 @@ def parse_blast_records(blast_output_file):
     blast_records_perfect = blast_records[blast_records.iloc[:,2]==100]
 
     # col 1 is the subject (where col 0 is the query)
-    unqiue_hits = blast_records_perfect.iloc[:,1].unique()
+    unique_hits = blast_records_perfect.iloc[:,1].unique()
 
     return unique_hits
 
@@ -70,7 +70,7 @@ def qc(query_file):
     blast_output_file = run_blast(query_file, blast_db)
     unique_hits = parse_blast_records(blast_output_file)
 
-    if len(unqiue_hits) >= 3:
+    if len(unique_hits) >= 3:
         return True
     else:
         return False
