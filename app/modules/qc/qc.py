@@ -18,8 +18,7 @@ def create_blast_db():
                                         "-in", ecoli_ref,
                                         "-dbtype", "nucl",
                                         "-title", "ecoli_blastdb",
-                                        "-out", blast_db_path],
-                                       check=True)
+                                        "-out", blast_db_path])
     if completed_process.returncode == 0:
         return blast_db_path
     else:
