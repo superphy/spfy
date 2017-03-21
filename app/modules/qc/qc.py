@@ -32,7 +32,7 @@ def run_blast(query_file, blast_db):
                                         "-query", query_file,
                                         "-db", blast_db,
                                         "-out", blast_output_file,
-                                        "-outfmt", "6",
+                                        "-outfmt", "10",
                                         "-word_size", "11"])
     if ret_code == 0:
         return blast_output_file
