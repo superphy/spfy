@@ -27,6 +27,10 @@ def create_blast_db():
 
 
 def run_blast(query_file, blast_db):
+    '''
+    Runs query against ref db of ecoli-spec sequences.
+    Output format is set to '10'(csv)
+    '''
     blast_output_file = create_blast_db() + '.output'
     ret_code = subprocess.call(["blastn",
                                         "-query", query_file,
@@ -40,9 +44,14 @@ def run_blast(query_file, blast_db):
         raise
 
 def parse_blast_records(blast_output_file):
+    '''
+    Recall, headers are: https://edwards.sdsu.edu/research/blast-output-8/
+    For QC, we only consider perfect matches against our reference.
+    '''
     blast_records = pd.read_csv(blast_output_file)
     print blast_records
-    print blast_records.iloc[:,2]
+    print '!!!!!!!!!!!'
+    print blast_records[blast_records.iloc[:,2]==100]
 
 
 def qc(query_file):
