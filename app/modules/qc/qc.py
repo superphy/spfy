@@ -44,8 +44,7 @@ def qc(query_file):
     blast_db = create_blast_db()
     blast_output_file = run_blast(query_file, blast_db)
 
-    # dev code
-    subprocess.call(['cat', blast_output_file])
+    print blast_output_file
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
