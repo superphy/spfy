@@ -79,4 +79,4 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("-i", required=True)
     args = parser.parse_args()
-    qc(args.i)
+    print qc(args.i)
