@@ -42,6 +42,7 @@ def run_blast(query_file, blast_db):
 def parse_blast_records(blast_output_file):
     blast_records = pd.read_csv(blast_output_file)
     print blast_records
+    print blast_records.iloc[:,2]
 
 
 def qc(query_file):
