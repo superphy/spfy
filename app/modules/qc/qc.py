@@ -14,12 +14,12 @@ def create_blast_db():
     tempdir = tempfile.mkdtemp()
     blast_db_path = os.path.join(tempdir, 'ecoli_blastdb')
 
-    completed_process = subprocess.call(["makeblastdb",
+    ret_code = subprocess.call(["makeblastdb",
                                         "-in", ecoli_ref,
                                         "-dbtype", "nucl",
                                         "-title", "ecoli_blastdb",
                                         "-out", blast_db_path])
-    if completed_process.returncode == 0:
+    if ret_code == 0:
         return blast_db_path
     else:
         raise
@@ -33,7 +33,7 @@ def run_blast(query_file, blast_db):
                                         "-out", blast_output_file,
                                         "-outfmt", "5",
                                         "-word_size", "11"])
-    if completed_process.returncode == 0:
+    if ret_code == 0:
         return blast_output_file
     else:
         raise
