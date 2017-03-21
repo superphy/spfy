@@ -27,7 +27,7 @@ def create_blast_db():
 
 def run_blast(query_file, blast_db):
     blast_output_file = create_blast_db() + '.output'
-    completed_process = subprocess.call(["blastn",
+    ret_code = subprocess.call(["blastn",
                                         "-query", query_file,
                                         "-db", blast_db,
                                         "-out", blast_output_file,
