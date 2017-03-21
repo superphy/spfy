@@ -48,11 +48,11 @@ def parse_blast_records(blast_output_file):
     Recall, headers are: https://edwards.sdsu.edu/research/blast-output-8/
     For QC, we only consider perfect matches against our reference.
     '''
-    blast_records = pd.read_csv(blast_output_file)
+    blast_records = pd.read_csv(blast_output_file, header=None)
     print blast_records
     print '!!!!!!!!!!!'
-    print blast_records[blast_records.iloc[:,2]==100]
-
+    blast_records_perfect = blast_records[blast_records.iloc[:,2]==100]
+    print blast_records_perfect.iloc[:,1].unique()
 
 def qc(query_file):
     '''
