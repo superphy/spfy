@@ -50,5 +50,5 @@ def qc(query_file):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("-i", required=True)
-    parser.parse_args()
+    args = parser.parse_args()
     qc(args.i)
