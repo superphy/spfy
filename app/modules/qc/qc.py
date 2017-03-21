@@ -1,7 +1,9 @@
+import os
 import tempfile
 import subprocess
 import argparse
 import Bio.Blast.NCBIXML
+
 
 def create_blast_db():
     '''
@@ -23,6 +25,7 @@ def create_blast_db():
     else:
         raise
 
+
 def run_blast(query_file, blast_db):
     blast_output_file = create_blast_db() + '.output'
     completed_process = subprocess.run(["blastn",
@@ -35,6 +38,7 @@ def run_blast(query_file, blast_db):
         return blast_output_file
     else:
         raise
+
 
 def qc(query_file):
     '''
