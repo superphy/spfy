@@ -4,6 +4,7 @@ import subprocess
 import argparse
 import Bio.Blast.NCBIXML
 
+import pandas as pd
 
 def create_blast_db():
     '''
@@ -39,10 +40,8 @@ def run_blast(query_file, blast_db):
         raise
 
 def parse_blast_records(blast_output_file):
-    result_handle = open(blast_output_file, 'r')
-    blast_records = Bio.Blast.NCBIXML.parse(result_handle)
-    result_handle.close()
-
+    blast_records = pd.read_csv(blast_output_file)
+    print blast_records
 
 
 def qc(query_file):
@@ -52,8 +51,8 @@ def qc(query_file):
     '''
     blast_db = create_blast_db()
     blast_output_file = run_blast(query_file, blast_db)
-
     print blast_output_file
+    parse_blast_records(blast_output_file)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
