@@ -14,7 +14,7 @@ def create_blast_db():
     tempdir = tempfile.mkdtemp()
     blast_db_path = os.path.join(tempdir, 'ecoli_blastdb')
 
-    completed_process = subprocess.run(["makeblastdb",
+    completed_process = subprocess.call(["makeblastdb",
                                         "-in", ecoli_ref,
                                         "-dbtype", "nucl",
                                         "-title", "ecoli_blastdb",
@@ -28,7 +28,7 @@ def create_blast_db():
 
 def run_blast(query_file, blast_db):
     blast_output_file = create_blast_db() + '.output'
-    completed_process = subprocess.run(["blastn",
+    completed_process = subprocess.call(["blastn",
                                         "-query", query_file,
                                         "-db", blast_db,
                                         "-out", blast_output_file,
