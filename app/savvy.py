@@ -23,8 +23,7 @@ from turtle_grapher import generate_output, generate_graph, generate_turtle_skel
 
 from os.path import basename
 
-# bruteforce
-from insert import upload_graph
+from modules.blazeUploader.blazeUploader import upload_graph
 
 # for pairwise comparison of rows in panadas
 from itertools import tee, izip

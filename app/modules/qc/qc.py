@@ -2,7 +2,6 @@ import os
 import tempfile
 import subprocess
 import argparse
-import Bio.Blast.NCBIXML
 
 import pandas as pd
 

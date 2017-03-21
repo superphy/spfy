@@ -1,4 +1,11 @@
-def upload_graph(graph):
+import requests
+import os
+import config
+
+from SPARQLWrapper import SPARQLWrapper, JSON
+from rdflib import Graph
+
+def upload_graph(graph, url='http://localhost:8080/bigdata/sparql'):
     """
     Uploads raw data onto Blazegraph. To ensure that Blazegraph interprets
     properly, it is necessary to specify the format in a Context-Header.
@@ -14,16 +21,7 @@ def upload_graph(graph):
 
     Prints out the response object from Blazegraph
     """
-    import requests
-    import os
-    import config
-
-    from turtle_grapher import generate_output
-    from SPARQLWrapper import SPARQLWrapper, JSON
-    from rdflib import Graph
-
     data = graph.serialize(format="turtle")
-    url = config.database['blazegraph_url']
 
     headers = {'Content-Type': 'application/x-turtle'}
     request = requests.post(
@@ -35,3 +33,15 @@ def upload_graph(graph):
         headers=headers
     )
     return request.content
+
+def blazeUploader(graph, blazegraph_url, spfyid = None):
+    '''
+    (1) Takes a rdflib.Graph object
+    (2) Checks for duplicates in Blazegraph
+    (3) Queries Blazegraph for current largest spfyID
+    (4) Appends the spfyID to the graph object
+    (5) Uploads graph object to Blazegraph
+    '''
+
+    # (5)
+    upload_graph(graph, blazegraph_url)
