@@ -20,6 +20,8 @@ def create_blast_db():
                                        check=True)
     if completed_process.returncode == 0:
         return blast_db_path
+    else:
+        raise
 
 def run_blast(query_file, blast_db):
     blast_output_file = create_blast_db() + '.output'
@@ -31,6 +33,8 @@ def run_blast(query_file, blast_db):
                                         "-word_size", "11"])
     if completed_process.returncode == 0:
         return blast_output_file
+    else:
+        raise
 
 def qc(query_file):
     '''
@@ -46,4 +50,5 @@ def qc(query_file):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("-i", required=True)
+    parser.parse_args()
     qc(args.i)
