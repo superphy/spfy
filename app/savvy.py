@@ -12,7 +12,7 @@ import logging
 # long function calls, cause datastruct_savvy is important
 import datastruct_savvy
 
-import pandas as pd
+
 
 import config
 import shutil
@@ -21,12 +21,13 @@ from rdflib import Graph
 from modules.turtleGrapher.turtle_utils import generate_uri as gu, generate_hash
 from modules.turtleGrapher.turtle_grapher import generate_output, generate_graph, generate_hash, generate_turtle_skeleton, generate_file_output
 
-from os.path import basename
+
 from modules.blazeUploader.blazeUploader import upload_graph
 from modules.beautify.beautify import json_return
 
+from modules.ectyper.callEctyper import call_ectyper
+
 # for pairwise comparison of rows in panadas
-from itertools import tee, izip
 
 def savvy(args_dict):
     '''

@@ -1,3 +1,5 @@
+from app import config  # this is the config.py
+
 def generate_hash(filename):
     from hashlib import sha1
     # the 'b' isn't needed less you run this on Windows
@@ -36,7 +38,7 @@ def generate_uri(uri, s=''):
     Returns:
         (rdflib.URIRef) with URI needed to add to rdflib.Graph
     """
-    import config  # this is the config.py
+
 
     from rdflib import Namespace, URIRef, Literal
 
@@ -66,7 +68,7 @@ def uri_to_basename(uri):
     Returns:
         (str): just the basestring (ie. everything after the : in rdf syntax)
     '''
-    import config
+
     for value in config.namespaces.keys():
         if value in uri:
             return str(uri).strip(value)

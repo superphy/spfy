@@ -71,9 +71,9 @@ def parse_gene_dict(graph, gene_dict, uriGenome):
             # this is a special case for amr results
             if 'CUT_OFF' in gene_dict.keys():
                 graph.add((bnode_start, gu('dc:Description'),
-                           Literal(amr_results['CUT_OFF'][i])))
+                           Literal(gene_dict['CUT_OFF'])))
                 graph.add((bnode_end, gu('dc:Description'),
-                           Literal(amr_results['CUT_OFF'][i])))
+                           Literal(gene_dict['CUT_OFF'])))
 
             graph.add((bnode_start, gu('rdf:type'), gu('faldo:Position')))
             graph.add((bnode_start, gu('rdf:type'), gu('faldo:ExactPosition')))

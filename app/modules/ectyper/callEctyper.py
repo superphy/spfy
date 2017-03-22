@@ -1,3 +1,8 @@
+import shutil
+
+from app.modules.turtleGrapher import datastruct_savvy
+from app.modules.amr.amr import generate_amr
+
 def call_ectyper(graph, args_dict):
     # i don't intend to import anything from ECTyper (there are a lot of
     # imports in it - not sure if we'll use them all)

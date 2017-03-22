@@ -1,3 +1,5 @@
+from app.modules.turtleGrapher import datastruct_savvy
+
 def generate_amr(graph, uriGenome, fasta_file):
     import subprocess
     import pandas

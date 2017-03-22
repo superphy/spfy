@@ -4,7 +4,7 @@
 # only nonspecific stuff: shouldn't contain any functions directly related
 # to data structure(rdf triple organization) of the modules you're dev'ing
 
-import config
+from app import config
 from turtle_utils import generate_uri as gu, uri_to_basename
 from rdflib import Namespace, Graph, Literal, plugin
 from rdflib.serializer import Serializer

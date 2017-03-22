@@ -1,6 +1,6 @@
 import requests
 import os
-import config
+from app import config
 
 from SPARQLWrapper import SPARQLWrapper, JSON
 from rdflib import Graph
