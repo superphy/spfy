@@ -7,7 +7,6 @@
 from app import config
 from turtle_utils import generate_uri as gu, uri_to_basename
 from rdflib import Namespace, Graph, Literal, plugin
-from rdflib.serializer import Serializer
 from Bio import SeqIO
 from os.path import basename
 

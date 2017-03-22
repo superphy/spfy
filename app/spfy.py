@@ -2,7 +2,6 @@
 # -*- coding: UTF-8 -*-
 
 import logging
-import time
 import os
 
 import redis
@@ -13,12 +12,6 @@ from flask import current_app
 # Redis Queue
 from redis import Redis
 from rq import Queue
-# for details, see: https://github.com/nvie/rq/pull/421
-from rq.registry import FinishedJobRegistry, StartedJobRegistry
-# details:
-# https://realpython.com/blog/python/flask-by-example-implementing-a-redis-task-queue/
-# http://stackoverflow.com/questions/15181630/how-to-get-job-by-id-in-rq-python
-from rq.job import Job
 
 # other libraries for rdflib
 from rdflib import Graph
@@ -28,6 +21,12 @@ from modules.turtleGrapher.turtle_utils import generate_uri as gu, generate_hash
 
 # for various features we add
 from savvy import savvy  # serotype/amr/vf
+
+
+
+from config import database
+from multiprocessing import Pool, cpu_count
+
 
 # the only ONE time for global variables
 # when naming queues, make sure you actually set a worker to listen to that queue
@@ -66,7 +65,6 @@ def blob_savvy(args_dict):
     return d
 
 def spfyids_single(args_dict):
-    from config import database
 
     # this is temporary, TODO: include a spqarql query to the db
     uriIsolate = gu(':spfy' + str(database['count']))
@@ -97,8 +95,7 @@ def spfyids_directory(args_dict):
     TODO: fix that^
     TODO: make this whole thing less messy
     '''
-    from config import database
-    from multiprocessing import Pool, cpu_count
+
 
     print 'Precomputing hashes for all files in directory, may take awhile...'
 
@@ -154,8 +151,6 @@ def spfy(args_dict):
 
 if __name__ == "__main__":
     import argparse
-
-    from ConfigParser import SafeConfigParser
 
     # parsing cli-input
     parser = argparse.ArgumentParser()

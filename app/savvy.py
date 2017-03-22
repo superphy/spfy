@@ -9,18 +9,9 @@
 # -vy
 
 import logging
-# long function calls, cause datastruct_savvy is important
-import datastruct_savvy
 
-
-
-import config
-import shutil
-
-from rdflib import Graph
-from modules.turtleGrapher.turtle_utils import generate_uri as gu, generate_hash
-from modules.turtleGrapher.turtle_grapher import generate_output, generate_graph, generate_hash, generate_turtle_skeleton, generate_file_output
-
+from modules.turtleGrapher.turtle_utils import generate_uri as gu
+from modules.turtleGrapher.turtle_grapher import generate_graph, generate_hash, generate_turtle_skeleton
 
 from modules.blazeUploader.blazeUploader import upload_graph
 from modules.beautify.beautify import json_return

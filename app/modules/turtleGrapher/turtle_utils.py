@@ -1,4 +1,5 @@
 from app import config  # this is the config.py
+from rdflib import Namespace, URIRef, Literal
 
 def generate_hash(filename):
     from hashlib import sha1
@@ -38,9 +39,6 @@ def generate_uri(uri, s=''):
     Returns:
         (rdflib.URIRef) with URI needed to add to rdflib.Graph
     """
-
-
-    from rdflib import Namespace, URIRef, Literal
 
     # if you call with a uri already
     if isinstance(uri, URIRef):

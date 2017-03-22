@@ -1,11 +1,10 @@
+import subprocess
+import pandas as pd
+
 from app.modules.turtleGrapher import datastruct_savvy
 
 def generate_amr(graph, uriGenome, fasta_file):
-    import subprocess
-    import pandas
-
-    from os import rename
-    from rdflib import BNode, Literal
+    
 
     if '/' in fasta_file:
         outputname = fasta_file.split('/')[-1]
@@ -31,7 +30,7 @@ def generate_amr(graph, uriGenome, fasta_file):
 
     #rename(output + '.txt', output + '.tsv')
 
-    amr_results = pandas.read_table('/app/' + outputname + '.txt')
+    amr_results = pd.read_table('/app/' + outputname + '.txt')
     amr_results = amr_results[
         ['ORF_ID', 'START', 'STOP', 'ORIENTATION', 'CUT_OFF', 'Best_Hit_ARO']]
 
