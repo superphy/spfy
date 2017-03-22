@@ -24,8 +24,7 @@ from rq.job import Job
 from rdflib import Graph
 
 # our own slightly more general stuff
-from turtle_grapher import generate_output
-from turtle_utils import generate_uri as gu, generate_hash
+from modules.turtleGrapher.turtle_utils import generate_uri as gu, generate_hash
 
 # for various features we add
 from savvy import savvy  # serotype/amr/vf

@@ -18,11 +18,10 @@ import config
 import shutil
 
 from rdflib import Graph
-from turtle_utils import generate_uri as gu
-from turtle_grapher import generate_output, generate_graph, generate_turtle_skeleton, generate_file_output
+from modules.turtleGrapher.turtle_utils import generate_uri as gu, generate_hash
+from modules.turtleGrapher.turtle_grapher import generate_output, generate_graph, generate_hash, generate_turtle_skeleton, generate_file_output
 
 from os.path import basename
-
 from modules.blazeUploader.blazeUploader import upload_graph
 from modules.beautify.beautify import json_return
 
@@ -82,7 +81,6 @@ if __name__ == "__main__":
     import os  # for batch cleanup
 
     from ConfigParser import SafeConfigParser
-    from turtle_utils import generate_hash
 
     # parsing cli-input
     parser = argparse.ArgumentParser()
