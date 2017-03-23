@@ -5,7 +5,7 @@ import logging
 import os
 
 import redis
-import config
+import app.config
 
 from flask import current_app
 
@@ -17,14 +17,14 @@ from rq import Queue
 from rdflib import Graph
 
 # our own slightly more general stuff
-from modules.turtleGrapher.turtle_utils import generate_uri as gu, generate_hash
+from app.modules.turtleGrapher.turtle_utils import generate_uri as gu, generate_hash
 
 # for various features we add
 from savvy import savvy  # serotype/amr/vf
 
 
 
-from config import database
+from app.config import database
 from multiprocessing import Pool, cpu_count
 
 
@@ -32,35 +32,63 @@ from multiprocessing import Pool, cpu_count
 # when naming queues, make sure you actually set a worker to listen to that queue
 # we use the high priority queue for things that should be immediately
 # returned to the user
-redis_url = config.REDIS_URL
+redis_url = app.config.REDIS_URL
 redis_conn = redis.from_url(redis_url)
-high = Queue('high', connection=redis_conn)
-low = Queue('low', connection=redis_conn, default_timeout=600)
+singles_q = Queue('singles', connection=redis_conn)
+multiples_q = Queue('multiples', connection=redis_conn, default_timeout=600)
+blazegraph_q = Queue('blazegraph', connection=redis_conn)
 
+def blob_savvy_enqueue(single_dict):
+    '''
+    Handles enqueueing of single file to multiple queues.
+    :param f: a fasta file
+    :param single_dict: single dictionary of arguments
+    :return: dictionary with jobs ids and relevant headers
+    '''
+    from app.modules.qc.qc import qc
+    from app.modules.ectyper.callEctyper import call_ectyper
+    from app.modules.amr.amr import amr
+    from app.modules.beautify.beautify import beautify
+    from app.modules.turtleGrapher.datastruct_savvy import datastruct_savvy
+    from app.modules.blazeUploader.blaze_uploader import blaze_uploader
+    from app.modules.turtleGrapher.turtle_grapher import turtle_grapher
+    jobs = {}
+
+    job_qc = multiples_q.enqueue(qc, single_dict)
+
+    job_ectyper = singles_q.enqueue(call_ectyper, single_dict, depends_on=job_qc)
+    job_ectyper_beautify = multiples_q.enqueue(beautify, single_dict, depends_on=job_ectyper, result_ttl=-1)
+    job_ectyper_datastruct = multiples_q.enqueue(datastruct_savvy, single_dict, depends_on=job_ectyper)
+    job_ectyper_blazegraph = blazegraph_q.enqueue(blaze_uploader, single_dict, depends_on=job_ectyper_datastruct)
+
+    job_amr = multiples_q.enqueue(amr, single_dict, depends_on=job_qc)
+    job_amr_beautify = multiples_q.enqueue(beautify, single_dict, depends_on=job_amr, result_ttl=-1)
+    job_amr_datastruct = multiples_q.enqueue(datastruct_savvy, single_dict, depends_on=job_amr)
+    job_amr_blazegraph = blazegraph_q.enqueue(blaze_uploader, single_dict, depends_on=job_amr_datastruct)
+
+    # the base file data for blazegraph
+    job_turtle = multiples_q.enqueue(turtle_grapher, single_dict, depends_on=job_qc)
+    job_turtle_blazegraph = blazegraph_q.enqueue(blaze_uploader, single_dict, depends_on=job_turtle)
+
+    jobs[job_qc.get_id()] = {'file': args_dict['i'], 'analysis':'Quality Control'}
+    jobs[job_ectyper_beautify.get_id()] = {'file': args_dict['i'], 'analysis': 'Virulence Factors / Serotype'}
+    jobs[job_amr_beautify.get_id()] = {'file': args_dict['i'], 'analysis': 'Antimicrobial Resistance'}
+
+    return jobs
 
 def blob_savvy(args_dict):
     '''
-    Handles savvy.py's pipeline.
+    Handles enqueuing of all files in a given directory or just a single file
     '''
     d = {}
     if os.path.isdir(args_dict['i']):
         for f in os.listdir(args_dict['i']):
             single_dict = dict(args_dict.items() + {'uriIsolate': args_dict['uris'][f][
-                               'uriIsolate'], 'uriGenome': args_dict['uris'][f]['uriGenome'], 'i': args_dict['i'] + f, 'uris': None}.items())
-            job_high= high.enqueue(savvy, dict(single_dict.items() +
-                                     {'disable_amr': True}.items()),result_ttl=-1)
-            job_low = low.enqueue(savvy, dict(single_dict.items() +
-                                    {'disable_vf': True, 'disable_serotype': True}.items()),result_ttl=-1)
-            d[job_high.get_id()] = {'file':f, 'analysis':'Virulence Factors / Serotype'}
-            d[job_low.get_id()] = {'file':f, 'analysis': 'Antimicrobial Resistance'}
+                               'uriIsolate'], 'uriGenome': args_dict['uris'][f]['uriGenome'], 'i': os.path.abspath(f), 'uris': None}.items())
+            d.update(blob_savvy_enqueue(single_dict))
     else:
         # run the much faster vf and serotyping separately of amr
-        job_high = high.enqueue(savvy, dict(args_dict.items() +
-                                 {'disable_amr': True}.items()),result_ttl=-1)
-        job_low = low.enqueue(savvy, dict(args_dict.items() +
-                                {'disable_vf': True, 'disable_serotype': True}.items()),result_ttl=-1)
-        d[job_high.get_id()] = {'file':args_dict['i'], 'analysis':'Virulence Factors and Serotype'}
-        d[job_low.get_id()] = {'file':args_dict['i'], 'analysis': 'Antimicrobial Resistance'}
+        d.update(blob_savvy_enqueue(args_dict))
 
     return d
 

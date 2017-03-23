@@ -10,13 +10,13 @@
 
 import logging
 
-from modules.turtleGrapher.turtle_utils import generate_uri as gu
-from modules.turtleGrapher.turtle_grapher import generate_graph, generate_hash, generate_turtle_skeleton
+from app.modules.turtleGrapher.turtle_utils import generate_uri as gu
+from app.modules.turtleGrapher.turtle_grapher import generate_graph, generate_hash, generate_turtle_skeleton
 
-from modules.blazeUploader.blazeUploader import upload_graph
-from modules.beautify.beautify import json_return
+from app.modules.blazeUploader.blaze_uploader import upload_graph
+from app.modules.beautify.beautify import json_return
 
-from modules.ectyper.callEctyper import call_ectyper
+from app.modules.ectyper.callEctyper import call_ectyper
 
 # for pairwise comparison of rows in panadas
 

@@ -34,7 +34,7 @@ def upload_graph(graph, url='http://localhost:8080/bigdata/sparql'):
     )
     return request.content
 
-def blazeUploader(graph, blazegraph_url, spfyid = None):
+def blaze_uploader(graph, blazegraph_url, spfyid = None):
     '''
     (1) Takes a rdflib.Graph object
     (2) Checks for duplicates in Blazegraph

@@ -4,7 +4,7 @@ import pandas as pd
 from app.modules.turtleGrapher import datastruct_savvy
 
 def generate_amr(graph, uriGenome, fasta_file):
-    
+
 
     if '/' in fasta_file:
         outputname = fasta_file.split('/')[-1]
@@ -61,3 +61,16 @@ def generate_amr(graph, uriGenome, fasta_file):
     graph = datastruct_savvy.parse_gene_dict(graph, amr_dict, uriGenome)
 
     return {'graph': graph, 'amr_dict': amr_dict}
+
+def amr():
+    '''
+    (1) Creates a blank graph object
+    (2) Generates the URIs required for appending AMR data to the graph object.
+    (3) Uses RGI to compute AMR results
+    (4)
+        a. If called with deployment flag, sends AMR to beautify.py for processing to be returned in spfy web app.
+        b. If a blazegraph url was supplied, cals datastruct.
+    :return:
+    '''
+    from app.modules.turtleGrapher.turtle_grapher import generate_graph
+    graph = generate_graph()

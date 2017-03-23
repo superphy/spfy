@@ -223,3 +223,6 @@ def json_return(args_dict, gene_dict):
         return ret
     else:
         return json_r
+
+def beautify(args_dict):
+    pass

@@ -121,3 +121,6 @@ def generate_file_output(graph, destination):
 
 def generate_jsonld(graph):
     return graph.serialize(format="json-ld", indent=4)
+
+def turtle_grapher(args_dict):
+    pass

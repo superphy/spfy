@@ -102,3 +102,6 @@ def parse_gene_dict(graph, gene_dict, uriGenome):
             ####
 
     return graph
+
+def datastruct_savvy(args_dict):
+    pass
