@@ -16,7 +16,7 @@ from app.modules.turtleGrapher.turtle_grapher import generate_graph, generate_ha
 from app.modules.blazeUploader.blaze_uploader import upload_graph
 from app.modules.beautify.beautify import json_return
 
-from app.modules.ectyper.callEctyper import call_ectyper
+from app.modules.ectyper.call_ectyper import call_ectyper
 
 # for pairwise comparison of rows in panadas
 

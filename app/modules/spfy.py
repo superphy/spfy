@@ -1,7 +1,6 @@
 #!/usr/bin/env python2
 # -*- coding: UTF-8 -*-
 
-import logging
 import os
 
 import redis
@@ -16,16 +15,16 @@ from rq import Queue
 # other libraries for rdflib
 from rdflib import Graph
 
-# our own slightly more general stuff
-from app.modules.turtleGrapher.turtle_utils import generate_uri as gu, generate_hash
-
-# for various features we add
-from savvy import savvy  # serotype/amr/vf
 
 
-
-from app.config import database
-from multiprocessing import Pool, cpu_count
+from app.modules.qc.qc import qc
+from app.modules.ectyper.call_ectyper import call_ectyper
+from app.modules.amr.amr import amr
+from app.modules.amr.amr_to_dict import amr_to_dict
+from app.modules.beautify.beautify import beautify
+from app.modules.turtleGrapher.datastruct_savvy import datastruct_savvy
+from app.modules.blazeUploader.blaze_uploader import blaze_uploader
+from app.modules.turtleGrapher.turtle_grapher import turtle_grapher
 
 
 # the only ONE time for global variables
@@ -45,34 +44,34 @@ def blob_savvy_enqueue(single_dict):
     :param single_dict: single dictionary of arguments
     :return: dictionary with jobs ids and relevant headers
     '''
-    from app.modules.qc.qc import qc
-    from app.modules.ectyper.callEctyper import call_ectyper
-    from app.modules.amr.amr import amr
-    from app.modules.beautify.beautify import beautify
-    from app.modules.turtleGrapher.datastruct_savvy import datastruct_savvy
-    from app.modules.blazeUploader.blaze_uploader import blaze_uploader
-    from app.modules.turtleGrapher.turtle_grapher import turtle_grapher
     jobs = {}
+    query_file = single_dict['i']
 
-    job_qc = multiples_q.enqueue(qc, single_dict)
+    job_qc = multiples_q.enqueue(qc, query_file)
 
+    #### ECTYPER PIPELINE
+    # the ectyper call is special in that it requires the entire arguments  to decide whether to carry the serotype option flag, virulance factors option flag, and percent identity field
     job_ectyper = singles_q.enqueue(call_ectyper, single_dict, depends_on=job_qc)
-    job_ectyper_beautify = multiples_q.enqueue(beautify, single_dict, depends_on=job_ectyper, result_ttl=-1)
+    job_ectyper_beautify = multiples_q.enqueue(beautify, query_file + '_ectyper.p', depends_on=job_ectyper, result_ttl=-1)
     job_ectyper_datastruct = multiples_q.enqueue(datastruct_savvy, single_dict, depends_on=job_ectyper)
     job_ectyper_blazegraph = blazegraph_q.enqueue(blaze_uploader, single_dict, depends_on=job_ectyper_datastruct)
+    #### END ECTYPER PIPELINE
 
-    job_amr = multiples_q.enqueue(amr, single_dict, depends_on=job_qc)
-    job_amr_beautify = multiples_q.enqueue(beautify, single_dict, depends_on=job_amr, result_ttl=-1)
+    #### AMR PIPELINE
+    job_amr = multiples_q.enqueue(amr, query_file, depends_on=job_qc)
+    job_amr_dict = multiples_q.enqueue(amr_to_dict, query_file + '.tsv', depends_on=job_amr)
+    job_amr_beautify = multiples_q.enqueue(beautify, query_file + '_amr.p', depends_on=job_amr_dict, result_ttl=-1)
     job_amr_datastruct = multiples_q.enqueue(datastruct_savvy, single_dict, depends_on=job_amr)
     job_amr_blazegraph = blazegraph_q.enqueue(blaze_uploader, single_dict, depends_on=job_amr_datastruct)
+    #### END AMR PIPELINE
 
     # the base file data for blazegraph
     job_turtle = multiples_q.enqueue(turtle_grapher, single_dict, depends_on=job_qc)
     job_turtle_blazegraph = blazegraph_q.enqueue(blaze_uploader, single_dict, depends_on=job_turtle)
 
-    jobs[job_qc.get_id()] = {'file': args_dict['i'], 'analysis':'Quality Control'}
-    jobs[job_ectyper_beautify.get_id()] = {'file': args_dict['i'], 'analysis': 'Virulence Factors / Serotype'}
-    jobs[job_amr_beautify.get_id()] = {'file': args_dict['i'], 'analysis': 'Antimicrobial Resistance'}
+    jobs[job_qc.get_id()] = {'file': single_dict['i'], 'analysis':'Quality Control'}
+    jobs[job_ectyper_beautify.get_id()] = {'file': single_dict['i'], 'analysis': 'Virulence Factors / Serotype'}
+    jobs[job_amr_beautify.get_id()] = {'file': single_dict['i'], 'analysis': 'Antimicrobial Resistance'}
 
     return jobs
 
@@ -83,139 +82,54 @@ def blob_savvy(args_dict):
     d = {}
     if os.path.isdir(args_dict['i']):
         for f in os.listdir(args_dict['i']):
-            single_dict = dict(args_dict.items() + {'uriIsolate': args_dict['uris'][f][
-                               'uriIsolate'], 'uriGenome': args_dict['uris'][f]['uriGenome'], 'i': os.path.abspath(f), 'uris': None}.items())
+            single_dict = dict(args_dict.items() + {'i': os.path.abspath(f)}.items())
             d.update(blob_savvy_enqueue(single_dict))
     else:
-        # run the much faster vf and serotyping separately of amr
         d.update(blob_savvy_enqueue(args_dict))
 
     return d
 
-def spfyids_single(args_dict):
-
-    # this is temporary, TODO: include a spqarql query to the db
-    uriIsolate = gu(':spfy' + str(database['count']))
-
-    uriGenome = gu(':' + generate_hash(args_dict['i']))
-
-    args_dict['uriIsolate'] = uriIsolate
-    args_dict['uriGenome'] = uriGenome
-
-    return args_dict
-
-
-def hash_me(file_dict):
-    uris = {}
-    uris[file_dict['basename']] = {}
-    uris[file_dict['basename']]['uriIsolate'] = gu(
-        ':spfy' + str(file_dict['count']))
-    uris[file_dict['basename']]['uriGenome'] = gu(
-        ':' + generate_hash(file_dict['withpath']))
-    return uris
-
-
-def spfyids_directory(args_dict):
-    '''
-    TODO: make the database count actually work
-    This is meant to preallocate spfyIDs
-    -note may have problems with files that fail (gaps in id range)
-    TODO: fix that^
-    TODO: make this whole thing less messy
-    '''
-
-
-    print 'Precomputing hashes for all files in directory, may take awhile...'
-
-    files = os.listdir(args_dict['i'])
-    count = database['count']
-
-    # inital mapping of a files to a number(spfyID)
-    files_list = []
-    for f in files:
-        file_dict = {}
-        file_dict['basename'] = f
-        file_dict['withpath'] = args_dict['i'] + f
-        file_dict['count'] = count
-        files_list.append(file_dict)
-        count += 1
-    # TODO: write-out count
-
-    # hasing and make uris
-    p = Pool(cpu_count())
-    # this will return a list of dicts
-    uris = p.map(hash_me, files_list)
-
-    # convert the list of dicts into a nested dict structure {filename:
-    # {'uriIsolate' , 'uriGenome'}}
-    # ducttape soln
-    uris_dict = {}
-    for uri_dict in uris:
-        uris_dict[uri_dict.keys()[0]] = uri_dict.values()[0]
-
-    args_dict['uris'] = uris_dict
-
-    return args_dict
-
-
 def spfy(args_dict):
     '''
     '''
-    # check if a directory was passed or a just a single file
-    # updates args_dict with appropriate rdflib.URIRef's
-    if os.path.isdir(args_dict['i']):
-        if args_dict['i'][-1] is not '/':
-            args_dict['i'] = args_dict['i'] + '/'
-        args_dict = spfyids_directory(args_dict)
-    else:
-        args_dict = spfyids_single(args_dict)
+    args_dict['i'] = os.path.abspath(args_dict['i'])
 
     print 'Starting blob_savvy call'
-    logging.info('Starting blob_savvy call...')
     jobs_dict = blob_savvy(args_dict)
-    logging.info('blob_savvy enqueues finished')
 
     return jobs_dict
 
-if __name__ == "__main__":
-    import argparse
+# ignore the super dangerous defining of a dictionary in arguments, this is only for testing
+def spfy_test(args_dict={'i':'../tests/ecoli/GCA_001894495.1_ASM189449v1_genomic.fna', 's':1,'vf':1}):
+    '''
+    This is meant to mirror the pipeline, and for checking everything works together as expected w/o Redis Queue.
+    '''
 
-    # parsing cli-input
-    parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "-i",
-        help="FASTA file or directory",
-        required=True
-    )
-    parser.add_argument(
-        "--disable-serotype",
-        help="Disables use of the Serotyper. Serotyper is triggered by default.",
-        action="store_true"
-    )
-    parser.add_argument(
-        "--disable-vf",
-        help="Disables use of ECTyper to get associated Virulence Factors. VFs are computed by default.",
-        action="store_true"
-    )
-    parser.add_argument(
-        "--disable-amr",
-        help="Disables use of RGI to get Antimicrobial Resistance Factors.  AMR genes are computed by default.",
-        action="store_true"
-    )
+    args_dict['i'] = os.path.abspath(args_dict['i'])
+    query_file = args_dict['i']
 
-    args = parser.parse_args()
-    # we make a dictionary from the cli-inputs and add are uris to it
-    # mainly used for when a func needs a lot of the args
-    args_dict = vars(args)
+    print 'QC...'
+    assert qc(query_file) == True
+    print 'QC Done'
 
-    # starting logging
-    # TODO: move this to global and see it if breaks
-    logging.basicConfig(
-        filename='outputs/spfy' + __name__ + '.log',
-        level=logging.INFO
-    )
+    print 'ECtyper...'
+    #check that the results file will be where we expect
+    assert call_ectyper(args_dict) == query_file +'_ectyper.p'
+    print 'ECtyper done'
 
-    spfy(args_dict)
+    print 'AMR...'
+    assert amr(args_dict) == query_file + '.tsv'
+    print 'AMR done'
+    print 'AMR to Dict...'
+    assert amr_to_dict(query_file + '.tsv') == query_file + '_amr.p'
+    print 'AMR to Dict Done'
 
-    print('ALL COMPLETE')
-    logging.info('ALL COMPLETE')
+    print 'datastruct_savvy on ectyper...'
+
+
+if __name__ == '__main__':
+    '''
+    You're not expected to call spfy.py directly!
+    This is only meant for testing.
+    '''
+    spfy_test()
