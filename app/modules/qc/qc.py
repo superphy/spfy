@@ -10,7 +10,7 @@ def create_blast_db():
     Creates a reference database using https://raw.githubusercontent.com/superphy/version-1/master/Sequences/genome_content_panseq/putative_e_coli_specific.fasta
     The databse contains 10 ecoli-specific gene sequences
     '''
-    ecoli_ref = os.path.abspath(os.path.abspath(__file__) + '/' + 'putative_e_coli_specific.fasta')
+    ecoli_ref = os.path.abspath(os.path.dirname(os.path.abspath(__file__)) + '/' + 'putative_e_coli_specific.fasta')
     tempdir = tempfile.mkdtemp()
     blast_db_path = os.path.join(tempdir, 'ecoli_blastdb')
 
