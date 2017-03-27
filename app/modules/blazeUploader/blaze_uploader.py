@@ -82,9 +82,10 @@ def blaze_uploader(graph, spfyid = None):
     '''
     (1) Takes a rdflib.Graph object
     (2) Checks for duplicates in Blazegraph
-    (3) Queries Blazegraph for current largest spfyID
-    (4) Appends the spfyID to the graph object
-    (5) Uploads graph object to Blazegraph
+        (2a.) If a duplicate is found, does a SPARQL Update with the new graph
+        (2b.) Else: Queries Blazegraph for current largest spfyID
+            (3) Appends the spfyID to the graph object
+            (4) Uploads graph object to Blazegraph
     '''
     # setting the spfyID tells us to bypass all db checks and upload directly
     if not spfyid:
@@ -96,5 +97,4 @@ def blaze_uploader(graph, spfyid = None):
             raise Exception('Duplicate entry found in blazegraph: ' + duplicate)
     else:
         graph = add_spfyid(graph, spfyid)
-    # (5)
-    return upload_graph(graph, blazegraph_url)
+    return upload_graph(graph)

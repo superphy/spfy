@@ -104,4 +104,10 @@ def parse_gene_dict(graph, gene_dict, uriGenome):
     return graph
 
 def datastruct_savvy(args_dict):
+    """
+    Note: we work we base graphs (those generated solely from the fasta file) and result graphs (those generated from analysis modules (RGI/ECtyper) separately - they are only linked once uploaded to blazegraph
+    :param args_dict: 
+    :return: 
+    """
+    graph = Graph()
     pass
