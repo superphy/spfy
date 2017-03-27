@@ -48,7 +48,7 @@ def generate_output(graph):
     return output
 
 
-def generate_turtle_skeleton(graph, fasta_file, uriIsolate, uriGenome):
+def generate_turtle_skeleton(graph, fasta_file, uriGenome):
     '''
     Handles the main generation of a turtle object.
 
@@ -69,15 +69,7 @@ def generate_turtle_skeleton(graph, fasta_file, uriIsolate, uriGenome):
         graph: the graph with all the triples generated from the .fasta file
     '''
 
-    # ex. :spfy234
-    graph.add((uriIsolate, gu('rdf:type'), gu('ncbi:562')))
-    graph.add((uriIsolate, gu('ge:0001567'), Literal("bacterium")))
-    graph.add((uriIsolate, gu('dc:description'),
-               Literal(uri_to_basename(uriIsolate))))
 
-    # ex. :4eb02f5676bc808f86c0f014bbce15775adf06ba
-    # associatting isolate URI with assembly URI
-    graph.add((uriIsolate, gu('g:Genome'), uriGenome))
 
     # this is used as the human readable display of Genome
     graph.add((uriGenome, gu('dc:description'), Literal(basename(fasta_file))))

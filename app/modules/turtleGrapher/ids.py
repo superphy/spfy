@@ -80,3 +80,4 @@ def ids(args_dict):
         args_dict = spfyids_directory(args_dict)
     else:
         args_dict = spfyids_single(args_dict)
+    return args_dict

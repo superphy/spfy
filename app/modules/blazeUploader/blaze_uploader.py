@@ -1,11 +1,15 @@
 import requests
 import os
+import rdflib
 from app import config
 
 from SPARQLWrapper import SPARQLWrapper, JSON
-from rdflib import Graph
+from rdflib import Literal
+from app.modules.turtleGrapher.turtle_utils import generate_uri as gu
 
-def upload_graph(graph, url='http://localhost:8080/bigdata/sparql'):
+blazegraph_url = config.database['blazegraph_url']
+
+def upload_graph(graph):
     """
     Uploads raw data onto Blazegraph. To ensure that Blazegraph interprets
     properly, it is necessary to specify the format in a Context-Header.
@@ -27,14 +31,54 @@ def upload_graph(graph, url='http://localhost:8080/bigdata/sparql'):
     request = requests.post(
         os.getenv(
             'SUPERPHY_RDF_URL',
-            url
+            blazegraph_url
         ),
         data=data,
         headers=headers
     )
     return request.content
 
-def blaze_uploader(graph, blazegraph_url, spfyid = None):
+def check_duplicates(graph):
+    '''
+    
+    :param graph: 
+    :return: None if no duplicates found, otherwise return the duplicate's spfyID as a uriIsolate
+    '''
+    # retrieve the genome uri from the graph object; object=None to consider any object as valid
+    uriGenome = next(graph.subjects(predicate=gu('so:0001462'), object=None))
+    sparql = SPARQLWrapper(blazegraph_url)
+    query = 'SELECT ?spfyid '
+    query += 'WHERE { ?spfyid ' + gu('g:Genome') + ' ' + uriGenome + ' }'
+    sparql.setQuery(query)
+    sparql.setReturnFormat(JSON)
+    results = sparql.query().convert()
+    return results
+
+def check_largest_spfyid():
+    sparql = SPARQLWrapper(blazegraph_url)
+    query = 'SELECT ?spfyid '
+    query += 'WHERE { ?spfyid ' + gu('g:Genome') + ' ?anyGenome }'
+    query += 'ORDER BY DESC(?spfyid) LIMIT 1'
+    sparql.setQuery(query)
+    sparql.setReturnFormat(JSON)
+    results = sparql.query().convert()
+    return results
+
+def add_spfyid(graph, spfyid):
+    uriIsolate = gu(':spfy' + str(spfyid))
+    uriGenome = next(graph.subjects(predicate=gu('so:0001462'), object=None))
+    # ex. :spfy234
+    graph.add((uriIsolate, gu('rdf:type'), gu('ncbi:562')))
+    graph.add((uriIsolate, gu('ge:0001567'), Literal("bacterium")))
+    graph.add((uriIsolate, gu('dc:description'),
+               Literal(uri_to_basename(uriIsolate))))
+
+    # ex. :4eb02f5676bc808f86c0f014bbce15775adf06ba
+    # associatting isolate URI with assembly URI
+    graph.add((uriIsolate, gu('g:Genome'), uriGenome))
+    return graph
+
+def blaze_uploader(graph, spfyid = None):
     '''
     (1) Takes a rdflib.Graph object
     (2) Checks for duplicates in Blazegraph
@@ -42,6 +86,15 @@ def blaze_uploader(graph, blazegraph_url, spfyid = None):
     (4) Appends the spfyID to the graph object
     (5) Uploads graph object to Blazegraph
     '''
-
+    # setting the spfyID tells us to bypass all db checks and upload directly
+    if not spfyid:
+        duplicate = check_duplicates()
+        if not duplicate:
+            largest = check_largest_spfyid()
+            graph = add_spfyid(largest,graph)
+        else:
+            raise Exception('Duplicate entry found in blazegraph: ' + duplicate)
+    else:
+        graph = add_spfyid(graph, spfyid)
     # (5)
-    upload_graph(graph, blazegraph_url)
+    return upload_graph(graph, blazegraph_url)

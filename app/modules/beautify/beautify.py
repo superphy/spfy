@@ -1,6 +1,8 @@
 import pandas as pd
+import cPickle as pickle
 from itertools import tee, izip
 from os.path import basename
+
 
 def pairwise(iterable):
     "s -> (s0,s1), (s1,s2), (s2, s3), ..."
@@ -224,5 +226,20 @@ def json_return(args_dict, gene_dict):
     else:
         return json_r
 
-def beautify(args_dict):
-    pass
+def beautify(args_dict, pickled_dictionary=None, gene_dict=None):
+    '''
+    Converts a given 'spit' datum (a dictionary with our results from rgi/ectyper) to a json form used by the frontend. This result is to be stored in Redis by the calling RQ Worker.
+    :param args_dict: The arguments supplied by the user. In the case of spfy web-app, this is used to determine which analysis options were set.
+    :param pickled_dictionary: location of the .p pickled dictionary object. This is supplied by the enqueue call in spfy.py
+    :param gene_dict: optionally, if using this to test via cli, you can supply the actual dictionary object.
+    :return: json representation of the results, as required by the front-end.
+    '''
+    if gene_dict:
+        pass
+    elif pickled_dictionary:
+        f = open(pickled_dictionary, 'rb')
+        gene_dict = pickle.load(f)
+        f.close()
+    else:
+        raise Exception('No results dictionary to beautify!')
+    return json_return(args_dict, gene_dict)

@@ -52,7 +52,7 @@ def blob_savvy_enqueue(single_dict):
     #### ECTYPER PIPELINE
     # the ectyper call is special in that it requires the entire arguments  to decide whether to carry the serotype option flag, virulance factors option flag, and percent identity field
     job_ectyper = singles_q.enqueue(call_ectyper, single_dict, depends_on=job_qc)
-    job_ectyper_beautify = multiples_q.enqueue(beautify, query_file + '_ectyper.p', depends_on=job_ectyper, result_ttl=-1)
+    job_ectyper_beautify = multiples_q.enqueue(beautify, single_dict,query_file + '_ectyper.p', depends_on=job_ectyper, result_ttl=-1)
     job_ectyper_datastruct = multiples_q.enqueue(datastruct_savvy, single_dict, depends_on=job_ectyper)
     job_ectyper_blazegraph = blazegraph_q.enqueue(blaze_uploader, single_dict, depends_on=job_ectyper_datastruct)
     #### END ECTYPER PIPELINE
