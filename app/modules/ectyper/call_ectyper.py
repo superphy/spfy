@@ -46,3 +46,41 @@ def call_ectyper(args_dict):
         pickle.dump(ectyper_dict,open(p,'wb'))
 
     return p
+
+if __name__ == "__main__":
+    import argparse
+    import os  # for batch cleanup
+
+    from ConfigParser import SafeConfigParser
+
+    # parsing cli-input
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "-i",
+        help="FASTA file",
+        required=True
+    )
+    parser.add_argument(
+        "--disable-serotype",
+        help="Disables use of the Serotyper. Serotyper is triggered by default.",
+        action="store_true"
+    )
+    parser.add_argument(
+        "--disable-vf",
+        help="Disables use of ECTyper to get associated Virulence Factors. VFs are computed by default.",
+        action="store_true"
+    )
+    parser.add_argument(
+        "--disable-amr",
+        help="Disables use of RGI to get Antimicrobial Resistance Factors.  AMR genes are computed by default.",
+        action="store_true"
+    )
+    parser.add_argument(
+        "--pi",
+        help="percent identity",
+        type=int
+    )
+    args = parser.parse_args()
+    args_dict = vars(args)
+
+    print call_ectyper(args_dict)

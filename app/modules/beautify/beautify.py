@@ -237,9 +237,7 @@ def beautify(args_dict, pickled_dictionary=None, gene_dict=None):
     if gene_dict:
         pass
     elif pickled_dictionary:
-        f = open(pickled_dictionary, 'rb')
-        gene_dict = pickle.load(f)
-        f.close()
+        gene_dict = pickle.load(open(pickled_dictionary, 'rb'))
     else:
         raise Exception('No results dictionary to beautify!')
     return json_return(args_dict, gene_dict)
