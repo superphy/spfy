@@ -4,7 +4,7 @@ import cPickle as pickle
 
 def amr_to_dict(amr_file):
     amr_results = pd.read_table(amr_file)
-    amr_results = amr_results['ORF_ID', 'START', 'STOP', 'ORIENTATION', 'CUT_OFF', 'Best_Hit_ARO']
+    amr_results = amr_results[['ORF_ID', 'START', 'STOP', 'ORIENTATION', 'CUT_OFF', 'Best_Hit_ARO']]
 
     amr_results.rename(
         columns={'ORF_ID': 'contig_id', 'Best_Hit_ARO': 'GENE_NAME'}, inplace=True)
