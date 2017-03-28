@@ -78,7 +78,8 @@ if __name__ == "__main__":
     parser.add_argument(
         "--pi",
         help="percent identity",
-        type=int
+        type=int,
+        default=90
     )
     args = parser.parse_args()
     args_dict = vars(args)
