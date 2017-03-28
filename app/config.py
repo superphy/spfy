@@ -41,4 +41,5 @@ database['count'] = 1
 # Sentry DSN for RQ; note: RQ also reads from REDIS_URL, and QUEUES
 # If you're using Sentry to collect your runtime exceptions, you can use this
 # to configure RQ for it in a single step
-#SENTRY_DSN = 'http://public:secret@example.com/1'
+# NOTE!!!: There is a bug with Raven that needs to be accounted for in RQ config. You must prefix your sentry dsn with sync+ eg 'sync+https://...' see https://github.com/nvie/rq/issues/350 . As of Mar.'17 this hasn't been fixed.
+#SENTRY_DSN = 'sync+https://public:secret@example.com/1'

@@ -31,3 +31,15 @@ def amr(query_file):
     shutil.move(outputname+'.txt', amr_file)
 
     return amr_file
+
+if __name__=='__main__':
+    import argparse
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "-i",
+        help="FASTA file",
+        required=True
+    )
+    args = parser.parse_args()
+    print amr(args.i)

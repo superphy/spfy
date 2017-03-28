@@ -1,4 +1,4 @@
-#this is for RQ
+#this is for RQ to be tagged as backend-rq
 
 FROM superphy/docker-flask-conda:latest
 
