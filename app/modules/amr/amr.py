@@ -27,7 +27,7 @@ def amr(query_file):
                      '-o', outputname])
 
     # rename and move the tsv to the original directory, if applicable
-    amr_file = query_file + '.tsv'
+    amr_file = query_file + '_rgi.tsv'
     shutil.move(outputname+'.txt', amr_file)
 
     return amr_file

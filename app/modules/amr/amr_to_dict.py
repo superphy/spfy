@@ -28,7 +28,7 @@ def amr_to_dict(amr_file):
         amr_dict[contig_id].append(dict((keys, amr_results[i][keys]) for keys in (
             'START', 'STOP', 'GENE_NAME', 'ORIENTATION', 'CUT_OFF', 'GENE_NAME')))
 
-    p = os.path.join(amr_file + '_amr.p')
+    p = os.path.join(amr_file + '_rgi.p')
     pickle.dump(amr_dict, open(p, 'wb'))
 
     return p

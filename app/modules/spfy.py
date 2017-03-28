@@ -59,8 +59,8 @@ def blob_savvy_enqueue(single_dict):
 
     #### AMR PIPELINE
     job_amr = multiples_q.enqueue(amr, query_file, depends_on=job_qc)
-    job_amr_dict = multiples_q.enqueue(amr_to_dict, query_file + '.tsv', depends_on=job_amr)
-    job_amr_beautify = multiples_q.enqueue(beautify, query_file + '_amr.p', depends_on=job_amr_dict, result_ttl=-1)
+    job_amr_dict = multiples_q.enqueue(amr_to_dict, query_file + '_rgi.tsv', depends_on=job_amr)
+    job_amr_beautify = multiples_q.enqueue(beautify, query_file + '_rgi.tsv_rgi.p', depends_on=job_amr_dict, result_ttl=-1)
     job_amr_datastruct = multiples_q.enqueue(datastruct_savvy, single_dict, depends_on=job_amr)
     job_amr_blazegraph = blazegraph_q.enqueue(blaze_uploader, single_dict, depends_on=job_amr_datastruct)
     #### END AMR PIPELINE
