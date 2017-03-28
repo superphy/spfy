@@ -33,3 +33,15 @@ def amr_to_dict(amr_file):
     pickle.dump(amr_dict, open(p, 'wb'))
 
     return p
+
+if __name__=='__main__':
+    import argparse
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "-i",
+        help="amr .tsv reuslts file",
+        required=True
+    )
+    args = parser.parse_args()
+    print amr(args.i)
