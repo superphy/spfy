@@ -44,4 +44,4 @@ if __name__=='__main__':
         required=True
     )
     args = parser.parse_args()
-    print amr(args.i)
+    print amr_to_dict(args.i)
