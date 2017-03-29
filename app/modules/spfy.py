@@ -23,7 +23,7 @@ from app.modules.amr.amr import amr
 from app.modules.amr.amr_to_dict import amr_to_dict
 from app.modules.beautify.beautify import beautify
 from app.modules.turtleGrapher.datastruct_savvy import datastruct_savvy
-from app.modules.blazeUploader.blaze_uploader import blaze_uploader
+from app.modules.blazeUploader.upload_graph import blaze_uploader
 from app.modules.turtleGrapher.turtle_grapher import turtle_grapher
 
 

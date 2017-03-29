@@ -10,6 +10,7 @@ from rdflib import Namespace, Graph, Literal, plugin
 from Bio import SeqIO
 from os.path import basename
 
+
 '''
 a guide to all those predicates:
     dc:description      -human readable version for display on the web
@@ -73,6 +74,7 @@ def generate_turtle_skeleton(graph, fasta_file, uriGenome):
 
     # this is used as the human readable display of Genome
     graph.add((uriGenome, gu('dc:description'), Literal(basename(fasta_file))))
+    # note that timestamps are not added in base graph generation, they are only added during the check for duplicate files in blazegraph
 
     # uri for bag of contigs
     # ex. :4eb02f5676bc808f86c0f014bbce15775adf06ba/contigs/

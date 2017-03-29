@@ -13,7 +13,7 @@ import logging
 from app.modules.turtleGrapher.turtle_utils import generate_uri as gu
 from app.modules.turtleGrapher.turtle_grapher import generate_graph, generate_hash, generate_turtle_skeleton
 
-from app.modules.blazeUploader.blaze_uploader import upload_graph
+from app.modules.blazeUploader.upload_graph import upload_graph
 from app.modules.beautify.beautify import json_return
 
 from app.modules.ectyper.call_ectyper import call_ectyper
