@@ -98,3 +98,8 @@ def blaze_uploader(graph, spfyid = None):
     else:
         graph = add_spfyid(graph, spfyid)
     return upload_graph(graph)
+
+if __name__=='__main__':
+    print 'Testing...'
+    print 'Largest Spfy ID:'
+    print check_largest_spfyid()
