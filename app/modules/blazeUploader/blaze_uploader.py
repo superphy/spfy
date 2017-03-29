@@ -59,6 +59,8 @@ def check_largest_spfyid():
     query = 'SELECT ?spfyid '
     query += 'WHERE { ?spfyid <' + gu('g:Genome') + '> ?anyGenome } '
     query += 'ORDER BY DESC(?spfyid) LIMIT 1'
+    print 'query is :'
+    print query
     sparql.setQuery(query)
     sparql.setReturnFormat(JSON)
     results = sparql.query().convert()
