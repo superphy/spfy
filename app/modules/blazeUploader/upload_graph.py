@@ -1,6 +1,5 @@
 import requests
 import os
-import rdflib
 
 from app import config
 

@@ -1,14 +1,5 @@
-'''
-given some fasta file:
-(1) Check for duplicates in blazegraph
-(2) If no duplicate is found, check for largest current spfyID
-(3) Create a triple (with associated timestamp) that links the fasta file hash to the spfyID
-(4) Upload that file to Blazegraph to reserve that spfyID
-(5) Return the spfyID to use in proceeding pipeline
--> If a duplicate is found, just return that spfyID
-'''
 from datetime import datetime
-from app.modules.turtleGrapher.turtle_utils import generate_hash, generate_uri as gu, uri_to_basename
+from app.modules.turtleGrapher.turtle_utils import generate_hash, generate_uri as gu
 from app.modules.blazeUploader.upload_graph import upload_graph
 from SPARQLWrapper import SPARQLWrapper, JSON
 from rdflib import Literal, Graph
@@ -72,6 +63,16 @@ def reservation_triple(uriGenome, spfyid):
     return graph
 
 def reserve_id(query_file):
+    '''
+    given some fasta file:
+    (1) Check for duplicates in blazegraph
+    (2) If no duplicate is found, check for largest current spfyID
+    (3) Create a triple (with associated timestamp) that links the fasta file hash to the spfyID
+    (4) Upload that file to Blazegraph to reserve that spfyID
+    (5) Return the spfyID to use in proceeding pipeline
+    -> If a duplicate is found, just return that spfyID
+    '''
+
     # uriGenome generation
     file_hash = generate_hash(query_file)
     uriGenome = gu(':' + file_hash)
