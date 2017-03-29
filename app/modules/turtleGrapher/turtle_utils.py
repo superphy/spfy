@@ -25,7 +25,7 @@ def slugify(value):
     re_camel_case = re.compile(r'(((?<=[a-z])[A-Z])|([A-Z](?![A-Z]|$)))')
     value = unicode(value)
     value = unicodedata.normalize('NFKD', value).encode('ascii', 'ignore')
-    value = unicode(re.sub('[^\w\s-]', '', value).strip().lower())
+    value = unicode(re.sub('[^\w\s-]', '', value).strip())
     value = unicode(re.sub('[-\s]+', '-', value))
     return value
 
