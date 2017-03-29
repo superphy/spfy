@@ -18,6 +18,7 @@ from rdflib import Graph
 
 
 from app.modules.qc.qc import qc
+from app.modules.blazeUploader.reserve_id import reserve_id
 from app.modules.ectyper.call_ectyper import call_ectyper
 from app.modules.amr.amr import amr
 from app.modules.amr.amr_to_dict import amr_to_dict
@@ -48,17 +49,18 @@ def blob_savvy_enqueue(single_dict):
     query_file = single_dict['i']
 
     job_qc = multiples_q.enqueue(qc, query_file)
+    job_id = singles_q.enqueue(reserve_id, query_file, depends_on=job_qc)
 
     #### ECTYPER PIPELINE
     # the ectyper call is special in that it requires the entire arguments  to decide whether to carry the serotype option flag, virulance factors option flag, and percent identity field
-    job_ectyper = singles_q.enqueue(call_ectyper, single_dict, depends_on=job_qc)
+    job_ectyper = singles_q.enqueue(call_ectyper, single_dict, depends_on=job_id)
     job_ectyper_beautify = multiples_q.enqueue(beautify, single_dict,query_file + '_ectyper.p', depends_on=job_ectyper, result_ttl=-1)
     job_ectyper_datastruct = multiples_q.enqueue(datastruct_savvy, single_dict, depends_on=job_ectyper)
     job_ectyper_blazegraph = blazegraph_q.enqueue(blaze_uploader, single_dict, depends_on=job_ectyper_datastruct)
     #### END ECTYPER PIPELINE
 
     #### AMR PIPELINE
-    job_amr = multiples_q.enqueue(amr, query_file, depends_on=job_qc)
+    job_amr = multiples_q.enqueue(amr, query_file, depends_on=job_id)
     job_amr_dict = multiples_q.enqueue(amr_to_dict, query_file + '_rgi.tsv', depends_on=job_amr)
     job_amr_beautify = multiples_q.enqueue(beautify, query_file + '_rgi.tsv_rgi.p', depends_on=job_amr_dict, result_ttl=-1)
     job_amr_datastruct = multiples_q.enqueue(datastruct_savvy, single_dict, depends_on=job_amr)
