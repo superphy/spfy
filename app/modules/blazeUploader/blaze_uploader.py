@@ -58,7 +58,7 @@ def check_largest_spfyid():
     sparql = SPARQLWrapper(blazegraph_url)
     query = 'SELECT ?spfyid'
     query += ' WHERE { ?spfyid <' + gu('g:Genome') + '> ?genomeid .'
-    query += ' ?genomeid ' + gu('dc:date') + ' ?date }'
+    query += ' ?genomeid <' + gu('dc:date') + '> ?date }'
     query += ' ORDER BY DESC(?date) LIMIT 1'
     print 'query is :'
     print query
