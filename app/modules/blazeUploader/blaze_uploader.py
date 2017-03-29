@@ -5,7 +5,7 @@ from app import config
 
 from SPARQLWrapper import SPARQLWrapper, JSON
 from rdflib import Literal
-from app.modules.turtleGrapher.turtle_utils import generate_uri as gu
+from app.modules.turtleGrapher.turtle_utils import generate_uri as gu, uri_to_basename
 
 blazegraph_url = config.database['blazegraph_url']
 
@@ -40,9 +40,9 @@ def upload_graph(graph):
 
 def check_duplicates(graph):
     '''
-    
+    Checks for duplicates in Blazegraph by extracting genomeid URI (the sha3(sorted content of file) from a graph object).
     :param graph: 
-    :return: None if no duplicates found, otherwise return the duplicate's spfyID as a uriIsolate
+    :return: None if no duplicates found, otherwise return the int of the duplicate's spfyID
     '''
     # retrieve the genome uri from the graph object; object=None to consider any object as valid
     uriGenome = next(graph.subjects(predicate=gu('so:0001462'), object=None))
@@ -52,9 +52,16 @@ def check_duplicates(graph):
     sparql.setQuery(query)
     sparql.setReturnFormat(JSON)
     results = sparql.query().convert()
-    return results
+    if not ['results']['bindings']:
+        return None
+    else:
+        return int(results['results']['bindings'][0]['spfyid']['value'].split('spfy')[1])
 
 def check_largest_spfyid():
+    '''
+    Checks the current largest spfyID is the database (via sort of insert timestamps).
+    :return: (int)
+    '''
     sparql = SPARQLWrapper(blazegraph_url)
     query = 'SELECT ?spfyid'
     query += ' WHERE { ?spfyid <' + gu('g:Genome') + '> ?genomeid .'
@@ -65,7 +72,14 @@ def check_largest_spfyid():
     sparql.setQuery(query)
     sparql.setReturnFormat(JSON)
     results = sparql.query().convert()
-    return results
+
+    # check that there was some result
+    if ['results']['bindings']:
+        # if there was a result, return the int of the spfyid
+        return int(results['results']['bindings'][0]['spfyid']['value'].split('spfy')[1])
+    else:
+        # no result was found (fresh DB)
+        return 0
 
 def add_spfyid(graph, spfyid):
     uriIsolate = gu(':spfy' + str(spfyid))
@@ -95,9 +109,9 @@ def blaze_uploader(graph, spfyid = None):
         duplicate = check_duplicates()
         if not duplicate:
             largest = check_largest_spfyid()
-            graph = add_spfyid(largest,graph)
+            graph = add_spfyid(graph, largest+1)
         else:
-            raise Exception('Duplicate entry found in blazegraph: ' + duplicate)
+            raise Exception('Duplicate entry found in blazegraph, spfyID: ' + duplicate)
     else:
         graph = add_spfyid(graph, spfyid)
     return upload_graph(graph)
