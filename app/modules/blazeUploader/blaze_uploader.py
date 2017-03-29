@@ -48,7 +48,7 @@ def check_duplicates(graph):
     uriGenome = next(graph.subjects(predicate=gu('so:0001462'), object=None))
     sparql = SPARQLWrapper(blazegraph_url)
     query = 'SELECT ?spfyid '
-    query += 'WHERE { ?spfyid ' + gu('g:Genome') + ' ' + uriGenome + ' }'
+    query += 'WHERE { ?spfyid <' + gu('g:Genome') + '> ' + uriGenome + ' }'
     sparql.setQuery(query)
     sparql.setReturnFormat(JSON)
     results = sparql.query().convert()
@@ -57,7 +57,7 @@ def check_duplicates(graph):
 def check_largest_spfyid():
     sparql = SPARQLWrapper(blazegraph_url)
     query = 'SELECT ?spfyid '
-    query += 'WHERE { ?spfyid ' + gu('g:Genome') + ' ?anyGenome }'
+    query += 'WHERE { ?spfyid <' + gu('g:Genome') + '> ?anyGenome } '
     query += 'ORDER BY DESC(?spfyid) LIMIT 1'
     sparql.setQuery(query)
     sparql.setReturnFormat(JSON)
