@@ -95,26 +95,5 @@ def generate_turtle_skeleton(graph, fasta_file, uriGenome):
 
     return graph
 
-# Historical methods, case you ever need them
-
-
-def generate_file_output(graph, destination):
-    """
-    Export RDF Graph data to a turtle file at the given destination
-
-    Args:
-        graph (rdflib.Graph): container object to store RDF triples
-        destination (str): an internal filepath relative to the  __init__.py
-        file this module belongs to
-    """
-
-    graph.serialize(destination=destination+'-turtle', format="turtle")
-    graph.serialize(destination=destination+'-xml', format="xml")
-    graph.serialize(destination=destination+'-prettyxml', format="pretty-xml")
-    graph.serialize(destination=destination+'-jsonld', format="json-ld", indent=4)
-
-def generate_jsonld(graph):
-    return graph.serialize(format="json-ld", indent=4)
-
 def turtle_grapher(args_dict):
     pass
