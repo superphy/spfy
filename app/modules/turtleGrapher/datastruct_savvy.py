@@ -124,7 +124,7 @@ def datastruct_savvy(query_file, id_file, pickled_dictionary):
     uriIsolate = gu(':spfy' + str(spfyid))
 
     # results dict retrieval
-    results_dict = pickle.load(pickled_dictionary)
+    results_dict = pickle.load(open(pickled_dictionary, 'rb'))
 
     # graphing functions
     for key in results_dict.keys():

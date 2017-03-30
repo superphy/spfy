@@ -226,7 +226,7 @@ def json_return(args_dict, gene_dict):
     else:
         return json_r
 
-def beautify(args_dict, pickled_dictionary=None, gene_dict=None):
+def beautify(args_dict, pickled_dictionary):
     '''
     Converts a given 'spit' datum (a dictionary with our results from rgi/ectyper) to a json form used by the frontend. This result is to be stored in Redis by the calling RQ Worker.
     :param args_dict: The arguments supplied by the user. In the case of spfy web-app, this is used to determine which analysis options were set.
@@ -234,10 +234,5 @@ def beautify(args_dict, pickled_dictionary=None, gene_dict=None):
     :param gene_dict: optionally, if using this to test via cli, you can supply the actual dictionary object.
     :return: json representation of the results, as required by the front-end.
     '''
-    if gene_dict:
-        pass
-    elif pickled_dictionary:
-        gene_dict = pickle.load(open(pickled_dictionary, 'rb'))
-    else:
-        raise Exception('No results dictionary to beautify!')
+    gene_dict = pickle.load(open(pickled_dictionary, 'rb'))
     return json_return(args_dict, gene_dict)
