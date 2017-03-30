@@ -5,17 +5,11 @@
 # to data structure(rdf triple organization) of the modules you're dev'ing
 
 from app import config
-from turtle_utils import generate_uri as gu, uri_to_basename
+from app.modules.turtleGrapher.turtle_utils import generate_hash, generate_uri as gu
+from app.modules.blazeUploader.upload_graph import upload_graph
 from rdflib import Namespace, Graph, Literal, plugin
 from Bio import SeqIO
 from os.path import basename
-
-
-'''
-a guide to all those predicates:
-    dc:description      -human readable version for display on the web
-'''
-
 
 def generate_graph():
     '''
@@ -36,7 +30,7 @@ def generate_graph():
 
     return graph
 
-def generate_turtle_skeleton(graph, fasta_file, uriGenome):
+def generate_turtle_skeleton(query_file):
     '''
     Handles the main generation of a turtle object.
 
@@ -50,17 +44,19 @@ def generate_turtle_skeleton(graph, fasta_file, uriGenome):
         note: the record.id is what RGI uses as a prefix for ORF_ID (ORF_ID has additional _314 or w/e #s)
 
     Args:
-        graph(rdflib.Graph): the graph instance that is 1:1 with a .fasta file
-        fasta_file(str): path to the .fasta file (this should already incl the directory)
-        spfyID(hash): currently a hash value generated from the name of the fasta file
+       query_file(str): path to the .fasta file (this should already incl the directory)
     Returns:
         graph: the graph with all the triples generated from the .fasta file
     '''
+    # Base graph generation
+    graph = generate_graph()
 
-
+    # uriGenome generation
+    file_hash = generate_hash(query_file)
+    uriGenome = gu(':' + file_hash)
 
     # this is used as the human readable display of Genome
-    graph.add((uriGenome, gu('dc:description'), Literal(basename(fasta_file))))
+    graph.add((uriGenome, gu('dc:description'), Literal(basename(query_file))))
     # note that timestamps are not added in base graph generation, they are only added during the check for duplicate files in blazegraph
 
     # uri for bag of contigs
@@ -68,8 +64,7 @@ def generate_turtle_skeleton(graph, fasta_file, uriGenome):
     uriContigs = gu(uriGenome, "/contigs")
     graph.add((uriGenome, gu('so:0001462'), uriContigs))
 
-    for record in SeqIO.parse(open(fasta_file), "fasta"):
-
+    for record in SeqIO.parse(open(query_file), "fasta"):
         # ex. :4eb02f5676bc808f86c0f014bbce15775adf06ba/contigs/FLOF01006689.1
         uriContig = gu(':' + record.id)
         # linking the spec contig and the bag of contigs
@@ -82,5 +77,6 @@ def generate_turtle_skeleton(graph, fasta_file, uriGenome):
 
     return graph
 
-def turtle_grapher(args_dict):
-    pass
+def turtle_grapher(query_file):
+    graph = generate_turtle_skeleton(query_file)
+    upload_graph(graph)
