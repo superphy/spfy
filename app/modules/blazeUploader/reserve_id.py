@@ -1,8 +1,12 @@
+import os
 from datetime import datetime
 from app.modules.turtleGrapher.turtle_utils import generate_hash, generate_uri as gu
 from app.modules.blazeUploader.upload_graph import upload_graph
 from SPARQLWrapper import SPARQLWrapper, JSON
 from rdflib import Literal, Graph
+from app import config
+
+blazegraph_url = config.database['blazegraph_url']
 
 def check_duplicates(uriGenome):
     '''
@@ -41,7 +45,7 @@ def check_largest_spfyid():
     results = sparql.query().convert()
 
     # check that there was some result
-    if ['results']['bindings']:
+    if results['results']['bindings']:
         # if there was a result, return the int of the spfyid
         return int(results['results']['bindings'][0]['spfyid']['value'].split('spfy')[1])
     else:
@@ -90,3 +94,14 @@ def reserve_id(query_file):
     else:
         # a duplicate was found, return the (int) of it's spfyID
         return duplicate
+
+def write_reserve_id(query_file):
+    '''
+    A write function for pipeline in spfy.py to write out file.
+    :param query_file: 
+    :return: 
+    '''
+    spfyid = reserve_id(query_file)
+    id_file = os.path.abspath(query_file) + '_id.txt'
+    with open(id_file, 'w+') as f:
+        f.write(str(spfyid))

@@ -18,7 +18,7 @@ from rdflib import Graph
 
 
 from app.modules.qc.qc import qc
-from app.modules.blazeUploader.reserve_id import reserve_id
+from app.modules.blazeUploader.reserve_id import write_reserve_id
 from app.modules.ectyper.call_ectyper import call_ectyper
 from app.modules.amr.amr import amr
 from app.modules.amr.amr_to_dict import amr_to_dict
@@ -49,7 +49,7 @@ def blob_savvy_enqueue(single_dict):
     query_file = single_dict['i']
 
     job_qc = multiples_q.enqueue(qc, query_file)
-    job_id = singles_q.enqueue(reserve_id, query_file, depends_on=job_qc)
+    job_id = singles_q.enqueue(write_reserve_id, query_file, depends_on=job_qc)
 
     #### ECTYPER PIPELINE
     # the ectyper call is special in that it requires the entire arguments  to decide whether to carry the serotype option flag, virulance factors option flag, and percent identity field
