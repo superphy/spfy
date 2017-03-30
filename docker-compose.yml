@@ -1,7 +1,7 @@
 version: '2'
 services:
   web-nginx-uwsgi:
-    image: nitzoy/backend-production:latest
+    image: superphy/backend:1.0.0
     ports:
     - "80:80"
     depends_on:
@@ -11,7 +11,7 @@ services:
     - /datastore
 
   worker:
-    image: backend-rq
+    image: superphy/backend-rq:1.0.0
     volumes_from:
       - web-nginx-uwsgi
     depends_on:
