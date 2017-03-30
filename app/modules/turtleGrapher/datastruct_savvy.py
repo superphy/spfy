@@ -1,9 +1,10 @@
+import cPickle as pickle
 from rdflib import BNode, Literal, Graph
-from turtle_utils import generate_uri as gu
-
+from app.modules.turtleGrapher.turtle_utils import generate_uri as gu
+from app.modules.turtleGrapher.turtle_grapher import generate_graph
+from app.modules.blazeUploader.upload_graph import upload_graph
 # working with Serotype, Antimicrobial Resistance, & Virulence Factor data
 # structures
-
 
 def parse_serotype(graph, serotyper_dict, uriIsolate):
     if 'O type' in serotyper_dict:
@@ -103,11 +104,36 @@ def parse_gene_dict(graph, gene_dict, uriGenome):
 
     return graph
 
-def datastruct_savvy(args_dict):
+def datastruct_savvy(query_file, id_file, pickled_dictionary):
     """
     Note: we work we base graphs (those generated solely from the fasta file) and result graphs (those generated from analysis modules (RGI/ECtyper) separately - they are only linked once uploaded to blazegraph
     :param args_dict: 
     :return: 
     """
-    graph = Graph()
-    pass
+    # Base graph generation
+    graph = generate_graph()
+
+    # uriGenome generation
+    file_hash = generate_hash(query_file)
+    uriGenome = gu(':' + file_hash)
+
+    # uriIsolate retrieval
+    with open(id_file) as f:
+        l = f.readline()
+        spfyid = int(l)
+    uriIsolate = gu(':spfy' + str(spfyid))
+
+    # results dict retrieval
+    results_dict = pickle.load(pickled_dictionary)
+
+    # graphing functions
+    for key in results_dict.keys():
+        if key == 'Serotype':
+            graph = parse_serotype(graph,pickled_dictionary['Serotype'],uriIsolate)
+        elif key == 'Virulence Factors':
+            graph = parse_gene_dict(graph, results_dict['Virulence Factors'], uriGenome)
+        elif key == 'Antimicrobial Resistance':
+            graph = parse_gene_dict(graph, results_dict['Antimicrobial Resistance'], uriGenome)
+
+    # upload
+    return upload_graph(graph)
