@@ -36,19 +36,6 @@ def generate_graph():
 
     return graph
 
-
-def generate_output(graph):
-    """
-    Returns RDF Graph data in the turtle format and clears the Graph
-
-    Args:
-        graph (rdflib.Graph): container object to store RDF triples
-    """
-
-    output = graph.serialize(format="turtle")
-    return output
-
-
 def generate_turtle_skeleton(graph, fasta_file, uriGenome):
     '''
     Handles the main generation of a turtle object.
