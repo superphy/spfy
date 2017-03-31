@@ -19,8 +19,9 @@ from app.modules.amr.amr_to_dict import amr_to_dict
 from app.modules.beautify.beautify import beautify
 from app.modules.turtleGrapher.datastruct_savvy import datastruct_savvy
 from app.modules.turtleGrapher.turtle_grapher import turtle_grapher
+from app.modules.loggingFunctions import initialize_logging
 
-log_file = app.modules.loggingFunctions.initialize_logging()
+log_file = initialize_logging()
 log = logging.getLogger(__name__)
 
 def savvy(args_dict):

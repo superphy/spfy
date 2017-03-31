@@ -17,7 +17,7 @@ def initialize_logging():
     """
 
     # set up DEBUG logging to file, INFO logging to STDERR
-    log_file = os.path.join(tempfile.gettempdir(), 'ectyper.log')
+    log_file = os.path.join(tempfile.gettempdir(), 'spfy.log')
 
     formatter = logging.Formatter(
         '%(asctime)s %(name)-12s %(levelname)-8s %(message)s')
