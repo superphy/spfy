@@ -25,6 +25,7 @@ def call_ectyper(args_dict):
         temp_file_path = os.path.join(wrapper_dir, 'temp.fna')
         shutil.copyfile(args_dict['i'], temp_file_path)
         args_dict['i']= temp_file_path
+        log.debug(temp_file_path)
 
         ectyper_path = os.path.join(wrapper_dir, 'ecoli_serotyping/src/Tools_Controller/tools_controller.py')
         log.debug(ectyper_path)
