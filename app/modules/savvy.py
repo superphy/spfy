@@ -46,11 +46,15 @@ def savvy(args_dict):
 
     # (3) ECTyper Step:
     ectyper_p = call_ectyper(args_dict)
-    log.info("pickled ectyper file: " + ectyper_p)
+    log.info("Pickled ECTyper File: " + ectyper_p)
 
     # (4) ECTyper Beautify Step:
     ectyper_beautify = beautify(args_dict, ectyper_p)
-    log.info('beautified ECTyper result: ' + str(ectyper_beautify))
+    log.debug('Beautified ECTyper Result: ' + str(ectyper_beautify))
+
+    # (5) Graphing ECTyper Result & Upload:
+    ectyper_upload = datastruct_savvy(query_file, query_file + '_id.txt', query_file + '_ectyper.p')
+    log.debug('Graph & Upload of ECTyper Result: ' + ectyper_upload)
 
 if __name__ == "__main__":
     import argparse
