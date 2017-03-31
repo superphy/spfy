@@ -6,7 +6,7 @@ import redis
 from flask import Blueprint, render_template, request, jsonify, current_app, g, url_for, redirect
 from rq import Queue
 
-import spfy
+from app.modules.spfy import spfy
 
 from werkzeug.utils import secure_filename
 
@@ -100,7 +100,7 @@ def upload():
                         filename = handle_tar(filename, now)
 
                     # for enqueing task
-                    jobs_enqueued = spfy.spfy(
+                    jobs_enqueued = spfy(
                         {'i': filename, 'disable_serotype': False, 'disable_amr': False, 'disable_vf': False, 'pi':options['pi'], 'options':options})
                     jobs_dict.update(jobs_enqueued)
 
