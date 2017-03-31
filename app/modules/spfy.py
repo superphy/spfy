@@ -4,7 +4,7 @@
 import os
 
 import redis
-import ..config
+from .. import config
 
 from flask import current_app
 
@@ -31,7 +31,7 @@ from modules.turtleGrapher.turtle_grapher import turtle_grapher
 # when naming queues, make sure you actually set a worker to listen to that queue
 # we use the high priority queue for things that should be immediately
 # returned to the user
-redis_url = app.config.REDIS_URL
+redis_url = config.REDIS_URL
 redis_conn = redis.from_url(redis_url)
 singles_q = Queue('singles', connection=redis_conn)
 multiples_q = Queue('multiples', connection=redis_conn, default_timeout=600)
