@@ -5,7 +5,7 @@ from modules.turtleGrapher.turtle_utils import generate_hash, generate_uri as gu
 from modules.blazeUploader.upload_graph import upload_graph
 from SPARQLWrapper import SPARQLWrapper, JSON
 from rdflib import Literal, Graph
-from app import config
+import config
 from modules.loggingFunctions import initialize_logging
 
 log_file = initialize_logging()

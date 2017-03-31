@@ -1,4 +1,4 @@
-from app import config  # this is the config.py
+import config  # this is the config.py
 from rdflib import Namespace, URIRef, Literal
 
 def generate_hash(filename):

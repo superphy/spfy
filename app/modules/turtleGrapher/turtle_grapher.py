@@ -4,7 +4,7 @@
 # only nonspecific stuff: shouldn't contain any functions directly related
 # to data structure(rdf triple organization) of the modules you're dev'ing
 
-from app import config
+import config
 from modules.turtleGrapher.turtle_utils import generate_hash, generate_uri as gu
 from modules.blazeUploader.upload_graph import upload_graph
 from rdflib import Namespace, Graph, Literal, plugin

@@ -4,7 +4,7 @@
 import os
 
 import redis
-from . import config
+import config
 
 from flask import current_app
 

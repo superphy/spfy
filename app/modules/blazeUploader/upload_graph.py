@@ -1,7 +1,7 @@
 import requests
 import os
 
-from app import config
+import config
 
 blazegraph_url = config.database['blazegraph_url']
 
