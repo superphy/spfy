@@ -19,7 +19,8 @@ def call_ectyper(args_dict):
         shutil.copyfile(args_dict['i'], os.path.dirname(os.path.realpath(__file__)) + '/temp.fna')
         args_dict['i']= os.path.abspath('temp.fna')
 
-        ectyper_dict = subprocess.check_output(['./ecoli_serotyping/src/Tools_Controller/tools_controller.py',
+        ectyper_path = os.path.abspath('ecoli_serotyping/src/Tools_Controller/tools_controller.py')
+        ectyper_dict = subprocess.check_output(['.' + ectyper_path,
                                                 '-in', args_dict['i'],
                                                 '-s', str(
                                                     int(not args_dict['disable_serotype'])),
