@@ -129,7 +129,7 @@ def datastruct_savvy(query_file, id_file, pickled_dictionary):
     # graphing functions
     for key in results_dict.keys():
         if key == 'Serotype':
-            graph = parse_serotype(graph,pickled_dictionary['Serotype'],uriIsolate)
+            graph = parse_serotype(graph,results_dict['Serotype'],uriIsolate)
         elif key == 'Virulence Factors':
             graph = parse_gene_dict(graph, results_dict['Virulence Factors'], uriGenome)
         elif key == 'Antimicrobial Resistance':
