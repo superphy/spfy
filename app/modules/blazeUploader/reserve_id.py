@@ -19,7 +19,7 @@ def check_duplicates(uriGenome):
     #SPARQL Query
     sparql = SPARQLWrapper(blazegraph_url)
     query = 'SELECT ?spfyid '
-    query += 'WHERE { ?spfyid <' + gu('g:Genome') + '> ' + uriGenome + ' }'
+    query += 'WHERE { ?spfyid <' + gu('g:Genome') + '> <' + uriGenome + '> }'
     sparql.setQuery(query)
     sparql.setReturnFormat(JSON)
     results = sparql.query().convert()
