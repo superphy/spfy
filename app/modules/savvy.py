@@ -7,7 +7,8 @@
 # A:ntimicrobial Resistance
 # V:irulence Factors
 # -vy
-# essentially implements the same pipeline as blob_savvy_enqueue() in spfy.py, but without the RQ backing and with option graph generation of outputs
+# essentially implements the same pipeline as blob_savvy_enqueue() in spfy.py, but without the RQ backing
+# still graphs the results, so must have blazegraph running and defined in app/config.py
 
 import os
 import logging
@@ -63,6 +64,10 @@ def savvy(args_dict):
     # (7) AMR Results to Dictionary Step:
     amr_p = amr_to_dict(amr_results_file)
     log.info("Pickled AMR Results File: " + amr_p)
+
+    # (8) AMR Beautify Step:
+    amr_beautify = beautify(args_dict, amr_p)
+    log.debug('Beautified AMR Result: ' + amr_beautify)
 
 if __name__ == "__main__":
     import argparse
