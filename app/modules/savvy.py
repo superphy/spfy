@@ -56,6 +56,10 @@ def savvy(args_dict):
     ectyper_upload = datastruct_savvy(query_file, query_file + '_id.txt', query_file + '_ectyper.p')
     log.info('Graph & Upload of ECTyper Result: ' + ectyper_upload)
 
+    # (6) RGI Step:
+    amr_results_file = amr(query_file)
+    log.info("AMR Results File: " + amr_results_file)
+
 if __name__ == "__main__":
     import argparse
 
