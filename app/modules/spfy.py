@@ -60,12 +60,12 @@ def blob_savvy_enqueue(single_dict):
     #### AMR PIPELINE
     job_amr = multiples_q.enqueue(amr, query_file, depends_on=job_id)
     job_amr_dict = multiples_q.enqueue(amr_to_dict, query_file + '_rgi.tsv', depends_on=job_amr)
-    job_amr_beautify = multiples_q.enqueue(beautify, query_file + '_rgi.tsv_rgi.p', depends_on=job_amr_dict, result_ttl=-1)
+    job_amr_beautify = multiples_q.enqueue(beautify, single_dict, query_file + '_rgi.tsv_rgi.p', depends_on=job_amr_dict, result_ttl=-1)
     job_amr_datastruct = multiples_q.enqueue(datastruct_savvy, query_file, query_file + '_id.txt', query_file + '_rgi.tsv_rgi.p', depends_on=job_amr)
     #### END AMR PIPELINE
 
     # the base file data for blazegraph
-    job_turtle = multiples_q.enqueue(turtle_grapher, single_dict, depends_on=job_qc)
+    job_turtle = multiples_q.enqueue(turtle_grapher, query_file, depends_on=job_qc)
 
     jobs[job_qc.get_id()] = {'file': single_dict['i'], 'analysis':'Quality Control'}
     jobs[job_id.get_id()] = {'file': single_dict['i'], 'analysis':'ID Reservation'}
