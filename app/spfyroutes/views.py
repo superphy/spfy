@@ -6,7 +6,7 @@ import redis
 from flask import Blueprint, render_template, request, jsonify, current_app, g, url_for, redirect
 from rq import Queue
 
-from .modules.spfy import spfy
+from modules.spfy import spfy
 
 from werkzeug.utils import secure_filename
 
