@@ -40,7 +40,8 @@ def savvy(args_dict):
     log.info("QC: " + str(qc_pass))
 
     # (2) SpfyID Step:
-
+    id_file = write_reserve_id(query_file)
+    log.info("id_file:" + id_file)
 
 if __name__ == "__main__":
     import argparse
