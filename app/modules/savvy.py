@@ -45,7 +45,7 @@ def savvy(args_dict):
 
     # (3) ECTyper Step:
     ectyper_p = call_ectyper(args_dict)
-    log.info("pickled ectyper file: " + )
+    log.info("pickled ectyper file: " + ectyper_p)
 
 if __name__ == "__main__":
     import argparse
