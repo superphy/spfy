@@ -67,7 +67,7 @@ def savvy(args_dict):
 
     # (8) AMR Beautify Step:
     amr_beautify = beautify(args_dict, amr_p)
-    log.debug('Beautified AMR Result: ' + amr_beautify)
+    log.debug('Beautified AMR Result: ' + str(amr_beautify))
 
 if __name__ == "__main__":
     import argparse
