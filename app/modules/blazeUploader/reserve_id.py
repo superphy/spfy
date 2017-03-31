@@ -1,10 +1,15 @@
 import os
+import logging
 from datetime import datetime
 from app.modules.turtleGrapher.turtle_utils import generate_hash, generate_uri as gu
 from app.modules.blazeUploader.upload_graph import upload_graph
 from SPARQLWrapper import SPARQLWrapper, JSON
 from rdflib import Literal, Graph
 from app import config
+from app.modules.loggingFunctions import initialize_logging
+
+log_file = initialize_logging()
+log = logging.getLogger(__name__)
 
 blazegraph_url = config.database['blazegraph_url']
 
@@ -43,7 +48,7 @@ def check_largest_spfyid():
     sparql.setQuery(query)
     sparql.setReturnFormat(JSON)
     results = sparql.query().convert()
-
+    log.debug(results)
     # check that there was some result
     if results['results']['bindings']:
         # if there was a result, return the int of the spfyid
