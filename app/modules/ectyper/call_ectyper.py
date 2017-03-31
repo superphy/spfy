@@ -20,6 +20,7 @@ def call_ectyper(args_dict):
         args_dict['i']= os.path.abspath('temp.fna')
 
         ectyper_path = os.path.abspath('ecoli_serotyping/src/Tools_Controller/tools_controller.py')
+        log.debug(ectyper_path)
         ectyper_dict = subprocess.check_output(['.' + ectyper_path,
                                                 '-in', args_dict['i'],
                                                 '-s', str(
