@@ -9,6 +9,7 @@
 # -vy
 # essentially implements the same pipeline as blob_savvy_enqueue() in spfy.py, but without the RQ backing and with option graph generation of outputs
 
+import os
 import logging
 
 from app.modules.qc.qc import qc
@@ -82,5 +83,8 @@ if __name__ == "__main__":
     # we make a dictionary from the cli-inputs and add are uris to it
     # mainly used for when a func needs a lot of the args
     args_dict = vars(args)
+
+    # check/convert file to abspath
+    args_dict['i'] = os.path.abspath(args_dict['i'])
 
     savvy(args_dict)
