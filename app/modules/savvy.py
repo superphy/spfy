@@ -60,6 +60,10 @@ def savvy(args_dict):
     amr_results_file = amr(query_file)
     log.info("AMR Results File: " + amr_results_file)
 
+    # (7) AMR Results to Dictionary Step:
+    amr_p = amr_to_dict(amr_results_file)
+    log.info("Pickled AMR Results File: " + amr_p)
+
 if __name__ == "__main__":
     import argparse
 
