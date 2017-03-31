@@ -20,13 +20,14 @@ from app.modules.beautify.beautify import beautify
 from app.modules.turtleGrapher.datastruct_savvy import datastruct_savvy
 from app.modules.turtleGrapher.turtle_grapher import turtle_grapher
 
+log_file = app.modules.loggingFunctions.initialize_logging()
 log = logging.getLogger(__name__)
 
 def savvy(args_dict):
     '''
 
     '''
-    log.info("Begin Savvy()")
+    log.info("Starting savvy.py from savvy(). Logfile is: " + str(log_file))
     log.debug("args_dict received was: " + str(args_dict))
 
     query_file = args_dict['i']
@@ -43,7 +44,7 @@ def savvy(args_dict):
 if __name__ == "__main__":
     import argparse
 
-    logging.basicConfig(filename=__name__ + '.log')
+    log.info("Starting savvy.py from if __name__=='__main__'. Logfile is: " + str(log_file))
 
     # parsing cli-input
     parser = argparse.ArgumentParser()
