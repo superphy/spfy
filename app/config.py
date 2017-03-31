@@ -1,7 +1,11 @@
 #for secret key, do a os.urandom(24).encode('hex')
 SECRET_KEY = 'is-that-daisy'
 REDIS_URL = 'redis://redis:6379/0'
-QUEUES = ['medium','low','default']
+# actual queues aren't defined here, they are in their respective supervisord.conf worker call
+# this is done to isolate the RQ-Blazegraph worker to avoid race conditions
+QUEUES = ['default']
+# QUEUES_SPFY is for spfy web-app to poll
+QUEUES_SPFY = ['singles', 'blazegraph']
 BOOTSTRAP_SERVE_LOCAL = True
 MAX_TIME_TO_WAIT = 10
 

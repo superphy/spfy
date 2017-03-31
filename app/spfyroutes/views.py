@@ -25,9 +25,7 @@ def fetch_job(job_id):
     '''
     redis_url = current_app.config['REDIS_URL']
     redis_connection = redis.from_url(redis_url)
-    # recall that high isn't in the config file as the config is also used to init all rq workers
-    queues = ['high']
-    queues = queues + current_app.config['QUEUES']
+    queues = current_app.config['QUEUES_SPFY']
     for queue in queues:
         q = Queue(queue, connection=redis_connection)
         job = q.fetch_job(job_id)
