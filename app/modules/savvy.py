@@ -43,6 +43,10 @@ def savvy(args_dict):
     id_file = write_reserve_id(query_file)
     log.info("id_file:" + id_file)
 
+    # (3) ECTyper Step:
+    ectyper_p = call_ectyper(args_dict)
+    log.info("pickled ectyper file: " + )
+
 if __name__ == "__main__":
     import argparse
 

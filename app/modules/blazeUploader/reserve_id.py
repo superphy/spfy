@@ -46,8 +46,7 @@ def check_largest_spfyid():
     query += ' WHERE { ?spfyid <' + gu('g:Genome') + '> ?genomeid .'
     query += ' ?genomeid <' + gu('dc:date') + '> ?date }'
     query += ' ORDER BY DESC(?date) LIMIT 1'
-    print 'query is :'
-    print query
+    log.debug(query)
     sparql.setQuery(query)
     sparql.setReturnFormat(JSON)
     results = sparql.query().convert()
@@ -71,7 +70,7 @@ def reservation_triple(uriGenome, spfyid):
     # timestamp
     now = datetime.now()
     now = now.strftime("%Y-%m-%d-%H-%M-%S-%f")
-    graph.add((uriGenome, gu('dc:date')), Literal(now))
+    graph.add((uriGenome, gu('dc:date'), Literal(now)))
     return graph
 
 def reserve_id(query_file):
