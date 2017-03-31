@@ -32,6 +32,8 @@ def check_duplicates(uriGenome):
     if not results['results']['bindings']:
         return None
     else:
+        # ex. of result from Blazegraph:  {u'head': {u'vars': [u'spfyid']}, u'results': {u'bindings': [{u'spfyid': {u'type': u'uri', u'value': u'https://www.github.com/superphy#spfy2224'}}]}}
+        # would return: 2224
         return int(results['results']['bindings'][0]['spfyid']['value'].split('spfy')[1])
 
 def check_largest_spfyid():
@@ -88,6 +90,7 @@ def reserve_id(query_file):
     uriGenome = gu(':' + file_hash)
 
     duplicate = check_duplicates(uriGenome)
+    log.debug('check_duplicates() returned: ' + duplicate)
     if not duplicate:
         # no duplicates were found, check the current largest spfyID
         largest = check_largest_spfyid()
@@ -108,6 +111,8 @@ def write_reserve_id(query_file):
     :return: 
     '''
     spfyid = reserve_id(query_file)
+    log.info('SpfyID #:' + spfyid)
     id_file = os.path.abspath(query_file) + '_id.txt'
     with open(id_file, 'w+') as f:
         f.write(str(spfyid))
+    return id_file
