@@ -69,6 +69,10 @@ def savvy(args_dict):
     amr_beautify = beautify(args_dict, amr_p)
     log.debug('Beautified AMR Result: ' + str(amr_beautify))
 
+    # (9) Graping AMR Result & Upload:
+    amr_upload = datastruct_savvy(query_file, query_file + '_id.txt', query_file + '_rgi.tsv_rgi.p')
+    log.info('Graph & Upload of AMR Result: ' + amr_upload)
+
 if __name__ == "__main__":
     import argparse
 
