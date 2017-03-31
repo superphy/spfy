@@ -91,4 +91,9 @@ if __name__ == "__main__":
     # check/convert file to abspath
     args_dict['i'] = os.path.abspath(args_dict['i'])
 
+    # add nested dictionary to mimick output from spfy web-app
+    spfy_options = {'vf': not args_dict['disable_vf'], 'amr': not args_dict['disable_amr'], 'serotype': not args_dict['disable_serotype']}
+    # the 'options' field represents things the user (of the web-app) has chosen to display, we still run ALL analysis on their files so their choices are not added to module calls (& hence kept separate)
+    args_dict['options'] = spfy_options
+
     savvy(args_dict)
