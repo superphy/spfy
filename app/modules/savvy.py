@@ -48,6 +48,10 @@ def savvy(args_dict):
     ectyper_p = call_ectyper(args_dict)
     log.info("pickled ectyper file: " + ectyper_p)
 
+    # (4) ECTyper Beautify Step:
+    ectyper_beautify = beautify(args_dict, ectyper_p)
+    log.info('beautified ECTyper result: ' + str(ectyper_beautify))
+
 if __name__ == "__main__":
     import argparse
 

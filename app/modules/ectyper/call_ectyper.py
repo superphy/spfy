@@ -36,14 +36,14 @@ def call_ectyper(args_dict):
                                                     int(not args_dict['disable_vf'])),
                                                 '-pi', str(args_dict['pi'])
                                                 ])
+        # removing that temp file we created
+        os.remove(temp_file_path)
 
         # because we are using check_output, this catches any print messages from tools_controller
         # TODO: switch to pipes
         if 'error' in ectyper_dict.lower():
-            #logging.error('ectyper failed for' + args_dict['i'])
-            print 'ECTyper failed for: ', filepath
-            print 'returning graph w/o serotype'
-            raise
+            log.fatal('ECTper failed for' + args_dict['i'])
+            raise Exception('ECTper failed for' + filepath)
 
         ectyper_dict = literal_eval(ectyper_dict)
 
