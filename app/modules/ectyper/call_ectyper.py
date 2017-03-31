@@ -20,10 +20,12 @@ def call_ectyper(args_dict):
 
         #hack to allow ectyper to run in docker
         filepath=(args_dict['i'])
-        shutil.copyfile(args_dict['i'], os.path.dirname(os.path.realpath(__file__)) + '/temp.fna')
-        args_dict['i']= os.path.abspath('temp.fna')
-
         wrapper_dir = os.path.dirname(os.path.abspath(__file__))
+        # this temp file path is req for ectyper
+        temp_file_path = os.path.join(wrapper_dir, 'temp.fna')
+        shutil.copyfile(args_dict['i'], temp_file_path)
+        args_dict['i']= temp_file_path
+
         ectyper_path = os.path.join(wrapper_dir, 'ecoli_serotyping/src/Tools_Controller/tools_controller.py')
         log.debug(ectyper_path)
         ectyper_dict = subprocess.check_output(['.' + ectyper_path,
