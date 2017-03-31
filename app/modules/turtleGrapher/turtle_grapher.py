@@ -79,4 +79,4 @@ def generate_turtle_skeleton(query_file):
 
 def turtle_grapher(query_file):
     graph = generate_turtle_skeleton(query_file)
-    upload_graph(graph)
+    return upload_graph(graph)
