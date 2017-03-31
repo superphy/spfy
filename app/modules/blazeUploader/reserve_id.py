@@ -28,6 +28,7 @@ def check_duplicates(uriGenome):
     sparql.setQuery(query)
     sparql.setReturnFormat(JSON)
     results = sparql.query().convert()
+    log.debug(results)
     if not ['results']['bindings']:
         return None
     else:
