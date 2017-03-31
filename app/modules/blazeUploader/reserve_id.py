@@ -90,7 +90,7 @@ def reserve_id(query_file):
     uriGenome = gu(':' + file_hash)
 
     duplicate = check_duplicates(uriGenome)
-    log.debug('check_duplicates() returned: ' + duplicate)
+    log.debug('check_duplicates() returned: ' + str(duplicate))
     if not duplicate:
         # no duplicates were found, check the current largest spfyID
         largest = check_largest_spfyid()
@@ -111,7 +111,7 @@ def write_reserve_id(query_file):
     :return: 
     '''
     spfyid = reserve_id(query_file)
-    log.info('SpfyID #:' + spfyid)
+    log.info('SpfyID #:' + str(spfyid))
     id_file = os.path.abspath(query_file) + '_id.txt'
     with open(id_file, 'w+') as f:
         f.write(str(spfyid))
