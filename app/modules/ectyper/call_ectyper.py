@@ -23,6 +23,8 @@ def call_ectyper(args_dict):
         # this temp file path is req for ectyper
         temp_file_path = os.path.join(wrapper_dir, 'temp.fna')
         shutil.copyfile(args_dict['i'], temp_file_path)
+        # create a copy of args_dict so we don't modify it from calling functions
+        args_dict = dict(args_dict)
         args_dict['i']= temp_file_path
         log.debug(temp_file_path)
 

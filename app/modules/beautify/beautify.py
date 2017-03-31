@@ -175,7 +175,7 @@ def json_return(args_dict, gene_dict):
                     # TODO: bug fix^
                     if type(item) is dict:
                         instance_dict = {}
-                        instance_dict['filename'] = basename(args_dict['filename'])[27:]
+                        instance_dict['filename'] = basename(args_dict['i'])[27:]
                         instance_dict['contigid'] = contig_id
                         instance_dict['analysis'] = analysis
                         instance_dict['hitname'] = item['GENE_NAME']
