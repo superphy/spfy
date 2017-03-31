@@ -43,6 +43,8 @@ def savvy(args_dict):
 if __name__ == "__main__":
     import argparse
 
+    log.basicConfig(filename=__name__ + '.log')
+
     # parsing cli-input
     parser = argparse.ArgumentParser()
     parser.add_argument(
