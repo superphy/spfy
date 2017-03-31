@@ -23,7 +23,8 @@ def call_ectyper(args_dict):
         shutil.copyfile(args_dict['i'], os.path.dirname(os.path.realpath(__file__)) + '/temp.fna')
         args_dict['i']= os.path.abspath('temp.fna')
 
-        ectyper_path = os.path.abspath('ecoli_serotyping/src/Tools_Controller/tools_controller.py')
+        wrapper_dir = os.path.dirname(os.path.abspath(__file__))
+        ectyper_path = os.path.join(wrapper_dir, 'ecoli_serotyping/src/Tools_Controller/tools_controller.py')
         log.debug(ectyper_path)
         ectyper_dict = subprocess.check_output(['.' + ectyper_path,
                                                 '-in', args_dict['i'],
