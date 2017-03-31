@@ -13,15 +13,15 @@
 import os
 import logging
 
-from app.modules.qc.qc import qc
-from app.modules.blazeUploader.reserve_id import write_reserve_id
-from app.modules.ectyper.call_ectyper import call_ectyper
-from app.modules.amr.amr import amr
-from app.modules.amr.amr_to_dict import amr_to_dict
-from app.modules.beautify.beautify import beautify
-from app.modules.turtleGrapher.datastruct_savvy import datastruct_savvy
-from app.modules.turtleGrapher.turtle_grapher import turtle_grapher
-from app.modules.loggingFunctions import initialize_logging
+from modules.qc.qc import qc
+from modules.blazeUploader.reserve_id import write_reserve_id
+from modules.ectyper.call_ectyper import call_ectyper
+from modules.amr.amr import amr
+from modules.amr.amr_to_dict import amr_to_dict
+from modules.beautify.beautify import beautify
+from modules.turtleGrapher.datastruct_savvy import datastruct_savvy
+from modules.turtleGrapher.turtle_grapher import turtle_grapher
+from modules.loggingFunctions import initialize_logging
 
 log_file = initialize_logging()
 log = logging.getLogger(__name__)

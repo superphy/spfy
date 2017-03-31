@@ -5,7 +5,7 @@ import subprocess
 import cPickle as pickle
 from ast import literal_eval
 from os.path import basename
-from app.modules.loggingFunctions import initialize_logging
+from modules.loggingFunctions import initialize_logging
 
 log_file = initialize_logging()
 log = logging.getLogger(__name__)

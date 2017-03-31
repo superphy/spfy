@@ -1,5 +1,5 @@
 import os
-from app.modules.qc.qc import qc
+from modules.qc.qc import qc
 
 ecoli_dir = os.path.abspath('ecoli')
 not_ecoli_dir = os.path.abspath('notEcoli')

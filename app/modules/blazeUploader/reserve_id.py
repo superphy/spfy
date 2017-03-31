@@ -1,12 +1,12 @@
 import os
 import logging
 from datetime import datetime
-from app.modules.turtleGrapher.turtle_utils import generate_hash, generate_uri as gu
-from app.modules.blazeUploader.upload_graph import upload_graph
+from modules.turtleGrapher.turtle_utils import generate_hash, generate_uri as gu
+from modules.blazeUploader.upload_graph import upload_graph
 from SPARQLWrapper import SPARQLWrapper, JSON
 from rdflib import Literal, Graph
 from app import config
-from app.modules.loggingFunctions import initialize_logging
+from modules.loggingFunctions import initialize_logging
 
 log_file = initialize_logging()
 log = logging.getLogger(__name__)
@@ -16,7 +16,7 @@ blazegraph_url = config.database['blazegraph_url']
 def check_duplicates(uriGenome):
     '''
     Checks for duplicates in Blazegraph by computing genomeURI (the sha3(sorted content of file) from a graph object).
-    :param graph: 
+    :param graph:
     :return: None if no duplicates found, otherwise return the int of the duplicate's spfyID
     '''
 
@@ -106,8 +106,8 @@ def reserve_id(query_file):
 def write_reserve_id(query_file):
     '''
     A write function for pipeline in spfy.py to write out file.
-    :param query_file: 
-    :return: 
+    :param query_file:
+    :return:
     '''
     spfyid = reserve_id(query_file)
     log.info('SpfyID #:' + str(spfyid))

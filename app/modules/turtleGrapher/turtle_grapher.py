@@ -5,8 +5,8 @@
 # to data structure(rdf triple organization) of the modules you're dev'ing
 
 from app import config
-from app.modules.turtleGrapher.turtle_utils import generate_hash, generate_uri as gu
-from app.modules.blazeUploader.upload_graph import upload_graph
+from modules.turtleGrapher.turtle_utils import generate_hash, generate_uri as gu
+from modules.blazeUploader.upload_graph import upload_graph
 from rdflib import Namespace, Graph, Literal, plugin
 from Bio import SeqIO
 from os.path import basename
