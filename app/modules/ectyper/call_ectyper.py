@@ -1,10 +1,14 @@
 import shutil
 import os
+import logging
 import subprocess
 import cPickle as pickle
-
 from ast import literal_eval
 from os.path import basename
+from app.modules.loggingFunctions import initialize_logging
+
+log_file = initialize_logging()
+log = logging.getLogger(__name__)
 
 def call_ectyper(args_dict):
     # i don't intend to import anything from ECTyper (there are a lot of
