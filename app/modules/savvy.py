@@ -54,7 +54,7 @@ def savvy(args_dict):
 
     # (5) Graphing ECTyper Result & Upload:
     ectyper_upload = datastruct_savvy(query_file, query_file + '_id.txt', query_file + '_ectyper.p')
-    log.debug('Graph & Upload of ECTyper Result: ' + ectyper_upload)
+    log.info('Graph & Upload of ECTyper Result: ' + ectyper_upload)
 
 if __name__ == "__main__":
     import argparse
