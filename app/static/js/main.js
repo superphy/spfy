@@ -32,6 +32,10 @@ app.controller('SpfyController', [
         $scope.formData.options.serotype=true
         $scope.pi=90
 
+        // for managing QC result & SpfyID Generation result
+        $scope.qcPassed = false
+        $scope.spfyidGeneration = false
+
         // check at least one of options is selected
         var calculateSomeSelected = function() {
           $scope.someSelected = Object.keys($scope.formData.options).some(function(key) {
@@ -125,13 +129,18 @@ app.controller('SpfyController', [
                         if (status == 200) {
                             $log.log(data);
                             $scope.loading = false;
-                            $scope.spits = $scope.spits.concat(data);
-
-                            //check for "No results found"
-                            for(hit in data){
-                              if (data[hit].hitname === "No Results Found." ||
-                                  data[hit].hitname.includes("No prediction could be made for")){
-                                $scope.foundNull = true;
+                            if (typeof(data) === "boolean"){
+                              $scope.qcPassed = data
+                            } else if (typeof(data) == "string"){
+                              $scope.spfyidGeneration = data
+                            } else {
+                              $scope.spits = $scope.spits.concat(data);
+                              //check for "No results found"
+                              for(hit in data){
+                                if (data[hit].hitname === "No Results Found." ||
+                                    data[hit].hitname.includes("No prediction could be made for")){
+                                  $scope.foundNull = true;
+                                }
                               }
                             }
 
