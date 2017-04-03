@@ -152,6 +152,9 @@ app.controller('SpfyController', [
                           // job result not found ie. still pending
                           // set to result of QC (so that failing QC propagates to failing every job)
                           $scope.loading = $scope.qcPassed;
+                          if (!$scope.qcPassed){
+                            $timeout.cancel(timeout);
+                          }
                         }
                         // continue to call the poller() function every 2 seconds
                         // until the timeout is cancelled
