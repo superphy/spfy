@@ -153,14 +153,14 @@ app.controller('SpfyController', [
                         } else if (status == 202){
                           // job result not found ie. still pending
                           // set to result of QC (so that failing QC propagates to failing every job)
-                          if ($scope.qcComplete === true && $scope.qcPassed === false){
+                          if ($scope.qcComplete && !$scope.qcPassed)){
                             $scope.loading = false;
                             $timeout.cancel(timeout);
                             $scope.uploaderror = true;
                             $scope.jobfailed = true;
                             return false;
                           }
-                        } 
+                        }
                         // continue to call the poller() function every 2 seconds
                         // until the timeout is cancelled
                         timeout = $timeout(poller(key), 2000);
