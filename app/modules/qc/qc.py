@@ -5,7 +5,6 @@ import subprocess
 import argparse
 
 import pandas as pd
-import numby as np
 
 def create_blast_db():
     '''
