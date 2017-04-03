@@ -8,8 +8,7 @@ import pandas as pd
 
 def create_blast_db(query_file):
     '''
-    Creates a reference database using https://raw.githubusercontent.com/superphy/version-1/master/Sequences/genome_content_panseq/putative_e_coli_specific.fasta
-    The databse contains 10 ecoli-specific gene sequences
+
 
     :param query_file: genome file that was given by the user.
     '''
@@ -30,7 +29,8 @@ def create_blast_db(query_file):
 
 def run_blast(blast_db):
     '''
-    Runs query against ref db of ecoli-spec sequences.
+    Compares db made from user submitted data against https://raw.githubusercontent.com/superphy/version-1/master/Sequences/genome_content_panseq/putative_e_coli_specific.fasta
+    The ref contains 10 ecoli-specific gene sequences
     Output format is set to '10'(csv)
     '''
     ecoli_ref = os.path.abspath(os.path.dirname(os.path.abspath(__file__)) + '/' + 'putative_e_coli_specific.fasta')
@@ -58,9 +58,7 @@ def parse_blast_records(blast_output_file):
     # col 4 is percent identity, as set by our blast call above
     blast_records_pi_passed = blast_records[blast_records['pident']>=90]
     # pl check: col
-    blast_records_pi_passed['plpassed'] = blast_records_pi_passed.apply(lambda row: row['length']/row['qlen'] * 100)
-    #blast_records_pi_passed['plpassed'] = blast_records_pi_passed[blast_records_pi_passed['length']/blast_records_pi_passed['qlen'] * 100 >= 90]
-    blast_records_pi_pl_passed = blast_records_pi_passed[blast_records_pi_passed['plpassed'] >= 90]
+    blast_records_pi_pl_passed = blast_records_pi_passed[blast_records_pi_passed[blast_records_pi_passed['length']/blast_records_pi_passed['qlen'] * 100 >= 90]]
     print blast_records_pi_pl_passed
     # col 1 is the subject (where col 0 is the query)
     unique_hits = blast_records_pi_pl_passed['sseqid'].unique()
