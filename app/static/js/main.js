@@ -153,6 +153,7 @@ app.controller('SpfyController', [
                         } else if (status == 202){
                           // job result not found ie. still pending
                           // set to result of QC (so that failing QC propagates to failing every job)
+                          $scope.loading = true;
                           if ($scope.qcComplete && !$scope.qcPassed){
                             $log.log('Something messed up');
                             $log.log(($scope.qcComplete && !$scope.qcPassed));
