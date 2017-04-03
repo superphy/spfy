@@ -63,6 +63,7 @@ def parse_blast_records(blast_output_file):
     # col 1 is the subject (where col 0 is the query)
     unique_hits = blast_records_pi_pl_passed['sseqid'].unique()
 
+    print unique_hits
     return unique_hits
 
 def qc(query_file):
