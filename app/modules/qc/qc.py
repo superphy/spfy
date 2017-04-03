@@ -74,6 +74,7 @@ def qc(query_file):
     '''
     blast_db = create_blast_db()
     blast_output_file = run_blast(query_file, blast_db)
+    print blast_output_file
     unique_hits = parse_blast_records(blast_output_file)
 
     if len(unique_hits) >= 3:
