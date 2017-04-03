@@ -18,7 +18,7 @@ def create_blast_db(query_file):
     blast_db_path = os.path.join(tempdir, 'ecoli_blastdb')
 
     ret_code = subprocess.call(["makeblastdb",
-                                        "-in", ecoli_ref,
+                                        "-in", query_file,
                                         "-dbtype", "nucl",
                                         "-title", "ecoli_blastdb",
                                         "-out", blast_db_path])
