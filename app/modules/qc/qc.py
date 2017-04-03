@@ -53,7 +53,7 @@ def parse_blast_records(blast_output_file):
     returns a list of unique hits from the reference db
     '''
     blast_records = pd.read_csv(blast_output_file, header=None)
-    blast_records.columns['qseqid','qlen','sseqid','length','pident','sstart','send','sframe']
+    blast_records.columns = ['qseqid','qlen','sseqid','length','pident','sstart','send','sframe']
     print blast_records
     # col 4 is percent identity, as set by our blast call above
     blast_records_pi_passed = blast_records[blast_records.iloc[:,4]>=90]
