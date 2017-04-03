@@ -160,19 +160,13 @@ app.controller('SpfyController', [
                             $scope.jobfailed = true;
                             return false;
                           }
-                        } else if (status == 500){
-                          $scope.qcPassed = false;
-                          $scope.qcComplete = true;
-                          $scope.loading = false;
-                          $timeout.cancel(timeout);
-                          $scope.uploaderror = true;
-                          $scope.jobfailed = true;
-                          return false;
-                        }
+                        } 
                         // continue to call the poller() function every 2 seconds
                         // until the timeout is cancelled
                         timeout = $timeout(poller(key), 2000);
                     }).error(function(error, status) {
+                        $scope.qcPassed = false;
+                        $scope.qcComplete = true;
                         $log.log(error);
                         $scope.loading = false;
                         $log.log(status);
