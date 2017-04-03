@@ -1,3 +1,4 @@
+
 import os
 import tempfile
 import subprocess
@@ -59,7 +60,7 @@ def parse_blast_records(blast_output_file):
     blast_records_pi_passed = blast_records[blast_records['pident']>=90]
 
     # pl check: col
-    blast_records_pi_pl_passed = blast_records_pi_passed[blast_records_pi_passed['length']/blast_records_pi_passed['qlen']>=90]
+    blast_records_pi_pl_passed = blast_records_pi_passed[blast_records_pi_passed['length']/blast_records_pi_passed['qlen']>=.90]
 
     # col 1 is the subject (where col 0 is the query)
     unique_hits = blast_records_pi_pl_passed.iloc[:,2].unique()
