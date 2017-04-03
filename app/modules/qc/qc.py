@@ -55,8 +55,8 @@ def parse_blast_records(blast_output_file):
     # col 4 is percent identity, as set by our blast call above
     blast_records_pi_passed = blast_records[blast_records['pident']>=90]
     # pl check: col
-    blast_records_pi_passed['plpassed'] = blast_records_pi_passed['length']/blast_records_pi_passed['qlen'] * 100
     blast_records_pi_pl_passed = blast_records_pi_passed[blast_records_pi_passed['length']/blast_records_pi_passed['qlen'] * 100 >= 90]
+    print blast_records_pi_pl_passed
     # col 1 is the subject (where col 0 is the query)
     unique_hits = blast_records_pi_pl_passed['sseqid'].unique()
 
