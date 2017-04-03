@@ -6,7 +6,7 @@ import argparse
 import pandas as pd
 
 # we want to use true division, not integer
-from __future__ import division
+#from __future__ import division
 
 def create_blast_db():
     '''
@@ -60,7 +60,7 @@ def parse_blast_records(blast_output_file):
     blast_records_pi_pl_passed = blast_records_pi_passed[blast_records_pi_passed.iloc[:,3]/blast_records_pi_passed.iloc[:,1]>=90]
 
     # col 1 is the subject (where col 0 is the query)
-    unique_hits = blast_records_pi_pl_passed.iloc[:,1].unique()
+    unique_hits = blast_records_pi_pl_passed.iloc[:,2].unique()
 
     return unique_hits
 
