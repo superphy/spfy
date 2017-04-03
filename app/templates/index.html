@@ -116,9 +116,9 @@
                 <!-- end of search area -->
             <!-- actual results area-->
             <div class="container-fluid">
-                <div class="alert alert-info" role="alert" ng-show="disableDownload && qcPassed && loading"><i class="fa fa-check-square-o" aria-hidden="true"></i>QC Passed</div>
+                <div class="alert alert-info" role="alert" ng-show="disableDownload && qcPassed && loading"><i class="fa fa-check-square-o" aria-hidden="true"></i> <strong> QC Passed.</strong></div>
 
-                <div class="alert alert-danger" role="alert" ng-show="jobfailed && !qcPassed"><i class="fa fa-frown-o" aria-hidden="true"></i><strong>QC Failed.</strong> All other analyzes cancelled.</div>
+                <div class="alert alert-danger" role="alert" ng-show="jobfailed && !qcPassed"><i class="fa fa-frown-o" aria-hidden="true"></i><strong> QC Failed.</strong> All other analyzes cancelled.</div>
 
                 <div class="alert alert-info" role="alert" ng-show="!disableDownload && loading"><i class="fa fa-cogs" aria-hidden="true"></i><strong> Heads up!</strong> Only partial results so far.</div>
 
