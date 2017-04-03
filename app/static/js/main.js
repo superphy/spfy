@@ -34,6 +34,7 @@ app.controller('SpfyController', [
 
         // for managing QC result & SpfyID Generation result
         $scope.qcPassed = false
+        $scope.qcComplete = false
         $scope.spfyidGeneration = false
 
         // check at least one of options is selected
@@ -131,6 +132,7 @@ app.controller('SpfyController', [
                             $scope.loading = false;
                             if (typeof(data) === "boolean"){
                               $scope.qcPassed = data;
+                              $scope.qcComplete = true;
                             } else if (typeof(data) == "string"){
                               $scope.spfyidGeneration = data;
                             } else {
@@ -151,9 +153,12 @@ app.controller('SpfyController', [
                         } else if (status == 202){
                           // job result not found ie. still pending
                           // set to result of QC (so that failing QC propagates to failing every job)
-                          $scope.loading = $scope.qcPassed;
-                          if ($scope.qcPassed === false){
+                          if ($scope.qcComplete && $scope.qcPassed = false){
+                            $scope.loading = false;
                             $timeout.cancel(timeout);
+                            $scope.uploaderror = true;
+                            $scope.jobfailed = true;
+                            return false;
                           }
                         }
                         // continue to call the poller() function every 2 seconds
