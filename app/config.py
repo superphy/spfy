@@ -10,7 +10,6 @@ BOOTSTRAP_SERVE_LOCAL = True
 MAX_TIME_TO_WAIT = 10
 
 DATASTORE = '/datastore'
-ALLOWED_EXTENSIONS = ['fna']
 RECAPTCHA_ENABLED = True
 RECAPTCHA_SITE_KEY = "6LeVYhgUAAAAAKbedEJoCcRaeFaxPh-2hZfzXfFP"
 RECAPTCHA_SECRET_KEY = "PUTYOSECRETKEYHERE"
@@ -36,9 +35,6 @@ namespaces = {
 database = {}
 database['blazegraph_url'] = 'http://blazegraph:8080/bigdata/sparql'
 #database['blazegraph_url'] = 'http://localhost:9000/blazegraph/namespace/superphy/sparql'
-#note: the convention here is database['count'] is NOT occupied
-# on new DB, start at 1
-database['count'] = 1
 #### end of savvy.py stuff
 
 

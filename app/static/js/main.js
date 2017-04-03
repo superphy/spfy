@@ -130,9 +130,9 @@ app.controller('SpfyController', [
                             $log.log(data);
                             $scope.loading = false;
                             if (typeof(data) === "boolean"){
-                              $scope.qcPassed = data
+                              $scope.qcPassed = data;
                             } else if (typeof(data) == "string"){
-                              $scope.spfyidGeneration = data
+                              $scope.spfyidGeneration = data;
                             } else {
                               $scope.spits = $scope.spits.concat(data);
                               //check for "No results found"
@@ -150,7 +150,8 @@ app.controller('SpfyController', [
                             return false;
                         } else if (status == 202){
                           // job result not found ie. still pending
-                          $scope.loading = true;
+                          // set to result of QC (so that failing QC propagates to failing every job)
+                          $scope.loading = $scope.qcPassed;
                         }
                         // continue to call the poller() function every 2 seconds
                         // until the timeout is cancelled
