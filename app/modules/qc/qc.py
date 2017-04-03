@@ -6,12 +6,14 @@ import argparse
 
 import pandas as pd
 
-def create_blast_db():
+def create_blast_db(query_file):
     '''
     Creates a reference database using https://raw.githubusercontent.com/superphy/version-1/master/Sequences/genome_content_panseq/putative_e_coli_specific.fasta
     The databse contains 10 ecoli-specific gene sequences
+
+    :param query_file: genome file that was given by the user.
     '''
-    ecoli_ref = os.path.abspath(os.path.dirname(os.path.abspath(__file__)) + '/' + 'putative_e_coli_specific.fasta')
+
     tempdir = tempfile.mkdtemp()
     blast_db_path = os.path.join(tempdir, 'ecoli_blastdb')
 
@@ -26,14 +28,15 @@ def create_blast_db():
         raise Exception("Could not create blast db")
 
 
-def run_blast(query_file, blast_db):
+def run_blast(blast_db):
     '''
     Runs query against ref db of ecoli-spec sequences.
     Output format is set to '10'(csv)
     '''
+    ecoli_ref = os.path.abspath(os.path.dirname(os.path.abspath(__file__)) + '/' + 'putative_e_coli_specific.fasta')
     blast_output_file = create_blast_db() + '.output'
     ret_code = subprocess.call(["blastn",
-                                        "-query", query_file,
+                                        "-query", ecoli_ref,
                                         "-db", blast_db,
                                         "-out", blast_output_file,
                                         "-outfmt", '10 " qseqid qlen sseqid length pident sstart send sframe "',
@@ -72,8 +75,8 @@ def qc(query_file):
 
     Returns True for pass, False for failed qc check (not ecoli.)
     '''
-    blast_db = create_blast_db()
-    blast_output_file = run_blast(query_file, blast_db)
+    blast_db = create_blast_db(query_file)
+    blast_output_file = run_blast(blast_db)
     print blast_output_file
     unique_hits = parse_blast_records(blast_output_file)
 
