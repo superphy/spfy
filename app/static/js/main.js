@@ -153,7 +153,7 @@ app.controller('SpfyController', [
                         } else if (status == 202){
                           // job result not found ie. still pending
                           // set to result of QC (so that failing QC propagates to failing every job)
-                          if ($scope.qcComplete && !$scope.qcPassed)){
+                          if ($scope.qcComplete && !$scope.qcPassed){
                             $scope.loading = false;
                             $timeout.cancel(timeout);
                             $scope.uploaderror = true;
