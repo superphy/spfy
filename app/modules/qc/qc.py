@@ -61,7 +61,7 @@ def parse_blast_records(blast_output_file):
     print blast_records_pi_passed
     blast_records_pi_pl_passed = blast_records_pi_passed[blast_records_pi_passed['length']/blast_records_pi_passed['qlen'] * 100 >= 90]
     # col 1 is the subject (where col 0 is the query)
-    unique_hits = blast_records_pi_pl_passed.iloc[:,2].unique()
+    unique_hits = blast_records_pi_pl_passed.iloc['sseqid'].unique()
 
     return unique_hits
 
