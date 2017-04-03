@@ -34,7 +34,7 @@ def run_blast(blast_db):
     Output format is set to '10'(csv)
     '''
     ecoli_ref = os.path.abspath(os.path.dirname(os.path.abspath(__file__)) + '/' + 'putative_e_coli_specific.fasta')
-    blast_output_file = create_blast_db() + '.output'
+    blast_output_file = blast_db + '.output'
     ret_code = subprocess.call(["blastn",
                                         "-query", ecoli_ref,
                                         "-db", blast_db,
