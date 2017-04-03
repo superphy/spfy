@@ -137,6 +137,7 @@ app.controller('SpfyController', [
                               $scope.spfyidGeneration = data;
                             } else {
                               $scope.spits = $scope.spits.concat(data);
+                              $scope.disableDownload = false;
                               //check for "No results found"
                               for(hit in data){
                                 if (data[hit].hitname === "No Results Found." ||
@@ -145,10 +146,9 @@ app.controller('SpfyController', [
                                 }
                               }
                             }
-
                             $log.log($scope.spits);
                             $timeout.cancel(timeout);
-                            $scope.disableDownload = false;
+
                             return false;
                         } else if (status == 202){
                           // job result not found ie. still pending
