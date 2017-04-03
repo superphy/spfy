@@ -161,6 +161,8 @@ app.controller('SpfyController', [
                             return false;
                           }
                         } else if (status == 500){
+                          $scope.qcPassed = false;
+                          $scope.qcComplete = true;
                           $scope.loading = false;
                           $timeout.cancel(timeout);
                           $scope.uploaderror = true;
