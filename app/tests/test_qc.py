@@ -1,5 +1,5 @@
 # usage:    cd app/
-#           python -m pytest
+#           python -m pytest --ignore modules/ectyper/ecoli_serotyping
 
 import pytest
 import os
@@ -21,9 +21,8 @@ GENOMES_LIST_ECOLI = listdir_fullpath('tests/ecoli')
 
 def test_qc():
     for ecoli_genome in GENOMES_LIST_ECOLI:
-
         print ecoli_genome
-        assert qc(non_ecoli_genome) == True
+        assert qc(ecoli_genome) == True
     for non_ecoli_genome in GENOMES_LIST_NOT_ECOLI:
         print non_ecoli_genome
         assert qc(non_ecoli_genome) == False
