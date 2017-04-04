@@ -63,7 +63,7 @@ def parse_blast_records(blast_output_file):
     blast_records_pi_pl_passed = blast_records_pi_passed[blast_records_pi_passed['pl'] >= 90]
     print blast_records_pi_pl_passed
     # col 1 is the subject (where col 0 is the query)
-    unique_hits = blast_records_pi_pl_passed['sseqid'].unique()
+    unique_hits = blast_records_pi_pl_passed['qseqid'].unique()
 
     print unique_hits
     return unique_hits
