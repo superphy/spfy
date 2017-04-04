@@ -91,6 +91,11 @@ http {
     # for more information.
     include /etc/nginx/conf.d/*.conf;
 
+    map $http_upgrade $connection_upgrade {
+        default upgrade;
+        ''      close;
+    }
+
     server {
 	client_max_body_size 200m;
 	listen       80 default_server;
@@ -101,17 +106,22 @@ http {
         # Load configuration files for the default server block.
         include /etc/nginx/default.d/*.conf;
 
-  rewrite ^([^.]*[^/])$ $1/ permanent;
 
 	location / {
             proxy_pass http://127.0.0.1:8081;
 	}
-	location /spfy {
-	    rewrite ^/spfy(.*) /$1 break;
-            include uwsgi_params;
-            uwsgi_pass 127.0.0.1:8080;
-        }
-
+	location /spfy/ {
+	    rewrite ^/spfy/(.*)$ /$1 break;
+      	    proxy_pass http://localhost:8080;
+      	    proxy_redirect http://localhost:8080/ $scheme://$host/spfy/;
+     	    proxy_http_version 1.1;
+            proxy_set_header Upgrade $http_upgrade;
+      	    proxy_set_header Connection $connection_upgrade;
+      	    proxy_read_timeout 20d;
+	}
+	location /shiny/ {
+	    proxy_pass http://127.0.0.1:3840;
+	}
 
     }
 
@@ -125,25 +135,24 @@ http {
         # Load configuration files for the default server block.
         include /etc/nginx/default.d/*.conf;
 
-        
-
 	location / {
             proxy_pass http://127.0.0.1:8081;
 	}
-        location /superphy {
-            proxy_pass https://127.0.0.1:8081;
+	location = /spfy {
+	    return 301 /superphy/spfy/;
+	}
+	location /spfy/ {
+            rewrite ^/spfy/(.*)$ /$1 break;
+            proxy_pass http://localhost:8080;
+            proxy_redirect http://localhost:8080/superphy/ $scheme://$host/spfy/;
+            proxy_http_version 1.1;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection $connection_upgrade;
+            proxy_read_timeout 20d;
         }
-	location /superphy/spfy {
-	    rewrite ^/superphy/spfy(.*) /$1 break;
-            include uwsgi_params;
-            uwsgi_pass 127.0.0.1:8080;
-        }
-	location /spfy {
-	    rewrite ^/spfy(.*) /$1 break;
-            include uwsgi_params;
-            uwsgi_pass 127.0.0.1:8080;
-        }
-
+	location /shiny/ {
+	    proxy_pass http://127.0.0.1:3840;
+	}
     }
 
 
