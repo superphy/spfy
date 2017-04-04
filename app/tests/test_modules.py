@@ -48,7 +48,7 @@ def test_ectyper():
 
         # beautify ECTyper check
         json_return = beautify(single_dict, pickled_ectyper_dict)
-        assert type(json_return) == dict
+        assert type(json_return) == list
 
 def test_amr():
     for ecoli_genome in GENOMES_LIST_ECOLI:
@@ -66,4 +66,4 @@ def test_amr():
         single_dict = dict(ARGS_DICT)
         single_dict.update({'i':ecoli_genome})
         json_return = beautify(single_dict,pickled_amr_dict)
-        assert type(json_return) == dict
+        assert type(json_return) == list
