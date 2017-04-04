@@ -16,7 +16,13 @@ from modules.turtleGrapher.turtle_grapher import turtle_grapher
 
 # utility function to generate full path (still relative to root, not absoulte) for files in directories
 def listdir_fullpath(d):
-    return [os.path.join(d, f) for f in os.listdir(d)]
+    valid_extensions = ('fasta','fna')
+    l = []
+    for f in os.listdir(d):
+        filename, file_extension = os.path.splitext(f)
+        if file_extension in valid_extensions:
+            l.append(os.path.join(d, f))
+    return l
 
 # globals for testing
 GENOMES_LIST_NOT_ECOLI = listdir_fullpath('tests/notEcoli')
