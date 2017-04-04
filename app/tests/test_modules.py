@@ -42,25 +42,25 @@ def test_ectyper():
         # basic ECTyper check
         single_dict = dict(ARGS_DICT)
         single_dict.update({'i':ecoli_genome})
-        pickled_file = call_ectyper(single_dict)
-        ectyper_dict = pickle.load(open(pickled_file,'rb'))
+        pickled_ectyper_dict = call_ectyper(single_dict)
+        ectyper_dict = pickle.load(open(pickled_ectyper_dict,'rb'))
         assert type(ectyper_dict) == dict
 
         # beautify ECTyper check
-        json_return = beautify(pickled_file)
+        json_return = beautify(single_dict, pickled_ectyper_dict)
         assert type(json_return) == dict
 
 def test_amr():
     for ecoli_genome in GENOMES_LIST_ECOLI:
         # this generates the .tsv
-        pickled_file = amr(ecoli_genome)
-        filename, file_extension = os.path.splitext(pickled_file)
+        pickled_amr_tsv = amr(ecoli_genome)
+        filename, file_extension = os.path.splitext(pickled_amr_tsv)
         assert file_extension == '.tsv'
 
         # convert the tsv to a directory
-        pickled_amr_dict = amr_to_dict(pickled_file)
-        r_dict = pickle.load(open(pickled_amr_dict,'rb'))
-        assert type(ectyper_dict) == dict
+        pickled_amr_dict = amr_to_dict(pickled_amr_tsv)
+        amr_dict = pickle.load(open(pickled_amr_dict,'rb'))
+        assert type(amr_dict) == dict
 
         # beautify amr check
         single_dict = dict(ARGS_DICT)
