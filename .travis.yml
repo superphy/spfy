@@ -7,9 +7,9 @@ python:
 install:
   - sudo apt-get update
   #### Docker:
-  - docker build -t superphy/backend:2.0.0 -f Dockerfile-spfy
-  - docker build -t superphy/backend-rq:2.0.0 -f Dockerfile-rq
-  - docker build -t superphy/backend-rq-blazegraph:2.0.0 -f Dockerfile-rq-blazegraph
+  - docker build -t superphy/backend:2.0.0 -f Dockerfile-spfy .
+  - docker build -t superphy/backend-rq:2.0.0 -f Dockerfile-rq .
+  - docker build -t superphy/backend-rq-blazegraph:2.0.0 -f Dockerfile-rq-blazegraph .
   - docker-compose up
 
   #### miniconda install:
