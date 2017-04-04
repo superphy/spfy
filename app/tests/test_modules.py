@@ -19,7 +19,9 @@ def listdir_fullpath(d):
     valid_extensions = ('fasta','fna')
     l = []
     for f in os.listdir(d):
+        print f
         filename, file_extension = os.path.splitext(f)
+        print file_extension
         if file_extension in valid_extensions:
             l.append(os.path.join(d, f))
     return l
