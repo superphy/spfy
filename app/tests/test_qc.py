@@ -13,11 +13,11 @@ from modules.beautify.beautify import beautify
 from modules.turtleGrapher.datastruct_savvy import datastruct_savvy
 from modules.turtleGrapher.turtle_grapher import turtle_grapher
 
-GENOMES_LIST_NOT_ECOLI = listdir_fullpath('tests/notEcoli')
-GENOMES_LIST_ECOLI = listdir_fullpath('tests/ecoli')
-
 def listdir_fullpath(d):
     return [os.path.join(d, f) for f in os.listdir(d)]
+
+GENOMES_LIST_NOT_ECOLI = listdir_fullpath('tests/notEcoli')
+GENOMES_LIST_ECOLI = listdir_fullpath('tests/ecoli')
 
 def test_qc():
     for ecoli_genome in GENOMES_LIST_ECOLI:
