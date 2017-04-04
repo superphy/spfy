@@ -38,3 +38,9 @@ def test_ectyper():
         pickled_file = call_ectyper(single_dict)
         ectyper_dict = pickle.load(open(pickled_file,'rb'))
         assert type(ectyper_dict) == dict
+
+def test_amr():
+    for ecoli_genome in GENOMES_LIST_ECOLI:
+        pickled_file = amr(ecoli_genome)
+        ectyper_dict = pickle.load(open(pickled_file,'rb'))
+        assert type(ectyper_dict) == dict
