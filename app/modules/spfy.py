@@ -97,38 +97,3 @@ def spfy(args_dict):
     jobs_dict = blob_savvy(args_dict)
 
     return jobs_dict
-
-# ignore the super dangerous defining of a dictionary in arguments, this is only for testing
-def spfy_test(args_dict={'i':'../tests/ecoli/GCA_001894495.1_ASM189449v1_genomic.fna', 's':1,'vf':1}):
-    '''
-    This is meant to mirror the pipeline, and for checking everything works together as expected w/o Redis Queue.
-    '''
-
-    args_dict['i'] = os.path.abspath(args_dict['i'])
-    query_file = args_dict['i']
-
-    print 'QC...'
-    assert qc(query_file) == True
-    print 'QC Done'
-
-    print 'ECtyper...'
-    #check that the results file will be where we expect
-    assert call_ectyper(args_dict) == query_file +'_ectyper.p'
-    print 'ECtyper done'
-
-    print 'AMR...'
-    assert amr(args_dict) == query_file + '.tsv'
-    print 'AMR done'
-    print 'AMR to Dict...'
-    assert amr_to_dict(query_file + '.tsv') == query_file + '_amr.p'
-    print 'AMR to Dict Done'
-
-    print 'datastruct_savvy on ectyper...'
-
-
-if __name__ == '__main__':
-    '''
-    You're not expected to call spfy.py directly!
-    This is only meant for testing.
-    '''
-    spfy_test()
