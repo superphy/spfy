@@ -16,12 +16,10 @@ from modules.turtleGrapher.turtle_grapher import turtle_grapher
 
 # utility function to generate full path (still relative to root, not absoulte) for files in directories
 def listdir_fullpath(d):
-    valid_extensions = ('fasta','fna')
+    valid_extensions = ('.fasta','.fna')
     l = []
     for f in os.listdir(d):
-        print f
         filename, file_extension = os.path.splitext(f)
-        print file_extension
         if file_extension in valid_extensions:
             l.append(os.path.join(d, f))
     return l
