@@ -4,7 +4,7 @@ FROM superphy/docker-flask-conda:latest
 
 ## Nginx:
 # Make NGINX run on the foreground
-RUN echo "daemon off;" >> /etc/nginx/nginx.conf
+#TEMPORARY RUN echo "daemon off;" >> /etc/nginx/nginx.conf
 # Remove default configuration from Nginx
 #TEMPORARY RUN rm /etc/nginx/conf.d/default.conf
 # Copy the modified Nginx conf
