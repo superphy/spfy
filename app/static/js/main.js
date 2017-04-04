@@ -8,6 +8,7 @@ app.controller('SpfyController', [
     'vcRecaptchaService',
     function($scope, $log, $http, $timeout, vcRecaptchaService) {
 
+
         $scope.loading = false;
 
         $scope.jobfailed = false;
@@ -32,6 +33,11 @@ app.controller('SpfyController', [
         $scope.formData.options.serotype=true
         $scope.pi=90
 
+        // for managing QC result & SpfyID Generation result
+        $scope.qcPassed = false
+        $scope.qcComplete = false
+        $scope.spfyidGeneration = false
+
         // check at least one of options is selected
         var calculateSomeSelected = function() {
           $scope.someSelected = Object.keys($scope.formData.options).some(function(key) {
@@ -44,7 +50,9 @@ app.controller('SpfyController', [
         //recaptcha support via github.com/VividCortex/angular-recaptcha/
         $scope.submitted = false;
         $scope.response = null;
-        $scope.noCaptcha = true;
+        //$scope.noCaptcha = true;
+        //override for disabling captcha for public release
+        $scope.noCaptcha = false;
         $scope.widgetId = null;
         $scope.setResponse = function (response) {
                     console.info('Response available');
@@ -125,28 +133,46 @@ app.controller('SpfyController', [
                         if (status == 200) {
                             $log.log(data);
                             $scope.loading = false;
-                            $scope.spits = $scope.spits.concat(data);
-
-                            //check for "No results found"
-                            for(hit in data){
-                              if (data[hit].hitname === "No Results Found." ||
-                                  data[hit].hitname.includes("No prediction could be made for")){
-                                $scope.foundNull = true;
+                            if (typeof(data) === "boolean"){
+                              $scope.qcPassed = data;
+                              $scope.qcComplete = true;
+                            } else if (typeof(data) == "string"){
+                              $scope.spfyidGeneration = data;
+                            } else {
+                              $scope.spits = $scope.spits.concat(data);
+                              $scope.disableDownload = false;
+                              //check for "No results found"
+                              for(hit in data){
+                                if (data[hit].hitname === "No Results Found." ||
+                                    data[hit].hitname.includes("No prediction could be made for")){
+                                  $scope.foundNull = true;
+                                }
                               }
                             }
-
                             $log.log($scope.spits);
                             $timeout.cancel(timeout);
-                            $scope.disableDownload = false;
+
                             return false;
                         } else if (status == 202){
                           // job result not found ie. still pending
+                          // set to result of QC (so that failing QC propagates to failing every job)
                           $scope.loading = true;
+                          if ($scope.qcComplete && !$scope.qcPassed){
+                            $log.log('Something messed up');
+                            $log.log(($scope.qcComplete && !$scope.qcPassed));
+                            $scope.loading = false;
+                            $timeout.cancel(timeout);
+                            $scope.uploaderror = true;
+                            $scope.jobfailed = true;
+                            return false;
+                          }
                         }
                         // continue to call the poller() function every 2 seconds
                         // until the timeout is cancelled
                         timeout = $timeout(poller(key), 2000);
                     }).error(function(error, status) {
+                        $scope.qcPassed = false;
+                        $scope.qcComplete = true;
                         $log.log(error);
                         $scope.loading = false;
                         $log.log(status);

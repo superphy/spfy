@@ -1,0 +1,41 @@
+sudo: required
+services:
+  - docker
+lanugage: python
+python:
+  - "2.7"
+before_install:
+  - sudo apt-get update
+  #### Docker:
+  - docker build -t superphy/backend:2.0.0 -f Dockerfile-spfy .
+  - docker build -t superphy/backend-rq:2.0.0 -f Dockerfile-rq .
+  - docker build -t superphy/backend-rq-blazegraph:2.0.0 -f Dockerfile-rq-blazegraph .
+  - docker-compose up -d
+  - docker ps -a
+  - ls
+  #### miniconda install:
+  # We do this conditionally because it saves us some downloading if the
+  # version is the same.
+  - if [[ "$TRAVIS_PYTHON_VERSION" == "2.7" ]]; then
+      wget https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh -O miniconda.sh;
+    else
+      wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
+    fi
+  - bash miniconda.sh -b -p $HOME/miniconda
+  - export PATH="$HOME/miniconda/bin:$PATH"
+  - hash -r
+  - conda config --set always_yes yes --set changeps1 no
+  - conda config --add channels bioconda
+  - conda update -q conda
+  # Useful for debugging any issues with conda
+  - conda info -a
+install:
+  - cd app/
+  - ls
+  #### Recreate our Conda env for testing
+  - conda env create -f environment.yml -n backend
+  - source activate backend
+  - pip install pytest
+script:
+  #### Run Pytest
+  - python -m pytest --ignore modules/ectyper/ecoli_serotyping -v
