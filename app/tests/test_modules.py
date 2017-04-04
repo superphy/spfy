@@ -1,5 +1,5 @@
 # usage:    cd app/
-#           python -m pytest --ignore modules/ectyper/ecoli_serotyping
+#           python -m pytest --ignore modules/ectyper/ecoli_serotyping -v
 
 import pytest
 import os
@@ -39,14 +39,31 @@ def test_qc():
 
 def test_ectyper():
     for ecoli_genome in GENOMES_LIST_ECOLI:
+        # basic ECTyper check
         single_dict = dict(ARGS_DICT)
         single_dict.update({'i':ecoli_genome})
         pickled_file = call_ectyper(single_dict)
         ectyper_dict = pickle.load(open(pickled_file,'rb'))
         assert type(ectyper_dict) == dict
 
+        # beautify ECTyper check
+        json_return = beautify(pickled_file)
+        assert type(json_return) == dict
+
 def test_amr():
     for ecoli_genome in GENOMES_LIST_ECOLI:
+        # this generates the .tsv
         pickled_file = amr(ecoli_genome)
-        ectyper_dict = pickle.load(open(pickled_file,'rb'))
+        filename, file_extension = os.path.splitext(pickled_file)
+        assert file_extension == '.tsv'
+
+        # convert the tsv to a directory
+        pickled_amr_dict = amr_to_dict(pickled_file)
+        r_dict = pickle.load(open(pickled_amr_dict,'rb'))
         assert type(ectyper_dict) == dict
+
+        # beautify amr check
+        single_dict = dict(ARGS_DICT)
+        single_dict.update({'i':ecoli_genome})
+        json_return = beautify(single_dict,pickled_amr_dict)
+        assert type(json_return) == dict
