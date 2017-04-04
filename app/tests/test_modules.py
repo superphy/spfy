@@ -3,6 +3,7 @@
 
 import pytest
 import os
+import cPickle as pickle
 
 from modules.qc.qc import qc
 from modules.blazeUploader.reserve_id import write_reserve_id
@@ -13,16 +14,23 @@ from modules.beautify.beautify import beautify
 from modules.turtleGrapher.datastruct_savvy import datastruct_savvy
 from modules.turtleGrapher.turtle_grapher import turtle_grapher
 
+# utility function to generate full path (still relative to root, not absoulte) for files in directories
 def listdir_fullpath(d):
     return [os.path.join(d, f) for f in os.listdir(d)]
 
 GENOMES_LIST_NOT_ECOLI = listdir_fullpath('tests/notEcoli')
 GENOMES_LIST_ECOLI = listdir_fullpath('tests/ecoli')
 
+#### Non-Blazegraph/RQ Tests
+
 def test_qc():
     for ecoli_genome in GENOMES_LIST_ECOLI:
-        print ecoli_genome
         assert qc(ecoli_genome) == True
     for non_ecoli_genome in GENOMES_LIST_NOT_ECOLI:
-        print non_ecoli_genome
         assert qc(non_ecoli_genome) == False
+
+def test_ectyper():
+    for ecoli_genome in GENOMES_LIST_ECOLI:
+        pickled_file = call_ectyper(ecoli_genome)
+        ectyper_dict = pickle.load(open(pickled_file,'rb'))
+        assert type(ectyper_dict) == dict
