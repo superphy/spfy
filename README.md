@@ -8,7 +8,7 @@ SPA bundling Serotype & Virulence Factors (via [ECTyper](https://github.com/phac
 1. Install Docker (& Docker-Compose separately if you're on Linux, [Link](https://docs.docker.com/compose/install/)) mac/windows users have Compose bundled with Docker Engine.
 2. `git clone https://github.com/superphy/backend.git`
 3. `docker-compose up`
-4. Visit http://localhost:80
+4. Visit http://localhost:8000
 5. Eat cake :cake:
 
 ## Architecture:
