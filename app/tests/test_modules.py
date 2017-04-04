@@ -51,7 +51,7 @@ def test_ectyper():
         assert type(json_return) == list
 
 def test_amr():
-    for ecoli_genome in GENOMES_LIST_ECOLI:
+        ecoli_genome = GENOMES_LIST_ECOLI[0]
         # this generates the .tsv
         pickled_amr_tsv = amr(ecoli_genome)
         filename, file_extension = os.path.splitext(pickled_amr_tsv)
