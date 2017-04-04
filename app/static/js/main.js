@@ -50,7 +50,9 @@ app.controller('SpfyController', [
         //recaptcha support via github.com/VividCortex/angular-recaptcha/
         $scope.submitted = false;
         $scope.response = null;
-        $scope.noCaptcha = true;
+        //$scope.noCaptcha = true;
+        //override for disabling captcha for public release
+        $scope.noCaptcha = false;
         $scope.widgetId = null;
         $scope.setResponse = function (response) {
                     console.info('Response available');
