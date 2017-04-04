@@ -55,17 +55,17 @@ def parse_blast_records(blast_output_file):
     '''
     blast_records = pd.read_csv(blast_output_file, header=None)
     blast_records.columns = ['qseqid','qlen','sseqid','length','pident','sstart','send','sframe']
-    # col 4 is percent identity, as set by our blast call above
-    blast_records_pi_passed = blast_records[blast_records['pident']>=90]
-    # pl check: col
-    blast_records_pi_passed['pl'] = blast_records_pi_passed['length']/blast_records_pi_passed['qlen'] * 100
-    print blast_records_pi_passed
-    blast_records_pi_pl_passed = blast_records_pi_passed[blast_records_pi_passed['pl'] >= 90]
-    print blast_records_pi_pl_passed
-    # col 1 is the subject (where col 0 is the query)
-    unique_hits = blast_records_pi_pl_passed['qseqid'].unique()
 
-    print unique_hits
+    # filter for results with percent identity >= 90%
+    blast_records_pi_passed = blast_records[blast_records['pident']>=90]
+
+    # calculate percent length
+    blast_records_pi_passed['pl'] = blast_records_pi_passed['length']/blast_records_pi_passed['qlen'] * 100
+    # filter for results with percent length >= 90%
+    blast_records_pi_pl_passed = blast_records_pi_passed[blast_records_pi_passed['pl'] >= 90]
+
+    # take only unique hits of the reference sequence that pass pi/pl checks (we don't count repeats)
+    unique_hits = blast_records_pi_pl_passed['qseqid'].unique()
     return unique_hits
 
 def qc(query_file):
@@ -77,7 +77,6 @@ def qc(query_file):
     '''
     blast_db = create_blast_db(query_file)
     blast_output_file = run_blast(blast_db)
-    print blast_output_file
     unique_hits = parse_blast_records(blast_output_file)
 
     if len(unique_hits) >= 3:
