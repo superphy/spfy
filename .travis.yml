@@ -12,9 +12,10 @@ install:
   - docker build -t superphy/backend-rq-blazegraph:2.0.0 -f Dockerfile-rq-blazegraph .
   - docker-compose up -d
   - docker ps -a
-
+  - ls
   #### miniconda install:
   - cd app/
+  - ls
   # We do this conditionally because it saves us some downloading if the
   # version is the same.
   - if [[ "$TRAVIS_PYTHON_VERSION" == "2.7" ]]; then
@@ -33,3 +34,6 @@ install:
   #### Recreate our Conda env for testing
   - conda create -f environment.yml -n backend
   - source activate backend
+
+  #### Run Pytest
+  - python -m pytest --ignore modules/ectyper/ecoli_serotyping -v
