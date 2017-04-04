@@ -1,7 +1,10 @@
 version: '2'
 services:
   web-nginx-uwsgi:
-    image: superphy/backend:2.0.0
+    build:
+      context: .
+      dockerfile: Dockerfile-spfy
+    image: backend
     ports:
     - "80:80"
     depends_on:
@@ -11,14 +14,20 @@ services:
     - /datastore
 
   worker:
-    image: superphy/backend-rq:2.0.0
+    build:
+      context: .
+      dockerfile: Dockerfile-rq
+    image: backend-rq
     volumes_from:
     - web-nginx-uwsgi
     depends_on:
     - web-nginx-uwsgi
 
   worker-blazegraph-ids:
-    image: superphy/backend-rq-blazegraph:2.0.0
+    build:
+      context: .
+      dockerfile: Dockerfile-rq-blazegraph
+    image: backend-rq-blazegraph
     volumes_from:
       - web-nginx-uwsgi
     depends_on:
