@@ -1,3 +1,6 @@
+# usage:    cd app/
+#           python -m pytest
+
 import pytest
 import os
 
@@ -10,8 +13,8 @@ from modules.beautify.beautify import beautify
 from modules.turtleGrapher.datastruct_savvy import datastruct_savvy
 from modules.turtleGrapher.turtle_grapher import turtle_grapher
 
-GENOMES_LIST_NOT_ECOLI = os.listdir('notEcoli')
-GENOMES_LIST_ECOLI = os.listdir('ecoli')
+GENOMES_LIST_NOT_ECOLI = os.listdir('tests/notEcoli')
+GENOMES_LIST_ECOLI = os.listdir('tests/ecoli')
 
 def test_qc():
     for ecoli_genome in GENOMES_LIST_ECOLI:
