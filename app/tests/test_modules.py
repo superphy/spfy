@@ -21,7 +21,7 @@ def listdir_fullpath(d):
 # globals for testing
 GENOMES_LIST_NOT_ECOLI = listdir_fullpath('tests/notEcoli')
 GENOMES_LIST_ECOLI = listdir_fullpath('tests/ecoli')
-ARGS_DICT={'s':1,'vf':1,'pi':90}
+ARGS_DICT={'disable_serotype':False,'disable_vf':False,'pi':90}
 
 #### Non-Blazegraph/RQ Tests
 
