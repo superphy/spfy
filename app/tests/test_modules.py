@@ -18,8 +18,10 @@ from modules.turtleGrapher.turtle_grapher import turtle_grapher
 def listdir_fullpath(d):
     return [os.path.join(d, f) for f in os.listdir(d)]
 
+# globals for testing
 GENOMES_LIST_NOT_ECOLI = listdir_fullpath('tests/notEcoli')
 GENOMES_LIST_ECOLI = listdir_fullpath('tests/ecoli')
+ARGS_DICT={'s':1,'vf':1,'pi':90}
 
 #### Non-Blazegraph/RQ Tests
 
@@ -31,6 +33,7 @@ def test_qc():
 
 def test_ectyper():
     for ecoli_genome in GENOMES_LIST_ECOLI:
-        pickled_file = call_ectyper(ecoli_genome)
+        single_dict = dict(ARGS_DICT + {'i':ecoli_genome})
+        pickled_file = call_ectyper(ecoli_genome, single_dict)
         ectyper_dict = pickle.load(open(pickled_file,'rb'))
         assert type(ectyper_dict) == dict
