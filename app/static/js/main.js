@@ -8,7 +8,6 @@ app.controller('SpfyController', [
     'vcRecaptchaService',
     function($scope, $log, $http, $timeout, vcRecaptchaService) {
 
-        $scope.disableCaptcha = true;
 
         $scope.loading = false;
 
