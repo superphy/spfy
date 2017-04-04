@@ -33,7 +33,8 @@ def test_qc():
 
 def test_ectyper():
     for ecoli_genome in GENOMES_LIST_ECOLI:
-        single_dict = dict(ARGS_DICT + {'i':ecoli_genome})
+        single_dict = dict(ARGS_DICT)
+        single_dict.update({'i':ecoli_genome})
         pickled_file = call_ectyper(ecoli_genome, single_dict)
         ectyper_dict = pickle.load(open(pickled_file,'rb'))
         assert type(ectyper_dict) == dict
