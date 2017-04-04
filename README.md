@@ -2,10 +2,10 @@
 
 Live: https://lfz.corefacility.ca/superphy/spfy/
 
-SPA bundling Serotype & Virulence Factors (via [ECTyper](https://github.com/phac-nml/ecoli_serotyping)) and Antimicrobial Resistance (via [CARD](https://card.mcmaster.ca/analyze/rgi)) predictions of E.coli genome sequences.
+SPA bundling Serotype & Virulence Factors (via [ECTyper](https://github.com/phac-nml/ecoli_serotyping)) and Antimicrobial Resistance (via [CARD](https://card.mcmaster.ca/analyze/rgi)) predictions of E.coli genome sequences using task queues (RQ)
 
 ## Use:
-1. Install Docker (& Docker-Compose separately if you're on Linux [Link](https://docs.docker.com/compose/install/), mac/windows users have Compose bundled with Docker Engine)
+1. Install Docker (& Docker-Compose separately if you're on Linux, [Link](https://docs.docker.com/compose/install/)) mac/windows users have Compose bundled with Docker Engine.
 2. `git clone https://github.com/superphy/backend.git`
 3. `docker-compose up`
 4. Visit http://localhost:80

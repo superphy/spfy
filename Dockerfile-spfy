@@ -2,6 +2,9 @@
 # to be tagged as nitzoy/backend-production:latest
 FROM superphy/docker-flask-conda:latest
 
+# Add maximum upload of 100 m
+COPY upload_60G.conf /etc/nginx/conf.d/
+
 COPY ./app /app
 WORKDIR /app
 
