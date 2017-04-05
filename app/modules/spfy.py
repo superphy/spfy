@@ -81,7 +81,7 @@ def blob_savvy(args_dict):
     d = {}
     if os.path.isdir(args_dict['i']):
         for f in os.listdir(args_dict['i']):
-            single_dict = dict(args_dict.items() + {'i': os.path.abspath(f)}.items())
+            single_dict = dict(args_dict.items() + {'i': os.path.join(args_dict['i'], f)}.items())
             d.update(blob_savvy_enqueue(single_dict))
     else:
         d.update(blob_savvy_enqueue(args_dict))
