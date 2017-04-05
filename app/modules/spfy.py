@@ -91,7 +91,8 @@ def blob_savvy(args_dict):
 def spfy(args_dict):
     '''
     '''
-    args_dict['i'] = os.path.abspath(args_dict['i'])
+    # abs path resolution should be handled in spfy.py
+    #args_dict['i'] = os.path.abspath(args_dict['i'])
 
     print 'Starting blob_savvy call'
     jobs_dict = blob_savvy(args_dict)
