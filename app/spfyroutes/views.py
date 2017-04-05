@@ -128,10 +128,6 @@ def upload():
 def index():
     return render_template("index.html")
 
-
-def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1] in current_app.config['ALLOWED_EXTENSIONS']
-
 def handle_tar(filename, now):
     if tarfile.is_tarfile(filename):
         tar = tarfile.open(filename)
