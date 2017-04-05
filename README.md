@@ -5,10 +5,10 @@
 
 Live: https://lfz.corefacility.ca/superphy/spfy/
 
-SPA bundling Serotype & Virulence Factors (via [ECTyper](https://github.com/phac-nml/ecoli_serotyping)) and Antimicrobial Resistance (via [CARD](https://card.mcmaster.ca/analyze/rgi)) predictions of E.coli genome sequences using task queues (RQ)
+Platform for predicting Serotype & Virulence Factors (via [ECTyper](https://github.com/phac-nml/ecoli_serotyping)) and Antimicrobial Resistance (via [CARD](https://card.mcmaster.ca/analyze/rgi)) from E.coli genome sequences bundled using task queues (RQ) and a SPA front-end (AngularJS/Flask).
 
 ## Use:
-1. Install Docker (& Docker-Compose separately if you're on Linux, [Link](https://docs.docker.com/compose/install/)) mac/windows users have Compose bundled with Docker Engine.
+1. Install Docker (& Docker-Compose separately if you're on Linux, [link](https://docs.docker.com/compose/install/)). mac/windows users have Compose bundled with Docker Engine.
 2. `git clone https://github.com/superphy/backend.git`
 3. `docker-compose up`
 4. Visit http://localhost:8000
@@ -28,4 +28,6 @@ The `superphy/backend-rq:2.0.0` image is *scalable*: you can create as many inst
 
 The `superphy/backend-rq-blazegraph:2.0.0` image is not scalable: it is responsible for querying the Blazegraph database for duplicate entries and for assigning spfyIDs in *sequential* order. It's functions are kept as minimal as possible to improve performance (as ID generation is the one bottleneck in otherwise parallel pipelines); comparisons are done by sha1 hashes of the submitted files and non-duplicates have their IDs reserved by linking the generated spfyID to the file hash. Worker management in handled in `supervisor`.
 
-The `superphy/backend:2.0.0` which runs the main web app uses `supervisor` to manage inner processes: `nginx`, `uWsgi`. The web backend is written using `Flask` and the front-end in `AngularJS`
+The `superphy/backend:2.0.0` which runs the main web app uses `supervisor` to manage inner processes: `nginx`, `uWsgi`.
+
+## Extending:
