@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/superphy/backend.svg?branch=master)](https://travis-ci.org/superphy/backend)
+
 **Spfy**: speedy [superphy](https://github.com/superphy/semantic)
 
 Live: https://lfz.corefacility.ca/superphy/spfy/
