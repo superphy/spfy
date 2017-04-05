@@ -61,7 +61,7 @@ def blob_savvy_enqueue(single_dict):
     job_amr = multiples_q.enqueue(amr, query_file, depends_on=job_id)
     job_amr_dict = multiples_q.enqueue(amr_to_dict, query_file + '_rgi.tsv', depends_on=job_amr)
     job_amr_beautify = multiples_q.enqueue(beautify, single_dict, query_file + '_rgi.tsv_rgi.p', depends_on=job_amr_dict, result_ttl=-1)
-    job_amr_datastruct = multiples_q.enqueue(datastruct_savvy, query_file, query_file + '_id.txt', query_file + '_rgi.tsv_rgi.p', depends_on=job_amr)
+    job_amr_datastruct = multiples_q.enqueue(datastruct_savvy, query_file, query_file + '_id.txt', query_file + '_rgi.tsv_rgi.p', depends_on=job_amr_dict)
     #### END AMR PIPELINE
 
     # the base file data for blazegraph
@@ -81,7 +81,7 @@ def blob_savvy(args_dict):
     d = {}
     if os.path.isdir(args_dict['i']):
         for f in os.listdir(args_dict['i']):
-            single_dict = dict(args_dict.items() + {'i': os.path.abspath(f)}.items())
+            single_dict = dict(args_dict.items() + {'i': os.path.join(args_dict['i'], f)}.items())
             d.update(blob_savvy_enqueue(single_dict))
     else:
         d.update(blob_savvy_enqueue(args_dict))
@@ -91,7 +91,8 @@ def blob_savvy(args_dict):
 def spfy(args_dict):
     '''
     '''
-    args_dict['i'] = os.path.abspath(args_dict['i'])
+    # abs path resolution should be handled in spfy.py
+    #args_dict['i'] = os.path.abspath(args_dict['i'])
 
     print 'Starting blob_savvy call'
     jobs_dict = blob_savvy(args_dict)
