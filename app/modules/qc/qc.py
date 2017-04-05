@@ -53,11 +53,13 @@ def parse_blast_records(blast_output_file):
 
     returns a list of unique hits from the reference db
     '''
+    print blast_output_file
     blast_records = pd.read_csv(blast_output_file, header=None)
     blast_records.columns = ['qseqid','qlen','sseqid','length','pident','sstart','send','sframe']
 
     # filter for results with percent identity >= 90%
     blast_records_pi_passed = blast_records[blast_records['pident']>=90]
+    print blast_records_pi_passed
 
     # calculate percent length
     blast_records_pi_passed['pl'] = blast_records_pi_passed['length']/blast_records_pi_passed['qlen'] * 100
