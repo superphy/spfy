@@ -39,3 +39,5 @@ install:
 script:
   #### Run Pytest
   - python -m pytest --ignore modules/ectyper/ecoli_serotyping -v
+notifications:
+  email: false
