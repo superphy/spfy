@@ -63,9 +63,11 @@ def parse_blast_records(blast_output_file):
     blast_records_pi_passed['pl'] = blast_records_pi_passed['length']/blast_records_pi_passed['qlen'] * 100
     # filter for results with percent length >= 90%
     blast_records_pi_pl_passed = blast_records_pi_passed[blast_records_pi_passed['pl'] >= 90]
+    print blast_records_pi_pl_passed
 
     # take only unique hits of the reference sequence that pass pi/pl checks (we don't count repeats)
     unique_hits = blast_records_pi_pl_passed['qseqid'].unique()
+    print unique_hits
     return unique_hits
 
 def qc(query_file):
