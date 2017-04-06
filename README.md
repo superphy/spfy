@@ -10,9 +10,10 @@ Platform for predicting Serotype & Virulence Factors (via [ECTyper](https://gith
 ## Use:
 1. Install Docker (& Docker-Compose separately if you're on Linux, [link](https://docs.docker.com/compose/install/)). mac/windows users have Compose bundled with Docker Engine.
 2. `git clone https://github.com/superphy/backend.git`
-3. `docker-compose up`
-4. Visit http://localhost:8000
-5. Eat cake :cake:
+3. `git submodule update --init --remote --recursive`
+4. `docker-compose up`
+5. Visit http://localhost:8000
+6. Eat cake :cake:
 
 ## Architecture:
 Docker Image | Ports | Names | *Description*
