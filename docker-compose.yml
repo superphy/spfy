@@ -4,9 +4,9 @@ services:
     build:
       context: .
       dockerfile: Dockerfile-spfy
-    image: superphy/backend:2.1.0
+    image: backend
     ports:
-    - "80:80"
+    - "8000:80"
     depends_on:
     - redis
     - blazegraph
@@ -17,7 +17,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile-rq
-    image: superphy/backend-rq:2.0.0
+    image: backend-rq
     volumes_from:
     - web-nginx-uwsgi
     depends_on:
@@ -27,7 +27,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile-rq-blazegraph
-    image: superphy/backend-rq-blazegraph:2.0.0
+    image: backend-rq-blazegraph
     volumes_from:
       - web-nginx-uwsgi
     depends_on:
