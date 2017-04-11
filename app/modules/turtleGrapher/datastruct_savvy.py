@@ -47,9 +47,6 @@ def parse_gene_dict(graph, gene_dict, uriGenome, geneType):
 
     for contig_id in gene_dict.keys():
         for gene_record in gene_dict[contig_id]:
-            # uriGenome generation
-            file_hash = generate_hash(query_file)
-            uriGenome = gu(':' + file_hash)
             # uri for bag of contigs
             # ex. :4eb02f5676bc808f86c0f014bbce15775adf06ba/contigs/
             uriContigs = gu(uriGenome, "/contigs")
