@@ -20,7 +20,7 @@ def parse_serotype(graph, serotyper_dict, uriIsolate):
     return graph
 
 
-def parse_gene_dict(graph, gene_dict, uriGenome):
+def parse_gene_dict(graph, gene_dict, uriGenome, geneType):
     '''
     My intention is to eventually use ECTyper for all of the calls it was meant for.
     Just need to update ECTyper dict format to ref. AMR / VF by contig. as opposed to genome directly.
@@ -65,10 +65,14 @@ def parse_gene_dict(graph, gene_dict, uriGenome):
             # some gene names, esp those which are effectively a description,
             # have spaces
             gene_name = gene_record['GENE_NAME'].replace(' ', '_')
+            uriGene = gu(':' + gene_name)
+            # define the object type of the gene
+            graph.add((uriGene, gu('rdf:type'), gu(':Marker')))
+            graph.add((uriGene, gu('rdf:type'), gu(':' + geneType)))
             # define the object type of bnode_region
             graph.add((bnode_region, gu('rdf:type'), gu('faldo:Region')))
             # link the region (eg. the occurance of the gene in a contig)
-            graph.add((gu(':' + gene_name), gu(':hasPart'), bnode_region))
+            graph.add((uriGene, gu(':hasPart'), bnode_region))
 
             # define the object type of the start & end bnodes
             graph.add((bnode_start, gu('rdf:type'), gu('faldo:Begin')))
@@ -141,9 +145,9 @@ def datastruct_savvy(query_file, id_file, pickled_dictionary):
         if key == 'Serotype':
             graph = parse_serotype(graph,results_dict['Serotype'],uriIsolate)
         elif key == 'Virulence Factors':
-            graph = parse_gene_dict(graph, results_dict['Virulence Factors'], uriGenome)
+            graph = parse_gene_dict(graph, results_dict['Virulence Factors'], uriGenome, 'VirulenceFactor')
         elif key == 'Antimicrobial Resistance':
-            graph = parse_gene_dict(graph, results_dict['Antimicrobial Resistance'], uriGenome)
+            graph = parse_gene_dict(graph, results_dict['Antimicrobial Resistance'], uriGenome, 'AntimicrobialResistanceGene')
 
     # upload
     return upload_graph(graph)
