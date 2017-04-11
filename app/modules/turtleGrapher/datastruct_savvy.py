@@ -47,7 +47,6 @@ def parse_gene_dict(graph, gene_dict, uriGenome):
 
     for contig_id in gene_dict.keys():
         for gene_record in gene_dict[contig_id]:
-
             # uriGenome generation
             file_hash = generate_hash(query_file)
             uriGenome = gu(':' + file_hash)
@@ -59,20 +58,24 @@ def parse_gene_dict(graph, gene_dict, uriGenome):
 
             # after this point we switch perspective to the gene and build down to
             # relink the gene with the contig
-
-            bnode_occurrence = BNode()
+            bnode_region = BNode()
             bnode_start = BNode()
             bnode_end = BNode()
 
             # some gene names, esp those which are effectively a description,
             # have spaces
             gene_name = gene_record['GENE_NAME'].replace(' ', '_')
+            # define the object type of bnode_region
+            graph.add((bnode_region, gu('rdf:type'), gu('faldo:Region')))
+            # link the region (eg. the occurance of the gene in a contig)
+            graph.add((gu(':' + gene_name), gu(':hasPart'), bnode_region))
 
-            graph.add((gu(':' + gene_name), gu('faldo:Region'), bnode_occurrence))
-
-
-            graph.add((bnode_occurrence, gu('faldo:Begin'), bnode_start))
-            graph.add((bnode_occurrence, gu('faldo:End'), bnode_end))
+            # define the object type of the start & end bnodes
+            graph.add((bnode_start, gu('rdf:type'), gu('faldo:Begin')))
+            graph.add((bnode_end, gu('rdf:type'), gu('faldo:End')))
+            # link the start and end bnodes to the region
+            graph.add((bnode_region, gu(':hasPart'), bnode_start))
+            graph.add((bnode_region, gu(':hasPart'), bnode_end))
 
             # this is a special case for amr results
             if 'CUT_OFF' in gene_dict.keys():
@@ -81,6 +84,7 @@ def parse_gene_dict(graph, gene_dict, uriGenome):
                 graph.add((bnode_end, gu('dc:Description'),
                            Literal(gene_dict['CUT_OFF'])))
 
+            # object types defined in FALDO standard
             graph.add((bnode_start, gu('rdf:type'), gu('faldo:Position')))
             graph.add((bnode_start, gu('rdf:type'), gu('faldo:ExactPosition')))
             graph.add((bnode_end, gu('rdf:type'), gu('faldo:Position')))
@@ -99,14 +103,15 @@ def parse_gene_dict(graph, gene_dict, uriGenome):
 
             graph.add((bnode_start, gu('faldo:Position'),
                        Literal(gene_record['START'])))
-            graph.add((bnode_start, gu('faldo:Reference'), uriContig))
-
             graph.add((bnode_end, gu('faldo:Position'),
                        Literal(gene_record['STOP'])))
-            graph.add((bnode_end, gu('faldo:Reference'), uriContig))
-
-            ####
-
+            # because we've identified a gene, that uriContig is now also a faldo:Reference (note: this isn't how FALDO intended the linkage to be, but we do this to accomadate inferencing in Blazegraph)
+            # this also means that if you find (or are querying) a uriContig and it isn't not a faldo:Reference (& only a g:Contig) then there are no genes assoc w it
+            graph.add((uriContig, gu('rdf:type'), gu('faldo:Reference')))
+            # link up the start/end bnodes to the contig
+            graph.add((bnode_start, gu(':hasPart'), uriContig))
+            graph.add((bnode_end, gu(':hasPart'), uriContig))
+    #### end of nested for
     return graph
 
 def datastruct_savvy(query_file, id_file, pickled_dictionary):
