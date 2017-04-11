@@ -28,7 +28,8 @@ namespaces = {
     'ncbi' : 'http://purl.obolibrary.org/obo/NCBI_Taxon_',
     'so' : 'http://purl.obolibrary.org/obo/SO_',
     'dc' : 'http://purl.org/dc/elements/1.1/',
-    'rdf' : 'http://www.w3.org/1999/02/22-rdf-syntax-ns#'
+    'rdf' : 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
+    'owl' : 'http://www.w3.org/2002/07/owl#'
 }
 
 #database defaults

@@ -28,6 +28,9 @@ def generate_graph():
         else:
             graph.bind(key, config.namespaces[key])
 
+    # add transitive properties
+    graph.add((gu(':hasPart'), gu('rdf:type'), gu('owl:TransitiveProperty')))
+
     return graph
 
 def generate_turtle_skeleton(query_file):
@@ -54,7 +57,8 @@ def generate_turtle_skeleton(query_file):
     # uriGenome generation
     file_hash = generate_hash(query_file)
     uriGenome = gu(':' + file_hash)
-
+    # set the object type for uriGenome
+    graph.add((uriGenome, gu('rdf:type'), gu('g:Genome')))
     # this is used as the human readable display of Genome
     graph.add((uriGenome, gu('dc:description'), Literal(basename(query_file))))
     # note that timestamps are not added in base graph generation, they are only added during the check for duplicate files in blazegraph
@@ -62,19 +66,23 @@ def generate_turtle_skeleton(query_file):
     # uri for bag of contigs
     # ex. :4eb02f5676bc808f86c0f014bbce15775adf06ba/contigs/
     uriContigs = gu(uriGenome, "/contigs")
-    graph.add((uriGenome, gu('so:0001462'), uriContigs))
+    # set the object type for uriContigs
+    graph.add((uriContigs, gu('rdf:type'), gu('so:0001462')))
+    # link the bag of contigs to the genome
+    graph.add((uriGenome, gu(':hasPart'), uriContigs))
 
     for record in SeqIO.parse(open(query_file), "fasta"):
         # ex. :4eb02f5676bc808f86c0f014bbce15775adf06ba/contigs/FLOF01006689.1
         uriContig = gu(uriContigs, '/' + record.id)
+        # add the object type to uriContig
+        graph.add((uriContig, gu('rdf:type'), gu('g:Contig')))
         # linking the spec contig and the bag of contigs
-        graph.add((uriContigs, gu('g:Contig'), uriContig))
+        graph.add((uriContigs, gu(':hasPart'), uriContig))
         graph.add((uriContig, gu('g:DNASequence'), Literal(record.seq)))
         graph.add((uriContig, gu('g:Description'),
                    Literal(record.description)))
-        graph.add((uriContig, gu('dc:description'),
-                   Literal(record.description)))
-
+        graph.add((uriContig, gu('g:Identifier'),
+                   Literal(record.id)))
     return graph
 
 def turtle_grapher(query_file):
