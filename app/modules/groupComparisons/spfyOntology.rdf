@@ -22,3 +22,13 @@ spfy:Marker rdfs:subClassOf faldo:Position .
 # result types which are considered spfy markers
 spfy:VirulenceFactor rdfs:subClassOf spfy:Marker .
 spfy:AntimicrobialResistanceGene rdfs:subClassOf spfy:Marker .
+
+## Transitive properties
+# From SpfyID
+spfy:hasGenome a owl:TransitiveProperty .
+spfy:hasContigs a owl:TransitiveProperty .
+spfy:hasContig a owl:TransitiveProperty .
+# From Gene
+spfy:hasRegion a owl:TransitiveProperty .
+spfy:hasPosition a owl:TransitiveProperty .
+spfy:inContig a owl:TransitiveProperty .
