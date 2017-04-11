@@ -1,0 +1,18 @@
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix g: <http://www.biointerchange.org/gfvo#> .
+@prefix ge: <http://purl.obolibrary.org/obo/GENEPIO_> .
+@prefix so: <http://purl.obolibrary.org/obo/SO_> .
+@prefix faldo: <http://biohackathon.org/resource/faldo#> .
+@prefix spfy: <https://github.com/superphy> .
+
+# working from http://www.snee.com/bobdc.blog/2016/05/trying-out-blazegraph.html
+# trying to define our existing edge properties as transitive instead (if this works, it'd be  simpler than using rdfs:subClassOf)
+g:Genome a owl:TransitiveProperty .
+so:0001462 a owl:TransitiveProperty .
+g:Contig a owl:TransitiveProperty .
+faldo:Reference a owl:TransitiveProperty .
+faldo:Begin a owl:TransitiveProperty .
+faldo:End a owl:TransitiveProperty .
+faldo:Region a owl:TransitiveProperty .
