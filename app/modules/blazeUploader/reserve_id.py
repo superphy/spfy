@@ -67,7 +67,7 @@ def reservation_triple(uriGenome, spfyid):
     graph.add((uriIsolate, gu('rdf:type'), gu(':spfyId')))
 
     # associatting isolate URI with assembly URI
-    graph.add((uriIsolate, gu('g:Genome'), uriGenome))
+    graph.add((uriIsolate, gu(':hasPart'), uriGenome))
 
     # timestamp
     now = datetime.now()
