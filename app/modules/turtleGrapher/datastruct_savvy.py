@@ -64,7 +64,6 @@ def parse_gene_dict(graph, gene_dict, uriGenome, geneType):
             gene_name = gene_record['GENE_NAME'].replace(' ', '_')
             uriGene = gu(':' + gene_name)
             # define the object type of the gene
-            graph.add((uriGene, gu('rdf:type'), gu(':Marker')))
             graph.add((uriGene, gu('rdf:type'), gu(':' + geneType)))
             # define the object type of bnode_region
             graph.add((bnode_region, gu('rdf:type'), gu('faldo:Region')))
@@ -90,7 +89,6 @@ def parse_gene_dict(graph, gene_dict, uriGenome, geneType):
             graph.add((bnode_start, gu('rdf:type'), gu('faldo:ExactPosition')))
             graph.add((bnode_end, gu('rdf:type'), gu('faldo:Position')))
             graph.add((bnode_end, gu('rdf:type'), gu('faldo:ExactPosition')))
-
             if gene_record['ORIENTATION'] is '+':
                 graph.add((bnode_start, gu('rdf:type'), gu(
                     'faldo:ForwardStrandPosition')))
