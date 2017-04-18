@@ -31,6 +31,10 @@ def generate_graph():
     # add transitive properties
     graph.add((gu(':hasPart'), gu('rdf:type'), gu('owl:TransitiveProperty')))
 
+    # make AntimicrobialResistanceGene & VirulenceFactor subclasses of :Marker
+    graph.add((gu(':AntimicrobialResistanceGene'), gu('rdfs:subClassOf'), gu(':Marker')))
+    graph.add((gu(':VirulenceFactor'), gu('rdfs:subClassOf'), gu(':Marker')))
+
     return graph
 
 def generate_turtle_skeleton(query_file):
