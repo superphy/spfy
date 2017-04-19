@@ -129,7 +129,7 @@ def write_reserve_id(query_file):
         f.write(str(spfyid))
     return id_file
 
-if __name__ == '__main__
+if __name__ == '__main__':
     import argparse
     parser = argparse.ArgumentParser()
     parser.add_argument("-i", required=True)
