@@ -24,7 +24,7 @@ def check_duplicates(uriGenome):
     #SPARQL Query
     sparql = SPARQLWrapper(blazegraph_url)
     query = 'SELECT ?spfyid '
-    query += 'WHERE { ?spfyid <' + gu('g:Genome') + '> <' + uriGenome + '> }'
+    query += 'WHERE { ?spfyid <' + gu(':hasPart') + '> <' + uriGenome + '> }'
     sparql.setQuery(query)
     sparql.setReturnFormat(JSON)
     results = sparql.query().convert()
@@ -43,7 +43,7 @@ def check_largest_spfyid():
     '''
     sparql = SPARQLWrapper(blazegraph_url)
     query = 'SELECT ?spfyid'
-    query += ' WHERE { ?spfyid <' + gu('g:Genome') + '> ?genomeid .'
+    query += ' WHERE { ?spfyid <' + gu(':hasPart') + '> ?genomeid .'
     query += ' ?genomeid <' + gu('dc:date') + '> ?date }'
     query += ' ORDER BY DESC(?date) LIMIT 1'
     log.debug(query)
