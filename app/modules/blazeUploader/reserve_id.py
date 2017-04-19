@@ -134,5 +134,5 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("-i", required=True)
     args = parser.parse_args()
-    print log
+    print log_file
     print reserve_id(args.i)
