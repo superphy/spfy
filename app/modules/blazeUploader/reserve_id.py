@@ -128,3 +128,9 @@ def write_reserve_id(query_file):
     with open(id_file, 'w+') as f:
         f.write(str(spfyid))
     return id_file
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-i", required=True)
+    args = parser.parse_args()
+    print reserve_id(args.i)
