@@ -23,8 +23,12 @@ def check_duplicates(uriGenome):
 
     #SPARQL Query
     sparql = SPARQLWrapper(blazegraph_url)
-    query = 'SELECT ?spfyid '
-    query += 'WHERE { ?spfyid <' + gu(':hasPart') + '> <' + uriGenome + '> }'
+    query = """
+    SELECT ?spfyid WHERE {
+        ?spfyid a <{spfyIdType}> .
+        ?spfyid <{hasPart}> <{uriGenome}> .
+    }
+    """.format(spfyIdType=gu(':spfyId'), hasPart=gu(':hasPart'), uriGenome=uriGenome)
     sparql.setQuery(query)
     sparql.setReturnFormat(JSON)
     results = sparql.query().convert()
@@ -42,10 +46,15 @@ def check_largest_spfyid():
     :return: (int)
     '''
     sparql = SPARQLWrapper(blazegraph_url)
-    query = 'SELECT ?spfyid'
-    query += ' WHERE { ?spfyid <' + gu(':hasPart') + '> ?genomeid .'
-    query += ' ?genomeid <' + gu('dc:date') + '> ?date }'
-    query += ' ORDER BY DESC(?date) LIMIT 1'
+    query = """
+    SELECT ?spfyid WHERE {
+        ?spfyid a <{spfyIdType}> .
+        ?spfyid <{hasPart}> ?genomeid .
+        ?genomeid a <{genomeIdType}> .
+        ?genomeid <{dateIdType}> ?date .
+    }
+    ORDER BY DESC(?date) LIMIT 1
+    """.format(spfyIdType=gu(':spfyId'), hasPart=gu(':hasPart'), genomeIdType=gu('g:Genome'), dateIdType=gu('dc:date'))
     log.debug(query)
     sparql.setQuery(query)
     sparql.setReturnFormat(JSON)
@@ -68,6 +77,8 @@ def reservation_triple(uriGenome, spfyid):
 
     # associatting isolate URI with assembly URI
     graph.add((uriIsolate, gu(':hasPart'), uriGenome))
+    # set the object type for uriGenome
+    graph.add((uriGenome, gu('rdf:type'), gu('g:Genome')))
 
     # timestamp
     now = datetime.now()

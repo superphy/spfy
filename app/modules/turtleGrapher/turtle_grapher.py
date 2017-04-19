@@ -28,8 +28,9 @@ def generate_graph():
         else:
             graph.bind(key, config.namespaces[key])
 
-    # add transitive properties
+    # add edge equivlaence properties
     graph.add((gu(':hasPart'), gu('rdf:type'), gu('owl:TransitiveProperty')))
+    graph.add((gu(':hasPart'), gu('rdf:type'), gu('owl:SymmetricProperty')))
 
     # make AntimicrobialResistanceGene & VirulenceFactor subclasses of :Marker
     graph.add((gu(':AntimicrobialResistanceGene'), gu('rdfs:subClassOf'), gu(':Marker')))
