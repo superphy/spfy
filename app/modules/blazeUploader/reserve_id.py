@@ -32,6 +32,8 @@ def check_duplicates(uriGenome):
     sparql.setQuery(query)
     sparql.setReturnFormat(JSON)
     results = sparql.query().convert()
+    log.debug('check_duplicates():')
+    log.debug(query)
     log.debug(results)
     if not results['results']['bindings']:
         return None
@@ -55,10 +57,11 @@ def check_largest_spfyid():
     }}
     ORDER BY DESC(?date) LIMIT 1
     """.format(spfyIdType=gu(':spfyId'), hasPart=gu(':hasPart'), genomeIdType=gu('g:Genome'), dateIdType=gu('dc:date'))
-    log.debug(query)
     sparql.setQuery(query)
     sparql.setReturnFormat(JSON)
     results = sparql.query().convert()
+    log.debug('check_largest_spfyid():')
+    log.debug(query)
     log.debug(results)
     # check that there was some result
     if results['results']['bindings']:
@@ -99,7 +102,9 @@ def reserve_id(query_file):
 
     # uriGenome generation
     file_hash = generate_hash(query_file)
+    log.debug(file_hash)
     uriGenome = gu(':' + file_hash)
+    log.debug(uriGenome)
 
     duplicate = check_duplicates(uriGenome)
     log.debug('check_duplicates() returned: ' + str(duplicate))
