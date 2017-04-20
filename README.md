@@ -31,3 +31,11 @@ The `superphy/backend-rq-blazegraph:2.0.0` image is not scalable: it is responsi
 The `superphy/backend:2.0.0` which runs the main web app uses `supervisor` to manage inner processes: `nginx`, `uWsgi`.
 
 ## Extending:
+
+## Debugging:
+* Ideally, setup a https://sentry.io account and copy your DSN into `app/config`
+* Alternatively:
+* Port 9181 is mapped to host on Service `backend-rq`, you can use `rq-dashboard` via:
+  * `docker exec -it backend_worker_1 sh` this drops a shell into the rq worker container which has rq-dashboard installed via conda
+  * `rq-dashboard -H redis` runs rq-dashboard and specifies the *redis* host automatically defined by docker-compose
+  * then on your host machine visit http://localhost:9181
