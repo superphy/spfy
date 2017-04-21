@@ -75,8 +75,10 @@ def reservation_triple(uriGenome, spfyid):
     graph = Graph()
 
     uriIsolate = gu(':spfy' + str(spfyid))
-    # se object type of spfyid
+    # set object type of spfyid
     graph.add((uriIsolate, gu('rdf:type'), gu(':spfyId')))
+    # add plain id # as an attribute
+    graph.add((uriIsolate, gu('dc:identifier'), Literal(spfyid)))
 
     # associatting isolate URI with assembly URI
     graph.add((uriIsolate, gu(':hasPart'), uriGenome))
