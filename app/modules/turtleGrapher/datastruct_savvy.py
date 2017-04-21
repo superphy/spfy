@@ -1,6 +1,6 @@
 import cPickle as pickle
 from rdflib import BNode, Literal, Graph
-from modules.turtleGrapher.turtle_utils import generate_uri as gu, generate_hash
+from modules.turtleGrapher.turtle_utils import generate_uri as gu, generate_hash, link_uris
 from modules.turtleGrapher.turtle_grapher import generate_graph
 from modules.blazeUploader.upload_graph import upload_graph
 # working with Serotype, Antimicrobial Resistance, & Virulence Factor data
@@ -68,14 +68,17 @@ def parse_gene_dict(graph, gene_dict, uriGenome, geneType):
             # define the object type of bnode_region
             graph.add((bnode_region, gu('rdf:type'), gu('faldo:Region')))
             # link the region (eg. the occurance of the gene in a contig)
-            graph.add((uriGene, gu(':hasPart'), bnode_region))
+            graph = link_uris(graph, bnode_region, uriGene)
+            #graph.add((uriGene, gu(':hasPart'), bnode_region))
 
             # define the object type of the start & end bnodes
             graph.add((bnode_start, gu('rdf:type'), gu('faldo:Begin')))
             graph.add((bnode_end, gu('rdf:type'), gu('faldo:End')))
             # link the start and end bnodes to the region
-            graph.add((bnode_region, gu(':hasPart'), bnode_start))
-            graph.add((bnode_region, gu(':hasPart'), bnode_end))
+            graph = link_uris(graph, bnode_start, bnode_region)
+            graph = link_uris(graph, bnode_end, bnode_region)
+            #graph.add((bnode_region, gu(':hasPart'), bnode_start))
+            #graph.add((bnode_region, gu(':hasPart'), bnode_end))
 
             # this is a special case for amr results
             if 'CUT_OFF' in gene_dict.keys():
@@ -108,8 +111,10 @@ def parse_gene_dict(graph, gene_dict, uriGenome, geneType):
             # this also means that if you find (or are querying) a uriContig and it isn't not a faldo:Reference (& only a g:Contig) then there are no genes assoc w it
             graph.add((uriContig, gu('rdf:type'), gu('faldo:Reference')))
             # link up the start/end bnodes to the contig
-            graph.add((bnode_start, gu(':hasPart'), uriContig))
-            graph.add((bnode_end, gu(':hasPart'), uriContig))
+            graph = link_uris(graph, uriContig, bnode_start)
+            graph = link_uris(graph, uriContig, bnode_end)
+            #graph.add((bnode_start, gu(':hasPart'), uriContig))
+            #graph.add((bnode_end, gu(':hasPart'), uriContig))
     #### end of nested for
     return graph
 

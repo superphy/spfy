@@ -1,7 +1,7 @@
 import os
 import logging
 from datetime import datetime
-from modules.turtleGrapher.turtle_utils import generate_hash, generate_uri as gu
+from modules.turtleGrapher.turtle_utils import generate_hash, generate_uri as gu, link_uris
 from modules.blazeUploader.upload_graph import upload_graph
 from SPARQLWrapper import SPARQLWrapper, JSON
 from rdflib import Literal, Graph
@@ -81,7 +81,8 @@ def reservation_triple(uriGenome, spfyid):
     graph.add((uriIsolate, gu('dc:identifier'), Literal(spfyid)))
 
     # associatting isolate URI with assembly URI
-    graph.add((uriIsolate, gu(':hasPart'), uriGenome))
+    graph = link_uris(graph, uriIsolate, uriGenome)
+    #graph.add((uriIsolate, gu(':hasPart'), uriGenome))
     # set the object type for uriGenome
     graph.add((uriGenome, gu('rdf:type'), gu('g:Genome')))
 

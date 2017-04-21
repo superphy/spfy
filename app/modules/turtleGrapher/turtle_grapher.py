@@ -5,7 +5,7 @@
 # to data structure(rdf triple organization) of the modules you're dev'ing
 
 import config
-from modules.turtleGrapher.turtle_utils import generate_hash, generate_uri as gu
+from modules.turtleGrapher.turtle_utils import generate_hash, generate_uri as gu, link_uris
 from modules.blazeUploader.upload_graph import upload_graph
 from rdflib import Namespace, Graph, Literal, plugin
 from Bio import SeqIO
@@ -30,6 +30,7 @@ def generate_graph():
 
     # add edge equivlaence properties
     graph.add((gu(':hasPart'), gu('rdf:type'), gu('owl:TransitiveProperty')))
+    graph.add((gu(':isFoundIn'), gu('rdf:type'), gu('owl:TransitiveProperty')))
     #graph.add((gu(':hasPart'), gu('rdf:type'), gu('owl:SymmetricProperty')))
 
     # make AntimicrobialResistanceGene & VirulenceFactor subclasses of :Marker
@@ -74,7 +75,8 @@ def generate_turtle_skeleton(query_file):
     # set the object type for uriContigs
     graph.add((uriContigs, gu('rdf:type'), gu('so:0001462')))
     # link the bag of contigs to the genome
-    graph.add((uriGenome, gu(':hasPart'), uriContigs))
+    graph = link_uris(graph, uriGenome, uriContigs)
+    #graph.add((uriGenome, gu(':hasPart'), uriContigs))
 
     for record in SeqIO.parse(open(query_file), "fasta"):
         # ex. :4eb02f5676bc808f86c0f014bbce15775adf06ba/contigs/FLOF01006689.1
@@ -82,7 +84,9 @@ def generate_turtle_skeleton(query_file):
         # add the object type to uriContig
         graph.add((uriContig, gu('rdf:type'), gu('g:Contig')))
         # linking the spec contig and the bag of contigs
-        graph.add((uriContigs, gu(':hasPart'), uriContig))
+        graph = link_uris(graph, uriContigs, uriContig)
+        #graph.add((uriContigs, gu(':hasPart'), uriContig))
+        # uriContig attributes
         graph.add((uriContig, gu('g:DNASequence'), Literal(record.seq)))
         graph.add((uriContig, gu('g:Description'),
                    Literal(record.description)))

@@ -73,3 +73,14 @@ def uri_to_basename(uri):
     # if the clean method above fails, default to '/' splitting
     # this will fail if a path-style uri is used
     return str(uri).split('/')[-1]
+
+def link_uris(graph, uri_towards_spfyid, uri_towards_marker):
+    '''
+    Links two vertices in a graph as required for inferencing/queries in blazegraph.
+    Blazegraph has problems (hangs after 3-4 uploads) with owl:SymmetricProperty, so we use :hasPart which we apply owl:TransitiveProperty to link everything in :spfyId -> :Marker and use :hasPart (same owl:TransitiveProperty) to link everything :Marker -> :spfyId
+    This means that you can't just query a vertex type and look for another vertex type -> you must know the direction you're moving in (think subway trains)
+    The owl:TransitiveProperty is defined in generate_graph() under turtle_grapher.py
+    '''
+    graph.add((uri_towards_spfyid, generate_uri(':hasPart'), uri_towards_marker))
+    graph.add((uri_towards_marker, generate_uri(':isFoundIn'), uri_towards_spfyid))
+    return graph
