@@ -1,7 +1,9 @@
 import config
 from modules.groupComparisons.ontology_weight import weights
+from SPARQLWrapper import SPARQLWrapper, JSON
 
 blazegraph_url = config.database['blazegraph_url']
+sparql = SPARQLWrapper(blazegraph_url)
 
 def get_type(uri):
     '''
@@ -16,7 +18,7 @@ def to_target(groupUri, targetUri):
     pass
 
 def query(groupUriA, groupUriB, targetUri):
-    sparql = SPARQLWrapper(blazegraph_url)
+
 
     # comparing groups
     if (groupUriA in weights.keys) and (groupUriB in weights.keys):
@@ -41,3 +43,5 @@ def query(groupUriA, groupUriB, targetUri):
     sparql.setQuery(query)
     sparql.setReturnFormat(JSON)
     results = sparql.query().convert()
+
+def compare_markers(uriA, uriB):
