@@ -1,7 +1,7 @@
 import os
 import logging
 from datetime import datetime
-from modules.turtleGrapher.turtle_utils import generate_hash, generate_uri as gu
+from modules.turtleGrapher.turtle_utils import generate_hash, generate_uri as gu, link_uris
 from modules.blazeUploader.upload_graph import upload_graph
 from SPARQLWrapper import SPARQLWrapper, JSON
 from rdflib import Literal, Graph
@@ -23,11 +23,17 @@ def check_duplicates(uriGenome):
 
     #SPARQL Query
     sparql = SPARQLWrapper(blazegraph_url)
-    query = 'SELECT ?spfyid '
-    query += 'WHERE { ?spfyid <' + gu('g:Genome') + '> <' + uriGenome + '> }'
+    query = """
+    SELECT ?spfyid WHERE {{
+        ?spfyid a <{spfyIdType}> .
+        ?spfyid <{hasPart}> <{uriGenome}> .
+    }}
+    """.format(spfyIdType=gu(':spfyId'), hasPart=gu(':hasPart'), uriGenome=uriGenome)
     sparql.setQuery(query)
     sparql.setReturnFormat(JSON)
     results = sparql.query().convert()
+    log.debug('check_duplicates():')
+    log.debug(query)
     log.debug(results)
     if not results['results']['bindings']:
         return None
@@ -42,14 +48,20 @@ def check_largest_spfyid():
     :return: (int)
     '''
     sparql = SPARQLWrapper(blazegraph_url)
-    query = 'SELECT ?spfyid'
-    query += ' WHERE { ?spfyid <' + gu('g:Genome') + '> ?genomeid .'
-    query += ' ?genomeid <' + gu('dc:date') + '> ?date }'
-    query += ' ORDER BY DESC(?date) LIMIT 1'
-    log.debug(query)
+    query = """
+    SELECT ?spfyid WHERE {{
+        ?spfyid a <{spfyIdType}> .
+        ?spfyid <{hasPart}> ?genomeid .
+        ?genomeid a <{genomeIdType}> .
+        ?genomeid <{dateIdType}> ?date .
+    }}
+    ORDER BY DESC(?date) LIMIT 1
+    """.format(spfyIdType=gu(':spfyId'), hasPart=gu(':hasPart'), genomeIdType=gu('g:Genome'), dateIdType=gu('dc:date'))
     sparql.setQuery(query)
     sparql.setReturnFormat(JSON)
     results = sparql.query().convert()
+    log.debug('check_largest_spfyid():')
+    log.debug(query)
     log.debug(results)
     # check that there was some result
     if results['results']['bindings']:
@@ -63,9 +75,16 @@ def reservation_triple(uriGenome, spfyid):
     graph = Graph()
 
     uriIsolate = gu(':spfy' + str(spfyid))
+    # set object type of spfyid
+    graph.add((uriIsolate, gu('rdf:type'), gu(':spfyId')))
+    # add plain id # as an attribute
+    graph.add((uriIsolate, gu('dc:identifier'), Literal(spfyid)))
 
     # associatting isolate URI with assembly URI
-    graph.add((uriIsolate, gu('g:Genome'), uriGenome))
+    graph = link_uris(graph, uriIsolate, uriGenome)
+    #graph.add((uriIsolate, gu(':hasPart'), uriGenome))
+    # set the object type for uriGenome
+    graph.add((uriGenome, gu('rdf:type'), gu('g:Genome')))
 
     # timestamp
     now = datetime.now()
@@ -86,7 +105,9 @@ def reserve_id(query_file):
 
     # uriGenome generation
     file_hash = generate_hash(query_file)
+    log.debug(file_hash)
     uriGenome = gu(':' + file_hash)
+    log.debug(uriGenome)
 
     duplicate = check_duplicates(uriGenome)
     log.debug('check_duplicates() returned: ' + str(duplicate))
@@ -115,3 +136,11 @@ def write_reserve_id(query_file):
     with open(id_file, 'w+') as f:
         f.write(str(spfyid))
     return id_file
+
+if __name__ == '__main__':
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-i", required=True)
+    args = parser.parse_args()
+    print log_file
+    print reserve_id(args.i)

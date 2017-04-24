@@ -5,7 +5,7 @@
 # to data structure(rdf triple organization) of the modules you're dev'ing
 
 import config
-from modules.turtleGrapher.turtle_utils import generate_hash, generate_uri as gu
+from modules.turtleGrapher.turtle_utils import generate_hash, generate_uri as gu, link_uris
 from modules.blazeUploader.upload_graph import upload_graph
 from rdflib import Namespace, Graph, Literal, plugin
 from Bio import SeqIO
@@ -27,6 +27,15 @@ def generate_graph():
             graph.bind('', config.namespaces['root'])
         else:
             graph.bind(key, config.namespaces[key])
+
+    # add edge equivlaence properties
+    graph.add((gu(':hasPart'), gu('rdf:type'), gu('owl:TransitiveProperty')))
+    graph.add((gu(':isFoundIn'), gu('rdf:type'), gu('owl:TransitiveProperty')))
+    #graph.add((gu(':hasPart'), gu('rdf:type'), gu('owl:SymmetricProperty')))
+
+    # make AntimicrobialResistanceGene & VirulenceFactor subclasses of :Marker
+    graph.add((gu(':AntimicrobialResistanceGene'), gu('rdfs:subClassOf'), gu(':Marker')))
+    graph.add((gu(':VirulenceFactor'), gu('rdfs:subClassOf'), gu(':Marker')))
 
     return graph
 
@@ -54,7 +63,8 @@ def generate_turtle_skeleton(query_file):
     # uriGenome generation
     file_hash = generate_hash(query_file)
     uriGenome = gu(':' + file_hash)
-
+    # set the object type for uriGenome
+    graph.add((uriGenome, gu('rdf:type'), gu('g:Genome')))
     # this is used as the human readable display of Genome
     graph.add((uriGenome, gu('dc:description'), Literal(basename(query_file))))
     # note that timestamps are not added in base graph generation, they are only added during the check for duplicate files in blazegraph
@@ -62,19 +72,26 @@ def generate_turtle_skeleton(query_file):
     # uri for bag of contigs
     # ex. :4eb02f5676bc808f86c0f014bbce15775adf06ba/contigs/
     uriContigs = gu(uriGenome, "/contigs")
-    graph.add((uriGenome, gu('so:0001462'), uriContigs))
+    # set the object type for uriContigs
+    graph.add((uriContigs, gu('rdf:type'), gu('so:0001462')))
+    # link the bag of contigs to the genome
+    graph = link_uris(graph, uriGenome, uriContigs)
+    #graph.add((uriGenome, gu(':hasPart'), uriContigs))
 
     for record in SeqIO.parse(open(query_file), "fasta"):
         # ex. :4eb02f5676bc808f86c0f014bbce15775adf06ba/contigs/FLOF01006689.1
-        uriContig = gu(':' + record.id)
+        uriContig = gu(uriContigs, '/' + record.id)
+        # add the object type to uriContig
+        graph.add((uriContig, gu('rdf:type'), gu('g:Contig')))
         # linking the spec contig and the bag of contigs
-        graph.add((uriContigs, gu('g:Contig'), uriContig))
+        graph = link_uris(graph, uriContigs, uriContig)
+        #graph.add((uriContigs, gu(':hasPart'), uriContig))
+        # uriContig attributes
         graph.add((uriContig, gu('g:DNASequence'), Literal(record.seq)))
         graph.add((uriContig, gu('g:Description'),
                    Literal(record.description)))
-        graph.add((uriContig, gu('dc:description'),
-                   Literal(record.description)))
-
+        graph.add((uriContig, gu('g:Identifier'),
+                   Literal(record.id)))
     return graph
 
 def turtle_grapher(query_file):

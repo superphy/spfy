@@ -3,8 +3,6 @@ import os
 
 import config
 
-blazegraph_url = config.database['blazegraph_url']
-
 def upload_graph(graph):
     """
     Uploads raw data onto Blazegraph. To ensure that Blazegraph interprets
@@ -21,6 +19,8 @@ def upload_graph(graph):
 
     Prints out the response object from Blazegraph
     """
+    blazegraph_url = config.database['blazegraph_url']
+    
     data = graph.serialize(format="turtle")
 
     headers = {'Content-Type': 'application/x-turtle'}
