@@ -23,7 +23,7 @@ def get_types():
     # Parse results and give me a tuple
     tup = ()
     for result in results['results']['bindings']:
-        t = (result['objecttype']['value'])
+        t = (str(result['objecttype']['value']))
         tup += t
     return tup
 
