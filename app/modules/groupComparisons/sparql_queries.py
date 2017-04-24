@@ -33,6 +33,15 @@ def is_group(uri):
     '''
     return uri in get_types()
 
+def parse_results(results, targetname, queryUri):
+    '''
+    Used to fix structure of SPARQL query results for running group comparisons.
+    '''
+    l = []
+    for result in results['results']['bindings']:
+        l.append(result[targetname]['value'])
+    return {queryUri: l}
+
 def to_target(queryUri, targetUri):
     '''
     Generates a query that selects all targetUri from groupUri
@@ -58,35 +67,11 @@ def to_target(queryUri, targetUri):
     sparql.setQuery(query)
     sparql.setReturnFormat(JSON)
     results = sparql.query().convert()
+    return parse_results(results, 'target', queryUri)
 
-def query(groupUriA, groupUriB, targetUri):
-    # comparing groups
-    if (groupUriA in weights.keys) and (groupUriB in weights.keys):
-        # determine weights of group uris
-        groupUriA_weight = weights[groupUriA]
-        groupUriB_weight = weights[groupUriB]
-        # use weights to determine which edge type to use in query
-        if groupUriA_weight < groupUriB_weight:
-            edge = gu(':hasPart')
-        elif groupUriA_weight > groupUriB_weight:
-            edge = gu(':isFoundIn')
-        else:
-            edge = 'o shihzu'
-
-        query = """
-        SELECT ?spfyid WHERE {{
-            ?spfyid a <{spfyIdType}> .
-            ?spfyid <{hasPart}> <{uriGenome}> .
-        }}
-        """.format(spfyIdType=gu(':spfyId'), hasPart=gu(':hasPart'), uriGenome=uriGenome)
-
-    sparql = SPARQLWrapper(blazegraph_url)
-    sparql.setQuery(query)
-    sparql.setReturnFormat(JSON)
-    results = sparql.query().convert()
-
-def compare_markers(uriA, uriB):
-    pass
+def query(queryUriA, queryUriB, targetUri):
+    resultsA = to_target(queryUriA, targetUri)
+    resultsB = to_target(queryUriB, targetUri)
 
 if __name__ == "__main__":
     '''
