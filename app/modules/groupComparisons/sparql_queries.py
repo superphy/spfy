@@ -1,5 +1,11 @@
 import config
 from SPARQLWrapper import SPARQLWrapper, JSON
+from modules.loggingFunctions import initialize_logging
+from modules.turtleGrapher.turtle_utils import generate_uri as gu
+
+# logging
+log_file = initialize_logging()
+log = logging.getLogger(__name__)
 
 #blazegraph_url = config.database['blazegraph_url']
 blazegraph_url = 'http://localhost:8080/bigdata/sparql'
@@ -25,13 +31,16 @@ def get_types():
     tup = ()
     for result in results['results']['bindings']:
         tup += (result['objecttype']['value'],)
+    log.debug(tup)
     return tup
 
 def is_group(uri):
     '''
     Returns True if a given URI is in the list of possible object types (ie. group types), otherwise False.
     '''
-    return uri in get_types()
+    isgroup = uri in get_types()
+    log.debug(isgroup)
+    return isgroup
 
 def parse_results(results, targetname, queryUri):
     '''
@@ -40,6 +49,7 @@ def parse_results(results, targetname, queryUri):
     l = []
     for result in results['results']['bindings']:
         l.append(result[targetname]['value'])
+    log.debug(l)
     return {queryUri: l}
 
 def to_target(queryUri, targetUri):
@@ -70,11 +80,23 @@ def to_target(queryUri, targetUri):
     return parse_results(results, 'target', queryUri)
 
 def query(queryUriA, queryUriB, targetUri):
+    # base dictionary for results
+    d = {}
+
+    # query results for UriA
     resultsA = to_target(queryUriA, targetUri)
+    log.debug(resultsA)
+    d.update(resultsA)
+
+    # query results for UriB
     resultsB = to_target(queryUriB, targetUri)
+    log.debug(resultsB)
+    d.update(resultsB)
+
+    return d
 
 if __name__ == "__main__":
     '''
     For testing...
     '''
-    print get_types()
+    print query(gu(':spfy1'),gu(':spfy2'),gu(':Marker'))
