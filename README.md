@@ -31,11 +31,31 @@ The `superphy/backend-rq-blazegraph:2.0.0` image is not scalable: it is responsi
 The `superphy/backend:2.0.0` which runs the main web app uses `supervisor` to manage inner processes: `nginx`, `uWsgi`.
 
 ## Extending:
+The `blob_savvy()` in `/app/modules/spfy.py` handles the separation of multiple-file inputs into single file calls.
+The `blob_savvy_enqueue()`, called by `blob_savvy()`, manages the RQ pipeline for processing an individual file.
+Say you wanted to add a example analysis called `penguin`:
+  1. NOTE: everything (rq workers, uwsgi, etc.) run inside `/app`, import should be relative to this. Example: `from modules.blazeUploader.reserve_id import write_reserve_id`. The top-most directory is used to build Docker Images and copies the contents of `/app` to run inside the containers.
+  2. Write a `blob_penguin_enqueue()` to handle your enqueueing of your analysis-specific pipeline.
+  3. Add the `blob_penguin_enqueue()` call to `blob_savvy()`.
+  4. If you want to store the results to Blazegraph, you can add that to your pipeline. In `savvy`, the graph generation is handled in `/app/modules/turtleGrapher/datastruct_savvy.py`, you can use that as an example. Note that the `upload_graph()` call is made within `datastruct_savvy.py`; this is done to avoid having to pass the resulting `rdflib.Graph` object between tasks. Also, the base graph (only containing information about the file, without any results from analyses) is handled by `/app/modules/turtleGrapher/turtle_grapher.py`.
+  5. If you want to return the results to the front-end, your `blob_penguin_enqueue()` should return a nested dictionary in the format {*JobID*: {'file': *filename including path*, 'analysis': *type of analysis*}} where the italicized items are filled with the actual values and 'file'/'analysis' are string literals. Note that the 'file'/'analysis' are recommended, but not actually used by the front-end, only the *JobIDs* are. RQ's `.enqueue()` returns the JobID by default. The front-end code is located in `/app/static` for the *js*/*css*/*img* files and in `/app/templates/index.html`.
+Once you've added your code, you can rebuild the docker images by doing the following in the repo root:
+  1. `docker-compose down`
+  2. `docker-compose build --no-cache`
+  3. `docker-compose up`
+
+## ReCaptcha Support:
+To enable:
+  1. Get a pair of ReCaptcha keys from Google, specific to your site domain.
+  2. Uncomment the `<!-- captcha-->` code in `/app/templates/index.html`
+  3. Add your public key to `$scope.model` dictionary under the key `key`
+  4. In `/app/config.py` set `RECAPTCHA_ENABLED` to `True` and add your corresponding public and private ('site' and 'secret') keys.
+  5. Rebuild your docker images.
 
 ## Debugging:
-* Ideally, setup a https://sentry.io account and copy your DSN into `app/config`
+* Ideally, setup a https://sentry.io account and copy your DSN into `/app/config.py`
 * Alternatively:
 * Port 9181 is mapped to host on Service `backend-rq`, you can use `rq-dashboard` via:
-  * `docker exec -it backend_worker_1 sh` this drops a shell into the rq worker container which has rq-dashboard installed via conda
-  * `rq-dashboard -H redis` runs rq-dashboard and specifies the *redis* host automatically defined by docker-compose
-  * then on your host machine visit http://localhost:9181
+  1. `docker exec -it backend_worker_1 sh` this drops a shell into the rq worker container which has rq-dashboard installed via conda
+  2. `rq-dashboard -H redis` runs rq-dashboard and specifies the *redis* host automatically defined by docker-compose
+  3. then on your host machine visit http://localhost:9181
