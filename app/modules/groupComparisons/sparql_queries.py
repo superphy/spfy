@@ -103,4 +103,5 @@ if __name__ == "__main__":
     '''
     For testing...
     '''
+    print log_file
     print query(gu(':spfy1'),gu(':spfy2'),gu(':Marker'))
