@@ -59,8 +59,9 @@ def to_target(queryUri, targetUri):
     Generates a query that selects all targetUri from groupUri
     '''
     sparql = SPARQLWrapper(blazegraph_url)
-    # the queries have to be structured differently if the queryUri is a object type or is a specific instance
+    # add PREFIXes to sparql query
     query = gp()
+    # the queries have to be structured differently if the queryUri is a object type or is a specific instance
     if is_group(queryUri):
         # then queryUri is a object type
         query += """
