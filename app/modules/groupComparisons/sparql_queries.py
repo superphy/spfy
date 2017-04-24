@@ -2,7 +2,8 @@ import config
 from modules.groupComparisons.ontology_weight import weights
 from SPARQLWrapper import SPARQLWrapper, JSON
 
-blazegraph_url = config.database['blazegraph_url']
+#blazegraph_url = config.database['blazegraph_url']
+blazegraph_url = 'http://localhost:8080/bigdata/sparql'
 
 def get_types():
     '''
@@ -58,3 +59,10 @@ def query(groupUriA, groupUriB, targetUri):
     results = sparql.query().convert()
 
 def compare_markers(uriA, uriB):
+    pass
+
+if __name__ == "__main__":
+    '''
+    For testing...
+    '''
+    print get_types()
