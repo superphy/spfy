@@ -3,6 +3,7 @@ import logging
 from SPARQLWrapper import SPARQLWrapper, JSON
 from modules.loggingFunctions import initialize_logging
 from modules.turtleGrapher.turtle_utils import generate_uri as gu
+from modules.groupComparisons.sparql_utils import generate_prefixes as gp
 
 # logging
 log_file = initialize_logging()
@@ -59,9 +60,10 @@ def to_target(queryUri, targetUri):
     '''
     sparql = SPARQLWrapper(blazegraph_url)
     # the queries have to be structured differently if the queryUri is a object type or is a specific instance
+    query = gp()
     if is_group(queryUri):
         # then queryUri is a object type
-        query = """
+        query += """
         SELECT ?target WHERE {{
             ?spfyid a <{queryUri}> ; (:hasPart|:isFoundIn) ?target .
             ?target a <{targetUri}> .
@@ -69,7 +71,7 @@ def to_target(queryUri, targetUri):
         """.format(queryUri=queryUri, targetUri=targetUri)
     else:
         # then queryUri is a specific object
-        query = """
+        query += """
         SELECT ?target WHERE {{
             <{queryUri}> (:hasPart|:isFoundIn) ?target .
             ?target a <{targetUri}> .
