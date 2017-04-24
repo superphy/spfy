@@ -9,6 +9,7 @@ def get_types():
     Gets a list distinct rdf:type objects (ie. all possible object types) by querying the blazegraph db.
     Used to determine if a given query Uri is an object type or a specific instance of an object.
     '''
+    # SPARQL Query
     sparql = SPARQLWrapper(blazegraph_url)
     query = """
     SELECT DISTINCT ?objecttype WHERE {{
@@ -18,7 +19,13 @@ def get_types():
     sparql.setQuery(query)
     sparql.setReturnFormat(JSON)
     results = sparql.query().convert()
-    return results
+
+    # Parse results and give me a tuple
+    tup = ()
+    for result in results['results']['bindings']:
+        t = (result['objecttype']['value'])
+        tup += t
+    return tup
 
 def to_target(groupUri, targetUri):
     '''
