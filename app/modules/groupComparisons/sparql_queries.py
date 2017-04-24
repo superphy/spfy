@@ -1,5 +1,5 @@
 import config
-from modules.groupComparisons.ontology_weight import weights
+from modules.groupComparisons.ontology_weights import weights
 from SPARQLWrapper import SPARQLWrapper, JSON
 
 #blazegraph_url = config.database['blazegraph_url']
