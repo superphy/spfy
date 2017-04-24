@@ -1,3 +1,4 @@
+@prefix : <https://www.github.com/superphy#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
@@ -8,27 +9,41 @@
 @prefix spfy: <https://github.com/superphy> .
 
 # working from http://www.snee.com/bobdc.blog/2016/05/trying-out-blazegraph.html
-# some of these rdfs:subClassOf may change to rdfs:subPropertyOf, after we test inferencing
-spfy:Id rdfs:subClassOf owl:Thing .
-g:Genome rdfs:subClassOf spfy:ID .
-so:0001462 rdfs:subClassOf g:Genome .
-g:Contig rdfs:subClassOf so:0001462 .
-# note: this will change in order, in reality positions are sublcasses of region, and regions are subclasses of genes
-faldo:Position rdfs:subClassOf g:Contig .
-faldo:Region rdfs:subClassOf faldo:Position .
-# spfy:Marker is a gene
-spfy:Marker rdfs:subClassOf faldo:Position .
 
-# result types which are considered spfy markers
+:hasPart a owl:TransitiveProperty .
+:isFoundIn a owl:TransitiveProperty .
+
+:spfyId :hasPart g:Genome .
+g:Genome :isFoundIn :spfyId .
+
+g:Genome :hasPart so:0001462 .
+so:0001462 :isFoundIn g:Genome .
+
+# so:0001462 is a 'Bag of Contigs'
+so:0001462 :hasPart g:Contig .
+g:Contig :isFoundIn so:0001462 .
+
+# if a Contig also has any genes associated with it, then...
+# (the g:Contig instance) a faldo:Reference .
+# this is only defined for a specific instance of a contig (and not the group type)
+
+g:Contig :hasPart faldo:Position .
+faldo:Position :isFoundIn g:Contig .
+# the faldo:Position instances are also...
+# (the faldo:Position instance) a faldo:ExactPosition
+# (the faldo:Position instance) a faldo:ForwardStrandPosition
+# or possibly:
+# (the faldo:Position instance) a faldo:ReverseStrandPosition
+
+faldo:Position :hasPart faldo:Region .
+faldo:Region :isFoundIn faldo:Position .
+
+faldo:Region :hasPart :VirulenceFactor
+:VirulenceFactor :isFoundIn faldo:Region
+# or possibly:
+faldo:Region :hasPart :AntimicrobialResistanceGene
+:AntimicrobialResistanceGene :isFoundIn faldo:Region
+
+# where:
 spfy:VirulenceFactor rdfs:subClassOf spfy:Marker .
 spfy:AntimicrobialResistanceGene rdfs:subClassOf spfy:Marker .
-
-## Transitive properties
-# From SpfyID
-spfy:hasGenome a owl:TransitiveProperty .
-spfy:hasContigs a owl:TransitiveProperty .
-spfy:hasContig a owl:TransitiveProperty .
-# From Gene
-spfy:hasRegion a owl:TransitiveProperty .
-spfy:hasPosition a owl:TransitiveProperty .
-spfy:inContig a owl:TransitiveProperty .
