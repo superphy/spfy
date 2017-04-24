@@ -12,6 +12,28 @@ log = logging.getLogger(__name__)
 #blazegraph_url = config.database['blazegraph_url']
 blazegraph_url = 'http://localhost:8080/bigdata/sparql'
 
+def get_instances(objectTypeUri):
+    '''
+    Gets all instances of a given object type.
+    Example use: to get all :Markers in blazegraph.
+    Args:
+        objecttype: a rdflib.URI
+    Returns:
+        a tuple of the result.
+    '''
+    # SPARQL Query
+    sparql = SPARQLWrapper(blazegraph_url)
+    query = """
+    SELECT DISTINCT ?objectinstance WHERE {{
+        ?objectinstance a <{objectTypeUri}> .
+    }}
+    """.format(objectTypeUri=objectTypeUri)
+    sparql.setQuery(query)
+    sparql.setReturnFormat(JSON)
+    results = sparql.query().convert()
+
+    return parse_results(results, 'objectinstance', objectTypeUri)
+
 def get_types():
     '''
     Gets a list distinct rdf:type objects (ie. all possible object types) by querying the blazegraph db.
