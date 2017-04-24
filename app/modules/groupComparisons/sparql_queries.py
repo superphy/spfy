@@ -23,8 +23,7 @@ def get_types():
     # Parse results and give me a tuple
     tup = ()
     for result in results['results']['bindings']:
-        t = (str(result['objecttype']['value']))
-        tup += t
+        tup += (result['objecttype']['value'],)
     return tup
 
 def to_target(groupUri, targetUri):
