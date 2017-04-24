@@ -3,23 +3,35 @@ from modules.groupComparisons.ontology_weight import weights
 from SPARQLWrapper import SPARQLWrapper, JSON
 
 blazegraph_url = config.database['blazegraph_url']
-sparql = SPARQLWrapper(blazegraph_url)
 
-def get_type(uri):
+def get_types():
     '''
-    Gets the object type of a given uri by querying the blazegraph db.
+    Gets a list distinct rdf:type objects (ie. all possible object types) by querying the blazegraph db.
+    Used to determine if a given query Uri is an object type or a specific instance of an object.
     '''
-    pass
+    query = """
+    SELECT DISTINCT ?objecttype WHERE {{
+        ?objectinstance a ?objecttype .
+    }}
+    """
+    sparql.setQuery(query)
+    sparql.setReturnFormat(JSON)
+    results = sparql.query().convert()
+    return results
 
 def to_target(groupUri, targetUri):
     '''
     Generates a query that selects all targetUri from groupUri
     '''
-    pass
+    sparql = SPARQLWrapper(blazegraph_url)
+    query = """
+    SELECT ?spfyid WHERE {{
+        ?spfyid a <{spfyIdType}> .
+        ?spfyid <{hasPart}> <{uriGenome}> .
+    }}
+    """.format(spfyIdType=gu(':spfyId'), hasPart=gu(':hasPart'), uriGenome=uriGenome)
 
 def query(groupUriA, groupUriB, targetUri):
-
-
     # comparing groups
     if (groupUriA in weights.keys) and (groupUriB in weights.keys):
         # determine weights of group uris
@@ -40,6 +52,7 @@ def query(groupUriA, groupUriB, targetUri):
         }}
         """.format(spfyIdType=gu(':spfyId'), hasPart=gu(':hasPart'), uriGenome=uriGenome)
 
+    sparql = SPARQLWrapper(blazegraph_url)
     sparql.setQuery(query)
     sparql.setReturnFormat(JSON)
     results = sparql.query().convert()
