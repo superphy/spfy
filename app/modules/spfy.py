@@ -15,8 +15,6 @@ from rq import Queue
 # other libraries for rdflib
 from rdflib import Graph
 
-
-
 from modules.qc.qc import qc
 from modules.blazeUploader.reserve_id import write_reserve_id
 from modules.ectyper.call_ectyper import call_ectyper
