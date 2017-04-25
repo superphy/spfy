@@ -3,37 +3,25 @@ import Dialog from 'react-md/lib/Dialogs';
 import Button from 'react-md/lib/Buttons/Button';
 import Divider from 'react-md/lib/Dividers';
 import TextField from 'react-md/lib/TextFields';
-import Toolbar from 'react-md/lib/Toolbars';
 
 
 export default class Home extends PureComponent {
   constructor(props) {
     super(props);
 
-    this.state = { visible: false, pageX: null, pageY: null };
-    this._openDialog = this._openDialog.bind(this);
-    this._closeDialog = this._closeDialog.bind(this);
+    this.state = { visible: false };
   }
 
-  _openDialog(e) {
-    let { pageX, pageY } = e;
-    if (e.changedTouches) {
-      const [touch] = e.changedTouches;
-      pageX = touch.pageX;
-      pageY = touch.pageY;
-    }
+  openDialog = () => {
+    this.setState({ visible: true });
+  };
 
-    this.setState({ visible: true, pageX, pageY });
-  }
-
-  _closeDialog() {
+  closeDialog = () => {
     this.setState({ visible: false });
-  }
+  };
 
   render() {
-    const nav = <Button icon onClick={this._closeDialog}>close</Button>;
-    const action = <Button flat label="Submit" onClick={this._closeDialog} />;
-
+    const { visible } = this.state;
     return (
       <div className="md-grid">
         <div className="paper-container">
@@ -46,21 +34,24 @@ export default class Home extends PureComponent {
             </p>
           </div>
           <div>
-            <Button raised label="New Comparison" onClick={this._openDialog} />
+            <Button raised label="New Comparison" onClick={this.openDialog} />
             <Dialog
-              id="fullPageExample"
-              {...this.state}
-              onHide={this._closeDialog}
-              fullPage
+              id="newComparison"
+              visible={visible}
+              onHide={this.closeDialog}
+              title="Submit a new Group Comparison"
               aria-label="New Comparison"
+              modal
+              actions={[{
+                onClick: this.closeDialog,
+                primary: true,
+                label: 'Submit',
+              }, {
+                onClick: this.closeDialog,
+                primary: true,
+                label: 'Cancel',
+              }]}
             >
-              <Toolbar
-                colored
-                nav={nav}
-                actions={action}
-                title="New Comparison"
-                fixed
-              />
               <form className="md-toolbar-relative">
                 <TextField
                   id="eventEmail"
