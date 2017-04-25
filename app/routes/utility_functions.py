@@ -2,6 +2,7 @@ import os
 import tarfile
 import zipfile
 from flask import current_app
+from werkzeug.utils import secure_filename
 
 def handle_tar(filename, now):
     if tarfile.is_tarfile(filename):
