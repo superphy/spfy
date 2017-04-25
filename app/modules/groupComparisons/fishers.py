@@ -15,10 +15,10 @@ def fishers(queryUriA, queryUriB, targetUri):
     # create a pandas dataframe from that list of genes
     dfTargets = pd.DataFrame(all_targets[targetUri])
 
-    # check which results from group A is in results from group B
-    matchesAtoB = dfA[0].isin(dfTargets[0])
+    # check how many 
+    matchesA = dfTargets[0].isin(dfA[0])
     # count the number of matches
-    count_matchesAtoB = matchesAtoB.value_counts()
+    count_matchesA = matchesAtoB.value_counts()
     # check which results from group B is in results from group A
     matchesBtoA = dfB[0].isin(dfTargets[0])
     # count the number of matches

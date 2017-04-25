@@ -5,7 +5,7 @@ this is the app factory
 from flask import Flask
 from flask_bootstrap import Bootstrap
 import config
-from spfyroutes.views import bp as spfy
+from routes.views import bp as spfy
 from flask_recaptcha import ReCaptcha
 
 
