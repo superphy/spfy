@@ -19,15 +19,22 @@ def get_all_atribute_types():
     # SPARQL Query
     sparql = SPARQLWrapper(blazegraph_url)
     query = """
-    SELECT DISTINCT ?attributetype WHERE {{
-        ?anything ?attributetype ?attribute .
-    }}
+    SELECT ?attributetype (COUNT(DISTINCT ?attribute) AS ?N)
+    WHERE {
+     ?objectinstance ?attributetype ?attribute .
+    }
+    GROUP BY ?attributetypes
     """
+    # query = """
+    # SELECT DISTINCT ?attributetype WHERE {{
+    #     ?anything ?attributetype ?attribute .
+    # }}
+    # """
     sparql.setQuery(query)
     sparql.setReturnFormat(JSON)
     results = sparql.query().convert()
 
-    return parse_results_tolist(results, 'attributetype')
+    return results
 
 def get_attribute_values(objectTypeUri, attributeTypeUri):
     '''
@@ -179,4 +186,6 @@ if __name__ == "__main__":
     '''
     print log_file
     #print query(gu(':spfy1'),gu(':spfy2'),gu(':Marker'))
+    # get all possible attribute types
     log.debug(get_all_atribute_types())
+    # user selects an attribute type => get all distinct attribute values and count them
