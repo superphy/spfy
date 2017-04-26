@@ -91,6 +91,19 @@ def parse_results_tolist(results, targetname):
     log.debug(l)
     return l
 
+def parse_results_todict(results, subjectname, targetname):
+    '''
+    Converts SPARQL JSON results into a python dictionary.
+    '''
+    d = {}
+    for result in results['results']['bindings']:
+        if d[result[subjectname]['value']]:
+            # then a list already exists
+            d[result[subjectname]['value']].append(result[targetname]['value'])
+        else:
+            d[result[subjectname]['value']] = [result[targetname]['value']]
+    return d
+
 def to_target(attributeUri, targetUri, attributeTypeUri='?p'):
     '''
     Generates a query that selects all targetUri from a given attribute group.
@@ -119,7 +132,7 @@ def to_target(attributeUri, targetUri, attributeTypeUri='?p'):
     sparql.setQuery(query)
     sparql.setReturnFormat(JSON)
     results = sparql.query().convert()
-    return results
+    return parse_results_todict(results, 's', 'target')
 
 def query(queryAttibuteUriA, queryAttibuteUriB, targetUri, queryAttributeTypeUriA='?p', queryAttributeTypeUriB='?p'):
     # base dictionary for results
@@ -149,9 +162,6 @@ if __name__ == "__main__":
     log.info(get_attribute_values(gu('ge:0001076')))
     # user selects two specific values
     # at this point, we no longer have to worry about query speed because none of the below queries are immediately returned to the ui (instead, they are handled in RQ)
-    log.info(is_group(gu(':Marker')))
-    log.info(is_group(unicode(gu(':VirulenceFactor'))))
-    log.info(is_group(gu(':ECP')))
     start = time.time()
     log.info(start)
     log.info(query('O157', 'O101', gu(':VirulenceFactor'), gu('ge:0001076'), gu('ge:0001076')))
