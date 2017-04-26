@@ -40,7 +40,7 @@ def get_attribute_values(attributeTypeUri):
     SELECT DISTINCT ?attribute WHERE {{
         ?s <{attributeTypeUri}> ?attribute .
     }}
-    """.format(objectTypeUri=objectTypeUri, attributeTypeUri=attributeTypeUri)
+    """.format(attributeTypeUri=attributeTypeUri)
     sparql.setQuery(query)
     sparql.setReturnFormat(JSON)
     results = sparql.query().convert()
