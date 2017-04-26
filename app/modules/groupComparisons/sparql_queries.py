@@ -14,6 +14,28 @@ log = logging.getLogger(__name__)
 #blazegraph_url = config.database['blazegraph_url']
 blazegraph_url = 'http://localhost:8080/bigdata/sparql'
 
+def get_instances(objectTypeUri):
+    '''
+    Gets all instances of a given object type.
+    Example use: to get all :Markers in blazegraph.
+    Args:
+        objecttype: a rdflib.URI
+    Returns:
+        a list of the result.
+    '''
+    # SPARQL Query
+    sparql = SPARQLWrapper(blazegraph_url)
+    query = """
+    SELECT DISTINCT ?objectinstance WHERE {{
+        ?objectinstance a <{objectTypeUri}> .
+    }}
+    """.format(objectTypeUri=objectTypeUri)
+    sparql.setQuery(query)
+    sparql.setReturnFormat(JSON)
+    results = sparql.query().convert()
+
+    return parse_results_tolist(results, 'objectinstance')
+
 def get_all_atribute_types():
     '''
     Returns all types of attributes (ie. all edge types) currently in blazegraph.
@@ -98,16 +120,22 @@ def parse_results_todict(results, subjectname, targetname):
     We reverse the order as we're more interested in targetname: count(DISTINCT subjectname).
     The use of sets is to ensure DISTINCT (though this should be accounted for by SPARQL query).
     '''
+    # this is the general dict to hold results
     d = {}
+    # a set to count number of unique subjectnames
+    st = set()
+    # the loop
     for result in results['results']['bindings']:
         if result[targetname]['value'] in d.keys():
             # then a set already exists
             d[result[targetname]['value']].add(result[subjectname]['value'])
         else:
             d[result[targetname]['value']] = set([result[subjectname]['value']])
+        # add the subjectname to the set
+        st.add(result[subjectname]['value'])
     # temp code to pickle result
     pickle.dump(d,open(str(time.time()) + '.p', 'wb'))
-    return d
+    return {'n':len(st),'d':d}
 
 def to_target(attributeUri, targetUri, attributeTypeUri='?p'):
     '''
