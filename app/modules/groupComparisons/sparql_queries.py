@@ -95,14 +95,16 @@ def parse_results_tolist(results, targetname):
 def parse_results_todict(results, subjectname, targetname):
     '''
     Converts SPARQL JSON results into a python dictionary.
+    We reverse the order as we're more interested in targetname: count(DISTINCT subjectname).
+    The use of sets is to ensure DISTINCT (though this should be accounted for by SPARQL query).
     '''
     d = {}
     for result in results['results']['bindings']:
-        if result[subjectname]['value'] in d.keys():
-            # then a list already exists
-            d[result[subjectname]['value']].append(result[targetname]['value'])
+        if result[targetname]['value'] in d.keys():
+            # then a set already exists
+            d[result[targetname]['value']].add(result[subjectname]['value'])
         else:
-            d[result[subjectname]['value']] = [result[targetname]['value']]
+            d[result[targetname]['value']] = set([result[subjectname]['value']])
     # temp code to pickle result
     pickle.dump(d,open(str(time.time()) + '.p', 'wb'))
     return d
