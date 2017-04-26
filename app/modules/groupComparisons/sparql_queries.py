@@ -97,7 +97,7 @@ def parse_results_todict(results, subjectname, targetname):
     '''
     d = {}
     for result in results['results']['bindings']:
-        if d[result[subjectname]['value']]:
+        if result[subjectname]['value'] in d.keys():
             # then a list already exists
             d[result[subjectname]['value']].append(result[targetname]['value'])
         else:
