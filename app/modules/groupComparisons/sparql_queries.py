@@ -1,5 +1,6 @@
 import config
 import logging
+import time
 from SPARQLWrapper import SPARQLWrapper, JSON
 from modules.loggingFunctions import initialize_logging
 from modules.turtleGrapher.turtle_utils import generate_uri as gu
@@ -147,4 +148,8 @@ if __name__ == "__main__":
     log.info(get_attribute_values(gu('ge:0001076')))
     # user selects two specific values
     # at this point, we no longer have to worry about query speed because none of the below queries are immediately returned to the ui (instead, they are handled in RQ)
+    start = time.time()
+    log.info(start)
     log.info(query('O157', 'O101', gu(':Marker'), gu('ge:0001076'), gu('ge:0001076')))
+    stop = time.time()
+    log.info(stop-start)
