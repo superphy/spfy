@@ -47,45 +47,6 @@ def get_attribute_values(attributeTypeUri):
     log.debug(results)
     return parse_results_tolist(results, 'attribute')
 
-def get_attribute_types(objectTypeUri):
-    '''
-    Given a object type uri, returns a simple list of all distinct attribute types it has.
-    '''
-    # SPARQL Query
-    sparql = SPARQLWrapper(blazegraph_url)
-    query = """
-    SELECT DISTINCT ?attributetype WHERE {{
-        ?s a <{objectTypeUri}> ; ?attributetype ?attribute .
-    }}
-    """.format(objectTypeUri=objectTypeUri)
-    sparql.setQuery(query)
-    sparql.setReturnFormat(JSON)
-    results = sparql.query().convert()
-    log.debug(results)
-    return parse_results(results, 'attributetype', objectTypeUri)
-
-def get_instances(objectTypeUri):
-    '''
-    Gets all instances of a given object type.
-    Example use: to get all :Markers in blazegraph.
-    Args:
-        objecttype: a rdflib.URI
-    Returns:
-        a list of the result.
-    '''
-    # SPARQL Query
-    sparql = SPARQLWrapper(blazegraph_url)
-    query = """
-    SELECT DISTINCT ?objectinstance WHERE {{
-        ?objectinstance a <{objectTypeUri}> .
-    }}
-    """.format(objectTypeUri=objectTypeUri)
-    sparql.setQuery(query)
-    sparql.setReturnFormat(JSON)
-    results = sparql.query().convert()
-
-    return parse_results(results, 'objectinstance', objectTypeUri)
-
 def get_types():
     '''
     Gets a list distinct rdf:type objects (ie. all possible object types) by querying the blazegraph db.
@@ -128,7 +89,7 @@ def parse_results_tolist(results, targetname):
     log.debug(l)
     return l
 
-def to_target(queryUri, targetUri):
+def to_target(attributeUri, targetUri):
     '''
     Generates a query that selects all targetUri from groupUri
     '''
@@ -180,6 +141,9 @@ if __name__ == "__main__":
     print log_file
     #print query(gu(':spfy1'),gu(':spfy2'),gu(':Marker'))
     # get all possible attribute types
-    log.debug(get_all_atribute_types())
+    log.info(get_all_atribute_types())
     # user selects an attribute type => get all distinct attribute values
-    log.debug(get_attribute_values(gu('ge:0001076')))
+    log.info(get_attribute_values(gu('ge:0001076')))
+    # user selects two specific values
+    # at this point, we no longer have to worry about query speed because none of the below queries are immediately returned to the ui (instead, they are handled in RQ)
+    log.info()
