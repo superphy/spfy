@@ -27,7 +27,7 @@ def get_all_atribute_types():
     sparql.setReturnFormat(JSON)
     results = sparql.query().convert()
 
-    return results
+    return parse_results_tolist(results, 'attributetype')
 
 def get_attribute_values(objectTypeUri, attributeTypeUri):
     '''
@@ -118,15 +118,15 @@ def is_group(uri):
     log.debug(isgroup)
     return isgroup
 
-def parse_results(results, targetname, queryUri):
+def parse_results_tolist(results, targetname):
     '''
-    Used to fix structure of SPARQL query results for running group comparisons.
+    Used to a simple list SPARQL query results for running group comparisons.
     '''
     l = []
     for result in results['results']['bindings']:
         l.append(result[targetname]['value'])
     log.debug(l)
-    return {queryUri: l}
+    return l
 
 def to_target(queryUri, targetUri):
     '''
