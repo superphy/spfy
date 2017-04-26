@@ -12,6 +12,23 @@ log = logging.getLogger(__name__)
 #blazegraph_url = config.database['blazegraph_url']
 blazegraph_url = 'http://localhost:8080/bigdata/sparql'
 
+def get_all_atribute_types():
+    '''
+    Returns all types of attributes (ie. all edge types) currently in blazegraph.
+    '''
+    # SPARQL Query
+    sparql = SPARQLWrapper(blazegraph_url)
+    query = """
+    SELECT DISTINCT ?attributetype WHERE {{
+        ?anything ?attributetype ?attribute .
+    }}
+    """
+    sparql.setQuery(query)
+    sparql.setReturnFormat(JSON)
+    results = sparql.query().convert()
+
+    return parse_results(results, 'attributetype', objectTypeUri)
+
 def get_attribute_values(objectTypeUri, attributeTypeUri):
     '''
     Given an objectype(ex. :spfyId) and an attribute type(ex. so:0001076, aka. O-Type).
@@ -27,7 +44,7 @@ def get_attribute_values(objectTypeUri, attributeTypeUri):
     sparql.setQuery(query)
     sparql.setReturnFormat(JSON)
     results = sparql.query().convert()
-
+    log.debug(results)
     return parse_results(results, 'attribute', attributeTypeUri)
 
 def get_attribute_types(objectTypeUri):
@@ -44,7 +61,7 @@ def get_attribute_types(objectTypeUri):
     sparql.setQuery(query)
     sparql.setReturnFormat(JSON)
     results = sparql.query().convert()
-
+    log.debug(results)
     return parse_results(results, 'attributetype', objectTypeUri)
 
 def get_instances(objectTypeUri):
