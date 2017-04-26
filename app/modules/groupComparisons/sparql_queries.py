@@ -162,7 +162,7 @@ if __name__ == "__main__":
     '''
     print log_file
     #print query(gu(':spfy1'),gu(':spfy2'),gu(':Marker'))
-    print get_tyes()
+    print get_types()
     print get_instances(gu(':spfyId'))
     print get_attribute_types(gu(':spfyId'))
     print get_attribute_values(gu(':spfyId'), gu('so:0001076'))
