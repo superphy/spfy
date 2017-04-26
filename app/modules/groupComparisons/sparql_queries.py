@@ -19,40 +19,33 @@ def get_all_atribute_types():
     # SPARQL Query
     sparql = SPARQLWrapper(blazegraph_url)
     query = """
-    SELECT ?attributetype (COUNT(DISTINCT ?attribute) AS ?N)
-    WHERE {
-     ?objectinstance ?attributetype ?attribute .
-    }
-    GROUP BY ?attributetypes
+    SELECT DISTINCT ?attributetype WHERE {{
+        ?anything ?attributetype ?attribute .
+    }}
     """
-    # query = """
-    # SELECT DISTINCT ?attributetype WHERE {{
-    #     ?anything ?attributetype ?attribute .
-    # }}
-    # """
     sparql.setQuery(query)
     sparql.setReturnFormat(JSON)
     results = sparql.query().convert()
 
-    return results
+    return parse_results_tolist(results, 'attributetype')
 
-def get_attribute_values(objectTypeUri, attributeTypeUri):
+def get_attribute_values(attributeTypeUri):
     '''
-    Given an objectype(ex. :spfyId) and an attribute type(ex. so:0001076, aka. O-Type).
-    Returns a list of all distinct attribute values associated with those two conditions.
+    Given an attribute type(ex. ge:0001076, aka. O-Type).
+    Returns a list of all distinct attribute values.
     '''
     # SPARQL Query
     sparql = SPARQLWrapper(blazegraph_url)
     query = """
     SELECT DISTINCT ?attribute WHERE {{
-        ?s a <{objectTypeUri}> ; <{attributeTypeUri}> ?attribute .
+        ?s <{attributeTypeUri}> ?attribute .
     }}
     """.format(objectTypeUri=objectTypeUri, attributeTypeUri=attributeTypeUri)
     sparql.setQuery(query)
     sparql.setReturnFormat(JSON)
     results = sparql.query().convert()
     log.debug(results)
-    return parse_results(results, 'attribute', attributeTypeUri)
+    return parse_results_tolist(results, 'attribute')
 
 def get_attribute_types(objectTypeUri):
     '''
@@ -188,4 +181,5 @@ if __name__ == "__main__":
     #print query(gu(':spfy1'),gu(':spfy2'),gu(':Marker'))
     # get all possible attribute types
     log.debug(get_all_atribute_types())
-    # user selects an attribute type => get all distinct attribute values and count them
+    # user selects an attribute type => get all distinct attribute values
+    log.debug(get_attribute_values(gu('ge:0001076')))
