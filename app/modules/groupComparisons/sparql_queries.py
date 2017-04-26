@@ -27,7 +27,7 @@ def get_all_atribute_types():
     sparql.setReturnFormat(JSON)
     results = sparql.query().convert()
 
-    return parse_results(results, 'attributetype', objectTypeUri)
+    return results
 
 def get_attribute_values(objectTypeUri, attributeTypeUri):
     '''
