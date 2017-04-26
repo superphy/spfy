@@ -56,4 +56,4 @@ if __name__ == "__main__":
     '''
     For testing...
     '''
-    print fishers('O157', 'O101', gu(':VirulenceFactor'), gu('ge:0001076'), gu('ge:0001076')
+    print fishers('O157', 'O101', gu(':VirulenceFactor'), gu('ge:0001076'), gu('ge:0001076'))
