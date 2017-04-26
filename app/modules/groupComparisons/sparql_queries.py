@@ -147,4 +147,4 @@ if __name__ == "__main__":
     log.info(get_attribute_values(gu('ge:0001076')))
     # user selects two specific values
     # at this point, we no longer have to worry about query speed because none of the below queries are immediately returned to the ui (instead, they are handled in RQ)
-    log.info(query('O157', 'O101', gu(':Marker'), gu('ge:0001076'), gu('ge:0001076'))
+    log.info(query('O157', 'O101', gu(':Marker'), gu('ge:0001076'), gu('ge:0001076')))
