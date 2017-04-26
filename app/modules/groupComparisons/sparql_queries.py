@@ -50,7 +50,7 @@ def get_attribute_values(attributeTypeUri):
 def get_types():
     '''
     Gets a list distinct rdf:type objects (ie. all possible object types) by querying the blazegraph db.
-    Used to determine if a given query Uri is an object type or a specific instance of an object.
+    Used to determine if a given query Uri is an object type or an attribute of the object.
     Parses the list and returns a tuple of just the URIs.
     '''
     # SPARQL Query
@@ -73,7 +73,7 @@ def get_types():
 
 def is_group(uri):
     '''
-    Returns True if a given URI is in the list of possible object types (ie. group types), otherwise False.
+    Returns True if a given URI is in the list of possible object types (ie. group types), otherwise False (ie. attributeType).
     '''
     isgroup = uri in get_types()
     log.debug(isgroup)
@@ -89,48 +89,49 @@ def parse_results_tolist(results, targetname):
     log.debug(l)
     return l
 
-def to_target(attributeUri, targetUri):
+def to_target(attributeUri, targetUri, attributeTypeUri='?p'):
     '''
-    Generates a query that selects all targetUri from groupUri
+    Generates a query that selects all targetUri from a given attribute group.
+    The attributeTypeUri isn't necessary, but specifying it (instead of using the wildcard) improves performance.
     '''
     sparql = SPARQLWrapper(blazegraph_url)
     # add PREFIXes to sparql query
     query = generate_prefixes()
     # the queries have to be structured differently if the queryUri is a object type or is a specific instance
-    if is_group(queryUri):
-        # then queryUri is a object type
+    if is_group(targetUri):
+        # then targetUri is a object type
         query += """
-        SELECT ?target WHERE {{
-            ?spfyid a <{queryUri}> ; (:hasPart|:isFoundIn) ?target .
+        SELECT ?s ?target WHERE {{
+            ?s <{attributeTypeUri}> '{attributeUri}' ; (:hasPart|:isFoundIn) ?target .
             ?target a <{targetUri}> .
         }}
-        """.format(queryUri=queryUri, targetUri=targetUri)
+        """.format(attributeTypeUri=attributeTypeUri, attributeUri=attributeUri, targetUri=targetUri)
     else:
-        # then queryUri is a specific object
+        # then targetUri is an attribute
         query += """
-        SELECT ?target WHERE {{
-            <{queryUri}> (:hasPart|:isFoundIn) ?target .
-            ?target a <{targetUri}> .
+        SELECT ?s ?target WHERE {{
+            ?s <{attributeTypeUri}> '{attributeUri}' ; (:hasPart|:isFoundIn) ?targetobject .
+            ?targetobject <{targetUri}> ?target.
         }}
-        """.format(queryUri=queryUri, targetUri=targetUri)
+        """.format(attributeTypeUri=attributeTypeUri, attributeUri=attributeUri, targetUri=targetUri)
     sparql.setQuery(query)
     sparql.setReturnFormat(JSON)
     results = sparql.query().convert()
-    return parse_results(results, 'target', queryUri)
+    return results
 
-def query(queryUriA, queryUriB, targetUri):
+def query(queryAttibuteUriA, queryAttibuteUriB, targetUri, queryAttributeTypeUriA='?p', queryAttributeTypeUriB='?p'):
     # base dictionary for results
     d = {}
 
     # query results for UriA
-    resultsA = to_target(queryUriA, targetUri)
+    resultsA = to_target(queryAttibuteUriA, targetUri, queryAttributeTypeUriA)
     log.debug(resultsA)
-    d.update(resultsA)
+    d.update({'A':resultsA})
 
     # query results for UriB
-    resultsB = to_target(queryUriB, targetUri)
+    resultsB = to_target(queryAttibuteUriB, targetUri, queryAttributeTypeUriB)
     log.debug(resultsB)
-    d.update(resultsB)
+    d.update({'B':resultsB})
 
     return d
 
@@ -146,4 +147,4 @@ if __name__ == "__main__":
     log.info(get_attribute_values(gu('ge:0001076')))
     # user selects two specific values
     # at this point, we no longer have to worry about query speed because none of the below queries are immediately returned to the ui (instead, they are handled in RQ)
-    log.info()
+    log.info(query('O157', 'O101', gu(':Marker'), gu('ge:0001076'), gu('ge:0001076'))
