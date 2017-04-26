@@ -1,6 +1,7 @@
 import config
 import logging
 import time
+import cPickle as pickle
 from SPARQLWrapper import SPARQLWrapper, JSON
 from modules.loggingFunctions import initialize_logging
 from modules.turtleGrapher.turtle_utils import generate_uri as gu
@@ -102,6 +103,8 @@ def parse_results_todict(results, subjectname, targetname):
             d[result[subjectname]['value']].append(result[targetname]['value'])
         else:
             d[result[subjectname]['value']] = [result[targetname]['value']]
+    # temp code to pickle result
+    pickle.dump(d,open(time.time() + '.p', 'wb'))
     return d
 
 def to_target(attributeUri, targetUri, attributeTypeUri='?p'):
