@@ -21,7 +21,7 @@ def get_attribute_values(objectTypeUri, attributeTypeUri):
     sparql = SPARQLWrapper(blazegraph_url)
     query = """
     SELECT DISTINCT ?attribute WHERE {{
-        ?s a {objectTypeUri} ; {attributeTypeUri} ?attribute .
+        ?s a <{objectTypeUri}> ; <{attributeTypeUri}> ?attribute .
     }}
     """.format(objectTypeUri=objectTypeUri, attributeTypeUri=attributeTypeUri)
     sparql.setQuery(query)
@@ -38,7 +38,7 @@ def get_attribute_types(objectTypeUri):
     sparql = SPARQLWrapper(blazegraph_url)
     query = """
     SELECT DISTINCT ?attributetype WHERE {{
-        ?s a {objectTypeUri} ; ?attributetype ?attribute .
+        ?s a <{objectTypeUri}> ; ?attributetype ?attribute .
     }}
     """.format(objectTypeUri=objectTypeUri)
     sparql.setQuery(query)
