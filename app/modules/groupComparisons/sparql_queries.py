@@ -149,7 +149,7 @@ if __name__ == "__main__":
     # user selects two specific values
     # at this point, we no longer have to worry about query speed because none of the below queries are immediately returned to the ui (instead, they are handled in RQ)
     log.info(is_group(':Marker'))
-    log.info(is_group(':VirulenceFactor'))
+    log.info(is_group(unicode(':VirulenceFactor')))
     log.info(is_group(':ECP'))
     start = time.time()
     log.info(start)
