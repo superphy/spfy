@@ -22,7 +22,7 @@ def tolist(targetname):
     def tolist_decorator(func):
         @wraps(func)
         def func_wrapper(*args, **kwargs):
-            results = func(*args, **kwargs):
+            results = func(*args, **kwargs)
             l = []
             for result in results['results']['bindings']:
                 l.append(result[targetname]['value'])
