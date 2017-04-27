@@ -58,7 +58,6 @@ if __name__ == "__main__":
     For testing...
     '''
     start = time.time()
-    print start
     print fishers('O157', 'O101', gu(':VirulenceFactor'), gu('ge:0001076'), gu('ge:0001076'))
     stop = time.time()
     print(stop-start)
