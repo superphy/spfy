@@ -1,36 +1,63 @@
 import scipy.stats as stats
 import pandas as pd
+import time
 from modules.turtleGrapher.turtle_utils import generate_uri as gu
-from modules.groupComparisons.sparql_queries import query
+from modules.groupComparisons.sparql_queries import query, get_instances
 
-def fishers(queryUriA, queryUriB, targetUri):
+def fishers(queryAttibuteUriA, queryAttibuteUriB, targetUri, queryAttributeTypeUriA='?p', queryAttributeTypeUriB='?p'):
     # query the blazegraph db for results
-    results = query(queryUriA, queryUriB, targetUri)
+    results = query(queryAttibuteUriA, queryAttibuteUriB, targetUri, queryAttributeTypeUriA, queryAttributeTypeUriB)
+    # split the results into sub vars
+    ## num of uniq subjects in A
+    nA = results['A']['n']
+    ## num of uniq subjects in B
+    nB = results['B']['n']
+    ## dictionary with the results from A
+    dictA = results['A']['d']
+    ## dictionary with the results from B
+    dictB = results['B']['d']
 
-    # create pandas dataframes from results
-    dfA = pd.DataFrame(results[queryUriA])
-    dfB = pd.DataFrame(results[queryUriB])
+    # join all possible targets as req for Fisher's
+    # we could instead query the db for `DISTINCT ?s WHERE ?s a targetUri`, but I'm not interested in targets that neither queryA nor queryB has.
+    all_targets = set(dictA.keys())
+    all_targets.update(dictB.keys())
 
-    # check which results from group A is in results from group B
-    matchesAtoB = dfA[0].isin(dfB[0])
-    # count the number of matches
-    count_matchesAtoB = matchesAtoB.value_counts()
-    # check which results from group B is in results from group A
-    matchesBtoA = dfB[0].isin(dfA[0])
-    # count the number of matches
-    count_matchesBtoA = matchesBtoA.value_counts()
+    # create a pandas dataframe for storing aggregate results from fisher's
+    df = pd.DataFrame(columns=['target','queryA','queryB','presentQueryA','absentQueryA','presentQueryB','absentQueryB','pvalue','oddsratio'])
 
-    # compute fisher's exact test
-    # table structure is:
-    #           queryUriA   queryUriB
-    #   True
-    #   False
-    oddsratio, pvalue = stats.fisher_exact([[count_matchesAtoB[True], count_matchesBtoA[True]], [count_matchesAtoB[False], count_matchesBtoA[False]]])
+    # iterate through targets and perform fisher's
+    for index, target in enumerate(all_targets):
+        # tags for dataframe
+        queryA = queryAttibuteUriA
+        queryB = queryAttibuteUriB
+        # check if target is found in queryA
+        if target in dictA.keys():
+            presentQueryA = len(dictA[target])
+        else:
+            presentQueryA = 0
+        absentQueryA = nA - presentQueryA
+        # check if target is found in queryB
+        if target in dictB.keys():
+            presentQueryB = len(dictB[target])
+        else:
+            presentQueryB = 0
+        absentQueryB = nB - presentQueryB
+        # compute fisher's exact test
+        # table structure is:
+        #           queryUriA   queryUriB
+        #   Present
+        #   Absent
+        pvalue, oddsratio = stats.fisher_exact([[presentQueryA, presentQueryB], [absentQueryA, absentQueryB]])
+        # add results to new row on pandas dataframe
+        df.loc[index] = [target,queryA,queryB,presentQueryA,absentQueryA,presentQueryB,absentQueryB,pvalue,oddsratio]
 
-    return pvalue
+    return df
 
 if __name__ == "__main__":
     '''
     For testing...
     '''
-    print fishers(gu(':spfy1'),gu(':spfy2'),gu(':Marker'))
+    start = time.time()
+    print fishers('O157', 'O101', gu(':VirulenceFactor'), gu('ge:0001076'), gu('ge:0001076'))
+    stop = time.time()
+    print(stop-start)

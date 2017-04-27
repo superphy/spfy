@@ -1,0 +1,10 @@
+@import 'globals';
+
+$md-primary-color: #607d8b;
+$md-secondary-color: $md-pink-a-100;
+
+@include react-md-everything;
+
+body {
+  margin: 0;
+}

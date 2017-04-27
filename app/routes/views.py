@@ -1,56 +1,16 @@
 import os
 import tarfile
 import zipfile
-
 import redis
-
+from datetime import datetime
 from flask import Blueprint, render_template, request, jsonify, current_app, g, url_for, redirect
 from rq import Queue
-
-from modules.spfy import spfy
-
 from werkzeug.utils import secure_filename
-
-from datetime import datetime
-
 from flask_recaptcha import ReCaptcha
-
+from modules.spfy import spfy
+from routes.utility_functions import handle_tar, handle_zip
 
 bp = Blueprint('main', __name__)
-
-def handle_tar(filename, now):
-    if tarfile.is_tarfile(filename):
-        tar = tarfile.open(filename)
-        extracted_dir = os.path.join(
-            current_app.config['DATASTORE'] + '/' + now)
-        os.mkdir(extracted_dir)
-        for member in tar.getmembers():
-            if not secure_filename(member.name):
-                return 'invalid upload', 500
-                # TODO: wipe temp data
-        tar.extractall(path=extracted_dir)
-        for fn in os.listdir(extracted_dir):
-            os.rename(extracted_dir +'/' + fn, extracted_dir +'/'+ now + '-' + fn)
-        tar.close()
-
-        # set filename to dir for spfy call
-        return extracted_dir
-
-def handle_zip(filename,now):
-    z = zipfile.ZipFile(filename,'r')
-    extracted_dir = os.path.join(
-        current_app.config['DATASTORE'] + '/' + now)
-    os.mkdir(extracted_dir)
-    for info in z.infolist():
-        if not secure_filename(info.filename):
-            return 'invalid upload', 500
-    z.extractall(path=extracted_dir)
-    for fn in os.listdir(extracted_dir):
-        os.rename(extracted_dir +'/' + fn, extracted_dir +'/'+ now + '-' + fn)
-    z.close()
-
-    # set filename to dir for spfy call
-    return extracted_dir
 
 def fetch_job(job_id):
     '''
@@ -76,8 +36,6 @@ def job_status(job_id):
     else:
         return "Still pending", 202
 
-
-@bp.route('/upload/', methods=['POST'])
 @bp.route('/upload', methods=['POST'])
 def upload():
     recaptcha = ReCaptcha(app=current_app)
@@ -154,7 +112,6 @@ def upload():
 
             return jsonify(jobs_dict)
     return "boo", 500
-
 
 @bp.route('/', methods=['GET', 'POST'])
 def index():

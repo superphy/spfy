@@ -167,9 +167,9 @@ app.controller('SpfyController', [
                             return false;
                           }
                         }
-                        // continue to call the poller() function every 2 seconds
+                        // continue to call the poller() function every 8 seconds
                         // until the timeout is cancelled
-                        timeout = $timeout(poller(key), 2000);
+                        timeout = $timeout(poller(key), 8000);
                     }).error(function(error, status) {
                         $scope.qcPassed = false;
                         $scope.qcComplete = true;
