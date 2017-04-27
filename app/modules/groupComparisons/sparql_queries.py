@@ -15,6 +15,22 @@ log = logging.getLogger(__name__)
 #blazegraph_url = config.database['blazegraph_url']
 blazegraph_url = 'http://localhost:8080/bigdata/sparql'
 
+def toset(targetname):
+    '''
+    A decorator to convert JSON response of sparql query to a set.
+    '''
+    def toset_decorator(func):
+        @wraps(func)
+        def func_wrapper(*args, **kwargs):
+            results = func(*args, **kwargs)
+            st = set()
+            for result in results['results']['bindings']:
+                st.add(result[targetname]['value'])
+            log.debug(st)
+            return st
+        return func_wrapper
+    return toset_decorator
+
 def tolist(targetname):
     '''
     A decorator to convert JSON response of sparql query to a list.
@@ -93,29 +109,21 @@ def get_attribute_values(attributeTypeUri):
     """.format(attributeTypeUri=attributeTypeUri)
     return query
 
+@toset(targetname='objecttype')
+@submit
 def get_types():
     '''
     Gets a list distinct rdf:type objects (ie. all possible object types) by querying the blazegraph db.
     Used to determine if a given query Uri is an object type or an attribute of the object.
-    Parses the list and returns a tuple of just the URIs.
+    Returns just the URIs.
     '''
     # SPARQL Query
-    sparql = SPARQLWrapper(blazegraph_url)
     query = """
     SELECT DISTINCT ?objecttype WHERE {{
         ?objectinstance a ?objecttype .
     }}
     """
-    sparql.setQuery(query)
-    sparql.setReturnFormat(JSON)
-    results = sparql.query().convert()
-
-    # Parse results and give me a tuple
-    tup = ()
-    for result in results['results']['bindings']:
-        tup += (result['objecttype']['value'],)
-    log.debug(tup)
-    return tup
+    return query
 
 def is_group(uri):
     '''
