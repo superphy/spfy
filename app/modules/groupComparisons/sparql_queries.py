@@ -2,6 +2,7 @@ import config
 import logging
 import time
 import cPickle as pickle
+from functools import wraps
 from SPARQLWrapper import SPARQLWrapper, JSON
 from modules.loggingFunctions import initialize_logging
 from modules.turtleGrapher.turtle_utils import generate_uri as gu
@@ -14,6 +15,38 @@ log = logging.getLogger(__name__)
 #blazegraph_url = config.database['blazegraph_url']
 blazegraph_url = 'http://localhost:8080/bigdata/sparql'
 
+def tolist(targetname):
+    '''
+    A decorator to convert JSON response of sparql query to a list.
+    '''
+    def tolist_decorator(func):
+        @wraps(func)
+        def func_wrapper(*args, **kwargs):
+            results = func(*args, **kwargs):
+            l = []
+            for result in results['results']['bindings']:
+                l.append(result[targetname]['value'])
+            log.debug(l)
+            return l
+        return func_wrapper
+    return tolist_decorator
+
+def submit(func):
+    '''
+    A decorator to submit a given query generation function.
+    '''
+    @wraps(func)
+    def func_wrapper(*args, **kwargs):
+        query = func(*args, **kwargs)
+        sparql = SPARQLWrapper(blazegraph_url)
+        sparql.setQuery(query)
+        sparql.setReturnFormat(JSON)
+        results = sparql.query().convert()
+        return results
+    return func_wrapper
+
+@tolist(targetname='objectinstance')
+@submit
 def get_instances(objectTypeUri):
     '''
     Gets all instances of a given object type.
@@ -24,52 +57,41 @@ def get_instances(objectTypeUri):
         a list of the result.
     '''
     # SPARQL Query
-    sparql = SPARQLWrapper(blazegraph_url)
     query = """
     SELECT DISTINCT ?objectinstance WHERE {{
         ?objectinstance a <{objectTypeUri}> .
     }}
     """.format(objectTypeUri=objectTypeUri)
-    sparql.setQuery(query)
-    sparql.setReturnFormat(JSON)
-    results = sparql.query().convert()
+    return query
 
-    return parse_results_tolist(results, 'objectinstance')
-
+@tolist(targetname='attributetype')
+@submit
 def get_all_atribute_types():
     '''
     Returns all types of attributes (ie. all edge types) currently in blazegraph.
     '''
     # SPARQL Query
-    sparql = SPARQLWrapper(blazegraph_url)
     query = """
     SELECT DISTINCT ?attributetype WHERE {{
         ?anything ?attributetype ?attribute .
     }}
     """
-    sparql.setQuery(query)
-    sparql.setReturnFormat(JSON)
-    results = sparql.query().convert()
+    return query
 
-    return parse_results_tolist(results, 'attributetype')
-
+@tolist(targetname='attribute')
+@submit
 def get_attribute_values(attributeTypeUri):
     '''
     Given an attribute type(ex. ge:0001076, aka. O-Type).
     Returns a list of all distinct attribute values.
     '''
     # SPARQL Query
-    sparql = SPARQLWrapper(blazegraph_url)
     query = """
     SELECT DISTINCT ?attribute WHERE {{
         ?s <{attributeTypeUri}> ?attribute .
     }}
     """.format(attributeTypeUri=attributeTypeUri)
-    sparql.setQuery(query)
-    sparql.setReturnFormat(JSON)
-    results = sparql.query().convert()
-    log.debug(results)
-    return parse_results_tolist(results, 'attribute')
+    return query
 
 def get_types():
     '''
@@ -103,16 +125,6 @@ def is_group(uri):
     isgroup = unicode(uri) in get_types()
     log.debug(isgroup)
     return isgroup
-
-def parse_results_tolist(results, targetname):
-    '''
-    Used to a simple list SPARQL query results for running group comparisons.
-    '''
-    l = []
-    for result in results['results']['bindings']:
-        l.append(result[targetname]['value'])
-    log.debug(l)
-    return l
 
 def parse_results_todict(results, subjectname, targetname):
     '''
