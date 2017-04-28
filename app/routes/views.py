@@ -3,10 +3,13 @@ import tarfile
 import zipfile
 import redis
 from datetime import datetime
+# flask/external lib
 from flask import Blueprint, render_template, request, jsonify, current_app, g, url_for, redirect
 from rq import Queue
 from werkzeug.utils import secure_filename
 from flask_recaptcha import ReCaptcha
+from rdflib import URIRef
+# spfy code
 from modules.spfy import spfy
 from routes.utility_functions import handle_tar, handle_zip
 from modules.groupComparisons.sparql_queries import get_all_attribute_types, get_attribute_values
@@ -18,7 +21,8 @@ def call_get_attribute_values(attributetype):
     Front-End API:
     Get all attribute values for a given attribute type.
     '''
-    return jsonify(get_attribute_values(attributeTypeUri=attributetype))
+    uri = URIRef(attributetype)
+    return jsonify(get_attribute_values(attributeTypeUri=uri))
 
 @bp.route('/api/v0/get_all_attribute_types')
 def call_get_all_atribute_types():
