@@ -154,7 +154,7 @@ def parse_results_todict(results, subjectname, targetname):
         # add the subjectname to the set
         st.add(result[subjectname]['value'])
     # temp code to pickle result
-    pickle.dump(d,open(str(time.time()) + '.p', 'wb'))
+    # pickle.dump(d,open(str(time.time()) + '.p', 'wb'))
     return {'n':len(st),'d':d}
 
 def to_target(attributeUri, targetUri, attributeTypeUri='?p'):
