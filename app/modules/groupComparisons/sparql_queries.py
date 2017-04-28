@@ -32,24 +32,22 @@ def toset(targetname):
     return toset_decorator
 
 #def tolist(targetname):
-def tolist():
+def tolist(func):
     '''
     A decorator to convert JSON response of sparql query to a list.
     '''
-    def tolist_decorator(func):
-        @wraps(func)
-        def func_wrapper(*args, **kwargs):
-            results = func(*args, **kwargs)
-            l = []
-            for result in results['results']['bindings']:
-                # we expect only 1 key in the response
-                k = result.keys()[0]
-                # get the value at that key
-                l.append(result[k]['value'])
-            log.debug(l)
-            return l
-        return func_wrapper
-    return tolist_decorator
+    @wraps(func)
+    def func_wrapper(*args, **kwargs):
+        results = func(*args, **kwargs)
+        l = []
+        for result in results['results']['bindings']:
+            # we expect only 1 key in the response
+            k = result.keys()[0]
+            # get the value at that key
+            l.append(result[k]['value'])
+        log.debug(l)
+        return l
+    return func_wrapper
 
 def submit(func):
     '''
