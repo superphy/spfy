@@ -31,7 +31,8 @@ def toset(targetname):
         return func_wrapper
     return toset_decorator
 
-def tolist(targetname):
+#def tolist(targetname):
+def tolist():
     '''
     A decorator to convert JSON response of sparql query to a list.
     '''
@@ -41,7 +42,10 @@ def tolist(targetname):
             results = func(*args, **kwargs)
             l = []
             for result in results['results']['bindings']:
-                l.append(result[targetname]['value'])
+                # we expect only 1 key in the response
+                k = result.keys()[0]
+                # get the value at that key
+                l.append(result[k]['value'])
             log.debug(l)
             return l
         return func_wrapper
@@ -63,7 +67,7 @@ def submit(func):
         return results
     return func_wrapper
 
-@tolist(targetname='objectinstance')
+@tolist
 @submit
 def get_instances(objectTypeUri):
     '''
@@ -82,7 +86,7 @@ def get_instances(objectTypeUri):
     """.format(objectTypeUri=objectTypeUri)
     return query
 
-@tolist(targetname='attributetype')
+@tolist
 @submit
 def get_all_attribute_types():
     '''
@@ -96,7 +100,8 @@ def get_all_attribute_types():
     """
     return query
 
-@tolist(targetname='attribute')
+#@tolist(targetname='attribute')
+@tolist
 @submit
 def get_attribute_values(attributeTypeUri):
     '''
@@ -111,7 +116,7 @@ def get_attribute_values(attributeTypeUri):
     """.format(attributeTypeUri=attributeTypeUri)
     return query
 
-@toset(targetname='objecttype')
+@toset
 @submit
 def get_types():
     '''

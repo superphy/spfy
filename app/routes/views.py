@@ -22,8 +22,6 @@ def call_get_attribute_values(attributetype):
     Get all attribute values for a given attribute type.
     '''
     uri = URIRef(attributetype)
-    results = get_attribute_values(attributeTypeUri=uri)
-    print results
     return jsonify(get_attribute_values(attributeTypeUri=uri))
 
 @bp.route('/api/v0/get_all_attribute_types')
