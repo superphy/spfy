@@ -29,7 +29,7 @@ def call_get_attribute_values(attributetype):
         attributetype = attributetype.replace('https:/', 'https://')
     # convert to a rdflib.URIRef object
     uri = URIRef(attributetype)
-    return get_attribute_values(attributeTypeUri=uri)
+    return jsonify(get_attribute_values(attributeTypeUri=uri))
 
 @bp.route('/api/v0/get_all_attribute_types')
 def call_get_all_atribute_types():
