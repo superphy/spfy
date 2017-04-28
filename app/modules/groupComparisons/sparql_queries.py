@@ -82,7 +82,7 @@ def get_instances(objectTypeUri):
 
 @tolist(targetname='attributetype')
 @submit
-def get_all_atribute_types():
+def get_all_attribute_types():
     '''
     Returns all types of attributes (ie. all edge types) currently in blazegraph.
     '''
@@ -187,17 +187,17 @@ def to_target(attributeUri, targetUri, attributeTypeUri='?p'):
     results = sparql.query().convert()
     return parse_results_todict(results, 's', 'target')
 
-def query(queryAttibuteUriA, queryAttibuteUriB, targetUri, queryAttributeTypeUriA='?p', queryAttributeTypeUriB='?p'):
+def query(queryAttributeUriA, queryAttributeUriB, targetUri, queryAttributeTypeUriA='?p', queryAttributeTypeUriB='?p'):
     # base dictionary for results
     d = {}
 
     # query results for UriA
-    resultsA = to_target(queryAttibuteUriA, targetUri, queryAttributeTypeUriA)
+    resultsA = to_target(queryAttributeUriA, targetUri, queryAttributeTypeUriA)
     log.debug(resultsA)
     d.update({'A':resultsA})
 
     # query results for UriB
-    resultsB = to_target(queryAttibuteUriB, targetUri, queryAttributeTypeUriB)
+    resultsB = to_target(queryAttributeUriB, targetUri, queryAttributeTypeUriB)
     log.debug(resultsB)
     d.update({'B':resultsB})
 
@@ -210,7 +210,7 @@ if __name__ == "__main__":
     print log_file
     #print query(gu(':spfy1'),gu(':spfy2'),gu(':Marker'))
     # get all possible attribute types
-    log.info(get_all_atribute_types())
+    log.info(get_all_attribute_types())
     # user selects an attribute type => get all distinct attribute values
     log.info(get_attribute_values(gu('ge:0001076')))
     # user selects two specific values
