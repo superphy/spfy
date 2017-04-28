@@ -1,7 +1,7 @@
 import config
 import logging
 import time
-import cPickle as pickle
+# import cPickle as pickle
 from functools import wraps
 from SPARQLWrapper import SPARQLWrapper, JSON
 from modules.loggingFunctions import initialize_logging
