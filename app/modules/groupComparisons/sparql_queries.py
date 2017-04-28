@@ -41,7 +41,7 @@ def tolist(func):
         results = func(*args, **kwargs)
         l = []
         for result in results['results']['bindings']:
-            # we expect only 1 key in the response
+            # we expect only 1 key in the nested result dict in results
             k = result.keys()[0]
             # get the value at that key
             l.append(result[k]['value'])
