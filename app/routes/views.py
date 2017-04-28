@@ -21,9 +21,15 @@ def call_get_attribute_values(attributetype):
     Front-End API:
     Get all attribute values for a given attribute type.
     '''
+    # workaround: Flask's path converter allows slashes, but only a SINGLE slash
+    # this adds the second slash
+    if 'http:/' in attributetype:
+        attributetype = attributetype.replace('http:/', 'http://')
+    else if 'https:/' in attributetype:
+        attributetype = attributetype.replace('https:/', 'https://')
+    # convert to a rdflib.URIRef object
     uri = URIRef(attributetype)
-    return jsonify(uri)
-    #return get_attribute_values(attributeTypeUri=uri)
+    return get_attribute_values(attributeTypeUri=uri)
 
 @bp.route('/api/v0/get_all_attribute_types')
 def call_get_all_atribute_types():
