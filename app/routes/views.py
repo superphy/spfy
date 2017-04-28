@@ -9,7 +9,7 @@ from werkzeug.utils import secure_filename
 from flask_recaptcha import ReCaptcha
 from modules.spfy import spfy
 from routes.utility_functions import handle_tar, handle_zip
-from modules.groupComparisons.sparql_queries import get_all_atribute_types, get_attribute_values
+from modules.groupComparisons.sparql_queries import get_all_attribute_types, get_attribute_values
 bp = Blueprint('main', __name__)
 
 @bp.route('/api/v0/get_attribute_values?type=<attributetype>')
@@ -20,13 +20,13 @@ def call_get_attribute_values(attributetype):
     '''
     return jsonify(get_attribute_values(attributeTypeUri=attributetype))
 
-@bp.route('/api/v0/get_all_atribute_types')
+@bp.route('/api/v0/get_all_attribute_types')
 def call_get_all_atribute_types():
     '''
     Front-End API:
     Get all possible attribute types.
     '''
-    return jsonify(get_all_atribute_types())
+    return jsonify(get_all_attribute_types())
 
 def fetch_job(job_id):
     '''
