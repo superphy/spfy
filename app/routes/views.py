@@ -8,10 +8,9 @@ from flask import Blueprint, render_template, request, jsonify, current_app, g, 
 from rq import Queue
 from werkzeug.utils import secure_filename
 from flask_recaptcha import ReCaptcha
-from rdflib import URIRef
 # spfy code
 from modules.spfy import spfy
-from routes.utility_functions import handle_tar, handle_zip
+from routes.utility_functions import handle_tar, handle_zip, fix_uri
 from modules.groupComparisons.sparql_queries import get_all_attribute_types, get_attribute_values
 bp = Blueprint('main', __name__)
 
@@ -23,12 +22,8 @@ def call_get_attribute_values(attributetype):
     '''
     # workaround: Flask's path converter allows slashes, but only a SINGLE slash
     # this adds the second slash
-    if 'http:/' in attributetype:
-        attributetype = attributetype.replace('http:/', 'http://')
-    elif 'https:/' in attributetype:
-        attributetype = attributetype.replace('https:/', 'https://')
-    # convert to a rdflib.URIRef object
-    uri = URIRef(attributetype)
+    # also convert to a rdflib.URIRef object
+    uri = fix_uri(attributetype)
     return jsonify(get_attribute_values(attributeTypeUri=uri))
 
 @bp.route('/api/v0/get_all_attribute_types')
