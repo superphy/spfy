@@ -101,7 +101,7 @@ def get_all_attribute_types():
 #@tolist(targetname='attribute')
 @tolist
 @submit
-def get_attribute_values(attributeTypeUri):
+def get_attribute_values(attributeTypeUri='http://purl.obolibrary.org/obo/GENEPIO_0001076'):
     '''
     Given an attribute type(ex. ge:0001076, aka. O-Type).
     Returns a list of all distinct attribute values.
