@@ -12,7 +12,7 @@ from routes.utility_functions import handle_tar, handle_zip
 from modules.groupComparisons.sparql_queries import get_all_attribute_types, get_attribute_values
 bp = Blueprint('main', __name__)
 
-@bp.route('/api/v0/get_attribute_values?type=<attributetype>')
+@bp.route('/api/v0/get_attribute_values?type=<path:attributetype>')
 def call_get_attribute_values(attributetype):
     '''
     Front-End API:
