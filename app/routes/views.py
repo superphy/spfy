@@ -25,7 +25,7 @@ def call_get_attribute_values(attributetype):
     # this adds the second slash
     if 'http:/' in attributetype:
         attributetype = attributetype.replace('http:/', 'http://')
-    else if 'https:/' in attributetype:
+    elif 'https:/' in attributetype:
         attributetype = attributetype.replace('https:/', 'https://')
     # convert to a rdflib.URIRef object
     uri = URIRef(attributetype)
