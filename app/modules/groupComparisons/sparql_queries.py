@@ -54,10 +54,12 @@ def submit(func):
     @wraps(func)
     def func_wrapper(*args, **kwargs):
         query = func(*args, **kwargs)
+        log.debug(query)
         sparql = SPARQLWrapper(blazegraph_url)
         sparql.setQuery(query)
         sparql.setReturnFormat(JSON)
         results = sparql.query().convert()
+        log.debug(results)
         return results
     return func_wrapper
 
