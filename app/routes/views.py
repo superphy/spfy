@@ -3,14 +3,36 @@ import tarfile
 import zipfile
 import redis
 from datetime import datetime
+# flask/external lib
 from flask import Blueprint, render_template, request, jsonify, current_app, g, url_for, redirect
 from rq import Queue
 from werkzeug.utils import secure_filename
 from flask_recaptcha import ReCaptcha
+# spfy code
 from modules.spfy import spfy
-from routes.utility_functions import handle_tar, handle_zip
-
+from routes.utility_functions import handle_tar, handle_zip, fix_uri
+from modules.groupComparisons.sparql_queries import get_all_attribute_types, get_attribute_values
 bp = Blueprint('main', __name__)
+
+@bp.route('/api/v0/get_attribute_values/type/<path:attributetype>')
+def call_get_attribute_values(attributetype):
+    '''
+    Front-End API:
+    Get all attribute values for a given attribute type.
+    '''
+    # workaround: Flask's path converter allows slashes, but only a SINGLE slash
+    # this adds the second slash
+    # also convert to a rdflib.URIRef object
+    uri = fix_uri(attributetype)
+    return jsonify(get_attribute_values(attributeTypeUri=uri))
+
+@bp.route('/api/v0/get_all_attribute_types')
+def call_get_all_atribute_types():
+    '''
+    Front-End API:
+    Get all possible attribute types.
+    '''
+    return jsonify(get_all_attribute_types())
 
 def fetch_job(job_id):
     '''

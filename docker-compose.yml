@@ -1,6 +1,6 @@
 version: '2'
 services:
-  web-nginx-uwsgi:
+  webserver:
     build:
       context: .
       dockerfile: Dockerfile-spfy
@@ -21,9 +21,9 @@ services:
     ports:
     - "9181:9181" #this is for debugging, drop a shell and run rq-dashboard if you need to see jobs
     volumes_from:
-    - web-nginx-uwsgi
+    - webserver
     depends_on:
-    - web-nginx-uwsgi
+    - webserver
 
   worker-blazegraph-ids:
     build:
@@ -31,9 +31,9 @@ services:
       dockerfile: Dockerfile-rq-blazegraph
     image: backend-rq-blazegraph
     volumes_from:
-      - web-nginx-uwsgi
+    - webserver
     depends_on:
-    - web-nginx-uwsgi
+    - webserver
 
   redis:
     image: redis:3.2

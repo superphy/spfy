@@ -1,7 +1,7 @@
 import config
 import logging
 import time
-import cPickle as pickle
+# import cPickle as pickle
 from functools import wraps
 from SPARQLWrapper import SPARQLWrapper, JSON
 from modules.loggingFunctions import initialize_logging
@@ -12,8 +12,8 @@ from modules.groupComparisons.sparql_utils import generate_prefixes
 log_file = initialize_logging()
 log = logging.getLogger(__name__)
 
-#blazegraph_url = config.database['blazegraph_url']
-blazegraph_url = 'http://localhost:8080/bigdata/sparql'
+blazegraph_url = config.database['blazegraph_url']
+#blazegraph_url = 'http://localhost:8080/bigdata/sparql'
 
 def toset(targetname):
     '''
@@ -31,21 +31,23 @@ def toset(targetname):
         return func_wrapper
     return toset_decorator
 
-def tolist(targetname):
+#def tolist(targetname):
+def tolist(func):
     '''
     A decorator to convert JSON response of sparql query to a list.
     '''
-    def tolist_decorator(func):
-        @wraps(func)
-        def func_wrapper(*args, **kwargs):
-            results = func(*args, **kwargs)
-            l = []
-            for result in results['results']['bindings']:
-                l.append(result[targetname]['value'])
-            log.debug(l)
-            return l
-        return func_wrapper
-    return tolist_decorator
+    @wraps(func)
+    def func_wrapper(*args, **kwargs):
+        results = func(*args, **kwargs)
+        l = []
+        for result in results['results']['bindings']:
+            # we expect only 1 key in the nested result dict in results
+            k = result.keys()[0]
+            # get the value at that key
+            l.append(result[k]['value'])
+        log.debug(l)
+        return l
+    return func_wrapper
 
 def submit(func):
     '''
@@ -54,14 +56,16 @@ def submit(func):
     @wraps(func)
     def func_wrapper(*args, **kwargs):
         query = func(*args, **kwargs)
+        log.debug(query)
         sparql = SPARQLWrapper(blazegraph_url)
         sparql.setQuery(query)
         sparql.setReturnFormat(JSON)
         results = sparql.query().convert()
+        log.debug(results)
         return results
     return func_wrapper
 
-@tolist(targetname='objectinstance')
+@tolist
 @submit
 def get_instances(objectTypeUri):
     '''
@@ -80,9 +84,9 @@ def get_instances(objectTypeUri):
     """.format(objectTypeUri=objectTypeUri)
     return query
 
-@tolist(targetname='attributetype')
+@tolist
 @submit
-def get_all_atribute_types():
+def get_all_attribute_types():
     '''
     Returns all types of attributes (ie. all edge types) currently in blazegraph.
     '''
@@ -94,7 +98,8 @@ def get_all_atribute_types():
     """
     return query
 
-@tolist(targetname='attribute')
+#@tolist(targetname='attribute')
+@tolist
 @submit
 def get_attribute_values(attributeTypeUri):
     '''
@@ -109,7 +114,7 @@ def get_attribute_values(attributeTypeUri):
     """.format(attributeTypeUri=attributeTypeUri)
     return query
 
-@toset(targetname='objecttype')
+@toset
 @submit
 def get_types():
     '''
@@ -154,7 +159,7 @@ def parse_results_todict(results, subjectname, targetname):
         # add the subjectname to the set
         st.add(result[subjectname]['value'])
     # temp code to pickle result
-    pickle.dump(d,open(str(time.time()) + '.p', 'wb'))
+    # pickle.dump(d,open(str(time.time()) + '.p', 'wb'))
     return {'n':len(st),'d':d}
 
 def to_target(attributeUri, targetUri, attributeTypeUri='?p'):
@@ -187,17 +192,17 @@ def to_target(attributeUri, targetUri, attributeTypeUri='?p'):
     results = sparql.query().convert()
     return parse_results_todict(results, 's', 'target')
 
-def query(queryAttibuteUriA, queryAttibuteUriB, targetUri, queryAttributeTypeUriA='?p', queryAttributeTypeUriB='?p'):
+def query(queryAttributeUriA, queryAttributeUriB, targetUri, queryAttributeTypeUriA='?p', queryAttributeTypeUriB='?p'):
     # base dictionary for results
     d = {}
 
     # query results for UriA
-    resultsA = to_target(queryAttibuteUriA, targetUri, queryAttributeTypeUriA)
+    resultsA = to_target(queryAttributeUriA, targetUri, queryAttributeTypeUriA)
     log.debug(resultsA)
     d.update({'A':resultsA})
 
     # query results for UriB
-    resultsB = to_target(queryAttibuteUriB, targetUri, queryAttributeTypeUriB)
+    resultsB = to_target(queryAttributeUriB, targetUri, queryAttributeTypeUriB)
     log.debug(resultsB)
     d.update({'B':resultsB})
 
@@ -210,7 +215,7 @@ if __name__ == "__main__":
     print log_file
     #print query(gu(':spfy1'),gu(':spfy2'),gu(':Marker'))
     # get all possible attribute types
-    log.info(get_all_atribute_types())
+    log.info(get_all_attribute_types())
     # user selects an attribute type => get all distinct attribute values
     log.info(get_attribute_values(gu('ge:0001076')))
     # user selects two specific values

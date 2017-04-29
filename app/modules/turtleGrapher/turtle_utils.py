@@ -17,15 +17,9 @@ def slugify(value):
     """
     import unicodedata
     import re
-    # Set up regular expressions
-    re_words = re.compile(r'<.*?>|((?:\w[-\w]*|&.*?;)+)', re.S)
-    re_chars = re.compile(r'<.*?>|(.)', re.S)
-    re_tag = re.compile(r'<(/)?([^ ]+?)(?:(\s*/)| .*?)?>', re.S)
-    re_newlines = re.compile(r'\r\n|\r')  # Used in normalize_newlines
-    re_camel_case = re.compile(r'(((?<=[a-z])[A-Z])|([A-Z](?![A-Z]|$)))')
     value = unicode(value)
     value = unicodedata.normalize('NFKD', value).encode('ascii', 'ignore')
-    value = unicode(re.sub('[^\w\s-]', '', value).strip())
+    value = unicode(re.sub('[^\w\s\/\./:-]', '', value).strip())
     value = unicode(re.sub('[-\s]+', '-', value))
     return value
 

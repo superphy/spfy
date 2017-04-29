@@ -3,6 +3,7 @@ import tarfile
 import zipfile
 from flask import current_app
 from werkzeug.utils import secure_filename
+from rdflib import URIRef
 
 def handle_tar(filename, now):
     if tarfile.is_tarfile(filename):
@@ -37,3 +38,16 @@ def handle_zip(filename,now):
 
     # set filename to dir for spfy call
     return extracted_dir
+
+def fix_uri(s):
+    '''
+    Workaround: Flask's path converter allows slashes, but only a SINGLE slash.
+    This adds the second slash.
+    Also converts to rdflib.URIRef
+    '''
+    if 'http:/' in s:
+        s = s.replace('http:/', 'http://')
+    elif 'https:/' in attributetype:
+        s = s.replace('https:/', 'https://')
+    uri = URIRef(s)
+    return uri
