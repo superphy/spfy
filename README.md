@@ -50,7 +50,7 @@ Once you've added your code, you can rebuild the docker images by doing the foll
 To enable:
   1. Get a pair of ReCaptcha keys from Google, specific to your site domain.
   2. Uncomment the `<!-- captcha-->` code in `/app/templates/index.html`
-  3. Add your public key to `$scope.model` dictionary under the key `key`
+  3. In `/app/static/main.js`, add your public key to `$scope.model` dictionary under the key `key`
   4. In `/app/config.py` set `RECAPTCHA_ENABLED` to `True` and add your corresponding public and private ('site' and 'secret') keys.
   5. Rebuild your docker images.
 
