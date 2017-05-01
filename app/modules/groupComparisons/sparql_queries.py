@@ -211,7 +211,7 @@ def logical(query_stringA, query_stringB):
                 ?s ?p URIc
             }
         }
-        
+
         Note: the MINUS must be at the bottom.
         Ex.
             WHERE
@@ -229,7 +229,8 @@ def logical(query_stringA, query_stringB):
             }
         (5350 results)
         '''
-        split_query_string
+        pass
+    pass
 
 def query(queryAttributeUriA, queryAttributeUriB, targetUri, queryAttributeTypeUriA='?p', queryAttributeTypeUriB='?p'):
     # base dictionary for results
