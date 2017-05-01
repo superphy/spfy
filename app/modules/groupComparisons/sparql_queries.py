@@ -31,7 +31,6 @@ def toset(targetname):
         return func_wrapper
     return toset_decorator
 
-#def tolist(targetname):
 def tolist(func):
     '''
     A decorator to convert JSON response of sparql query to a list.
@@ -41,10 +40,11 @@ def tolist(func):
         results = func(*args, **kwargs)
         l = []
         for result in results['results']['bindings']:
-            # we expect only 1 key in the nested result dict in results
-            k = result.keys()[0]
-            # get the value at that key
-            l.append(result[k]['value'])
+            keys = result.keys()
+            # Note: though this is writeen as a loop, we expect only 1 key in keys
+            for k in keys:
+                # get the value at that key
+                l.append(result[k]['value'])
         log.debug(l)
         return l
     return func_wrapper
@@ -98,7 +98,6 @@ def get_all_attribute_types():
     """
     return query
 
-#@tolist(targetname='attribute')
 @tolist
 @submit
 def get_attribute_values(attributeTypeUri):
@@ -192,6 +191,47 @@ def to_target(attributeUri, targetUri, attributeTypeUri='?p'):
     results = sparql.query().convert()
     return parse_results_todict(results, 's', 'target')
 
+def logical(query_stringA, query_stringB):
+    def parse(query_string):
+        '''
+        Order of Operations: NOT precedes AND precede OR
+        Expect form:
+        NOT (URIa) AND (URIb) OR (URIc)
+        Is parsed as:
+        ((NOT (URIa)) AND (URIb)) OR (URIc)
+        The end result should be:
+        SELECT ?s ?target
+        WHERE{
+            {
+                ?s ?p URIb
+                MINUS {?s ?p {URIa}}
+            }
+            UNION
+            {
+                ?s ?p URIc
+            }
+        }
+
+        Note: the MINUS must be at the bottom.
+        Ex.
+            WHERE
+            {
+            	MINUS
+              	{?s ge:0001076 'O101' .}
+              	?s a :spfyId
+            }
+        is treated differently (5353 results) vs.:
+            WHERE
+            {
+              	?s a :spfyId
+                     MINUS
+              	{?s ge:0001076 'O101' .}
+            }
+        (5350 results)
+        '''
+        pass
+    pass
+
 def query(queryAttributeUriA, queryAttributeUriB, targetUri, queryAttributeTypeUriA='?p', queryAttributeTypeUriB='?p'):
     # base dictionary for results
     d = {}
@@ -213,7 +253,6 @@ if __name__ == "__main__":
     For testing...
     '''
     print log_file
-    #print query(gu(':spfy1'),gu(':spfy2'),gu(':Marker'))
     # get all possible attribute types
     log.info(get_all_attribute_types())
     # user selects an attribute type => get all distinct attribute values

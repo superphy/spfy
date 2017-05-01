@@ -105,14 +105,12 @@ def upload():
                     filename = os.path.join(current_app.config[
                                             'DATASTORE'], now + '-' + secure_filename(file.filename))
                     file.save(filename)
-
                     print 'IVE SAVED YO FILE AT', str(filename)
 
                     if tarfile.is_tarfile(filename):
                         # set filename to dir for spfy call
                         filename = handle_tar(filename, now)
-
-                    if zipfile.is_zipfile(filename):
+                    else if zipfile.is_zipfile(filename):
                         filename = handle_zip(filename, now)
 
                     # for enqueing task
