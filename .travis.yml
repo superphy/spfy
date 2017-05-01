@@ -16,6 +16,7 @@ before_install:
   #### miniconda install:
   # We do this conditionally because it saves us some downloading if the
   # version is the same.
+  # this isn't exactly required for the repo to work (because the docker-flask-conda image is built sepeartely)
   - if [[ "$TRAVIS_PYTHON_VERSION" == "2.7" ]]; then
       wget https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh -O miniconda.sh;
     else
@@ -33,6 +34,7 @@ install:
   - cd app/
   - ls
   #### Recreate our Conda env for testing
+  - wget https://raw.githubusercontent.com/superphy/docker-flask-conda/master/app/environment.yml
   - conda env create -f environment.yml -n backend
   - source activate backend
   - pip install pytest
