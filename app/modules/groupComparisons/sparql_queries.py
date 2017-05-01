@@ -191,6 +191,16 @@ def to_target(attributeUri, targetUri, attributeTypeUri='?p'):
     results = sparql.query().convert()
     return parse_results_todict(results, 's', 'target')
 
+def logical(query_stringA, query_stringB):
+    def parse(query_string):
+        '''
+        Order of Operations: NOT precedes AND precede OR
+        Expect form:
+        NOT (URIa) AND (URIb) OR (URIc)
+        Is parsed as:
+        ((NOT (URIa)) AND (URIb)) OR (URIc)
+        '''
+
 def query(queryAttributeUriA, queryAttributeUriB, targetUri, queryAttributeTypeUriA='?p', queryAttributeTypeUriB='?p'):
     # base dictionary for results
     d = {}
@@ -212,7 +222,6 @@ if __name__ == "__main__":
     For testing...
     '''
     print log_file
-    #print query(gu(':spfy1'),gu(':spfy2'),gu(':Marker'))
     # get all possible attribute types
     log.info(get_all_attribute_types())
     # user selects an attribute type => get all distinct attribute values
