@@ -199,7 +199,37 @@ def logical(query_stringA, query_stringB):
         NOT (URIa) AND (URIb) OR (URIc)
         Is parsed as:
         ((NOT (URIa)) AND (URIb)) OR (URIc)
+        The end result should be:
+        SELECT ?s ?target
+        WHERE{
+            {
+                ?s ?p URIb
+                MINUS {?s ?p {URIa}}
+            }
+            UNION
+            {
+                ?s ?p URIc
+            }
+        }
+        
+        Note: the MINUS must be at the bottom.
+        Ex.
+            WHERE
+            {
+            	MINUS
+              	{?s ge:0001076 'O101' .}
+              	?s a :spfyId
+            }
+        is treated differently (5353 results) vs.:
+            WHERE
+            {
+              	?s a :spfyId
+                     MINUS
+              	{?s ge:0001076 'O101' .}
+            }
+        (5350 results)
         '''
+        split_query_string
 
 def query(queryAttributeUriA, queryAttributeUriB, targetUri, queryAttributeTypeUriA='?p', queryAttributeTypeUriB='?p'):
     # base dictionary for results
