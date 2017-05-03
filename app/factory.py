@@ -7,7 +7,7 @@ from flask_bootstrap import Bootstrap
 import config
 from routes.views import bp as spfy
 from flask_recaptcha import ReCaptcha
-
+from flask_cors import CORS, cross_origin
 
 def create_app():
     app = Flask(__name__)
@@ -23,6 +23,7 @@ def create_app():
     Bootstrap(app)
     recaptcha = ReCaptcha()
     recaptcha.init_app(app)
+    cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 
     app.register_blueprint(spfy)
 
