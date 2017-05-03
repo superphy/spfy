@@ -110,7 +110,7 @@ def upload():
                     if tarfile.is_tarfile(filename):
                         # set filename to dir for spfy call
                         filename = handle_tar(filename, now)
-                    else if zipfile.is_zipfile(filename):
+                    elif zipfile.is_zipfile(filename):
                         filename = handle_zip(filename, now)
 
                     # for enqueing task
