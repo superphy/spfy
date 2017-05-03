@@ -1,6 +1,6 @@
 #this file is used to build the base Docker image for spfy
 # to be tagged as nitzoy/backend-production:latest
-FROM superphy/docker-flask-conda:latest
+FROM superphy/docker-flask-conda:2.0.0
 
 ## Nginx:
 # Make NGINX run on the foreground
