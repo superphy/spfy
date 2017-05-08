@@ -47,7 +47,7 @@ def combine_types():
     '''
     set_attribute_types = set(get_all_attribute_types())
     set_object_types = get_types() # get types returns a set by default
-    return jsonify(set_attribute_types.union(set_object_types))
+    return jsonify(list(set_attribute_types.union(set_object_types)))
 
 @bp.route('/api/v0/get_all_attribute_types')
 def call_get_all_atribute_types():
