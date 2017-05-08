@@ -12,7 +12,7 @@ from flask_recaptcha import ReCaptcha
 # spfy code
 from modules.spfy import spfy
 from routes.utility_functions import handle_tar, handle_zip, fix_uri
-from modules.groupComparisons.sparql_queries import get_all_attribute_types, get_attribute_values
+from modules.groupComparisons.sparql_queries import get_all_attribute_types, get_attribute_values, get_types
 bp = Blueprint('main', __name__)
 from modules.groupComparisons.fishers import fishers
 
@@ -39,6 +39,15 @@ def call_get_attribute_values(attributetype):
     # also convert to a rdflib.URIRef object
     uri = fix_uri(attributetype)
     return jsonify(get_attribute_values(attributeTypeUri=uri))
+
+@bp.route('/api/v0/get_all_types')
+def combine_types():
+    '''
+    Returns all URIs that is either a attribute type or and object type.
+    '''
+    set_attribute_types = set(get_all_attribute_types())
+    set_object_types = get_types() # get types returns a set by default
+    return jsonify(set_attribute_types.union(set_object_types))
 
 @bp.route('/api/v0/get_all_attribute_types')
 def call_get_all_atribute_types():
