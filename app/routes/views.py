@@ -20,10 +20,10 @@ from modules.groupComparisons.fishers import fishers
 def handle_group_comparison_submission():
     query = request.json
     print query
-    queryAttributeUriA = query[0]['attribute']
-    queryAttributeUriB = query[1]['attribute']
-    queryAttributeTypeUriA = query[0]['relation']
-    queryAttributeTypeUriB = query[1]['relation']
+    queryAttributeUriA = query[0][0]['attribute']
+    queryAttributeUriB = query[1][0]['attribute']
+    queryAttributeTypeUriA = query[0][0]['relation']
+    queryAttributeTypeUriB = query[1][0]['relation']
     targetUri = 'https://www.github.com/superphy#Marker'
     f = fishers(queryAttibuteUriA, queryAttibuteUriB, targetUri, queryAttributeTypeUriA, queryAttributeTypeUriB)
     return jsonify(f.to_json())
