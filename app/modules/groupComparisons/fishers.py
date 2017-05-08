@@ -4,9 +4,9 @@ import time
 from modules.turtleGrapher.turtle_utils import generate_uri as gu
 from modules.groupComparisons.sparql_queries import query, get_instances
 
-def fishers(queryAttibuteUriA, queryAttibuteUriB, targetUri, queryAttributeTypeUriA='?p', queryAttributeTypeUriB='?p'):
+def fishers(queryAttributeUriA, queryAttributeUriB, targetUri, queryAttributeTypeUriA='?p', queryAttributeTypeUriB='?p'):
     # query the blazegraph db for results
-    results = query(queryAttibuteUriA, queryAttibuteUriB, targetUri, queryAttributeTypeUriA, queryAttributeTypeUriB)
+    results = query(queryAttributeUriA, queryAttributeUriB, targetUri, queryAttributeTypeUriA, queryAttributeTypeUriB)
     # split the results into sub vars
     ## num of uniq subjects in A
     nA = results['A']['n']
@@ -28,8 +28,8 @@ def fishers(queryAttibuteUriA, queryAttibuteUriB, targetUri, queryAttributeTypeU
     # iterate through targets and perform fisher's
     for index, target in enumerate(all_targets):
         # tags for dataframe
-        queryA = queryAttibuteUriA
-        queryB = queryAttibuteUriB
+        queryA = queryAttributeUriA
+        queryB = queryAttributeUriB
         # check if target is found in queryA
         if target in dictA.keys():
             presentQueryA = len(dictA[target])

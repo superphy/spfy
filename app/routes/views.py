@@ -25,7 +25,7 @@ def handle_group_comparison_submission():
     queryAttributeTypeUriA = query[0][0]['relation']
     queryAttributeTypeUriB = query[1][0]['relation']
     targetUri = 'https://www.github.com/superphy#Marker'
-    f = fishers(queryAttibuteUriA, queryAttibuteUriB, targetUri, queryAttributeTypeUriA, queryAttributeTypeUriB)
+    f = fishers(queryAttributeUriA, queryAttributeUriB, targetUri, queryAttributeTypeUriA, queryAttributeTypeUriB)
     return jsonify(f.to_json())
 
 @bp.route('/api/v0/get_attribute_values/type/<path:attributetype>')
