@@ -1,6 +1,7 @@
 import os
 import tarfile
 import zipfile
+import json
 import redis
 from datetime import datetime
 # flask/external lib
@@ -16,7 +17,8 @@ bp = Blueprint('main', __name__)
 
 @bp.route('/api/v0/newgroupcomparison', methods=['POST'])
 def handle_group_comparison_submission():
-    print request.json
+    query = json.load(request.json)
+    print query
     return jsonify(request.json)
 
 @bp.route('/api/v0/get_attribute_values/type/<path:attributetype>')
