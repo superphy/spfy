@@ -14,6 +14,10 @@ from routes.utility_functions import handle_tar, handle_zip, fix_uri
 from modules.groupComparisons.sparql_queries import get_all_attribute_types, get_attribute_values
 bp = Blueprint('main', __name__)
 
+@bp.route('/api/v0/newgroupcomparison', methods=['POST'])
+def handle_group_comparison_submission():
+    print request
+
 @bp.route('/api/v0/get_attribute_values/type/<path:attributetype>')
 def call_get_attribute_values(attributetype):
     '''
@@ -131,7 +135,7 @@ def upload():
         return jsonify(jobs_dict)
     else:
         return "Captcha Failed Verification", 500
-    
+
 @bp.route('/', methods=['GET', 'POST'])
 def index():
     return render_template("index.html")
