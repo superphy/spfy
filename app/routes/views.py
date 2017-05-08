@@ -18,7 +18,7 @@ from modules.groupComparisons.fishers import fishers
 
 @bp.route('/api/v0/newgroupcomparison', methods=['POST'])
 def handle_group_comparison_submission():
-    query = json.load(request.json)
+    query = json.load
     print query
     queryAttributeUriA = query[0]['attribute']
     queryAttributeUriB = query[1]['attribute']
