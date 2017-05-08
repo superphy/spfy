@@ -16,8 +16,8 @@ bp = Blueprint('main', __name__)
 
 @bp.route('/api/v0/newgroupcomparison', methods=['POST'])
 def handle_group_comparison_submission():
-    print request
-    return jsonify(request)
+    print request.json
+    return jsonify(request.json)
 
 @bp.route('/api/v0/get_attribute_values/type/<path:attributetype>')
 def call_get_attribute_values(attributetype):
