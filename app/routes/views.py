@@ -27,7 +27,7 @@ def handle_group_comparison_submission():
     queryAttributeTypeUriB = query[1][0]['relation']
     targetUri = target
     f = fishers(queryAttributeUriA, queryAttributeUriB, targetUri, queryAttributeTypeUriA, queryAttributeTypeUriB)
-    return jsonify(f.to_json(orient='split'))
+    return f.to_json(orient='split')
 
 @bp.route('/api/v0/get_attribute_values/type/<path:attributetype>')
 def call_get_attribute_values(attributetype):
