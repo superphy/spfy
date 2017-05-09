@@ -12,21 +12,22 @@ from flask_recaptcha import ReCaptcha
 # spfy code
 from modules.spfy import spfy
 from routes.utility_functions import handle_tar, handle_zip, fix_uri
-from modules.groupComparisons.sparql_queries import get_all_attribute_types, get_attribute_values
+from modules.groupComparisons.sparql_queries import get_all_attribute_types, get_attribute_values, get_types
 bp = Blueprint('main', __name__)
 from modules.groupComparisons.fishers import fishers
 
 @bp.route('/api/v0/newgroupcomparison', methods=['POST'])
 def handle_group_comparison_submission():
-    query = json.load(request.json)
+    query = request.json['groups']
+    target = request.json['target']
     print query
-    queryAttributeUriA = query[0]['attribute']
-    queryAttributeUriB = query[1]['attribute']
-    queryAttributeTypeUriA = query[0]['relation']
-    queryAttributeTypeUriB = query[1]['relation']
-    targetUri = 'https://www.github.com/superphy#Marker'
-    f = fishers(queryAttibuteUriA, queryAttibuteUriB, targetUri, queryAttributeTypeUriA, queryAttributeTypeUriB)
-    return jsonify(f.to_json())
+    queryAttributeUriA = query[0][0]['attribute']
+    queryAttributeUriB = query[1][0]['attribute']
+    queryAttributeTypeUriA = query[0][0]['relation']
+    queryAttributeTypeUriB = query[1][0]['relation']
+    targetUri = target
+    f = fishers(queryAttributeUriA, queryAttributeUriB, targetUri, queryAttributeTypeUriA, queryAttributeTypeUriB)
+    return f.to_json(orient='split')
 
 @bp.route('/api/v0/get_attribute_values/type/<path:attributetype>')
 def call_get_attribute_values(attributetype):
@@ -39,6 +40,15 @@ def call_get_attribute_values(attributetype):
     # also convert to a rdflib.URIRef object
     uri = fix_uri(attributetype)
     return jsonify(get_attribute_values(attributeTypeUri=uri))
+
+@bp.route('/api/v0/get_all_types')
+def combine_types():
+    '''
+    Returns all URIs that is either a attribute type or and object type.
+    '''
+    set_attribute_types = set(get_all_attribute_types())
+    set_object_types = get_types() # get types returns a set by default
+    return jsonify(list(set_attribute_types.union(set_object_types)))
 
 @bp.route('/api/v0/get_all_attribute_types')
 def call_get_all_atribute_types():

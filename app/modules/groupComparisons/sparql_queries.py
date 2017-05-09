@@ -113,7 +113,7 @@ def get_attribute_values(attributeTypeUri):
     """.format(attributeTypeUri=attributeTypeUri)
     return query
 
-@toset
+@toset(targetname='objecttype')
 @submit
 def get_types():
     '''
