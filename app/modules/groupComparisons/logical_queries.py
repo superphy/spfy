@@ -79,6 +79,7 @@ def resolve_spfyids(relation, attribute):
 
 @tolist
 @submit
+@prefix
 def testcase_spfyidtotarget(uri):
     query = """
     SELECT ?target WHERE {{
