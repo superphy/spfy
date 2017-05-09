@@ -7,6 +7,9 @@ from modules.loggingFunctions import initialize_logging
 log_file = initialize_logging()
 log = logging.getLogger(__name__)
 
+#blazegraph_url = config.database['blazegraph_url']
+blazegraph_url = 'http://localhost:8080/bigdata/sparql'
+
 def toset(func):
     '''
     A decorator to convert JSON response of sparql query to a set.
