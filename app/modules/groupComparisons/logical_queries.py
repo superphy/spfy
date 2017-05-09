@@ -102,4 +102,4 @@ def testcase_pollviaspfy():
 
 if __name__ == "__main__":
     #print resolve_spfyids(gu('ge:0001076'), 'O157')
-    testcase_pollviaspfy()
+    print testcase_pollviaspfy()
