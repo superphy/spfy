@@ -169,11 +169,11 @@ def to_target(attributeUri, targetUri, attributeTypeUri='?p'):
     sparql = SPARQLWrapper(blazegraph_url)
     # add PREFIXes to sparql query
     query = generate_prefixes()
-    # generate the base query
+    ## generate the base query
     query += """
     SELECT ?s ?target WHERE {{
-        ?s2 <{attributeTypeUri}> '{attributeUri}' .
-         ?s2 (:hasPart|:isFoundIn) ?target .
+        ?s <{attributeTypeUri}> '{attributeUri}' .
+         ?s (:hasPart|:isFoundIn) ?target .
     """.format(attributeTypeUri=attributeTypeUri, attributeUri=attributeUri, targetUri=targetUri, spfyIdUri=gu(':spfyId'))
     # the queries have to be structured differently if the queryUri is a object type or is a specific instance
     if is_group(targetUri):
