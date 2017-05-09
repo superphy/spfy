@@ -86,6 +86,7 @@ def testcase_spfyidtotarget(uri):
         ?target a <{targetUri}>.
     }}
     """.format(uri=uri, targetUri=gu(':Marker'))
+    return query
 
 def testcase_pollviaspfy():
     from tests.constants import set_spfyids_o157
