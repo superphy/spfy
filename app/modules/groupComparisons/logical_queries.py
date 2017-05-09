@@ -36,7 +36,7 @@ def query_objecttypes(uri):
     SELECT ?s WHERE {{
         <{uri}> a ?s .
     }}
-    """.format(relation=relation,attribute=attribute)
+    """.format(uri=uri)
     return query
 
 def resolve_spfyids(relation, attribute):
