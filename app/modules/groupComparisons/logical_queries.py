@@ -89,7 +89,8 @@ def testcase_spfyidtotarget(uri):
 
 def testcase_pollviaspfy():
     from tests.constants import set_spfyids_o157
-    print start = time.time()
+    start = time.time()
+    print start
     d = {}
     for spfyid in set_spfyids_o157:
         d[spfyid] = testcase_spfyidtotarget(spfyid)
