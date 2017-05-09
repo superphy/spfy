@@ -62,3 +62,19 @@ def prefix(func):
         query = func(*args, **kwargs)
         return prefixes + query
     return func_wrapper
+
+def submit(func):
+    '''
+    A decorator to submit a given query generation function.
+    '''
+    @wraps(func)
+    def func_wrapper(*args, **kwargs):
+        query = func(*args, **kwargs)
+        log.debug(query)
+        sparql = SPARQLWrapper(blazegraph_url)
+        sparql.setQuery(query)
+        sparql.setReturnFormat(JSON)
+        results = sparql.query().convert()
+        log.debug(results)
+        return results
+    return func_wrapper
