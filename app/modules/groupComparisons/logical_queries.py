@@ -13,6 +13,20 @@ log = logging.getLogger(__name__)
 @tostring
 @submit
 @prefix
+def query_objectids(relation, attribute):
+    '''
+    Grabs all objectids having the relation.
+    '''
+    query = """
+    SELECT ?s WHERE {{
+        ?s <{relation}> '{attribute}' .
+    }}
+    """.format(relation=relation,attribute=attribute)
+    return query
+
+@tostring
+@submit
+@prefix
 def query_single_objectid(relation, attribute):
     '''
     Grabs a single object id having the relation.
@@ -58,7 +72,10 @@ def resolve_spfyids(relation, attribute):
     Ret:
     '''
     print directlink_spfyid(relation, attribute)
-
+    if directlink_spfyid(relation, attribute):
+        # if we have a direct link to a spfyid, we can generate automatically.
+        spfyids = query_objectids(relation, attribute)
+        return spfyids
 
 if __name__ == "__main__":
     resolve_spfyids(gu('ge:0001076'), 'O157')
