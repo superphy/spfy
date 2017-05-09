@@ -81,7 +81,7 @@ def resolve_spfyids(relation, attribute):
 @submit
 def testcase_spfyidtotarget(uri):
     query = """
-    SELECT ?s WHERE {{
+    SELECT ?target WHERE {{
         <{uri}> (:hasPart|:isFoundIn) ?target .
         ?target a <{targetUri}>.
     }}
