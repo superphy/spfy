@@ -1,0 +1,64 @@
+import config
+import logging
+from functools import wraps
+from modules.loggingFunctions import initialize_logging
+
+# logging
+log_file = initialize_logging()
+log = logging.getLogger(__name__)
+
+def toset(func):
+    '''
+    A decorator to convert JSON response of sparql query to a set.
+    '''
+    @wraps(func)
+    def func_wrapper(*args, **kwargs):
+        results = func(*args, **kwargs)
+        st = set()
+        for result in results['results']['bindings']:
+            keys = result.keys()
+            # Note: though this is writeen as a loop, we expect only 1 key in keys
+            for k in keys:
+                # get the value at that key
+                st.add(result[k]['value'])
+        log.debug(st)
+        return st
+    return func_wrapper
+
+def tolist(func):
+    '''
+    A decorator to convert JSON response of sparql query to a list.
+    '''
+    @wraps(func)
+    def func_wrapper(*args, **kwargs):
+        results = func(*args, **kwargs)
+        l = []
+        for result in results['results']['bindings']:
+            keys = result.keys()
+            # Note: though this is writeen as a loop, we expect only 1 key in keys
+            for k in keys:
+                # get the value at that key
+                l.append(result[k]['value'])
+        log.debug(l)
+        return l
+    return func_wrapper
+
+def prefix(func):
+    '''
+    A decorator to add prefixes to a given query generation function.
+    Uses namespaces defined in the config.py file to generate all the prefixes you might need in a SPARQL query.
+    Returns a string.
+    '''
+    @wraps(func)
+    def func_wrapper(*args, **kwargs):
+        # generate prefixes
+        prefixes = ''
+        for key in config.namespaces.keys():
+            if key is 'root':
+                prefixes += 'PREFIX : <{name}> '.format(name=config.namespaces['root'])
+            else:
+                prefixes += 'PREFIX {prefix}: <{name}> '.format(prefix=key, name=config.namespaces[key])
+        # generate the query
+        query = func(*args, **kwargs)
+        return prefixes + query
+    return func_wrapper
