@@ -169,23 +169,19 @@ def to_target(attributeUri, targetUri, attributeTypeUri='?p'):
     sparql = SPARQLWrapper(blazegraph_url)
     # add PREFIXes to sparql query
     query = generate_prefixes()
+    # generate the base query
+    query += """
+    SELECT ?s ?target WHERE {{
+        ?s2 <{attributeTypeUri}> '{attributeUri}' .
+        ?s a <{spfyIdUri}>; (:hasPart|:isFoundIn) ?s2; (:hasPart|:isFoundIn) ?target .
+    """.format(attributeTypeUri=attributeTypeUri, attributeUri=attributeUri, targetUri=targetUri, spfyIdUri=gu(':spfyId'))
     # the queries have to be structured differently if the queryUri is a object type or is a specific instance
     if is_group(targetUri):
         # then targetUri is a object type
-        query += """
-        SELECT ?s ?target WHERE {{
-            ?s <{attributeTypeUri}> '{attributeUri}' ; (:hasPart|:isFoundIn) ?target .
-            ?target a <{targetUri}> .
-        }}
-        """.format(attributeTypeUri=attributeTypeUri, attributeUri=attributeUri, targetUri=targetUri)
+        query += " ?target a <{targetUri}> .}}".format(targetUri=targetUri)
     else:
         # then targetUri is an attribute
-        query += """
-        SELECT ?s ?target WHERE {{
-            ?s <{attributeTypeUri}> '{attributeUri}' ; (:hasPart|:isFoundIn) ?targetobject .
-            ?targetobject <{targetUri}> ?target.
-        }}
-        """.format(attributeTypeUri=attributeTypeUri, attributeUri=attributeUri, targetUri=targetUri)
+        query += " ?targetobject <{targetUri}> ?target.}}".format(targetUri=targetUri)
     sparql.setQuery(query)
     sparql.setReturnFormat(JSON)
     results = sparql.query().convert()
@@ -204,20 +200,20 @@ def to_target_negated(attributeUri, targetUri, attributeTypeUri='?p'):
         # then targetUri is a object type
         query += """
         SELECT ?s ?target WHERE {{
-            ?s <{attributeTypeUri}> ?o ; (:hasPart|:isFoundIn) ?target .
+            ?s a {spfyIdUri}; (:hasPart|:isFoundIn) ?target .
             ?target a <{targetUri}> .
             MINUS {?s <{attributeTypeUri}> '{attributeUri}'}
         }}
-        """.format(attributeTypeUri=attributeTypeUri, attributeUri=attributeUri, targetUri=targetUri)
+        """.format(attributeTypeUri=attributeTypeUri, attributeUri=attributeUri, targetUri=targetUri, spfyIdUri=gu(':spfyId'))
     else:
         # then targetUri is an attribute
         query += """
         SELECT ?s ?target WHERE {{
-            ?s <{attributeTypeUri}> ?o ; (:hasPart|:isFoundIn) ?targetobject .
+            ?s a {spfyIdUri}; (:hasPart|:isFoundIn) ?targetobject .
             ?targetobject <{targetUri}> ?target.
             MINUS {?s <{attributeTypeUri}> '{attributeUri}'}
         }}
-        """.format(attributeTypeUri=attributeTypeUri, attributeUri=attributeUri, targetUri=targetUri)
+        """.format(attributeTypeUri=attributeTypeUri, attributeUri=attributeUri, targetUri=targetUri, spfyIdUri=gu(':spfyId'))
     sparql.setQuery(query)
     sparql.setReturnFormat(JSON)
     results = sparql.query().convert()
