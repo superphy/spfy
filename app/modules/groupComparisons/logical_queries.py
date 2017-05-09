@@ -78,4 +78,4 @@ def resolve_spfyids(relation, attribute):
         return spfyids
 
 if __name__ == "__main__":
-    resolve_spfyids(gu('ge:0001076'), 'O157')
+    print resolve_spfyids(gu('ge:0001076'), 'O157')
