@@ -39,6 +39,17 @@ def query_objecttypes(uri):
     """.format(uri=uri)
     return query
 
+def directlink_spfyid(relation, attribute):
+    '''
+    Tells you if a given relation-attribute pair has a direct link to a given spfyId.
+    This is required for generating more complex SPARQL queries.
+    '''
+    objectid = query_single_objectid(relation, attribute)
+    print objectid
+    objectypes = query_objecttypes(objectid)
+    print objectypes
+    return unicode(gu(':spfyId')) in objectypes
+
 def resolve_spfyids(relation, attribute):
     '''
     Args:
@@ -46,10 +57,8 @@ def resolve_spfyids(relation, attribute):
         attribute: ex. "O136"
     Ret:
     '''
-    objectid = query_single_objectid(relation, attribute)
-    print objectid
-    objectype = query_objecttypes(objectid)
-    print objectype
+    print directlink_spfyid(relation, attribute)
+
 
 if __name__ == "__main__":
     resolve_spfyids(gu('ge:0001076'), 'O157')
