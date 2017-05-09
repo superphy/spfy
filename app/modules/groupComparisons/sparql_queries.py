@@ -173,7 +173,7 @@ def to_target(attributeUri, targetUri, attributeTypeUri='?p'):
     query += """
     SELECT ?s ?target WHERE {{
         ?s2 <{attributeTypeUri}> '{attributeUri}' .
-        ?s a <{spfyIdUri}>; (:hasPart|:isFoundIn) ?s2; (:hasPart|:isFoundIn) ?target .
+         ?s2 (:hasPart|:isFoundIn) ?target .
     """.format(attributeTypeUri=attributeTypeUri, attributeUri=attributeUri, targetUri=targetUri, spfyIdUri=gu(':spfyId'))
     # the queries have to be structured differently if the queryUri is a object type or is a specific instance
     if is_group(targetUri):
