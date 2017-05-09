@@ -22,7 +22,7 @@ def query_single_objectid(relation, attribute):
         ?s <{relation}> '{attribute}' .
     }}
     LIMIT 1
-    """
+    """.format(relation=relation,attribute=attribute)
     return query
 
 def resolve_spfyids(relation, attribute):
