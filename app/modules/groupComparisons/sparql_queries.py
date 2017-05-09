@@ -185,6 +185,7 @@ def to_target(attributeUri, targetUri, attributeTypeUri='?p'):
     sparql.setQuery(query)
     sparql.setReturnFormat(JSON)
     results = sparql.query().convert()
+    print results
     return parse_results_todict(results, 's', 'target')
 
 def to_target_negated(attributeUri, targetUri, attributeTypeUri='?p'):
