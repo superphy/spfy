@@ -10,7 +10,7 @@ from modules.groupComparisons.decorators import toset, tolist, tostring, prefix,
 log_file = initialize_logging()
 log = logging.getLogger(__name__)
 
-@tostring
+@toset
 @submit
 @prefix
 def query_objectids(relation, attribute):
