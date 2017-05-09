@@ -191,6 +191,38 @@ def to_target(attributeUri, targetUri, attributeTypeUri='?p'):
     results = sparql.query().convert()
     return parse_results_todict(results, 's', 'target')
 
+def to_target_negated(attributeUri, targetUri, attributeTypeUri='?p'):
+    '''
+    Generates a query that selects all targetUri from a given attribute group.
+    The attributeTypeUri isn't necessary, but specifying it (instead of using the wildcard) improves performance.
+    '''
+    sparql = SPARQLWrapper(blazegraph_url)
+    # add PREFIXes to sparql query
+    query = generate_prefixes()
+    # the queries have to be structured differently if the queryUri is a object type or is a specific instance
+    if is_group(targetUri):
+        # then targetUri is a object type
+        query += """
+        SELECT ?s ?target WHERE {{
+            ?s <{attributeTypeUri}> ?o ; (:hasPart|:isFoundIn) ?target .
+            ?target a <{targetUri}> .
+            MINUS {?s <{attributeTypeUri}> '{attributeUri}'}
+        }}
+        """.format(attributeTypeUri=attributeTypeUri, attributeUri=attributeUri, targetUri=targetUri)
+    else:
+        # then targetUri is an attribute
+        query += """
+        SELECT ?s ?target WHERE {{
+            ?s <{attributeTypeUri}> ?o ; (:hasPart|:isFoundIn) ?targetobject .
+            ?targetobject <{targetUri}> ?target.
+            MINUS {?s <{attributeTypeUri}> '{attributeUri}'}
+        }}
+        """.format(attributeTypeUri=attributeTypeUri, attributeUri=attributeUri, targetUri=targetUri)
+    sparql.setQuery(query)
+    sparql.setReturnFormat(JSON)
+    results = sparql.query().convert()
+    return parse_results_todict(results, 's', 'target')
+
 def logical(query_stringA, query_stringB):
     def parse(query_string):
         '''
