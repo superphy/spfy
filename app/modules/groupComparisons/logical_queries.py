@@ -74,8 +74,29 @@ def resolve_spfyids(relation, attribute):
     print directlink_spfyid(relation, attribute)
     if directlink_spfyid(relation, attribute):
         # if we have a direct link to a spfyid, we can generate automatically.
-        spfyids = query_objectids(relation, attribute)
-        return spfyids
+        set_spfyids = query_objectids(relation, attribute)
+        return set_spfyids
+
+@tolist
+@submit
+def testcase_spfyidtotarget(uri):
+    query = """
+    SELECT ?s WHERE {{
+        <{uri}> (:hasPart|:isFoundIn) ?target .
+        ?target a <{targetUri}>.
+    }}
+    """.format(uri=uri, targetUri=gu(':Marker'))
+
+def testcase_pollviaspfy():
+    from tests.constants import set_spfyids_o157
+    print start = time.time()
+    d = {}
+    for spfyid in set_spfyids_o157:
+        d[spfyid] = testcase_spfyidtotarget(spfyid)
+    stop = time.time()
+    print (stop-start)
+    return d
 
 if __name__ == "__main__":
-    print resolve_spfyids(gu('ge:0001076'), 'O157')
+    #print resolve_spfyids(gu('ge:0001076'), 'O157')
+    testcase_pollviaspfy()
