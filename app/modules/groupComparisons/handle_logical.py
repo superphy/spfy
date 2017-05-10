@@ -23,6 +23,7 @@ def handle_logical(group):
         if d['negated']:
             # get everything not d
             log.info('Handling negation for pair: ' + d['relation'] + d['attribute'])
+            log.info(index)
             current_set = resolve_spfyids_negated(d['relation'], d['attribute'])
         else:
             # get spfyids in regular fashion
