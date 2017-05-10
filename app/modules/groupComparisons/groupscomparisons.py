@@ -26,7 +26,7 @@ def collapse(dict_targets):
     return d
 
 def groupcomparisons(groups, target):
-    log.info(groups)
+    log.debug(groups)
     # define a list of sets to hold all spfyids per group
     sets_spfyids = []
     # define a list of nested dictionaries mapping spfyid to all of its targets
@@ -42,7 +42,7 @@ def groupcomparisons(groups, target):
 
     # enum through the groups and parse negations/logical operators to build a set of spfyids
     for index, group in enumerate(groups):
-        log.info(index)
+        log.debug(index)
         sets_spfyids.append(handle_logical(group))
         # define a blank dictionary for that spfyid
         dicts_targets.append({})
@@ -73,8 +73,8 @@ def groupcomparisons(groups, target):
                 queryAttributeUris[index] += query['logical'] + ' '
         queryAttributeUris[index] = queryAttributeUris[index].strip()
 
-    log.info(queryAttributeUris[0])
-    log.info(queryAttributeUris[1])
+    log.debug(queryAttributeUris[0])
+    log.debug(queryAttributeUris[1])
     df = fishers(queryAttributeUris[0], queryAttributeUris[1], target, results)
     return df
 
@@ -93,6 +93,7 @@ if __name__ == "__main__":
     target = "https://www.github.com/superphy#Marker"
 
     start = time.time()
+    print ([da,db])
     print groupcomparisons([da,db], target)
     stop = time.time()
     print (stop-start)
