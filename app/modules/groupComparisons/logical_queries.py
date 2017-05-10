@@ -5,6 +5,7 @@ from modules.loggingFunctions import initialize_logging
 from modules.turtleGrapher.turtle_utils import generate_uri as gu
 from modules.groupComparisons.sparql_utils import generate_prefixes
 from modules.groupComparisons.decorators import toset, tolist, tostring, prefix, submit
+from modules.groupComparisons.sparql_queries import is_group
 
 # logging
 log_file = initialize_logging()
@@ -143,16 +144,22 @@ def resolve_spfyids_negated(relation, attribute):
         set_spfyids = query_spfyids_negated(relation, attribute)
     return set_spfyids
 
-@tolist
+@toset
 @submit
 @prefix
-def query_targets(spfyid):
+def query_targets(spfyid, target):
+    # base select query
     query = """
     SELECT ?target WHERE {{
         <{spfyid}> (:hasPart|:isFoundIn) ?target .
-        ?target a <{targetUri}>.
-    }}
-    """.format(spfyid=spfyid, targetUri=gu(':Marker'))
+    """.format(spfyid=spfyid)
+    # the queries have to be structured differently if the target is a object type or is a specific instance
+    if is_group(target):
+        # then targetUri is a object type
+        query += " ?target a <{target}> .}}".format(target=target)
+    else:
+        # then targetUri is an attribute
+        query += " ?targetobject <{target}> ?target.}}".format(target=target)
     return query
 
 def testcase_pollviaspfy():

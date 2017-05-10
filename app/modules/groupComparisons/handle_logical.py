@@ -8,7 +8,7 @@ log = logging.getLogger(__name__)
 
 def handle_logical(group):
     '''
-    Accepts a (list) group (of relations) as input and generates the results dictionary as required for fishers.
+    Accepts a (list) group (of relations) as input, hanldes negation/logical operators, and returns a set of spfyids that match the relation-attribute & account for the operators.
     '''
     # sanity check
     if type(group) is not list:
