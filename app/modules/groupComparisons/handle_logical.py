@@ -38,9 +38,9 @@ def handle_logical(group):
             # note: a logical operator should be REQUIRED if relation-attribute pairs > 1
             operator = group[index-1]['logical']
             if operator == 'AND':
-                universe.intersection(current_set)
+                universe = universe.intersection(current_set)
             elif operator == 'OR':
-                universe.union(current_set)
+                universe = universe.union(current_set)
             log.info('Length of universe after logical: ' + str(len(universe)))
         else:
             # is index <= 0 (then index=0) and it is the current universe
