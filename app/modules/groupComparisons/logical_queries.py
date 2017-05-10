@@ -46,7 +46,7 @@ def query_objectids(relation, attribute):
 @toset
 @submit
 @prefix
-def query_spfyids(relation, attribute):
+def query_spfyids_negated(relation, attribute):
     '''
     Grabs all objectids having the relation.
     '''
@@ -62,7 +62,7 @@ def query_spfyids(relation, attribute):
 @toset
 @submit
 @prefix
-def query_objectids(relation, attribute):
+def query_objectids_negated(relation, attribute):
     '''
     Grabs all objectids having the relation.
     '''
