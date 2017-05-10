@@ -26,7 +26,7 @@ def toset(targetname):
             st = set()
             for result in results['results']['bindings']:
                 st.add(result[targetname]['value'])
-            log.debug(st)
+            #log.debug(st)
             return st
         return func_wrapper
     return toset_decorator
@@ -45,7 +45,7 @@ def tolist(func):
             for k in keys:
                 # get the value at that key
                 l.append(result[k]['value'])
-        log.debug(l)
+        #log.debug(l)
         return l
     return func_wrapper
 
@@ -61,7 +61,7 @@ def submit(func):
         sparql.setQuery(query)
         sparql.setReturnFormat(JSON)
         results = sparql.query().convert()
-        log.debug(results)
+        #log.debug(results)
         return results
     return func_wrapper
 
