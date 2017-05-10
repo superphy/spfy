@@ -20,7 +20,10 @@ def fishers(queryAttributeUriA, queryAttributeUriB, targetUri, results):
     dictA = results[0]['d']
     ## dictionary with the results from B
     dictB = results[1]['d']
-    log.info(str(nA) + str(nB) + str(len(dictA)) + str(len(dictB)))
+    log.info(str(nA))
+    log.info(str(nB))
+    log.info(str(len(dictA)))
+    log.info(str(len(dictB)))
 
     # join all possible targets as req for Fisher's
     # we could instead query the db for `DISTINCT ?s WHERE ?s a targetUri`, but I'm not interested in targets that neither queryA nor queryB has.
