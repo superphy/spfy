@@ -1,4 +1,5 @@
 import logging
+from modules.loggingFunctions import initialize_logging
 import scipy.stats as stats
 import pandas as pd
 import time
