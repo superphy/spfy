@@ -171,47 +171,6 @@ def to_target_negated(attributeUri, targetUri, attributeTypeUri='?p'):
     results = sparql.query().convert()
     return parse_results_todict(results, 's', 'target')
 
-def logical(query_stringA, query_stringB):
-    def parse(query_string):
-        '''
-        Order of Operations: NOT precedes AND precede OR
-        Expect form:
-        NOT (URIa) AND (URIb) OR (URIc)
-        Is parsed as:
-        ((NOT (URIa)) AND (URIb)) OR (URIc)
-        The end result should be:
-        SELECT ?s ?target
-        WHERE{
-            {
-                ?s ?p URIb
-                MINUS {?s ?p {URIa}}
-            }
-            UNION
-            {
-                ?s ?p URIc
-            }
-        }
-
-        Note: the MINUS must be at the bottom.
-        Ex.
-            WHERE
-            {
-            	MINUS
-              	{?s ge:0001076 'O101' .}
-              	?s a :spfyId
-            }
-        is treated differently (5353 results) vs.:
-            WHERE
-            {
-              	?s a :spfyId
-                     MINUS
-              	{?s ge:0001076 'O101' .}
-            }
-        (5350 results)
-        '''
-        pass
-    pass
-
 def query(queryAttributeUriA, queryAttributeUriB, targetUri, queryAttributeTypeUriA='?p', queryAttributeTypeUriB='?p'):
     # base dictionary for results
     d = {}
