@@ -1,4 +1,5 @@
-from modules.groupComparisons.handle_logical import handle_logical, query_targets
+from modules.groupComparisons.handle_logical import handle_logical
+from modules.groupComparisons.logical_queries import query_targets
 from modules.groupComparisons.fishers import fishers
 
 def collapse(dict_targets):
