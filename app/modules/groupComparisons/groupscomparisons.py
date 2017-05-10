@@ -1,6 +1,11 @@
+import logging
 from modules.groupComparisons.handle_logical import handle_logical
 from modules.groupComparisons.logical_queries import query_targets
 from modules.groupComparisons.fishers import fishers
+
+# logging
+log_file = initialize_logging()
+log = logging.getLogger(__name__)
 
 def collapse(dict_targets):
     '''
@@ -20,6 +25,7 @@ def collapse(dict_targets):
     return d
 
 def groupcomparisons(groups, target):
+    log.info(groups)
     # define a list of sets to hold all spfyids per group
     sets_spfyids = []
     # define a list of nested dictionaries mapping spfyid to all of its targets
