@@ -56,6 +56,8 @@ def fishers(queryAttributeUriA, queryAttributeUriB, targetUri, results):
         absentQueryB = nB - presentQueryB
         log.info('presentQueryB: ' + str(presentQueryB))
         log.info('absentQueryB: ' + str(absentQueryB))
+        if absentQueryB < 0:
+            log.error(dictB[target])
         # compute fisher's exact test
         # table structure is:
         #           queryUriA   queryUriB
