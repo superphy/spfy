@@ -9,7 +9,7 @@ def handle_logical(group):
         raise Exception("Invalid Argument. Requires a list of relation-attribute pairs for a group.")
     # create a blank universe which is our end result
     universe = set()
-    for d, index in group:
+    for d, index in enumerate(group):
         # create a temporary set before we merge with universe
         current_set = set()
         # d is of form: {"negated":false,"relation":"http://purl.obolibrary.org/obo/GENEPIO_0001076","attribute":"O136","logical":null}
