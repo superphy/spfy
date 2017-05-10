@@ -80,6 +80,7 @@ def groupcomparisons(groups, target):
 
 if __name__ == "__main__":
     import time
+    # test for OR
     da1 = {"negated":False,"relation":"http://purl.obolibrary.org/obo/GENEPIO_0001076","attribute":"O157",
     "logical":"OR"}
     da2 = {"negated":False,"relation":"http://purl.obolibrary.org/obo/GENEPIO_0001076","attribute":"O136"}
@@ -93,7 +94,26 @@ if __name__ == "__main__":
     target = "https://www.github.com/superphy#Marker"
 
     start = time.time()
-    print ([da,db])
-    print groupcomparisons([da,db], target)
+    log.info([da,db])
+    log.info(groupcomparisons([da,db], target))
     stop = time.time()
-    print (stop-start)
+    log.info(stop-start)
+
+    ## test NOT
+    da1 = {"negated":True,"relation":"http://purl.obolibrary.org/obo/GENEPIO_0001076","attribute":"O157",
+    "logical":"OR"}
+    da2 = {"negated":False,"relation":"http://purl.obolibrary.org/obo/GENEPIO_0001076","attribute":"O136"}
+    da = [da1,da2]
+
+    db1 = {"negated":False,"relation":"http://purl.obolibrary.org/obo/GENEPIO_0001076","attribute":"O84",
+    "logical":"OR"}
+    db2 = {"negated":False,"relation":"http://purl.obolibrary.org/obo/GENEPIO_0001076","attribute":"O54"}
+    db = [db1,db2]
+
+    target = "https://www.github.com/superphy#Marker"
+
+    start = time.time()
+    log.info([da,db])
+    log.info(groupcomparisons([da,db], target))
+    stop = time.time()
+    log.info(stop-start)
