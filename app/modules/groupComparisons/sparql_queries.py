@@ -7,6 +7,7 @@ from SPARQLWrapper import SPARQLWrapper, JSON
 from modules.loggingFunctions import initialize_logging
 from modules.turtleGrapher.turtle_utils import generate_uri as gu
 from modules.groupComparisons.sparql_utils import generate_prefixes
+from modules.groupComparisons.decorators import toset, tolist, submit
 
 # logging
 log_file = initialize_logging()
@@ -14,56 +15,6 @@ log = logging.getLogger(__name__)
 
 blazegraph_url = config.database['blazegraph_url']
 #blazegraph_url = 'http://localhost:8080/bigdata/sparql'
-
-def toset(targetname):
-    '''
-    A decorator to convert JSON response of sparql query to a set.
-    '''
-    def toset_decorator(func):
-        @wraps(func)
-        def func_wrapper(*args, **kwargs):
-            results = func(*args, **kwargs)
-            st = set()
-            for result in results['results']['bindings']:
-                st.add(result[targetname]['value'])
-            #log.debug(st)
-            return st
-        return func_wrapper
-    return toset_decorator
-
-def tolist(func):
-    '''
-    A decorator to convert JSON response of sparql query to a list.
-    '''
-    @wraps(func)
-    def func_wrapper(*args, **kwargs):
-        results = func(*args, **kwargs)
-        l = []
-        for result in results['results']['bindings']:
-            keys = result.keys()
-            # Note: though this is writeen as a loop, we expect only 1 key in keys
-            for k in keys:
-                # get the value at that key
-                l.append(result[k]['value'])
-        #log.debug(l)
-        return l
-    return func_wrapper
-
-def submit(func):
-    '''
-    A decorator to submit a given query generation function.
-    '''
-    @wraps(func)
-    def func_wrapper(*args, **kwargs):
-        query = func(*args, **kwargs)
-        log.debug(query)
-        sparql = SPARQLWrapper(blazegraph_url)
-        sparql.setQuery(query)
-        sparql.setReturnFormat(JSON)
-        results = sparql.query().convert()
-        #log.debug(results)
-        return results
-    return func_wrapper
 
 @tolist
 @submit
