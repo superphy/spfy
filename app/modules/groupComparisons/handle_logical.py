@@ -23,5 +23,5 @@ def handle_logical(group):
         print current_set
 
 if __name__ == "__main__":
-    d = {"negated":True,"relation":"http://purl.obolibrary.org/obo/GENEPIO_0001076","attribute":"O157"}
+    d = [{"negated":True,"relation":"http://purl.obolibrary.org/obo/GENEPIO_0001076","attribute":"O157"}]
     handle_logical(d)
