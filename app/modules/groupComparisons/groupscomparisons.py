@@ -42,7 +42,7 @@ def groupcomparisons(groups, target):
 
     # enum through the groups and parse negations/logical operators to build a set of spfyids
     for index, group in enumerate(groups):
-        sets_spfyids[index] = handle_logical(group)
+        l.append(handle_logical(group))
         # define a blank dictionary for that spfyid
         dicts_targets[index] = {}
         for spfyid in sets_spfyids[index]:
