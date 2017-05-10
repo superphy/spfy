@@ -44,21 +44,21 @@ def groupcomparisons(groups, target):
     for index, group in enumerate(groups):
         sets_spfyids.append(handle_logical(group))
         # define a blank dictionary for that spfyid
-        dicts_targets[index] = {}
+        dicts_targets.append({})
         for spfyid in sets_spfyids[index]:
             dicts_targets[index][spfyid] = query_targets(spfyid, target)
 
         # collapse/invert the results so we use targets as keys instead of spfyids
-        collapsed_targets[index] = collapse(dicts_targets[index])
+        collapsed_targets.append(collapse(dicts_targets[index]))
 
         # put together the results for that group
         N = len(sets_spfyids[index])
-        results[index] = {}
+        results.append({})
         results[index]['N'] = N
         results[index]['d'] = collapsed_targets[index]
 
         # put together the term/labels for fishers
-        queryAttributeUris[index] = ""
+        queryAttributeUris.append("")
         for query in group:
             # where query is of form:
             # # d is of form: {"negated":false,"relation":"http://purl.obolibrary.org/obo/GENEPIO_0001076","attribute":"O136","logical":null}
