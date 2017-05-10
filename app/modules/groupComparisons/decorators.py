@@ -39,7 +39,7 @@ def toset(func):
         st = set()
         for result in results['results']['bindings']:
             keys = result.keys()
-            # Note: though this is writeen as a loop, we expect only 1 key in keys
+            # Note: though this is written as a loop, we expect only 1 key in keys
             for k in keys:
                 # get the value at that key
                 st.add(result[k]['value'])
