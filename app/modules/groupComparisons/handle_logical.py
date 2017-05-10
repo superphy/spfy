@@ -49,11 +49,11 @@ def handle_logical(group):
     return universe
 
 if __name__ == "__main__":
-    d1 = {"negated":True,"relation":"http://purl.obolibrary.org/obo/GENEPIO_0001076","attribute":"O157",
+    d1 = {"negated":False,"relation":"http://purl.obolibrary.org/obo/GENEPIO_0001076","attribute":"O157",
     "logical":"OR"}
     u_d1 = handle_logical([d1])
     log.info('*Length of u_d1: ' + str(len(u_d1)))
-    d2 = {"negated":True,"relation":"http://purl.obolibrary.org/obo/GENEPIO_0001076","attribute":"O136"}
+    d2 = {"negated":False,"relation":"http://purl.obolibrary.org/obo/GENEPIO_0001076","attribute":"O136"}
     u_d2 = handle_logical([d2])
     log.info('*Length of u_d2: ' + str(len(u_d2)))
     u_d1_or_d2 = handle_logical([d1,d2])
