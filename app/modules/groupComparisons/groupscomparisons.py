@@ -72,6 +72,7 @@ def groupcomparisons(groups, target):
                 queryAttributeUris[index] += query['logical'] + ' '
         queryAttributeUris[index] = queryAttributeUris[index].strip()
 
+    log.info(queryAttributeUris[0] + queryAttributeUris[1])
     df = fishers(queryAttributeUris[0], queryAttributeUris[1], target, results)
     return df
 
