@@ -23,6 +23,7 @@ def fishers(queryAttributeUriA, queryAttributeUriB, targetUri, results):
     log.info(str(nA))
     log.info(str(nB))
     log.info(str(len(dictA)))
+    log.info(type(dictA))
     log.info(str(len(dictB)))
 
     # join all possible targets as req for Fisher's
