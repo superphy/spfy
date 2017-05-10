@@ -13,6 +13,21 @@ log = logging.getLogger(__name__)
 @toset
 @submit
 @prefix
+def query_spfyids(relation, attribute):
+    '''
+    Grabs all objectids having the relation.
+    '''
+    query = """
+    SELECT ?s WHERE {{
+        ?s2 <{relation}> '{attribute}' ; (:hasPart|:isFoundIn) ?s .
+        ?s a <{spfyIdUri}> .
+    }}
+    """.format(relation=relation, attribute=attribute, spfyIdUri=gu(':spfyId'))
+    return query
+
+@toset
+@submit
+@prefix
 def query_objectids(relation, attribute):
     '''
     Grabs all objectids having the relation.
@@ -71,11 +86,13 @@ def resolve_spfyids(relation, attribute):
         attribute: ex. "O136"
     Ret:
     '''
-    print directlink_spfyid(relation, attribute)
+    set_spfyids = set()
     if directlink_spfyid(relation, attribute):
         # if we have a direct link to a spfyid, we can generate automatically.
         set_spfyids = query_objectids(relation, attribute)
-        return set_spfyids
+    else:
+        set_spfyids = query_spfyids(relation, attribute)
+    return set_spfyids
 
 @tolist
 @submit
