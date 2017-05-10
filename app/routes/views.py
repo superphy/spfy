@@ -14,19 +14,20 @@ from modules.spfy import spfy
 from routes.utility_functions import handle_tar, handle_zip, fix_uri
 from modules.groupComparisons.sparql_queries import get_all_attribute_types, get_attribute_values, get_types
 bp = Blueprint('main', __name__)
-from modules.groupComparisons.fishers import fishers
+from modules.groupComparisons.groupcomparisons import groupcomparisons
 
 @bp.route('/api/v0/newgroupcomparison', methods=['POST'])
 def handle_group_comparison_submission():
     query = request.json['groups']
     target = request.json['target']
     print query
-    queryAttributeUriA = query[0][0]['attribute']
-    queryAttributeUriB = query[1][0]['attribute']
-    queryAttributeTypeUriA = query[0][0]['relation']
-    queryAttributeTypeUriB = query[1][0]['relation']
-    targetUri = target
-    f = fishers(queryAttributeUriA, queryAttributeUriB, targetUri, queryAttributeTypeUriA, queryAttributeTypeUriB)
+    # queryAttributeUriA = query[0][0]['attribute']
+    # queryAttributeUriB = query[1][0]['attribute']
+    # queryAttributeTypeUriA = query[0][0]['relation']
+    # queryAttributeTypeUriB = query[1][0]['relation']
+    # targetUri = target
+    # f = fishers(queryAttributeUriA, queryAttributeUriB, targetUri, queryAttributeTypeUriA, queryAttributeTypeUriB)
+    f = groupcomparisons(query, target)
     return f.to_json(orient='split')
 
 @bp.route('/api/v0/get_attribute_values/type/<path:attributetype>')
