@@ -1,4 +1,10 @@
+import logging
+from modules.loggingFunctions import initialize_logging
 from modules.groupComparisons.logical_queries import resolve_spfyids, resolve_spfyids_negated
+
+# logging
+log_file = initialize_logging()
+log = logging.getLogger(__name__)
 
 def handle_logical(group):
     '''
@@ -16,6 +22,7 @@ def handle_logical(group):
         ### get the initial set
         if d['negated']:
             # get everything not d
+            log.info('Handling negation for pair: 'd['relation'], d['attribute'])
             current_set = resolve_spfyids_negated(d['relation'], d['attribute'])
         else:
             # get spfyids in regular fashion
