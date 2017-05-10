@@ -36,7 +36,7 @@ def fishers(queryAttributeUriA, queryAttributeUriB, targetUri, results):
 
     # iterate through targets and perform fisher's
     for index, target in enumerate(all_targets):
-        log.info('Tartget: ' target)
+        log.info('Tartget: ' + target)
         # tags for dataframe
         queryA = queryAttributeUriA
         queryB = queryAttributeUriB
