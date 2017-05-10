@@ -5,7 +5,7 @@ def handle_logical(group):
     Accepts a (list) group (of relations) as input and generates the results dictionary as required for fishers.
     '''
     # sanity check
-    if type(group) not list:
+    if type(group) is not list:
         raise Exception("Invalid Argument. Requires a list of relation-attribute pairs for a group.")
     # create a blank universe which is our end result
     universe = set()
