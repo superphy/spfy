@@ -162,16 +162,6 @@ def query_targets(spfyid, target):
         query += " ?targetobject <{target}> ?target.}}".format(target=target)
     return query
 
-def testcase_pollviaspfy():
-    from tests.constants import set_spfyids_o157
-    start = time.time()
-    print start
-    d = {}
-    for spfyid in set_spfyids_o157:
-        d[spfyid] = query_targetst(spfyid)
-    stop = time.time()
-    print (stop-start)
-    return d
 
 if __name__ == "__main__":
     #print resolve_spfyids(gu('ge:0001076'), 'O157')
