@@ -45,12 +45,14 @@ def fishers(queryAttributeUriA, queryAttributeUriB, targetUri, results):
         else:
             presentQueryA = 0
         absentQueryA = nA - presentQueryA
+        log.info(absentQueryA)
         # check if target is found in queryB
         if target in dictB.keys():
             presentQueryB = len(dictB[target])
         else:
             presentQueryB = 0
         absentQueryB = nB - presentQueryB
+        log.info(absentQueryB)
         # compute fisher's exact test
         # table structure is:
         #           queryUriA   queryUriB
