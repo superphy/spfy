@@ -11,7 +11,6 @@ log_file = initialize_logging()
 log = logging.getLogger(__name__)
 
 def fishers(queryAttributeUriA, queryAttributeUriB, targetUri, results):
-    log.info(results)
     # split the results into sub vars
     ## num of uniq subjects in A
     nA = results[0]['N']
@@ -21,6 +20,7 @@ def fishers(queryAttributeUriA, queryAttributeUriB, targetUri, results):
     dictA = results[0]['d']
     ## dictionary with the results from B
     dictB = results[1]['d']
+    log.info(str(nA) + str(nB) + str(len(dictA)) + str(len(dictB)))
 
     # join all possible targets as req for Fisher's
     # we could instead query the db for `DISTINCT ?s WHERE ?s a targetUri`, but I'm not interested in targets that neither queryA nor queryB has.
