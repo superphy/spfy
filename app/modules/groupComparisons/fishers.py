@@ -4,18 +4,16 @@ import time
 from modules.turtleGrapher.turtle_utils import generate_uri as gu
 from modules.groupComparisons.sparql_queries import query, get_instances
 
-def fishers(queryAttributeUriA, queryAttributeUriB, targetUri, queryAttributeTypeUriA='?p', queryAttributeTypeUriB='?p'):
-    # query the blazegraph db for results
-    results = query(queryAttributeUriA, queryAttributeUriB, targetUri, queryAttributeTypeUriA, queryAttributeTypeUriB)
+def fishers(queryAttributeUriA, queryAttributeUriB, targetUri, results):
     # split the results into sub vars
     ## num of uniq subjects in A
-    nA = results['A']['n']
+    nA = results[0]['N']
     ## num of uniq subjects in B
-    nB = results['B']['n']
+    nB = results[1]['N']
     ## dictionary with the results from A
-    dictA = results['A']['d']
+    dictA = results[0]['d']
     ## dictionary with the results from B
-    dictB = results['B']['d']
+    dictB = results[1]['d']
 
     # join all possible targets as req for Fisher's
     # we could instead query the db for `DISTINCT ?s WHERE ?s a targetUri`, but I'm not interested in targets that neither queryA nor queryB has.
