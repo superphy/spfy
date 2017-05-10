@@ -27,7 +27,6 @@ def handle_logical(group):
         else:
             # get spfyids in regular fashion
             current_set = resolve_spfyids(d['relation'], d['attribute'])
-        print current_set
 
 if __name__ == "__main__":
     d = [{"negated":True,"relation":"http://purl.obolibrary.org/obo/GENEPIO_0001076","attribute":"O157"}]
