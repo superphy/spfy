@@ -90,6 +90,6 @@ if __name__ == "__main__":
     target = "https://www.github.com/superphy#Marker"
 
     start = time.time()
-    print groupcomparisons([db1,db2], target)
+    print groupcomparisons([da,db], target)
     stop = time.time()
     print (stop-start)
