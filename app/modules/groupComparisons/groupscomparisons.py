@@ -60,7 +60,7 @@ def groupcomparisons(groups, target):
 
         # put together the term/labels for fishers
         queryAttributeUris.append("")
-        for query in group:
+        for i, query in enumerate(group):
             # where query is of form:
             # # d is of form: {"negated":false,"relation":"http://purl.obolibrary.org/obo/GENEPIO_0001076","attribute":"O136","logical":null}
             # negation
@@ -69,7 +69,7 @@ def groupcomparisons(groups, target):
             # attribute
             queryAttributeUris[index] += query['attribute'] + ' '
             # logical operator
-            if len(group) > 1 and index < len(group)-1 and 'logical' in query.keys():
+            if len(group) > 1 and i < len(group)-1 and 'logical' in query.keys():
                 queryAttributeUris[index] += query['logical'] + ' '
         queryAttributeUris[index] = queryAttributeUris[index].strip()
 
