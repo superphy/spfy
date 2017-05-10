@@ -30,7 +30,6 @@ def fishers(queryAttributeUriA, queryAttributeUriB, targetUri, results):
     all_targets = set(dictA.keys())
     all_targets.update(dictB.keys())
     log.info('Length of All Targets: ' + str(len(all_targets)))
-    log.info(all_targets)
 
     # create a pandas dataframe for storing aggregate results from fisher's
     df = pd.DataFrame(columns=['target','queryA','queryB','presentQueryA','absentQueryA','presentQueryB','absentQueryB','pvalue','oddsratio'])
@@ -46,14 +45,16 @@ def fishers(queryAttributeUriA, queryAttributeUriB, targetUri, results):
         else:
             presentQueryA = 0
         absentQueryA = nA - presentQueryA
-        log.info(absentQueryA)
+        log.info('presentQueryA: ' + str(presentQueryA))
+        log.info('absentQueryA: ' + str(absentQueryA))
         # check if target is found in queryB
         if target in dictB.keys():
             presentQueryB = len(dictB[target])
         else:
             presentQueryB = 0
         absentQueryB = nB - presentQueryB
-        log.info(absentQueryB)
+        log.info('presentQueryB: ' + str(presentQueryB))
+        log.info('absentQueryB: ' + str(absentQueryB))
         # compute fisher's exact test
         # table structure is:
         #           queryUriA   queryUriB
