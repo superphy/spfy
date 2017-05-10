@@ -118,5 +118,6 @@ def testcase_pollviaspfy():
     return d
 
 if __name__ == "__main__":
-    #print resolve_spfyids(gu('ge:0001076'), 'O157')
-    print testcase_pollviaspfy()
+    print resolve_spfyids(gu('ge:0001076'), 'O157')
+    #print testcase_pollviaspfy()
+    print resolve_spfyids(gu('g:Identifier'), 'LGNE01000001.1')
