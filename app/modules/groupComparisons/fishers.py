@@ -2,9 +2,7 @@ import logging
 from modules.loggingFunctions import initialize_logging
 import scipy.stats as stats
 import pandas as pd
-import time
-from modules.turtleGrapher.turtle_utils import generate_uri as gu
-from modules.groupComparisons.sparql_queries import query, get_instances
+#import time
 
 # logging
 log_file = initialize_logging()
@@ -76,7 +74,7 @@ if __name__ == "__main__":
     '''
     For testing...
     '''
-    start = time.time()
-    print fishers('O157', 'O101', gu(':VirulenceFactor'), gu('ge:0001076'), gu('ge:0001076'))
-    stop = time.time()
-    print(stop-start)
+    #start = time.time()
+    #print fishers('O157', 'O101', gu(':VirulenceFactor'), gu('ge:0001076'), gu('ge:0001076'))
+    #stop = time.time()
+    #print(stop-start)
