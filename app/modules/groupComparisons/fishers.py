@@ -23,13 +23,13 @@ def fishers(queryAttributeUriA, queryAttributeUriB, targetUri, results):
     log.info(str(nA))
     log.info(str(nB))
     log.info(str(len(dictA)))
-    log.info(type(dictA))
     log.info(str(len(dictB)))
 
     # join all possible targets as req for Fisher's
     # we could instead query the db for `DISTINCT ?s WHERE ?s a targetUri`, but I'm not interested in targets that neither queryA nor queryB has.
     all_targets = set(dictA.keys())
     all_targets.update(dictB.keys())
+    log.info(len(all_targets))
 
     # create a pandas dataframe for storing aggregate results from fisher's
     df = pd.DataFrame(columns=['target','queryA','queryB','presentQueryA','absentQueryA','presentQueryB','absentQueryB','pvalue','oddsratio'])
