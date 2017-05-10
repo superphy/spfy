@@ -36,7 +36,7 @@ def fishers(queryAttributeUriA, queryAttributeUriB, targetUri, results):
 
     # iterate through targets and perform fisher's
     for index, target in enumerate(all_targets):
-        log.info('Tartget: ' + target)
+        log.info('Target: ' + target)
         # tags for dataframe
         queryA = queryAttributeUriA
         queryB = queryAttributeUriB
@@ -56,7 +56,10 @@ def fishers(queryAttributeUriA, queryAttributeUriB, targetUri, results):
         absentQueryB = nB - presentQueryB
         log.info('presentQueryB: ' + str(presentQueryB))
         log.info('absentQueryB: ' + str(absentQueryB))
-        if absentQueryB < 0:
+        if absentQueryB < 0 or absentQueryA < 0:
+            log.error('A:')
+            log.error(dictA[target])
+            log.error('B:')
             log.error(dictB[target])
         # compute fisher's exact test
         # table structure is:

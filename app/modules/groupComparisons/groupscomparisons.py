@@ -17,6 +17,8 @@ def collapse(dict_targets):
     # define the base dictionary
     d = {}
     for spfyid, set_targets in dict_targets.iteritems():
+        if len(spfyid) < 2:
+            log.error(spfyid)
         for target in set_targets:
             if target not in d.keys():
                 # then that gene has not spfyId assoc. with it yet
