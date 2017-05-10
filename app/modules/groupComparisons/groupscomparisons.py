@@ -117,3 +117,22 @@ if __name__ == "__main__":
     log.info(groupcomparisons([da,db], target))
     stop = time.time()
     log.info(stop-start)
+
+    ## test AND with NO with  non direct link
+    da1 = {"negated":True,"relation":"http://purl.obolibrary.org/obo/GENEPIO_0001076","attribute":"O157",
+    "logical":"AND"}
+    da2 = {"negated":False,"relation":"http://www.biointerchange.org/gfvo#Identifier","attribute":"LGNE01000001.1"}
+    da = [da1,da2]
+
+    db1 = {"negated":False,"relation":"http://purl.obolibrary.org/obo/GENEPIO_0001076","attribute":"O84",
+    "logical":"OR"}
+    db2 = {"negated":False,"relation":"http://purl.obolibrary.org/obo/GENEPIO_0001076","attribute":"O54"}
+    db = [db1,db2]
+
+    target = "https://www.github.com/superphy#Marker"
+
+    start = time.time()
+    log.info([da,db])
+    log.info(groupcomparisons([da,db], target))
+    stop = time.time()
+    log.info(stop-start)
