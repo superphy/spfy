@@ -1,10 +1,16 @@
+import logging
 import scipy.stats as stats
 import pandas as pd
 import time
 from modules.turtleGrapher.turtle_utils import generate_uri as gu
 from modules.groupComparisons.sparql_queries import query, get_instances
 
+# logging
+log_file = initialize_logging()
+log = logging.getLogger(__name__)
+
 def fishers(queryAttributeUriA, queryAttributeUriB, targetUri, results):
+    log.info(results)
     # split the results into sub vars
     ## num of uniq subjects in A
     nA = results[0]['N']
