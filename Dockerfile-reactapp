@@ -10,6 +10,9 @@ RUN mkdir /app
 COPY ./reactapp /app
 WORKDIR /app
 RUN yarn install
+# part of a bug fix; see https://github.com/sass/node-sass/issues/1579
+RUN yarn add node-sass
+RUN npm rebuild node-sass
 #debug
 RUN ls -lah
 RUN yarn build
