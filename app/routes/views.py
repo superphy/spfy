@@ -79,6 +79,10 @@ def fetch_job(job_id):
     return "fudge muffins!", 500
 
 @bp.route('/api/v0/results/<job_id>')
+def job_status_reactapp(job_id):
+    r = job_status(job_id)
+    return r
+
 @bp.route('/results/<job_id>')
 def job_status(job_id):
     job = fetch_job(job_id)
