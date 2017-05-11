@@ -56,6 +56,6 @@ def fix_uri(s):
 def is_json(myjson):
   try:
     json_object = json.loads(myjson)
-  except e:
+  except:
     return False
   return True
