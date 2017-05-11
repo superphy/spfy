@@ -78,6 +78,7 @@ def fetch_job(job_id):
             return job
     return "fudge muffins!", 500
 
+@bp.route('/api/v0/results/<job_id>')
 @bp.route('/results/<job_id>')
 def job_status(job_id):
     job = fetch_job(job_id)
