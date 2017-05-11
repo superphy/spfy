@@ -84,6 +84,7 @@ def job_status_reactapp(job_id):
     This provides an endpoint for the reactapp to poll results. We leave job_status() intact to maintain backwards compatibility with the AngularJS app.
     '''
     r = job_status(job_id)
+    print r
     if r == "Still pending":
         return jsonify({'pending': True})
     elif is_json(r):
