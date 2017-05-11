@@ -11,10 +11,13 @@ from werkzeug.utils import secure_filename
 from flask_recaptcha import ReCaptcha
 # spfy code
 from modules.spfy import spfy
-from routes.utility_functions import handle_tar, handle_zip, fix_uri
+from routes.utility_functions import handle_tar, handle_zip, fix_uri, is_json
 from modules.groupComparisons.sparql_queries import get_all_attribute_types, get_attribute_values, get_types
-bp = Blueprint('main', __name__)
+# Group Comparisons code
 from modules.groupComparisons.groupcomparisons import groupcomparisons
+from modules.gc import blob_gc_enqueue
+
+bp = Blueprint('main', __name__)
 
 @bp.route('/api/v0/newgroupcomparison', methods=['POST'])
 def handle_group_comparison_submission():
@@ -27,8 +30,9 @@ def handle_group_comparison_submission():
     # queryAttributeTypeUriB = query[1][0]['relation']
     # targetUri = target
     # f = fishers(queryAttributeUriA, queryAttributeUriB, targetUri, queryAttributeTypeUriA, queryAttributeTypeUriB)
+    blob_gc_enqueue(query, target)
     f = groupcomparisons(query, target)
-    return f.to_json(orient='split')
+    return f
 
 @bp.route('/api/v0/get_attribute_values/type/<path:attributetype>')
 def call_get_attribute_values(attributetype):
@@ -77,7 +81,10 @@ def fetch_job(job_id):
 def job_status(job_id):
     job = fetch_job(job_id)
     if job.is_finished:
-        return jsonify(job.result)
+        if is_json(job.result):
+            return job.result
+        else:
+            return jsonify(job.result)
     elif job.is_failed:
         return job.exc_info, 415
     else:

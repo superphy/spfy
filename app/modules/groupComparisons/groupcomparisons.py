@@ -76,7 +76,7 @@ def groupcomparisons(groups, target):
     log.debug(queryAttributeUris[0])
     log.debug(queryAttributeUris[1])
     df = fishers(queryAttributeUris[0], queryAttributeUris[1], target, results)
-    return df
+    return df.to_json(orient='split')
 
 if __name__ == "__main__":
     import time
