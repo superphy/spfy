@@ -13,8 +13,11 @@ from flask_recaptcha import ReCaptcha
 from modules.spfy import spfy
 from routes.utility_functions import handle_tar, handle_zip, fix_uri
 from modules.groupComparisons.sparql_queries import get_all_attribute_types, get_attribute_values, get_types
-bp = Blueprint('main', __name__)
+# Group Comparisons code
 from modules.groupComparisons.groupcomparisons import groupcomparisons
+from modules.gc import blob_gc_enqueue
+
+bp = Blueprint('main', __name__)
 
 @bp.route('/api/v0/newgroupcomparison', methods=['POST'])
 def handle_group_comparison_submission():
@@ -27,6 +30,7 @@ def handle_group_comparison_submission():
     # queryAttributeTypeUriB = query[1][0]['relation']
     # targetUri = target
     # f = fishers(queryAttributeUriA, queryAttributeUriB, targetUri, queryAttributeTypeUriA, queryAttributeTypeUriB)
+    blob_gc_enqueue(query, target)
     f = groupcomparisons(query, target)
     return f.to_json(orient='split')
 
