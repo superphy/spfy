@@ -30,9 +30,10 @@ def handle_group_comparison_submission():
     # queryAttributeTypeUriB = query[1][0]['relation']
     # targetUri = target
     # f = fishers(queryAttributeUriA, queryAttributeUriB, targetUri, queryAttributeTypeUriA, queryAttributeTypeUriB)
-    blob_gc_enqueue(query, target)
-    f = groupcomparisons(query, target)
-    return f
+    jobid = blob_gc_enqueue(query, target)
+    #f = groupcomparisons(query, target)
+    #return f
+    return jobid
 
 @bp.route('/api/v0/get_attribute_values/type/<path:attributetype>')
 def call_get_attribute_values(attributetype):
@@ -76,6 +77,30 @@ def fetch_job(job_id):
         if job is not None:
             return job
     return "fudge muffins!", 500
+
+@bp.route('/api/v0/results/<job_id>')
+def job_status_reactapp(job_id):
+    '''
+    This provides an endpoint for the reactapp to poll results. We leave job_status() intact to maintain backwards compatibility with the AngularJS app.
+    '''
+    r = job_status(job_id)
+    print r
+    status_code = int()
+    msg = ""
+    for value in r:
+        if type(value) is int:
+            status_code = value
+        else:
+            msg = value
+    if status_code == 202:
+        #return jsonify({'pending': True})
+        return 'pending', 204
+    elif status_code == 415:
+        # job failed and you have job.exc_info
+        return r, 500
+    else:
+        # then job has complited succesfully
+        return r, 200
 
 @bp.route('/results/<job_id>')
 def job_status(job_id):
