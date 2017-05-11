@@ -85,14 +85,19 @@ def job_status_reactapp(job_id):
     '''
     r = job_status(job_id)
     print r
-    if r == "Still pending":
+    for value in r:
+        if type(value) is int:
+            status_code = value
+        else:
+            msg = value
+    if status_code == 202:
         return jsonify({'pending': True})
-    elif is_json(r):
-        # then job has complited succesfully
-        return jsonify({'fulfilled': True, 'data': r})
-    else:
+    elif status code == 415:
         # job failed and you have job.exc_info
         return jsonify({'rejected': True, 'data': r})
+    else:
+        # then job has complited succesfully
+        return jsonify({'fulfilled': True, 'data': r})
 
 @bp.route('/results/<job_id>')
 def job_status(job_id):
