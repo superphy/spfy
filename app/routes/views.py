@@ -80,8 +80,18 @@ def fetch_job(job_id):
 
 @bp.route('/api/v0/results/<job_id>')
 def job_status_reactapp(job_id):
+    '''
+    This provides an endpoint for the reactapp to poll results. We leave job_status() intact to maintain backwards compatibility with the AngularJS app.
+    '''
     r = job_status(job_id)
-    return r
+    if r == "Still pending":
+        return jsonify({'pending': True})
+    elif is_json(r):
+        # then job has complited succesfully
+        return {'fulfilled': True, 'data': r}
+    else:
+        # job failed and you have job.exc_info
+        return {'rejected': True, 'data': r}
 
 @bp.route('/results/<job_id>')
 def job_status(job_id):
