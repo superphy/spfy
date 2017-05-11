@@ -11,7 +11,7 @@ from werkzeug.utils import secure_filename
 from flask_recaptcha import ReCaptcha
 # spfy code
 from modules.spfy import spfy
-from routes.utility_functions import handle_tar, handle_zip, fix_uri
+from routes.utility_functions import handle_tar, handle_zip, fix_uri, is_json
 from modules.groupComparisons.sparql_queries import get_all_attribute_types, get_attribute_values, get_types
 # Group Comparisons code
 from modules.groupComparisons.groupcomparisons import groupcomparisons
@@ -81,7 +81,10 @@ def fetch_job(job_id):
 def job_status(job_id):
     job = fetch_job(job_id)
     if job.is_finished:
-        return jsonify(job.result)
+        if is_json(job.result):
+            return job.result
+        else:
+            return jsonify(job.result)
     elif job.is_failed:
         return job.exc_info, 415
     else:
