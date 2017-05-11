@@ -13,6 +13,16 @@ services:
     volumes:
     - /datastore
 
+  reactapp:
+    build:
+      context: .
+      dockerfile: Dockerfile-reactapp
+    image: reactapp
+    ports:
+    - "5000:8090"
+    depends_on:
+    - webserver
+    
   worker:
     build:
       context: .
