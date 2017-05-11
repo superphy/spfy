@@ -85,6 +85,8 @@ def job_status_reactapp(job_id):
     '''
     r = job_status(job_id)
     print r
+    status_code = int()
+    msg = ""
     for value in r:
         if type(value) is int:
             status_code = value
