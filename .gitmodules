@@ -2,6 +2,3 @@
 	path = app/modules/ectyper/ecoli_serotyping
 	url = https://github.com/phac-nml/ecoli_serotyping.git
 	branch = superphy
-[submodule "app/reactapp"]
-	path = app/reactapp
-	url = https://github.com/superphy/reactapp.git
