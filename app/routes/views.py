@@ -89,10 +89,10 @@ def job_status_reactapp(job_id):
         return jsonify({'pending': True})
     elif is_json(r):
         # then job has complited succesfully
-        return {'fulfilled': True, 'data': r}
+        return jsonify({'fulfilled': True, 'data': r})
     else:
         # job failed and you have job.exc_info
-        return {'rejected': True, 'data': r}
+        return jsonify({'rejected': True, 'data': r})
 
 @bp.route('/results/<job_id>')
 def job_status(job_id):
