@@ -94,7 +94,7 @@ def job_status_reactapp(job_id):
             msg = value
     if status_code == 202:
         #return jsonify({'pending': True})
-        return 204
+        return 'pending', 204
     elif status_code == 415:
         # job failed and you have job.exc_info
         return r, 500
