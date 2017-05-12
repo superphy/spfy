@@ -48,7 +48,7 @@ def fix_uri(s):
     '''
     if 'http:/' in s:
         s = s.replace('http:/', 'http://')
-    elif 'https:/' in attributetype:
+    elif 'https:/' in s:
         s = s.replace('https:/', 'https://')
     uri = URIRef(s)
     return uri
