@@ -87,7 +87,10 @@ def is_group(uri):
     Returns True if a given URI is in the list of possible object types (ie. group types), otherwise False (ie. attributeType).
     '''
     log.info('is_group:' + uri)
-    isgroup = unicode(uri) in get_types()
+    log.info('is_group: get_types()')
+    types = get_types()
+    log.info(types)
+    isgroup = unicode(uri) in types
     log.info('is_group:' + str(isgroup))
     return isgroup
 
