@@ -11,23 +11,29 @@ from werkzeug.utils import secure_filename
 from flask_recaptcha import ReCaptcha
 # spfy code
 from modules.spfy import spfy
-from routes.utility_functions import handle_tar, handle_zip, fix_uri
+from routes.utility_functions import handle_tar, handle_zip, fix_uri, is_json
 from modules.groupComparisons.sparql_queries import get_all_attribute_types, get_attribute_values, get_types
+# Group Comparisons code
+from modules.groupComparisons.groupcomparisons import groupcomparisons
+from modules.gc import blob_gc_enqueue
+
 bp = Blueprint('main', __name__)
-from modules.groupComparisons.fishers import fishers
 
 @bp.route('/api/v0/newgroupcomparison', methods=['POST'])
 def handle_group_comparison_submission():
     query = request.json['groups']
     target = request.json['target']
     print query
-    queryAttributeUriA = query[0][0]['attribute']
-    queryAttributeUriB = query[1][0]['attribute']
-    queryAttributeTypeUriA = query[0][0]['relation']
-    queryAttributeTypeUriB = query[1][0]['relation']
-    targetUri = target
-    f = fishers(queryAttributeUriA, queryAttributeUriB, targetUri, queryAttributeTypeUriA, queryAttributeTypeUriB)
-    return f.to_json(orient='split')
+    # queryAttributeUriA = query[0][0]['attribute']
+    # queryAttributeUriB = query[1][0]['attribute']
+    # queryAttributeTypeUriA = query[0][0]['relation']
+    # queryAttributeTypeUriB = query[1][0]['relation']
+    # targetUri = target
+    # f = fishers(queryAttributeUriA, queryAttributeUriB, targetUri, queryAttributeTypeUriA, queryAttributeTypeUriB)
+    jobid = blob_gc_enqueue(query, target)
+    #f = groupcomparisons(query, target)
+    #return f
+    return jobid
 
 @bp.route('/api/v0/get_attribute_values/type/<path:attributetype>')
 def call_get_attribute_values(attributetype):
@@ -72,11 +78,38 @@ def fetch_job(job_id):
             return job
     return "fudge muffins!", 500
 
+@bp.route('/api/v0/results/<job_id>')
+def job_status_reactapp(job_id):
+    '''
+    This provides an endpoint for the reactapp to poll results. We leave job_status() intact to maintain backwards compatibility with the AngularJS app.
+    '''
+    r = job_status(job_id)
+    print r
+    status_code = int()
+    msg = ""
+    for value in r:
+        if type(value) is int:
+            status_code = value
+        else:
+            msg = value
+    if status_code == 202:
+        #return jsonify({'pending': True})
+        return 'pending', 204
+    elif status_code == 415:
+        # job failed and you have job.exc_info
+        return r, 500
+    else:
+        # then job has complited succesfully
+        return r, 200
+
 @bp.route('/results/<job_id>')
 def job_status(job_id):
     job = fetch_job(job_id)
     if job.is_finished:
-        return jsonify(job.result)
+        if is_json(job.result):
+            return job.result
+        else:
+            return jsonify(job.result)
     elif job.is_failed:
         return job.exc_info, 415
     else:

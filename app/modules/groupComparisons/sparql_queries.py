@@ -7,6 +7,7 @@ from SPARQLWrapper import SPARQLWrapper, JSON
 from modules.loggingFunctions import initialize_logging
 from modules.turtleGrapher.turtle_utils import generate_uri as gu
 from modules.groupComparisons.sparql_utils import generate_prefixes
+from modules.groupComparisons.decorators import toset, tolist, submit
 
 # logging
 log_file = initialize_logging()
@@ -14,56 +15,6 @@ log = logging.getLogger(__name__)
 
 blazegraph_url = config.database['blazegraph_url']
 #blazegraph_url = 'http://localhost:8080/bigdata/sparql'
-
-def toset(targetname):
-    '''
-    A decorator to convert JSON response of sparql query to a set.
-    '''
-    def toset_decorator(func):
-        @wraps(func)
-        def func_wrapper(*args, **kwargs):
-            results = func(*args, **kwargs)
-            st = set()
-            for result in results['results']['bindings']:
-                st.add(result[targetname]['value'])
-            log.debug(st)
-            return st
-        return func_wrapper
-    return toset_decorator
-
-def tolist(func):
-    '''
-    A decorator to convert JSON response of sparql query to a list.
-    '''
-    @wraps(func)
-    def func_wrapper(*args, **kwargs):
-        results = func(*args, **kwargs)
-        l = []
-        for result in results['results']['bindings']:
-            keys = result.keys()
-            # Note: though this is writeen as a loop, we expect only 1 key in keys
-            for k in keys:
-                # get the value at that key
-                l.append(result[k]['value'])
-        log.debug(l)
-        return l
-    return func_wrapper
-
-def submit(func):
-    '''
-    A decorator to submit a given query generation function.
-    '''
-    @wraps(func)
-    def func_wrapper(*args, **kwargs):
-        query = func(*args, **kwargs)
-        log.debug(query)
-        sparql = SPARQLWrapper(blazegraph_url)
-        sparql.setQuery(query)
-        sparql.setReturnFormat(JSON)
-        results = sparql.query().convert()
-        log.debug(results)
-        return results
-    return func_wrapper
 
 @tolist
 @submit
@@ -113,7 +64,7 @@ def get_attribute_values(attributeTypeUri):
     """.format(attributeTypeUri=attributeTypeUri)
     return query
 
-@toset(targetname='objecttype')
+@toset
 @submit
 def get_types():
     '''
@@ -137,116 +88,6 @@ def is_group(uri):
     isgroup = unicode(uri) in get_types()
     log.debug(isgroup)
     return isgroup
-
-def parse_results_todict(results, subjectname, targetname):
-    '''
-    Converts SPARQL JSON results into a python dictionary.
-    We reverse the order as we're more interested in targetname: count(DISTINCT subjectname).
-    The use of sets is to ensure DISTINCT (though this should be accounted for by SPARQL query).
-    '''
-    # this is the general dict to hold results
-    d = {}
-    # a set to count number of unique subjectnames
-    st = set()
-    # the loop
-    for result in results['results']['bindings']:
-        if result[targetname]['value'] in d.keys():
-            # then a set already exists
-            d[result[targetname]['value']].add(result[subjectname]['value'])
-        else:
-            d[result[targetname]['value']] = set([result[subjectname]['value']])
-        # add the subjectname to the set
-        st.add(result[subjectname]['value'])
-    # temp code to pickle result
-    # pickle.dump(d,open(str(time.time()) + '.p', 'wb'))
-    return {'n':len(st),'d':d}
-
-def to_target(attributeUri, targetUri, attributeTypeUri='?p'):
-    '''
-    Generates a query that selects all targetUri from a given attribute group.
-    The attributeTypeUri isn't necessary, but specifying it (instead of using the wildcard) improves performance.
-    '''
-    sparql = SPARQLWrapper(blazegraph_url)
-    # add PREFIXes to sparql query
-    query = generate_prefixes()
-    # the queries have to be structured differently if the queryUri is a object type or is a specific instance
-    if is_group(targetUri):
-        # then targetUri is a object type
-        query += """
-        SELECT ?s ?target WHERE {{
-            ?s <{attributeTypeUri}> '{attributeUri}' ; (:hasPart|:isFoundIn) ?target .
-            ?target a <{targetUri}> .
-        }}
-        """.format(attributeTypeUri=attributeTypeUri, attributeUri=attributeUri, targetUri=targetUri)
-    else:
-        # then targetUri is an attribute
-        query += """
-        SELECT ?s ?target WHERE {{
-            ?s <{attributeTypeUri}> '{attributeUri}' ; (:hasPart|:isFoundIn) ?targetobject .
-            ?targetobject <{targetUri}> ?target.
-        }}
-        """.format(attributeTypeUri=attributeTypeUri, attributeUri=attributeUri, targetUri=targetUri)
-    sparql.setQuery(query)
-    sparql.setReturnFormat(JSON)
-    results = sparql.query().convert()
-    return parse_results_todict(results, 's', 'target')
-
-def logical(query_stringA, query_stringB):
-    def parse(query_string):
-        '''
-        Order of Operations: NOT precedes AND precede OR
-        Expect form:
-        NOT (URIa) AND (URIb) OR (URIc)
-        Is parsed as:
-        ((NOT (URIa)) AND (URIb)) OR (URIc)
-        The end result should be:
-        SELECT ?s ?target
-        WHERE{
-            {
-                ?s ?p URIb
-                MINUS {?s ?p {URIa}}
-            }
-            UNION
-            {
-                ?s ?p URIc
-            }
-        }
-
-        Note: the MINUS must be at the bottom.
-        Ex.
-            WHERE
-            {
-            	MINUS
-              	{?s ge:0001076 'O101' .}
-              	?s a :spfyId
-            }
-        is treated differently (5353 results) vs.:
-            WHERE
-            {
-              	?s a :spfyId
-                     MINUS
-              	{?s ge:0001076 'O101' .}
-            }
-        (5350 results)
-        '''
-        pass
-    pass
-
-def query(queryAttributeUriA, queryAttributeUriB, targetUri, queryAttributeTypeUriA='?p', queryAttributeTypeUriB='?p'):
-    # base dictionary for results
-    d = {}
-
-    # query results for UriA
-    resultsA = to_target(queryAttributeUriA, targetUri, queryAttributeTypeUriA)
-    log.debug(resultsA)
-    d.update({'A':resultsA})
-
-    # query results for UriB
-    resultsB = to_target(queryAttributeUriB, targetUri, queryAttributeTypeUriB)
-    log.debug(resultsB)
-    d.update({'B':resultsB})
-
-    return d
 
 if __name__ == "__main__":
     '''

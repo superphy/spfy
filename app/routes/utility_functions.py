@@ -1,6 +1,7 @@
 import os
 import tarfile
 import zipfile
+import json
 from flask import current_app
 from werkzeug.utils import secure_filename
 from rdflib import URIRef
@@ -51,3 +52,10 @@ def fix_uri(s):
         s = s.replace('https:/', 'https://')
     uri = URIRef(s)
     return uri
+
+def is_json(myjson):
+  try:
+    json_object = json.loads(myjson)
+  except:
+    return False
+  return True
