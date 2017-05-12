@@ -55,7 +55,8 @@ def combine_types():
     '''
     set_attribute_types = set(get_all_attribute_types())
     set_object_types = get_types() # get types returns a set by default
-    return jsonify(list(set_attribute_types.union(set_object_types)))
+    set_all_types = set_attribute_types.union(set_object_types)
+    return jsonify(list(set_all_types.difference(blacklist)))
 
 @bp.route('/api/v0/get_all_attribute_types')
 def call_get_all_atribute_types():
@@ -63,7 +64,8 @@ def call_get_all_atribute_types():
     Front-End API:
     Get all possible attribute types.
     '''
-    return jsonify(get_all_attribute_types())
+    set_all_attribute_types = set(get_all_attribute_types())
+    return jsonify(list(set_all_attribute_types.difference(blacklist)))
 
 def fetch_job(job_id):
     '''
