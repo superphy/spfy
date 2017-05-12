@@ -62,6 +62,7 @@ def get_attribute_values(attributeTypeUri):
     SELECT DISTINCT ?attribute WHERE {{
         ?s <{attributeTypeUri}> ?attribute .
     }}
+    LIMIT 100
     """.format(attributeTypeUri=attributeTypeUri)
     return query
 
