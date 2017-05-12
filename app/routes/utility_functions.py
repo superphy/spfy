@@ -70,6 +70,9 @@ def to_readable(values,readable):
     '''
     Converts URI to human readable form.
     If you want the inverse, call this function with readable.inv
+    Args:
+        values: (list/set/string) of the value we want to convert
+        readable: the bidict (this is a lib from pip). defined in blacklist.py
     '''
     st = set()
     if type(values) in (list, set):
