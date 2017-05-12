@@ -12,7 +12,8 @@ from flask_recaptcha import ReCaptcha
 # spfy code
 from modules.spfy import spfy
 from routes.utility_functions import handle_tar, handle_zip, fix_uri, is_json
-from modules.groupComparisons.sparql_queries import get_all_attribute_types, get_attribute_values, get_types
+from routes.blacklist import blacklist
+from modules.groupComparisons.frontend_queries import get_all_attribute_types, get_attribute_values, get_types
 # Group Comparisons code
 from modules.groupComparisons.groupcomparisons import groupcomparisons
 from modules.gc import blob_gc_enqueue
