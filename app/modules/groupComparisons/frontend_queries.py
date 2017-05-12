@@ -56,6 +56,7 @@ def get_attribute_values(attributeTypeUri):
     Given an attribute type(ex. ge:0001076, aka. O-Type).
     Returns a list of all distinct attribute values.
     '''
+    is_group(attributeTypeUri)
     # SPARQL Query
     query = """
     SELECT DISTINCT ?attribute WHERE {{
