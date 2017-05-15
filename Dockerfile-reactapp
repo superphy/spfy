@@ -1,0 +1,28 @@
+FROM node:7.10.0-alpine
+
+# set yarn version
+ENV YARN_VERSION 0.17.6
+
+# Create app directory
+RUN mkdir /app
+
+# Install app dependencies & build
+COPY ./reactapp /app
+WORKDIR /app
+# part of a bug fix; see https://github.com/sass/node-sass/issues/1579
+RUN yarn add node-sass
+RUN npm rebuild node-sass
+
+RUN yarn install
+#debug
+RUN ls -lah
+RUN yarn build
+
+WORKDIR build
+# Install serve
+RUN yarn add serve
+
+EXPOSE 5000
+
+# defined in package.json
+CMD [ "yarn", "serve", "-s build" ]

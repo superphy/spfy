@@ -2,9 +2,15 @@ import os
 import tarfile
 import zipfile
 import json
+import logging
+from modules.loggingFunctions import initialize_logging
 from flask import current_app
 from werkzeug.utils import secure_filename
 from rdflib import URIRef
+
+# logging
+log_file = initialize_logging()
+log = logging.getLogger(__name__)
 
 def handle_tar(filename, now):
     if tarfile.is_tarfile(filename):
@@ -48,7 +54,7 @@ def fix_uri(s):
     '''
     if 'http:/' in s:
         s = s.replace('http:/', 'http://')
-    elif 'https:/' in attributetype:
+    elif 'https:/' in s:
         s = s.replace('https:/', 'https://')
     uri = URIRef(s)
     return uri
@@ -59,3 +65,31 @@ def is_json(myjson):
   except:
     return False
   return True
+
+def to_readable(values,readable):
+    '''
+    Converts URI to human readable form.
+    If you want the inverse, call this function with readable.inv
+    Args:
+        values: (list/set/string) of the value we want to convert
+        readable: the bidict (this is a lib from pip). defined in blacklist.py
+    '''
+    st = set()
+    if type(values) in (list, set):
+        for value in values:
+            try:
+                st.add(readable[value])
+            except:
+                log.error('to_readable(): No readable form found for ' + value)
+                st.add(value)
+        if type(uris) is set:
+            return st
+        else:
+            return list(st)
+    else:
+        # sent me a single item
+        try:
+            return readable[values]
+        except:
+            log.error('to_readable(): No readable form found for ' + values)
+            return values

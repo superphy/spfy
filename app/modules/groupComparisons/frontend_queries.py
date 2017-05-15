@@ -56,11 +56,13 @@ def get_attribute_values(attributeTypeUri):
     Given an attribute type(ex. ge:0001076, aka. O-Type).
     Returns a list of all distinct attribute values.
     '''
+    is_group(attributeTypeUri)
     # SPARQL Query
     query = """
     SELECT DISTINCT ?attribute WHERE {{
         ?s <{attributeTypeUri}> ?attribute .
     }}
+    LIMIT 100
     """.format(attributeTypeUri=attributeTypeUri)
     return query
 
@@ -84,9 +86,12 @@ def is_group(uri):
     '''
     Returns True if a given URI is in the list of possible object types (ie. group types), otherwise False (ie. attributeType).
     '''
-    log.debug(uri)
-    isgroup = unicode(uri) in get_types()
-    log.debug(isgroup)
+    log.info('is_group:' + uri)
+    log.info('is_group: get_types()')
+    types = get_types()
+    log.info(types)
+    isgroup = unicode(uri) in types
+    log.info('is_group:' + str(isgroup))
     return isgroup
 
 if __name__ == "__main__":
