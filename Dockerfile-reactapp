@@ -18,6 +18,7 @@ RUN yarn install
 RUN ls -lah
 RUN yarn build
 
+WORKDIR build
 # Install serve
 RUN yarn add serve
 
