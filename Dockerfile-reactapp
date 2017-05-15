@@ -25,4 +25,4 @@ RUN yarn add serve && \
 EXPOSE 5000
 
 # defined in package.json
-CMD [ "yarn", "serve", "-s build" ]
+CMD yarn serve -s build &
