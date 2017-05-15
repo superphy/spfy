@@ -19,10 +19,9 @@ RUN ls -lah
 RUN yarn build
 
 # Install serve
-RUN yarn add serve && \
-  yarn serve -s build
+RUN yarn add serve
 
 EXPOSE 5000
 
 # defined in package.json
-CMD yarn serve -s build &
+CMD [ "yarn", "serve", "-s build" ]
