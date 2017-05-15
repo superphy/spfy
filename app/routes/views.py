@@ -53,10 +53,13 @@ def combine_types():
     '''
     Returns all URIs that is either a attribute type or and object type.
     '''
-    set_attribute_types = set(get_all_attribute_types())
-    set_object_types = get_types() # get types returns a set by default
-    set_all_types = set_attribute_types.union(set_object_types)
-    return jsonify(list(set_all_types.difference(blacklist)))
+    # set_attribute_types = set(get_all_attribute_types())
+    # set_object_types = get_types() # get types returns a set by default
+    # set_all_types = set_attribute_types.union(set_object_types)
+    # return jsonify(list(set_all_types.difference(blacklist)))
+    # only choices in release-3.1.0, will be removed after packaging into Docker
+    release_310_options = set(["https://www.github.com/superphy#VirulenceFactor",  "https://www.github.com/superphy#AntimicrobialResistanceGene",  "https://www.github.com/superphy#Marker"])
+    return jsonify(list(release_310_options))
 
 @bp.route('/api/v0/get_all_attribute_types')
 def call_get_all_atribute_types():
@@ -65,6 +68,9 @@ def call_get_all_atribute_types():
     Get all possible attribute types.
     '''
     set_all_attribute_types = set(get_all_attribute_types())
+    # restrictions specific to release-3.1.0, will be removed after packaging into Docker
+    release_310_restrictions = set(["http://www.biointerchange.org/gfvo#DNASequence", "http://biohackathon.org/resource/faldo#Position", "http://www.biointerchange.org/gfvo#Identifier"])
+    set_all_attribute_types = set_all_attribute_types.difference(release_310_restrictions)
     return jsonify(list(set_all_attribute_types.difference(blacklist)))
 
 def fetch_job(job_id):
