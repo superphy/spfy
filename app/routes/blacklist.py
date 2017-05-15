@@ -1,5 +1,3 @@
-from bidict import bidict
-
 # a set of blacklisted terms that reactapp user can't select from
 blacklist = set([
     "http://purl.org/dc/elements/1.1/identifier",
@@ -32,14 +30,14 @@ blacklist = set([
 ])
 
 # a mapping of the readable form of a uri to their actual uri in blazegraph
-readable = bidict({
-    "http://purl.obolibrary.org/obo/GENEPIO_0001076":"O-Type",
-    "http://purl.obolibrary.org/obo/GENEPIO_0001077":"H-Type",
-    "https://www.github.com/superphy#AntimicrobialResistanceGene":"AntimicrobialResistanceGene",
-    "http://www.biointerchange.org/gfvo#Identifier":"Accession",
-    "https://www.github.com/superphy#Marker":"Gene",
-    "https://www.github.com/superphy#spfyId":"spfyId",
-    "http://biohackathon.org/resource/faldo#Position":"Position",
-    "http://www.biointerchange.org/gfvo#DNASequence":"DNASequence",
-    "https://www.github.com/superphy#VirulenceFactor":"VirulenceFactor"
-})
+# readable = bidict({
+#     "http://purl.obolibrary.org/obo/GENEPIO_0001076":"O-Type",
+#     "http://purl.obolibrary.org/obo/GENEPIO_0001077":"H-Type",
+#     "https://www.github.com/superphy#AntimicrobialResistanceGene":"AntimicrobialResistanceGene",
+#     "http://www.biointerchange.org/gfvo#Identifier":"Accession",
+#     "https://www.github.com/superphy#Marker":"Gene",
+#     "https://www.github.com/superphy#spfyId":"spfyId",
+#     "http://biohackathon.org/resource/faldo#Position":"Position",
+#     "http://www.biointerchange.org/gfvo#DNASequence":"DNASequence",
+#     "https://www.github.com/superphy#VirulenceFactor":"VirulenceFactor"
+# })
