@@ -14,6 +14,8 @@ from modules.beautify.beautify import beautify
 from modules.turtleGrapher.datastruct_savvy import datastruct_savvy
 from modules.turtleGrapher.turtle_grapher import turtle_grapher
 
+from tests.constants import ARGS_DICT
+
 # utility function to generate full path (still relative to root, not absoulte) for files in directories
 def listdir_fullpath(d):
     valid_extensions = ('.fasta','.fna')
@@ -27,7 +29,6 @@ def listdir_fullpath(d):
 # globals for testing
 GENOMES_LIST_NOT_ECOLI = listdir_fullpath('tests/notEcoli')
 GENOMES_LIST_ECOLI = listdir_fullpath('tests/ecoli')
-ARGS_DICT={'disable_serotype':False,'disable_vf':False,'pi':90, 'options':{'vf': True, 'amr': True, 'serotype': True}}
 
 #### Non-Blazegraph/RQ Tests
 
