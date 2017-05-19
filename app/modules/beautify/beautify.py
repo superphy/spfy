@@ -197,7 +197,7 @@ def json_return(args_dict, gene_dict):
                         json_r.append(instance_dict)
 
     json_r = check_alleles(json_r)
-
+    return json_r
     # check if we tried to beautify a failed analysis
     failed = False
     if isinstance(json_r, list):
