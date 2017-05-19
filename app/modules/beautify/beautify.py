@@ -2,7 +2,11 @@ import pandas as pd
 import cPickle as pickle
 from itertools import tee, izip
 from os.path import basename
+from modules.loggingFunctions import initialize_logging
 
+# logging
+log_file = initialize_logging()
+log = logging.getLogger(__name__)
 
 def pairwise(iterable):
     "s -> (s0,s1), (s1,s2), (s2, s3), ..."
@@ -142,6 +146,9 @@ def json_return(args_dict, gene_dict):
     # strip gene_dicts that user doesn't want to see
     # remember, we want to run all analysis on our end so we have that data in blazegraph
     d = dict(gene_dict)
+
+    log.info('Results Gene Dict: ' + str(d))
+
     for analysis in gene_dict:
         if analysis == 'Serotype' and not args_dict['options']['serotype']:
             del d['Serotype']
