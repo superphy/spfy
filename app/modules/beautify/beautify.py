@@ -134,8 +134,8 @@ def check_alleles(gene_dict):
         hits = substring_cut(hits)
 
     #this checks for alleles overlap
-    #new_hits = check_alleles_multiple(hits, new_hits)
-    return new_hits.append(check_alleles_multiple(hits, new_hits))
+    new_hits = check_alleles_multiple(hits, new_hits)
+    return new_hits
 
 
 def json_return(args_dict, gene_dict):
