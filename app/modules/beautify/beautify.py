@@ -1,3 +1,4 @@
+import logging
 import pandas as pd
 import cPickle as pickle
 from itertools import tee, izip
