@@ -220,15 +220,15 @@ def json_return(args_dict, gene_dict):
         instance_dict['hitstop'] = 'n/a'
         instance_dict['hitcutoff'] = 'n/a'
 
-        if not args_dict['disable_serotype']:
+        if not args_dict['options']['serotype']:
             t = dict(instance_dict)
             t.update({'analysis':'Serotype'})
             ret.append(t)
-        if not args_dict['disable_vf']:
+        if not args_dict['options']['vf']:
             t = dict(instance_dict)
             t.update({'analysis':'Virulence Factors'})
             ret.append(t)
-        if not args_dict['disable_amr']:
+        if not args_dict['options']['amr']:
             t = dict(instance_dict)
             t.update({'analysis':'Antimicrobial Resistance'})
             ret.append(t)
