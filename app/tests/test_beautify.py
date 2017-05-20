@@ -1,7 +1,7 @@
 import os
 import pytest
 import cPickle as pickle
-from modules.beautify.beautify import beautify, json_return
+from modules.beautify.beautify import beautify, json_return, has_failed
 from tests.constants import ARGS_DICT, BEAUTIFY_VF_SEROTYPE
 
 vf_serotype_gene_dict = os.path.join('tests/refs', 'GCA_000005845.2_ASM584v2_genomic.fna_ectyper-vf_serotype.p')
@@ -35,3 +35,6 @@ def test_beautify_json_r_serotype_only():
     gene_dict = pickle.load(open(vf_serotype_gene_dict, 'rb'))
     r = json_return(single_dict, gene_dict)
     assert len(r) == 1
+
+    failed = has_failed(r)
+    assert failed == False
