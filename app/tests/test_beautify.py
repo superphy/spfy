@@ -16,6 +16,6 @@ def test_beautify():
     # we only differentiate what is returned to the user, because we want all analysis ran & added to the db
     # this mimicks user selection of serotype only
     single_dict.update({'options':{'vf': False, 'amr': False, 'serotype': True}})
-    r = beautify(single_dict, serotype_gene_dict)
+    r = beautify(single_dict, vf_serotype_gene_dict)
     print r
     assert len(r) == 1
