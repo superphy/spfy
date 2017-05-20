@@ -25,7 +25,7 @@ def test_beautify_serotype_only():
     print r
     assert len(r) == 1
 
-def test_beautify_json_r_serotype_only()
+def test_beautify_json_r_serotype_only():
     single_dict = dict(ARGS_DICT)
     single_dict.update({'i': vf_serotype_gene_dict})
     # this mimicks user selection of serotype only
