@@ -142,13 +142,15 @@ def json_return(args_dict, gene_dict):
     """
     this controls the actual return to Redis (& hence the result polled by the frontend)
     """
+    log.debug('args_dict: ' + str(args_dict))
+    log.debug('gene_dict: ' + str(gene_dict))
     json_r = []
 
     # strip gene_dicts that user doesn't want to see
     # remember, we want to run all analysis on our end so we have that data in blazegraph
     d = dict(gene_dict)
 
-    log.info('Results Gene Dict: ' + str(d))
+    #log.info('Results Gene Dict: ' + str(d))
 
     for analysis in gene_dict:
         if analysis == 'Serotype' and not args_dict['options']['serotype']:
