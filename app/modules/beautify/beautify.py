@@ -127,6 +127,8 @@ def check_alleles(gene_dict):
         new_hits.append(dict(hits[hits['analysis']=='Serotype'].iloc[0]))
         hits = hits[hits['analysis'] != 'Serotype']
 
+    log.info(new_hits)
+
     #we've update the db for VF so an allele check is only needed for AMR
     if 'Antimicrobial Resistance' in hits.analysis.unique():
         #strip allele info from data
@@ -201,7 +203,9 @@ def json_return(args_dict, gene_dict):
 
     log.info('First parse into json_r: ' + str(json_r))
 
-    json_r = check_alleles(json_r)
+    # if looking for only serotype, skip this step
+    if args_dict['options']['vf'] or args_dict['options']['amr']:
+        json_r = check_alleles(json_r)
 
     log.info('After checking alleles json_r: ' + str(json_r))
     #return json_r
