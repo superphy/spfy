@@ -198,6 +198,8 @@ def json_return(args_dict, gene_dict):
                             instance_dict['hitcutoff'] = args_dict['pi']
                         json_r.append(instance_dict)
 
+    log.info('First parse into json_r: ' + str(json_r))
+
     json_r = check_alleles(json_r)
     #return json_r
     # check if we tried to beautify a failed analysis
