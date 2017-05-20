@@ -45,9 +45,10 @@ def check_alleles_multiple(hits, new_hits):
     '''
     checks for multiple hits of the same gene and appends to new_hits. also strips out overlap
     '''
-    ##sanity chcek
+    ## hits is only EVER empty when we've only want serotype
+    # recall that serotype inof is stored in new_hits whereas hits contains everything BUT serotype
     if hits.empty:
-        return hits
+        return new_hits
 
     #this checks for alleles overlap
     hits.sort_values(['analysis','filename','contigid','hitname','hitstart','hitstop'], inplace=True)
