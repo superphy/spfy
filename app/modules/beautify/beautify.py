@@ -208,7 +208,9 @@ def json_return(args_dict, gene_dict):
         json_r = check_alleles(json_r)
 
     log.info('After checking alleles json_r: ' + str(json_r))
-    #return json_r
+    return json_r
+
+def handle_failed(json_r, args_dict):
     # check if we tried to beautify a failed analysis
     failed = False
     if isinstance(json_r, list):
@@ -256,4 +258,5 @@ def beautify(args_dict, pickled_dictionary):
     :return: json representation of the results, as required by the front-end.
     '''
     gene_dict = pickle.load(open(pickled_dictionary, 'rb'))
-    return json_return(args_dict, gene_dict)
+    json_r =  json_return(args_dict, gene_dict)
+    return handle_failed(json_r, args_dict)
