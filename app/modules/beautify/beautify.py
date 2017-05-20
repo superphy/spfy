@@ -1,8 +1,13 @@
+import logging
 import pandas as pd
 import cPickle as pickle
 from itertools import tee, izip
 from os.path import basename
+from modules.loggingFunctions import initialize_logging
 
+# logging
+log_file = initialize_logging()
+log = logging.getLogger(__name__)
 
 def pairwise(iterable):
     "s -> (s0,s1), (s1,s2), (s2, s3), ..."
@@ -142,6 +147,9 @@ def json_return(args_dict, gene_dict):
     # strip gene_dicts that user doesn't want to see
     # remember, we want to run all analysis on our end so we have that data in blazegraph
     d = dict(gene_dict)
+
+    log.info('Results Gene Dict: ' + str(d))
+
     for analysis in gene_dict:
         if analysis == 'Serotype' and not args_dict['options']['serotype']:
             del d['Serotype']
@@ -189,7 +197,7 @@ def json_return(args_dict, gene_dict):
                         json_r.append(instance_dict)
 
     json_r = check_alleles(json_r)
-
+    #return json_r
     # check if we tried to beautify a failed analysis
     failed = False
     if isinstance(json_r, list):
@@ -212,15 +220,15 @@ def json_return(args_dict, gene_dict):
         instance_dict['hitstop'] = 'n/a'
         instance_dict['hitcutoff'] = 'n/a'
 
-        if not args_dict['disable_serotype']:
+        if not args_dict['options']['serotype']:
             t = dict(instance_dict)
             t.update({'analysis':'Serotype'})
             ret.append(t)
-        if not args_dict['disable_vf']:
+        if not args_dict['options']['vf']:
             t = dict(instance_dict)
             t.update({'analysis':'Virulence Factors'})
             ret.append(t)
-        if not args_dict['disable_amr']:
+        if not args_dict['options']['amr']:
             t = dict(instance_dict)
             t.update({'analysis':'Antimicrobial Resistance'})
             ret.append(t)
