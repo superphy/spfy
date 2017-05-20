@@ -142,8 +142,8 @@ def json_return(args_dict, gene_dict):
     """
     this controls the actual return to Redis (& hence the result polled by the frontend)
     """
-    log.debug('args_dict: ' + str(args_dict))
-    log.debug('gene_dict: ' + str(gene_dict))
+    log.info('args_dict: ' + str(args_dict))
+    log.info('gene_dict: ' + str(gene_dict))
     json_r = []
 
     # strip gene_dicts that user doesn't want to see
@@ -161,7 +161,7 @@ def json_return(args_dict, gene_dict):
             del d['Virulence Factors']
     gene_dict = d
 
-
+    log.info('After deletion from gene_dict: ' + str(gene_dict))
 
     for analysis in gene_dict:
         if analysis == 'Serotype':
