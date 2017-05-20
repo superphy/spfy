@@ -23,5 +23,5 @@ def test_beautify():
     ## test json_r separately of failed handling
     # json_return() is a part of the beautify work
     gene_dict = pickle.load(open(vf_serotype_gene_dict, 'rb'))
-    r = json_return(args_dict, gene_dict)
+    r = json_return(single_dict, gene_dict)
     assert len(r) == 1
