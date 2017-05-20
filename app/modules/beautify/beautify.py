@@ -210,7 +210,7 @@ def json_return(args_dict, gene_dict):
     log.info('After checking alleles json_r: ' + str(json_r))
     return json_r
 
-def handle_failed(json_r, args_dict):
+def has_failed(json_r):
     # check if we tried to beautify a failed analysis
     failed = False
     if isinstance(json_r, list):
@@ -219,35 +219,33 @@ def handle_failed(json_r, args_dict):
     elif isinstance(json_r,pd.DataFrame):
         if json_r.empty:
             failed = True
+    return failed
 
-    # if we beautified a failed analysis add this info to return
-    if failed:
-        ret = []
-        instance_dict = {}
-        instance_dict['filename'] = basename(args_dict['i'])[27:]
-        instance_dict['contigid'] = 'n/a'
-        #instance_dict['analysis'] = analysis
-        instance_dict['hitname'] = 'No Results Found.'
-        instance_dict['hitorientation'] = 'n/a'
-        instance_dict['hitstart'] = 'n/a'
-        instance_dict['hitstop'] = 'n/a'
-        instance_dict['hitcutoff'] = 'n/a'
+def handle_failed(json_r, args_dict):
+    ret = []
+    instance_dict = {}
+    instance_dict['filename'] = basename(args_dict['i'])[27:]
+    instance_dict['contigid'] = 'n/a'
+    #instance_dict['analysis'] = analysis
+    instance_dict['hitname'] = 'No Results Found.'
+    instance_dict['hitorientation'] = 'n/a'
+    instance_dict['hitstart'] = 'n/a'
+    instance_dict['hitstop'] = 'n/a'
+    instance_dict['hitcutoff'] = 'n/a'
 
-        if not args_dict['options']['serotype']:
-            t = dict(instance_dict)
-            t.update({'analysis':'Serotype'})
-            ret.append(t)
-        if not args_dict['options']['vf']:
-            t = dict(instance_dict)
-            t.update({'analysis':'Virulence Factors'})
-            ret.append(t)
-        if not args_dict['options']['amr']:
-            t = dict(instance_dict)
-            t.update({'analysis':'Antimicrobial Resistance'})
-            ret.append(t)
-        return ret
-    else:
-        return json_r
+    if not args_dict['options']['serotype']:
+        t = dict(instance_dict)
+        t.update({'analysis':'Serotype'})
+        ret.append(t)
+    if not args_dict['options']['vf']:
+        t = dict(instance_dict)
+        t.update({'analysis':'Virulence Factors'})
+        ret.append(t)
+    if not args_dict['options']['amr']:
+        t = dict(instance_dict)
+        t.update({'analysis':'Antimicrobial Resistance'})
+        ret.append(t)
+    return ret
 
 def beautify(args_dict, pickled_dictionary):
     '''
@@ -259,4 +257,7 @@ def beautify(args_dict, pickled_dictionary):
     '''
     gene_dict = pickle.load(open(pickled_dictionary, 'rb'))
     json_r =  json_return(args_dict, gene_dict)
-    return handle_failed(json_r, args_dict)
+    if has_failed(json_r):
+        return handle_failed(json_r, args_dict)
+    else:
+        return json_r
