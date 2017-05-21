@@ -66,4 +66,5 @@ def test_beautify_json_r_amr_only():
     ## test some pandas stuff on the json_r
     df = pd.DataFrame(r)
     assert 'Serotype' not in df.analysis.unique()
+    assert 'Virulence Factors' not in df.analysis.unique()
     assert 'Antimicrobial Resistance' in df.analysis.unique()
