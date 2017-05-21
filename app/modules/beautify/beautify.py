@@ -117,9 +117,13 @@ def substring_cut(hits):
                     hits.loc[i2, 'hitname']=row1.hitname
     return hits
 
-def check_alleles(gene_dict):
+def check_alleles(converted_json):
+    '''
+    Args:
+        converted_json : a list of dictionaries that have removed results not specific to the user's requests.
+    '''
     #we are working with the new dict format that is directly converted to json
-    hits = pd.DataFrame(gene_dict)
+    hits = pd.DataFrame(converted_json)
     if hits.empty:
         raise Exception('The Panadas DF from gene_dict is empty.')
     new_hits = []
@@ -141,7 +145,6 @@ def check_alleles(gene_dict):
     #this checks for alleles overlap
     new_hits = check_alleles_multiple(hits, new_hits)
     return new_hits
-
 
 def json_return(args_dict, gene_dict):
     """
@@ -202,14 +205,6 @@ def json_return(args_dict, gene_dict):
                         else:
                             instance_dict['hitcutoff'] = args_dict['pi']
                         json_r.append(instance_dict)
-
-    log.info('First parse into json_r: ' + str(json_r))
-
-    # if looking for only serotype, skip this step
-    if args_dict['options']['vf'] or args_dict['options']['amr']:
-        json_r = check_alleles(json_r)
-
-    log.info('After checking alleles json_r: ' + str(json_r))
     return json_r
 
 def has_failed(json_r):
@@ -258,7 +253,13 @@ def beautify(args_dict, pickled_dictionary):
     :return: json representation of the results, as required by the front-end.
     '''
     gene_dict = pickle.load(open(pickled_dictionary, 'rb'))
+    # this converts our dictionary structure into json and adds metadata (filename, etc.)
     json_r =  json_return(args_dict, gene_dict)
+    log.info('First parse into json_r: ' + str(json_r))
+    # if looking for only serotype, skip this step
+    if args_dict['options']['vf'] or args_dict['options']['amr']:
+        json_r = check_alleles(json_r)
+    log.info('After checking alleles json_r: ' + str(json_r))
     # check if there is an analysis module that has failed in the result
     if has_failed(json_r):
         return handle_failed(json_r, args_dict)

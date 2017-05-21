@@ -25,7 +25,6 @@ def test_beautify_serotype_only():
     single_dict.update({'options':{'vf': False, 'amr': False, 'serotype': True}})
     # beautify is what is actually called by the RQ worker & returned to the user
     r = beautify(single_dict, vf_serotype_gene_dict)
-    print r
     assert len(r) == 1
 
 def test_beautify_json_r_serotype_only():
@@ -64,6 +63,7 @@ def test_beautify_json_r_amr_only():
     r = json_return(single_dict, gene_dict)
     assert len(r) > 1
 
-    ## test some pandas stuff
-    df = pd.DataFrame(gene_dict)
+    ## test some pandas stuff on the json_r
+    df = pd.DataFrame(r)
     assert 'Serotype' not in df.analysis.unique()
+    assert 'Antimicrobial Resistance' in df.analysis.unique()
