@@ -1,6 +1,7 @@
 import os
 import pytest
 import cPickle as pickle
+import pandas as pd
 from modules.beautify.beautify import beautify, json_return, has_failed
 from tests.constants import ARGS_DICT, BEAUTIFY_VF_SEROTYPE
 
@@ -62,3 +63,7 @@ def test_beautify_json_r_amr_only():
     assert 'Antimicrobial Resistance' in gene_dict.keys()
     r = json_return(single_dict, gene_dict)
     assert len(r) > 1
+
+    ## test some pandas stuff
+    df = pd.DataFrame(gene_dict)
+    assert 'Serotype' not in df.analysis.unique()

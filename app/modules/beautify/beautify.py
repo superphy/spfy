@@ -143,7 +143,7 @@ def check_alleles(gene_dict):
 
 def json_return(args_dict, gene_dict):
     """
-    this controls the actual return to Redis (& hence the result polled by the frontend)
+    This converts the gene dict into a json format for return to the front end
     """
     log.info('args_dict: ' + str(args_dict))
     log.info('gene_dict: ' + str(gene_dict))
