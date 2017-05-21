@@ -12,7 +12,7 @@ from flask_recaptcha import ReCaptcha
 # spfy code
 from modules.spfy import spfy
 from routes.utility_functions import handle_tar, handle_zip, fix_uri
-from modules.groupComparisons.sparql_queries import get_all_attribute_types, get_attribute_values, get_types
+from modules.groupComparisons.frontend_queries import get_all_attribute_types, get_attribute_values, get_types
 bp = Blueprint('main', __name__)
 from modules.groupComparisons.fishers import fishers
 
