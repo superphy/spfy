@@ -120,6 +120,8 @@ def substring_cut(hits):
 def check_alleles(gene_dict):
     #we are working with the new dict format that is directly converted to json
     hits = pd.DataFrame(gene_dict)
+    if hits.empty:
+        raise Exception('The Panadas DF from gene_dict is empty.')
     new_hits = []
 
     # we're not interested in checking serotype, so we drop it
