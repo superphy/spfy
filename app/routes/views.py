@@ -140,19 +140,6 @@ def upload():
                 jobs_enqueued = spfy(
                     {'i': filename, 'disable_serotype': False, 'disable_amr': False, 'disable_vf': False, 'pi':options['pi'], 'options':options})
                 jobs_dict.update(jobs_enqueued)
-
-                # d = dict(jobs_dict)
-                # # legacy code, this is now handles in spfy.py
-                # # #strip jobs that the user doesn't want to see
-                # # # we run them anyways cause we want the data analyzed on our end
-                # # for job_id, descrip_dict in jobs_dict.items():
-                # #     if (not options['serotype']) and (not options['vf']):
-                # #         if descrip_dict['analysis'] == 'Virulence Factors and Serotype':
-                # #             del d[job_id]
-                # #     if (not options['amr']):
-                # #         if descrip_dict['analysis'] == 'Antimicrobial Resistance':
-                # #             del d[job_id]
-                # jobs_dict = d
         return jsonify(jobs_dict)
     else:
         return "Captcha Failed Verification", 500
