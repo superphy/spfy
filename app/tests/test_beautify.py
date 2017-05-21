@@ -44,7 +44,7 @@ def test_beautify_json_r_serotype_only():
 
 def test_beautify_amr_only():
     single_dict = dict(ARGS_DICT)
-    single_dict.update({'i': vf_serotype_gene_dict})
+    single_dict.update({'i': amr_gene_dict})
     # this mimicks user selection of serotype only
     single_dict.update({'options':{'vf': False, 'amr': True, 'serotype': False}})
     r = beautify(single_dict, amr_gene_dict)
