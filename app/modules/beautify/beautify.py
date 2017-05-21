@@ -128,6 +128,8 @@ def check_alleles(converted_json):
         raise Exception('The Panadas DF from gene_dict is empty.')
     new_hits = []
 
+    log.info('Pandas DF in check_alleles(): ' + hits.to_string)
+
     # we're not interested in checking serotype, so we drop it
     if 'Serotype' in hits.analysis.unique():
         new_hits.append(dict(hits[hits['analysis']=='Serotype'].iloc[0]))
