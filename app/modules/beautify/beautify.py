@@ -257,6 +257,7 @@ def beautify(args_dict, pickled_dictionary):
     '''
     gene_dict = pickle.load(open(pickled_dictionary, 'rb'))
     json_r =  json_return(args_dict, gene_dict)
+    # check if there is an analysis module that has failed in the result
     if has_failed(json_r):
         return handle_failed(json_r, args_dict)
     else:
