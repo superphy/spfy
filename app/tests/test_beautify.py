@@ -60,3 +60,5 @@ def test_beautify_json_r_amr_only():
     assert type(gene_dict) == dict
     assert len(gene_dict.keys()) == 1
     assert 'Antimicrobial Resistance' in gene_dict.keys()
+    r = json_return(single_dict, gene_dict)
+    assert len(r) > 1
