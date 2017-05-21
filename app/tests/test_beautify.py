@@ -6,6 +6,8 @@ from tests.constants import ARGS_DICT, BEAUTIFY_VF_SEROTYPE
 
 vf_serotype_gene_dict = os.path.join('tests/refs', 'GCA_000005845.2_ASM584v2_genomic.fna_ectyper-vf_serotype.p')
 
+amr_gene_dict = os.path.join('tests/refs', '2017-05-21-00-29-20-874628-GCA_000005845.2_ASM584v2_genomic.fna_rgi.tsv_rgi.p')
+
 def test_beautify_vf_serotype():
     ## test vf & serotype json return
     single_dict = dict(ARGS_DICT)
@@ -32,9 +34,18 @@ def test_beautify_json_r_serotype_only():
     single_dict.update({'options':{'vf': False, 'amr': False, 'serotype': True}})
     ## test json_r separately of failed handling
     # json_return() is a part of the beautify work
+    print type(gene_dict)
     gene_dict = pickle.load(open(vf_serotype_gene_dict, 'rb'))
     r = json_return(single_dict, gene_dict)
     assert len(r) == 1
 
     failed = has_failed(r)
     assert failed == False
+
+def test_beautify_amr_only():
+    single_dict = dict(ARGS_DICT)
+    single_dict.update({'i': vf_serotype_gene_dict})
+    # this mimicks user selection of serotype only
+    single_dict.update({'options':{'vf': False, 'amr': True, 'serotype': False}})
+    r = beautify(single_dict, amr_gene_dict)
+    assert len(r) > 1
