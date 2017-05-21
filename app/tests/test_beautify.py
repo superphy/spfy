@@ -34,8 +34,8 @@ def test_beautify_json_r_serotype_only():
     single_dict.update({'options':{'vf': False, 'amr': False, 'serotype': True}})
     ## test json_r separately of failed handling
     # json_return() is a part of the beautify work
-    print type(gene_dict)
     gene_dict = pickle.load(open(vf_serotype_gene_dict, 'rb'))
+    print type(gene_dict)
     r = json_return(single_dict, gene_dict)
     assert len(r) == 1
 
