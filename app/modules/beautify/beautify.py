@@ -45,9 +45,10 @@ def check_alleles_multiple(hits, new_hits):
     '''
     checks for multiple hits of the same gene and appends to new_hits. also strips out overlap
     '''
-    ##sanity chcek
+    ## hits is only EVER empty when we've only want serotype
+    # recall that serotype inof is stored in new_hits whereas hits contains everything BUT serotype
     if hits.empty:
-        return hits
+        return new_hits
 
     #this checks for alleles overlap
     hits.sort_values(['analysis','filename','contigid','hitname','hitstart','hitstop'], inplace=True)
@@ -116,15 +117,25 @@ def substring_cut(hits):
                     hits.loc[i2, 'hitname']=row1.hitname
     return hits
 
-def check_alleles(gene_dict):
+def check_alleles(converted_json):
+    '''
+    Args:
+        converted_json : a list of dictionaries that have removed results not specific to the user's requests.
+    '''
     #we are working with the new dict format that is directly converted to json
-    hits = pd.DataFrame(gene_dict)
+    hits = pd.DataFrame(converted_json)
+    if hits.empty:
+        raise Exception('The Panadas DF from gene_dict is empty.')
     new_hits = []
+
+    log.info('Pandas DF in check_alleles(): ' + str(hits))
 
     # we're not interested in checking serotype, so we drop it
     if 'Serotype' in hits.analysis.unique():
         new_hits.append(dict(hits[hits['analysis']=='Serotype'].iloc[0]))
         hits = hits[hits['analysis'] != 'Serotype']
+
+    log.info(new_hits)
 
     #we've update the db for VF so an allele check is only needed for AMR
     if 'Antimicrobial Resistance' in hits.analysis.unique():
@@ -137,18 +148,19 @@ def check_alleles(gene_dict):
     new_hits = check_alleles_multiple(hits, new_hits)
     return new_hits
 
-
 def json_return(args_dict, gene_dict):
     """
-    this controls the actual return to Redis (& hence the result polled by the frontend)
+    This converts the gene dict into a json format for return to the front end
     """
+    log.info('args_dict: ' + str(args_dict))
+    log.info('gene_dict: ' + str(gene_dict))
     json_r = []
 
     # strip gene_dicts that user doesn't want to see
     # remember, we want to run all analysis on our end so we have that data in blazegraph
     d = dict(gene_dict)
 
-    log.info('Results Gene Dict: ' + str(d))
+    #log.info('Results Gene Dict: ' + str(d))
 
     for analysis in gene_dict:
         if analysis == 'Serotype' and not args_dict['options']['serotype']:
@@ -159,7 +171,7 @@ def json_return(args_dict, gene_dict):
             del d['Virulence Factors']
     gene_dict = d
 
-
+    log.info('After deletion from gene_dict: ' + str(gene_dict))
 
     for analysis in gene_dict:
         if analysis == 'Serotype':
@@ -195,9 +207,9 @@ def json_return(args_dict, gene_dict):
                         else:
                             instance_dict['hitcutoff'] = args_dict['pi']
                         json_r.append(instance_dict)
+    return json_r
 
-    json_r = check_alleles(json_r)
-    #return json_r
+def has_failed(json_r):
     # check if we tried to beautify a failed analysis
     failed = False
     if isinstance(json_r, list):
@@ -206,35 +218,33 @@ def json_return(args_dict, gene_dict):
     elif isinstance(json_r,pd.DataFrame):
         if json_r.empty:
             failed = True
+    return failed
 
-    # if we beautified a failed analysis add this info to return
-    if failed:
-        ret = []
-        instance_dict = {}
-        instance_dict['filename'] = basename(args_dict['i'])[27:]
-        instance_dict['contigid'] = 'n/a'
-        #instance_dict['analysis'] = analysis
-        instance_dict['hitname'] = 'No Results Found.'
-        instance_dict['hitorientation'] = 'n/a'
-        instance_dict['hitstart'] = 'n/a'
-        instance_dict['hitstop'] = 'n/a'
-        instance_dict['hitcutoff'] = 'n/a'
+def handle_failed(json_r, args_dict):
+    ret = []
+    instance_dict = {}
+    instance_dict['filename'] = basename(args_dict['i'])[27:]
+    instance_dict['contigid'] = 'n/a'
+    #instance_dict['analysis'] = analysis
+    instance_dict['hitname'] = 'No Results Found.'
+    instance_dict['hitorientation'] = 'n/a'
+    instance_dict['hitstart'] = 'n/a'
+    instance_dict['hitstop'] = 'n/a'
+    instance_dict['hitcutoff'] = 'n/a'
 
-        if not args_dict['options']['serotype']:
-            t = dict(instance_dict)
-            t.update({'analysis':'Serotype'})
-            ret.append(t)
-        if not args_dict['options']['vf']:
-            t = dict(instance_dict)
-            t.update({'analysis':'Virulence Factors'})
-            ret.append(t)
-        if not args_dict['options']['amr']:
-            t = dict(instance_dict)
-            t.update({'analysis':'Antimicrobial Resistance'})
-            ret.append(t)
-        return ret
-    else:
-        return json_r
+    if not args_dict['options']['serotype']:
+        t = dict(instance_dict)
+        t.update({'analysis':'Serotype'})
+        ret.append(t)
+    if not args_dict['options']['vf']:
+        t = dict(instance_dict)
+        t.update({'analysis':'Virulence Factors'})
+        ret.append(t)
+    if not args_dict['options']['amr']:
+        t = dict(instance_dict)
+        t.update({'analysis':'Antimicrobial Resistance'})
+        ret.append(t)
+    return ret
 
 def beautify(args_dict, pickled_dictionary):
     '''
@@ -245,4 +255,15 @@ def beautify(args_dict, pickled_dictionary):
     :return: json representation of the results, as required by the front-end.
     '''
     gene_dict = pickle.load(open(pickled_dictionary, 'rb'))
-    return json_return(args_dict, gene_dict)
+    # this converts our dictionary structure into json and adds metadata (filename, etc.)
+    json_r =  json_return(args_dict, gene_dict)
+    log.info('First parse into json_r: ' + str(json_r))
+    # if looking for only serotype, skip this step
+    if args_dict['options']['vf'] or args_dict['options']['amr']:
+        json_r = check_alleles(json_r)
+    log.info('After checking alleles json_r: ' + str(json_r))
+    # check if there is an analysis module that has failed in the result
+    if has_failed(json_r):
+        return handle_failed(json_r, args_dict)
+    else:
+        return json_r
