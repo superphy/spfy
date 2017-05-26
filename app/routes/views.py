@@ -24,16 +24,7 @@ bp = Blueprint('main', __name__)
 def handle_group_comparison_submission():
     query = request.json['groups']
     target = request.json['target']
-    print query
-    # queryAttributeUriA = query[0][0]['attribute']
-    # queryAttributeUriB = query[1][0]['attribute']
-    # queryAttributeTypeUriA = query[0][0]['relation']
-    # queryAttributeTypeUriB = query[1][0]['relation']
-    # targetUri = target
-    # f = fishers(queryAttributeUriA, queryAttributeUriB, targetUri, queryAttributeTypeUriA, queryAttributeTypeUriB)
     jobid = blob_gc_enqueue(query, target)
-    #f = groupcomparisons(query, target)
-    #return f
     return jobid
 
 @bp.route('/api/v0/get_attribute_values/type/<path:attributetype>')
