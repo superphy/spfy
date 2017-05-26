@@ -61,3 +61,6 @@ To enable:
   1. `docker exec -it backend_worker_1 sh` this drops a shell into the rq worker container which has rq-dashboard installed via conda
   2. `rq-dashboard -H redis` runs rq-dashboard and specifies the *redis* host automatically defined by docker-compose
   3. then on your host machine visit http://localhost:9181
+
+## Blazegraph:
+* We are currently running Blazegraph version 2.1.4. If you want to run Blazegraph separately, please use the same version otherwise there may be problems in endpoint urls / returns (namely version 2.1.1). See https://github.com/superphy/backend/issues/63
