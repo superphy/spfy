@@ -38,6 +38,9 @@ def call_get_attribute_values(attributetype):
     # also convert to a rdflib.URIRef object
     uri = fix_uri(attributetype)
     return jsonify(get_attribute_values(attributeTypeUri=uri))
+    # set_attribute_types = set(get_all_attribute_types())
+    # set_object_types = get_types() # get types returns a set by default
+    # return jsonify(list(set_attribute_types.union(set_object_types)))
 
 @bp.route('/api/v0/get_all_types')
 def combine_types():
