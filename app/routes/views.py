@@ -20,14 +20,8 @@ from modules.groupComparisons.fishers import fishers
 def handle_group_comparison_submission():
     query = request.json['groups']
     target = request.json['target']
-    print query
-    queryAttributeUriA = query[0][0]['attribute']
-    queryAttributeUriB = query[1][0]['attribute']
-    queryAttributeTypeUriA = query[0][0]['relation']
-    queryAttributeTypeUriB = query[1][0]['relation']
-    targetUri = target
-    f = fishers(queryAttributeUriA, queryAttributeUriB, targetUri, queryAttributeTypeUriA, queryAttributeTypeUriB)
-    return f.to_json(orient='split')
+    jobid = blob_gc_enqueue(query, target)
+    return jobid
 
 @bp.route('/api/v0/get_attribute_values/type/<path:attributetype>')
 def call_get_attribute_values(attributetype):
@@ -40,6 +34,9 @@ def call_get_attribute_values(attributetype):
     # also convert to a rdflib.URIRef object
     uri = fix_uri(attributetype)
     return jsonify(get_attribute_values(attributeTypeUri=uri))
+    # set_attribute_types = set(get_all_attribute_types())
+    # set_object_types = get_types() # get types returns a set by default
+    # return jsonify(list(set_attribute_types.union(set_object_types)))
 
 @bp.route('/api/v0/get_all_types')
 def combine_types():
