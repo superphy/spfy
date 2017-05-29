@@ -72,16 +72,16 @@ def savvy(args_dict):
             fl.write(data)
         return f
 
-    log.info("Starting savvy.py from savvy(). Logfile is: " + str(log_file))
+    log.debug("Starting savvy.py from savvy(). Logfile is: " + str(log_file))
     log.debug("args_dict received was: " + str(args_dict))
 
     query_file = args_dict['i']
-    log.info("query_file is: " + query_file)
+    log.debug("query_file is: " + query_file)
 
     # (1) QC Step:
     qc_pass = qc(query_file)
     assert qc(query_file) == True
-    log.info("QC: " + str(qc_pass))
+    log.debug("QC: " + str(qc_pass))
 
     # (2) SpfyID Step:
     # we use mock to create a spfyid file, note that we dont need the
@@ -90,11 +90,11 @@ def savvy(args_dict):
     # spfy expects id files and fasta files to be in the same location
     id_file = os.path.abspath(query_file) + '_id.txt'
     shutil.copy(get_spfyid_file(), id_file)
-    log.info("id_file:" + id_file)
+    log.debug("id_file:" + id_file)
 
     # (3) ECTyper Step:
     ectyper_p = call_ectyper(args_dict)
-    log.info("Pickled ECTyper File: " + ectyper_p)
+    log.debug("Pickled ECTyper File: " + ectyper_p)
 
     # (4) ECTyper Beautify Step:
     ectyper_beautify = beautify(args_dict, ectyper_p)
@@ -103,15 +103,15 @@ def savvy(args_dict):
     # (5) Graphing ECTyper Result:
     ectyper_graph = generate_datastruct(query_file, query_file + '_id.txt', query_file + '_ectyper.p')
     ectyper_ttl = write_graph(ectyper_graph, 'ectyper')
-    log.info('Graph Result for ECtyper: ' + ectyper_ttl)
+    log.debug('Graph Result for ECtyper: ' + ectyper_ttl)
 
     # (6) RGI Step:
     amr_results_file = amr(query_file)
-    log.info("AMR Results File: " + amr_results_file)
+    log.debug("AMR Results File: " + amr_results_file)
 
     # (7) AMR Results to Dictionary Step:
     amr_p = amr_to_dict(amr_results_file)
-    log.info("Pickled AMR Results File: " + amr_p)
+    log.debug("Pickled AMR Results File: " + amr_p)
 
     # (8) AMR Beautify Step:
     amr_beautify = beautify(args_dict, amr_p)
@@ -120,19 +120,19 @@ def savvy(args_dict):
     # (9) Graping AMR Result:
     amr_graph = generate_datastruct(query_file, query_file + '_id.txt', query_file + '_rgi.tsv_rgi.p')
     amr_ttl = write_graph(amr_graph, 'rgi')
-    log.info('Graph Result for AMR: ' + amr_ttl)
+    log.debug('Graph Result for AMR: ' + amr_ttl)
 
     # (10) Base Graphing:
     base_turtle_graph = generate_turtle_skeleton(query_file)
     base_ttl = write_graph(base_turtle_graph, 'base')
-    log.info('Graph Result for base of fasta info: ' + base_ttl)
+    log.debug('Graph Result for base of fasta info: ' + base_ttl)
 
     return (base_ttl, ectyper_ttl, amr_ttl)
 
 if __name__ == "__main__":
     import argparse
 
-    log.info("Starting savvy.py from if __name__=='__main__'. Logfile is: " + str(log_file))
+    log.debug("Starting savvy.py from if __name__=='__main__'. Logfile is: " + str(log_file))
 
     # parsing cli-input
     parser = argparse.ArgumentParser()
