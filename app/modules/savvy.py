@@ -1,7 +1,7 @@
 #!/usr/bin/env python2
 # -*- coding: UTF-8 -*-
 
-# use: python -m app.modules.savvy -i /home/kevin/Desktop/nonGenBankEcoli/ECI-2866_lcl.fasta
+# use: python -m modules.savvy -i /home/kevin/Desktop/nonGenBankEcoli/ECI-2866_lcl.fasta
 
 # S:erotype
 # A:ntimicrobial Resistance
@@ -12,19 +12,46 @@
 
 import os
 import logging
-
-from app.modules.qc.qc import qc
-from app.modules.blazeUploader.reserve_id import write_reserve_id
-from app.modules.ectyper.call_ectyper import call_ectyper
-from app.modules.amr.amr import amr
-from app.modules.amr.amr_to_dict import amr_to_dict
-from app.modules.beautify.beautify import beautify
-from app.modules.turtleGrapher.datastruct_savvy import datastruct_savvy
-from app.modules.turtleGrapher.turtle_grapher import turtle_grapher
-from app.modules.loggingFunctions import initialize_logging
+import tempfile
+from modules.qc.qc import qc
+from modules.blazeUploader.reserve_id import write_reserve_id
+from modules.ectyper.call_ectyper import call_ectyper
+from modules.amr.amr import amr
+from modules.amr.amr_to_dict import amr_to_dict
+from modules.beautify.beautify import beautify
+from modules.turtleGrapher.datastruct_savvy import datastruct_savvy
+from modules.turtleGrapher.turtle_grapher import turtle_grapher
+from modules.loggingFunctions import initialize_logging
 
 log_file = initialize_logging()
 log = logging.getLogger(__name__)
+
+def get_spfyid_file():
+    '''
+    Uses tempfile to store the spfyid file on disk.
+    We use a mmethod so the tests can access just the file as well.
+    '''
+    f = os.path.join(tempfile.gettempdir(), 'spfyid_count.txt')
+    return f
+
+def mock_reserve_id():
+    '''
+    Mocks the presence of Blazegraph to generate spfyids.
+    '''
+    f = get_spfyid_file()
+    log.debug('spfyid_count file returned was : ' + f)
+    # check if an existing spfyid count exists
+    if os.path.isfile(f):
+        with open(f) as fl:
+            spfyid = fl.read()
+            spfyid = int(spfyid)
+    else:
+        spfyid = 0
+    # we assumed the spfyid in the file is already used
+    spfyid += 1
+    with open(f, 'w') as fl:
+        f.write(str(spfyid))
+    return spfyid
 
 def savvy(args_dict):
     '''

@@ -63,4 +63,4 @@ To enable:
   3. then on your host machine visit http://localhost:9181
 
 ## Blazegraph:
-* We are currently running Blazegraph version 2.1.4. If you want to run Blazegraph separately, please use the same version otherwise there may be problems in endpoint urls / returns (namely version 2.1.1). See https://github.com/superphy/backend/issues/63
+* We are currently running Blazegraph version 2.1.4. If you want to run Blazegraph separately, please use the same version otherwise there may be problems in endpoint urls / returns (namely version 2.1.1). See https://github.com/superphy/backend/issues/63 Alternatively, modify the endpoint accordingly under `database['blazegraph_url']` in `/app/config.py`

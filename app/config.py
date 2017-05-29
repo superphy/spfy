@@ -34,6 +34,7 @@ namespaces = {
 }
 
 #database defaults
+DATABASE_ENABLED = True
 database = {}
 database['blazegraph_url'] = 'http://blazegraph:8080/bigdata/sparql'
 #database['blazegraph_url'] = 'http://localhost:9000/blazegraph/namespace/superphy/sparql'
