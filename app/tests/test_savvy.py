@@ -16,6 +16,6 @@ def test_mock_reserve_id():
     else:
         # this is the expected test env where the spfyid file doesn't exist
         # first call returns 1 as the id
-        assert mock_reserve_id() = 1
+        assert mock_reserve_id() == 1
         # second call should have incremented the stored file
-        assert mock_reserve_id() = 2
+        assert mock_reserve_id() == 2
