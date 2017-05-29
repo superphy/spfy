@@ -15,7 +15,6 @@ import logging
 import tempfile
 import shutil
 import json
-from flask import Flask, jsonify
 from modules.qc.qc import qc
 from modules.blazeUploader.reserve_id import write_reserve_id
 from modules.ectyper.call_ectyper import call_ectyper
@@ -79,16 +78,12 @@ def savvy(args_dict):
     def write_json(json_r, analysis):
         '''
         Used to write out a .json result after processing by beautify.py
-        The jsonify method from Flask is also used in backend application.
+        Note that we use flask.jsonify in backend application instead of
+        json.dump as used here.
         '''
-        # to mimick the json result, we need to use a app context to run
-        # jsonify from Flask
-        app = Flask(__name__)
-        with app.test_request_context():
-            data = jsonify(json_r)
         f = query_file + '_' + analysis + '.json'
         with open(f, 'w') as fl:
-            json.dump(data, fl)
+            json.dump(json_r, fl)
         return f
 
     log.debug("Starting savvy.py from savvy(). Logfile is: " + str(log_file))
