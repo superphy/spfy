@@ -62,12 +62,12 @@ def savvy(args_dict):
         2. the graph of the ectyper result
         3. the graph of the amr result
     '''
-    def write_graph(graph):
+    def write_graph(graph, analysis):
         '''
         Used to write a rdf graph to disk as a turtle file.
         '''
         data = graph.serialize(format="turtle")
-        f = query_file + '_ectyper.ttl'
+        f = query_file + '_' + analysis + '.ttl'
         with open(f, 'w') as fl:
             fl.write(data)
         return f
@@ -102,7 +102,7 @@ def savvy(args_dict):
 
     # (5) Graphing ECTyper Result:
     ectyper_graph = generate_datastruct(query_file, query_file + '_id.txt', query_file + '_ectyper.p')
-    ectyper_ttl = write_graph(ectyper_graph)
+    ectyper_ttl = write_graph(ectyper_graph, 'ectyper')
     log.info('Graph Result for ECtyper: ' + ectyper_ttl)
 
     # (6) RGI Step:
@@ -119,12 +119,12 @@ def savvy(args_dict):
 
     # (9) Graping AMR Result:
     amr_graph = generate_datastruct(query_file, query_file + '_id.txt', query_file + '_rgi.tsv_rgi.p')
-    amr_ttl = write_graph(amr_graph)
+    amr_ttl = write_graph(amr_graph, 'rgi')
     log.info('Graph Result for AMR: ' + amr_ttl)
 
     # (10) Base Graphing:
     base_turtle_graph = generate_turtle_skeleton(query_file)
-    base_ttl = write_graph(base_turtle_graph)
+    base_ttl = write_graph(base_turtle_graph, 'base')
     log.info('Graph Result for base of fasta info: ' + base_ttl)
 
 if __name__ == "__main__":
