@@ -14,6 +14,7 @@ import os
 import logging
 import tempfile
 import shutil
+import json
 from flask import Flask, jsonify
 from modules.qc.qc import qc
 from modules.blazeUploader.reserve_id import write_reserve_id
@@ -87,7 +88,7 @@ def savvy(args_dict):
             data = jsonify(json)
         f = query_file + '_' + analysis + '.json'
         with open(f, 'w') as fl:
-            fl.write(data)
+            json.dump(data, fl)
         return f
 
     log.debug("Starting savvy.py from savvy(). Logfile is: " + str(log_file))
