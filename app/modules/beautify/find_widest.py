@@ -126,14 +126,14 @@ def check_alleles(converted_json):
         raise Exception('The Panadas DF from gene_dict is empty.')
     new_hits = []
 
-    log.info('Pandas DF in check_alleles(): ' + str(hits))
+    log.debug('Pandas DF in check_alleles(): ' + str(hits))
 
     # we're not interested in checking serotype, so we drop it
     if 'Serotype' in hits.analysis.unique():
         new_hits.append(dict(hits[hits['analysis']=='Serotype'].iloc[0]))
         hits = hits[hits['analysis'] != 'Serotype']
 
-    log.info(new_hits)
+    log.debug(new_hits)
 
     #we've update the db for VF so an allele check is only needed for AMR
     if 'Antimicrobial Resistance' in hits.analysis.unique():
