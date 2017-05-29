@@ -50,7 +50,7 @@ def mock_reserve_id():
     # we assumed the spfyid in the file is already used
     spfyid += 1
     with open(f, 'w') as fl:
-        f.write(str(spfyid))
+        fl.write(str(spfyid))
     return spfyid
 
 def savvy(args_dict):
