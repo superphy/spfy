@@ -56,5 +56,5 @@ def test_savvy():
             elif 'rgi' in result:
                 if '.ttl' in result:
                     assert length(result) == length('tests/refs/GCA_001894495.1_ASM189449v1_genomic.fna_rgi.ttl')
-                elif:
+                elif '.json' in result:
                     assert length(result) == length('tests/refs/GCA_001894495.1_ASM189449v1_genomic.fna_rgi.json')
