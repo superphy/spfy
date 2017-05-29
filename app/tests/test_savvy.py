@@ -49,6 +49,12 @@ def test_savvy():
             if 'base' in result:
                 assert sha1_hash(result) == sha1_hash('tests/refs/GCA_001894495.1_ASM189449v1_genomic.fna_base.ttl')
             elif 'ectyper' in result:
-                assert length(result) == length('tests/refs/GCA_001894495.1_ASM189449v1_genomic.fna_ectyper.ttl')
+                if '.ttl' in result:
+                    assert length(result) == length('tests/refs/GCA_001894495.1_ASM189449v1_genomic.fna_ectyper.ttl')
+                elif '.json' in result:
+                    assert length(result) == length('tests/refs/GCA_001894495.1_ASM189449v1_genomic.fna_ectyper.json')
             elif 'rgi' in result:
-                assert length(result) == length('tests/refs/GCA_001894495.1_ASM189449v1_genomic.fna_rgi.ttl')
+                if '.ttl' in result:
+                    assert length(result) == length('tests/refs/GCA_001894495.1_ASM189449v1_genomic.fna_rgi.ttl')
+                elif:
+                    assert length(result) == length('tests/refs/GCA_001894495.1_ASM189449v1_genomic.fna_rgi.json')

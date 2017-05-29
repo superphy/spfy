@@ -14,6 +14,7 @@ import os
 import logging
 import tempfile
 import shutil
+from flask import jsonify
 from modules.qc.qc import qc
 from modules.blazeUploader.reserve_id import write_reserve_id
 from modules.ectyper.call_ectyper import call_ectyper
@@ -60,7 +61,10 @@ def savvy(args_dict):
     Generate three turtle files:
         1. the graph of a base result for some fasta file
         2. the graph of the ectyper result
-        3. the graph of the amr result
+        3. the graph of the rgi result
+    And two JSON files:
+        1. the json result for ectyper after parsing by beautify
+        2. the json result for rgi after parsing by beautify
     '''
     def write_graph(graph, analysis):
         '''
@@ -68,6 +72,16 @@ def savvy(args_dict):
         '''
         data = graph.serialize(format="turtle")
         f = query_file + '_' + analysis + '.ttl'
+        with open(f, 'w') as fl:
+            fl.write(data)
+        return f
+    def write_json(json, analysis):
+        '''
+        Used to write out a .json result after processing by beautify.py
+        The jsonify method from Flask is also used in backend application.
+        '''
+        data = jsonify(json)
+        f = query_file + '_' + analysis + '.json'
         with open(f, 'w') as fl:
             fl.write(data)
         return f
@@ -99,6 +113,7 @@ def savvy(args_dict):
     # (4) ECTyper Beautify Step:
     ectyper_beautify = beautify(args_dict, ectyper_p)
     log.debug('Beautified ECTyper Result: ' + str(ectyper_beautify))
+    ectyper_json = write_json(ectyper_beautify, 'ectyper')
 
     # (5) Graphing ECTyper Result:
     ectyper_graph = generate_datastruct(query_file, query_file + '_id.txt', query_file + '_ectyper.p')
@@ -116,6 +131,7 @@ def savvy(args_dict):
     # (8) AMR Beautify Step:
     amr_beautify = beautify(args_dict, amr_p)
     log.debug('Beautified AMR Result: ' + str(amr_beautify))
+    amr_json = write_json(amr_beautify, 'rgi')
 
     # (9) Graping AMR Result:
     amr_graph = generate_datastruct(query_file, query_file + '_id.txt', query_file + '_rgi.tsv_rgi.p')
@@ -127,7 +143,7 @@ def savvy(args_dict):
     base_ttl = write_graph(base_turtle_graph, 'base')
     log.debug('Graph Result for base of fasta info: ' + base_ttl)
 
-    return (base_ttl, ectyper_ttl, amr_ttl)
+    return (base_ttl, ectyper_ttl, amr_ttl, ectyper_json, amr_json)
 
 if __name__ == "__main__":
     import argparse
