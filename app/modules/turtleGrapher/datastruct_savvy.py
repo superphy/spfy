@@ -118,12 +118,15 @@ def parse_gene_dict(graph, gene_dict, uriGenome, geneType):
     #### end of nested for
     return graph
 
-def datastruct_savvy(query_file, id_file, pickled_dictionary):
-    """
-    Note: we work we base graphs (those generated solely from the fasta file) and result graphs (those generated from analysis modules (RGI/ECtyper) separately - they are only linked once uploaded to blazegraph
-    :param args_dict:
-    :return:
-    """
+def generate_datastruct(query_file, id_file, pickled_dictionary):
+    '''
+    This is simply to decouple the graph generation code from the
+    upload code. In RQ backend, the datastruct_savvy() method is called
+    where-as in savvy.py (without RQ or Blazegraph) only compute_datastruct()
+    is called. The return type must be the same in datastruct_savvy to
+    maintain backwards compatability, hence most of the code is stored here
+    instead.
+    '''
     # Base graph generation
     graph = generate_graph()
 
@@ -148,6 +151,13 @@ def datastruct_savvy(query_file, id_file, pickled_dictionary):
             graph = parse_gene_dict(graph, results_dict['Virulence Factors'], uriGenome, 'VirulenceFactor')
         elif key == 'Antimicrobial Resistance':
             graph = parse_gene_dict(graph, results_dict['Antimicrobial Resistance'], uriGenome, 'AntimicrobialResistanceGene')
+    return graph
 
-    # upload
+def datastruct_savvy(query_file, id_file, pickled_dictionary):
+    """
+    Note: we work we base graphs (those generated solely from the fasta file) and result graphs (those generated from analysis modules (RGI/ECtyper) separately - they are only linked once uploaded to blazegraph
+    :param args_dict:
+    :return:
+    """
+    graph = generate_datastruct(query_file, id_file, pickled_dictionary)
     return upload_graph(graph)

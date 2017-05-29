@@ -13,14 +13,15 @@
 import os
 import logging
 import tempfile
+import shutil
 from modules.qc.qc import qc
 from modules.blazeUploader.reserve_id import write_reserve_id
 from modules.ectyper.call_ectyper import call_ectyper
 from modules.amr.amr import amr
 from modules.amr.amr_to_dict import amr_to_dict
 from modules.beautify.beautify import beautify
-from modules.turtleGrapher.datastruct_savvy import datastruct_savvy
-from modules.turtleGrapher.turtle_grapher import turtle_grapher
+from modules.turtleGrapher.datastruct_savvy import generate_datastruct
+from modules.turtleGrapher.turtle_grapher import generate_turtle_skeleton
 from modules.loggingFunctions import initialize_logging
 
 log_file = initialize_logging()
@@ -55,8 +56,22 @@ def mock_reserve_id():
 
 def savvy(args_dict):
     '''
-
+    Mimicks the spfy pipeline without RQ backend or Blazegraph.
+    Generate three turtle files:
+        1. the graph of a base result for some fasta file
+        2. the graph of the ectyper result
+        3. the graph of the amr result
     '''
+    def write_graph(graph):
+        '''
+        Used to write a rdf graph to disk as a turtle file.
+        '''
+        data = graph.serialize(format="turtle")
+        f = query_file + '_ectyper.ttl'
+        with open(f, 'w') as fl:
+            fl.write(data)
+        return f
+
     log.info("Starting savvy.py from savvy(). Logfile is: " + str(log_file))
     log.debug("args_dict received was: " + str(args_dict))
 
@@ -69,7 +84,12 @@ def savvy(args_dict):
     log.info("QC: " + str(qc_pass))
 
     # (2) SpfyID Step:
-    id_file = write_reserve_id(query_file)
+    # we use mock to create a spfyid file, note that we dont need the
+    # return as spfy methods will read from the file
+    mock_reserve_id()
+    # spfy expects id files and fasta files to be in the same location
+    id_file = os.path.abspath(query_file) + '_id.txt'
+    shutil.copy(get_spfyid_file(), id_file)
     log.info("id_file:" + id_file)
 
     # (3) ECTyper Step:
@@ -80,9 +100,10 @@ def savvy(args_dict):
     ectyper_beautify = beautify(args_dict, ectyper_p)
     log.debug('Beautified ECTyper Result: ' + str(ectyper_beautify))
 
-    # (5) Graphing ECTyper Result & Upload Step:
-    ectyper_upload = datastruct_savvy(query_file, query_file + '_id.txt', query_file + '_ectyper.p')
-    log.info('Graph & Upload of ECTyper Result: ' + ectyper_upload)
+    # (5) Graphing ECTyper Result:
+    ectyper_graph = datastruct_savvy(query_file, query_file + '_id.txt', query_file + '_ectyper.p')
+    ectyper_ttl = write_graph(ectyper_graph)
+    log.info('Graph Result for ECtyper: ' + ectyper_ttl)
 
     # (6) RGI Step:
     amr_results_file = amr(query_file)
@@ -96,13 +117,15 @@ def savvy(args_dict):
     amr_beautify = beautify(args_dict, amr_p)
     log.debug('Beautified AMR Result: ' + str(amr_beautify))
 
-    # (9) Graping AMR Result & Upload Step:
-    amr_upload = datastruct_savvy(query_file, query_file + '_id.txt', query_file + '_rgi.tsv_rgi.p')
-    log.info('Graph & Upload of AMR Result: ' + amr_upload)
+    # (9) Graping AMR Result:
+    amr_graph = generate_datastruct(query_file, query_file + '_id.txt', query_file + '_rgi.tsv_rgi.p')
+    amr_ttl = write_graph(amr_graph)
+    log.info('Graph Result for AMR: ' + amr_ttl)
 
-    # (10) Base Graphing & Upload Step:
-    base_turtle_upload = turtle_grapher(query_file)
-    log.info('Graph & Upload of Base Genome Data: ' + base_turtle_upload)
+    # (10) Base Graphing:
+    base_turtle_graph = generate_turtle_skeleton(query_file)
+    base_ttl = write_graph(base_turtle_graph)
+    log.info('Graph Result for base of fasta info: ' + base_ttl)
 
 if __name__ == "__main__":
     import argparse
