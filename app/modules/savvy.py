@@ -14,7 +14,7 @@ import os
 import logging
 import tempfile
 import shutil
-from flask import jsonify
+from flask import Flask, jsonify
 from modules.qc.qc import qc
 from modules.blazeUploader.reserve_id import write_reserve_id
 from modules.ectyper.call_ectyper import call_ectyper
@@ -82,6 +82,7 @@ def savvy(args_dict):
         '''
         # to mimick the json result, we need to use a app context to run
         # jsonify from Flask
+        app = Flask(__name__)
         with app.app_context():
             data = jsonify(json)
         f = query_file + '_' + analysis + '.json'
