@@ -101,7 +101,7 @@ def savvy(args_dict):
     log.debug('Beautified ECTyper Result: ' + str(ectyper_beautify))
 
     # (5) Graphing ECTyper Result:
-    ectyper_graph = datastruct_savvy(query_file, query_file + '_id.txt', query_file + '_ectyper.p')
+    ectyper_graph = generate_datastruct(query_file, query_file + '_id.txt', query_file + '_ectyper.p')
     ectyper_ttl = write_graph(ectyper_graph)
     log.info('Graph Result for ECtyper: ' + ectyper_ttl)
 
