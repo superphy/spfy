@@ -78,8 +78,8 @@ def savvy(args_dict):
     def write_json(json_r, analysis):
         '''
         Used to write out a .json result after processing by beautify.py
-        Note that we use flask.jsonify in backend application instead of
-        json.dump as used here.
+        Note that we use flask.jsonify in the backend application instead of
+        the json.dump method used here.
         '''
         f = query_file + '_' + analysis + '.json'
         with open(f, 'w') as fl:
