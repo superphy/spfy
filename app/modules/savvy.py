@@ -76,7 +76,7 @@ def savvy(args_dict):
         with open(f, 'w') as fl:
             fl.write(data)
         return f
-    def write_json(json, analysis):
+    def write_json(json_r, analysis):
         '''
         Used to write out a .json result after processing by beautify.py
         The jsonify method from Flask is also used in backend application.
@@ -85,7 +85,7 @@ def savvy(args_dict):
         # jsonify from Flask
         app = Flask(__name__)
         with app.test_request_context():
-            data = jsonify(json)
+            data = jsonify(json_r)
         f = query_file + '_' + analysis + '.json'
         with open(f, 'w') as fl:
             json.dump(data, fl)
