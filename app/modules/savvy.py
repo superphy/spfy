@@ -127,6 +127,8 @@ def savvy(args_dict):
     base_ttl = write_graph(base_turtle_graph, 'base')
     log.info('Graph Result for base of fasta info: ' + base_ttl)
 
+    return (base_ttl, ectyper_ttl, amr_ttl)
+
 if __name__ == "__main__":
     import argparse
 
@@ -171,4 +173,4 @@ if __name__ == "__main__":
     # the 'options' field represents things the user (of the web-app) has chosen to display, we still run ALL analysis on their files so their choices are not added to module calls (& hence kept separate)
     args_dict['options'] = spfy_options
 
-    savvy(args_dict)
+    print savvy(args_dict)

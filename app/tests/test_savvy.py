@@ -1,6 +1,12 @@
 import os
+import shutil
 import pytest
+from hashlib import sha1
 from modules.savvy import mock_reserve_id, get_spfyid_file
+from tests.constants import ARGS_DICT
+
+def sha1_hash(f):
+    return sha1(open(f,'rb').read()).hexdigest()
 
 def test_mock_reserve_id():
     f = get_spfyid_file()
@@ -19,3 +25,23 @@ def test_mock_reserve_id():
         assert mock_reserve_id() == 1
         # second call should have incremented the stored file
         assert mock_reserve_id() == 2
+        # delete the spfyid_count file that was created
+        os.remove(f)
+
+def test_savvy():
+    f = get_spfyid_file()
+    if os.path.isfile(f):
+        print 'There is already an ID file, not sure why tests are being run.'
+        assert False
+    else:
+        single_dict = dict(ARGS_DICT)
+        single_dict.update({'i': os.path.abspath('tests/ecoli/GCA_001894495.1_ASM189449v1_genomic.fna')})
+        r = savvy(single_dict)
+        for result in r:
+            if 'base' in result:
+                assert sha1_hash(result) == sha1_hash('tests/refs/GCA_001894495.1_ASM189449v1_genomic.fna_base.ttl')
+            elif 'ectyper' in result:
+                assert sha1_hash(result) == sha1_hash('tests/refs/GCA_001894495.1_ASM189449v1_genomic.fna_ectyper.ttl')
+            elif 'rgi' in result:
+                assert sha1_hash(result) == sha1_hash('tests/refs/GCA_001894495.1_ASM189449v1_genomic.fna_rgi.ttl')
+                
