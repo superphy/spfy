@@ -80,7 +80,10 @@ def savvy(args_dict):
         Used to write out a .json result after processing by beautify.py
         The jsonify method from Flask is also used in backend application.
         '''
-        data = jsonify(json)
+        # to mimick the json result, we need to use a app context to run
+        # jsonify from Flask
+        with app.app_context():
+            data = jsonify(json)
         f = query_file + '_' + analysis + '.json'
         with open(f, 'w') as fl:
             fl.write(data)
