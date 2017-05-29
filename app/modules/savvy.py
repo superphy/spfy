@@ -83,7 +83,7 @@ def savvy(args_dict):
         # to mimick the json result, we need to use a app context to run
         # jsonify from Flask
         app = Flask(__name__)
-        with app.app_context():
+        with app.test_request_context():
             data = jsonify(json)
         f = query_file + '_' + analysis + '.json'
         with open(f, 'w') as fl:
