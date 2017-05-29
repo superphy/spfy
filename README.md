@@ -63,4 +63,10 @@ To enable:
   3. then on your host machine visit http://localhost:9181
 
 ## Blazegraph:
-* We are currently running Blazegraph version 2.1.4. If you want to run Blazegraph separately, please use the same version otherwise there may be problems in endpoint urls / returns (namely version 2.1.1). See https://github.com/superphy/backend/issues/63
+* We are currently running Blazegraph version 2.1.4. If you want to run Blazegraph separately, please use the same version otherwise there may be problems in endpoint urls / returns (namely version 2.1.1). See [#63](https://github.com/superphy/backend/issues/63) Alternatively, modify the endpoint accordingly under `database['blazegraph_url']` in `/app/config.py`
+
+## CLI-Only:
+* If you wish to only create rdf graphs (serialized as turtle files):
+  1. First install miniconda and activate the environment from https://raw.githubusercontent.com/superphy/docker-flask-conda/master/app/environment.yml
+  2. cd into the app folder (where RQ workers typically run from): `cd app/`
+  2. Run savvy.py like so: `python -m modules/savvy -i tests/ecoli/GCA_001894495.1_ASM189449v1_genomic.fna`

@@ -1,7 +1,7 @@
 #!/usr/bin/env python2
 # -*- coding: UTF-8 -*-
 
-# use: python -m app.modules.savvy -i /home/kevin/Desktop/nonGenBankEcoli/ECI-2866_lcl.fasta
+# use: python -m modules.savvy -i /home/kevin/Desktop/nonGenBankEcoli/ECI-2866_lcl.fasta
 
 # S:erotype
 # A:ntimicrobial Resistance
@@ -12,75 +12,143 @@
 
 import os
 import logging
-
-from app.modules.qc.qc import qc
-from app.modules.blazeUploader.reserve_id import write_reserve_id
-from app.modules.ectyper.call_ectyper import call_ectyper
-from app.modules.amr.amr import amr
-from app.modules.amr.amr_to_dict import amr_to_dict
-from app.modules.beautify.beautify import beautify
-from app.modules.turtleGrapher.datastruct_savvy import datastruct_savvy
-from app.modules.turtleGrapher.turtle_grapher import turtle_grapher
-from app.modules.loggingFunctions import initialize_logging
+import tempfile
+import shutil
+import json
+from modules.qc.qc import qc
+from modules.blazeUploader.reserve_id import write_reserve_id
+from modules.ectyper.call_ectyper import call_ectyper
+from modules.amr.amr import amr
+from modules.amr.amr_to_dict import amr_to_dict
+from modules.beautify.beautify import beautify
+from modules.turtleGrapher.datastruct_savvy import generate_datastruct
+from modules.turtleGrapher.turtle_grapher import generate_turtle_skeleton
+from modules.loggingFunctions import initialize_logging
 
 log_file = initialize_logging()
 log = logging.getLogger(__name__)
 
+def get_spfyid_file():
+    '''
+    Uses tempfile to store the spfyid file on disk.
+    We use a mmethod so the tests can access just the file as well.
+    '''
+    f = os.path.join(tempfile.gettempdir(), 'spfyid_count.txt')
+    return f
+
+def mock_reserve_id():
+    '''
+    Mocks the presence of Blazegraph to generate spfyids.
+    '''
+    f = get_spfyid_file()
+    log.debug('spfyid_count file returned was : ' + f)
+    # check if an existing spfyid count exists
+    if os.path.isfile(f):
+        with open(f) as fl:
+            spfyid = fl.read()
+            spfyid = int(spfyid)
+    else:
+        spfyid = 0
+    # we assumed the spfyid in the file is already used
+    spfyid += 1
+    with open(f, 'w') as fl:
+        fl.write(str(spfyid))
+    return spfyid
+
 def savvy(args_dict):
     '''
-
+    Mimicks the spfy pipeline without RQ backend or Blazegraph.
+    Generate three turtle files:
+        1. the graph of a base result for some fasta file
+        2. the graph of the ectyper result
+        3. the graph of the rgi result
+    And two JSON files:
+        1. the json result for ectyper after parsing by beautify
+        2. the json result for rgi after parsing by beautify
     '''
-    log.info("Starting savvy.py from savvy(). Logfile is: " + str(log_file))
+    def write_graph(graph, analysis):
+        '''
+        Used to write a rdf graph to disk as a turtle file.
+        '''
+        data = graph.serialize(format="turtle")
+        f = query_file + '_' + analysis + '.ttl'
+        with open(f, 'w') as fl:
+            fl.write(data)
+        return f
+    def write_json(json_r, analysis):
+        '''
+        Used to write out a .json result after processing by beautify.py
+        Note that we use flask.jsonify in the backend application instead of
+        the json.dump method used here.
+        '''
+        f = query_file + '_' + analysis + '.json'
+        with open(f, 'w') as fl:
+            json.dump(json_r, fl)
+        return f
+
+    log.debug("Starting savvy.py from savvy(). Logfile is: " + str(log_file))
     log.debug("args_dict received was: " + str(args_dict))
 
     query_file = args_dict['i']
-    log.info("query_file is: " + query_file)
+    log.debug("query_file is: " + query_file)
 
     # (1) QC Step:
     qc_pass = qc(query_file)
     assert qc(query_file) == True
-    log.info("QC: " + str(qc_pass))
+    log.debug("QC: " + str(qc_pass))
 
     # (2) SpfyID Step:
-    id_file = write_reserve_id(query_file)
-    log.info("id_file:" + id_file)
+    # we use mock to create a spfyid file, note that we dont need the
+    # return as spfy methods will read from the file
+    mock_reserve_id()
+    # spfy expects id files and fasta files to be in the same location
+    id_file = os.path.abspath(query_file) + '_id.txt'
+    shutil.copy(get_spfyid_file(), id_file)
+    log.debug("id_file:" + id_file)
 
     # (3) ECTyper Step:
     ectyper_p = call_ectyper(args_dict)
-    log.info("Pickled ECTyper File: " + ectyper_p)
+    log.debug("Pickled ECTyper File: " + ectyper_p)
 
     # (4) ECTyper Beautify Step:
     ectyper_beautify = beautify(args_dict, ectyper_p)
     log.debug('Beautified ECTyper Result: ' + str(ectyper_beautify))
+    ectyper_json = write_json(ectyper_beautify, 'ectyper')
 
-    # (5) Graphing ECTyper Result & Upload Step:
-    ectyper_upload = datastruct_savvy(query_file, query_file + '_id.txt', query_file + '_ectyper.p')
-    log.info('Graph & Upload of ECTyper Result: ' + ectyper_upload)
+    # (5) Graphing ECTyper Result:
+    ectyper_graph = generate_datastruct(query_file, query_file + '_id.txt', query_file + '_ectyper.p')
+    ectyper_ttl = write_graph(ectyper_graph, 'ectyper')
+    log.debug('Graph Result for ECtyper: ' + ectyper_ttl)
 
     # (6) RGI Step:
     amr_results_file = amr(query_file)
-    log.info("AMR Results File: " + amr_results_file)
+    log.debug("AMR Results File: " + amr_results_file)
 
     # (7) AMR Results to Dictionary Step:
     amr_p = amr_to_dict(amr_results_file)
-    log.info("Pickled AMR Results File: " + amr_p)
+    log.debug("Pickled AMR Results File: " + amr_p)
 
     # (8) AMR Beautify Step:
     amr_beautify = beautify(args_dict, amr_p)
     log.debug('Beautified AMR Result: ' + str(amr_beautify))
+    amr_json = write_json(amr_beautify, 'rgi')
 
-    # (9) Graping AMR Result & Upload Step:
-    amr_upload = datastruct_savvy(query_file, query_file + '_id.txt', query_file + '_rgi.tsv_rgi.p')
-    log.info('Graph & Upload of AMR Result: ' + amr_upload)
+    # (9) Graping AMR Result:
+    amr_graph = generate_datastruct(query_file, query_file + '_id.txt', query_file + '_rgi.tsv_rgi.p')
+    amr_ttl = write_graph(amr_graph, 'rgi')
+    log.debug('Graph Result for AMR: ' + amr_ttl)
 
-    # (10) Base Graphing & Upload Step:
-    base_turtle_upload = turtle_grapher(query_file)
-    log.info('Graph & Upload of Base Genome Data: ' + base_turtle_upload)
+    # (10) Base Graphing:
+    base_turtle_graph = generate_turtle_skeleton(query_file)
+    base_ttl = write_graph(base_turtle_graph, 'base')
+    log.debug('Graph Result for base of fasta info: ' + base_ttl)
+
+    return (base_ttl, ectyper_ttl, amr_ttl, ectyper_json, amr_json)
 
 if __name__ == "__main__":
     import argparse
 
-    log.info("Starting savvy.py from if __name__=='__main__'. Logfile is: " + str(log_file))
+    log.debug("Starting savvy.py from if __name__=='__main__'. Logfile is: " + str(log_file))
 
     # parsing cli-input
     parser = argparse.ArgumentParser()
@@ -121,4 +189,4 @@ if __name__ == "__main__":
     # the 'options' field represents things the user (of the web-app) has chosen to display, we still run ALL analysis on their files so their choices are not added to module calls (& hence kept separate)
     args_dict['options'] = spfy_options
 
-    savvy(args_dict)
+    print savvy(args_dict)
