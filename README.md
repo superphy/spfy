@@ -69,4 +69,4 @@ To enable:
 * If you wish to only create rdf graphs (serialized as turtle files):
   1. First install miniconda and activate the environment from https://raw.githubusercontent.com/superphy/docker-flask-conda/master/app/environment.yml
   2. cd into the app folder (where RQ workers typically run from): `cd app/`
-  2. Run savvy.py like so: `python -m modules/savvy -i tests/ecoli/GCA_001894495.1_ASM189449v1_genomic.fna`
+  2. Run savvy.py like so: `python -m modules/savvy -i tests/ecoli/GCA_001894495.1_ASM189449v1_genomic.fna` where the argument after the `-i` is your genome (FASTA) file.
