@@ -2,7 +2,7 @@ import os
 import shutil
 import pytest
 from hashlib import sha1
-from modules.savvy import mock_reserve_id, get_spfyid_file
+from modules.savvy import mock_reserve_id, get_spfyid_file, savvy
 from tests.constants import ARGS_DICT
 
 def sha1_hash(f):
@@ -31,7 +31,7 @@ def test_mock_reserve_id():
 def test_savvy():
     f = get_spfyid_file()
     if os.path.isfile(f):
-        print 'There is already an ID file, not sure why tests are being run.'
+        print 'There is already an ID file, not sure why tests are being run. If you want to retest, run sudo rm /tmp/spfyid_count.txt'
         assert False
     else:
         single_dict = dict(ARGS_DICT)
@@ -44,4 +44,3 @@ def test_savvy():
                 assert sha1_hash(result) == sha1_hash('tests/refs/GCA_001894495.1_ASM189449v1_genomic.fna_ectyper.ttl')
             elif 'rgi' in result:
                 assert sha1_hash(result) == sha1_hash('tests/refs/GCA_001894495.1_ASM189449v1_genomic.fna_rgi.ttl')
-                
