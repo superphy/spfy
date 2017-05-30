@@ -28,6 +28,6 @@ def test_generate_uri():
     assert r == e
 
     # test with a url in the form of a string
-    e = URIREF('https://www.github.com/superphy#')
+    e = URIRef('https://www.github.com/superphy#')
     r = gu('https://www.github.com/superphy#')
     assert r == e
