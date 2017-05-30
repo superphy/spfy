@@ -17,7 +17,7 @@ def test_generate_uri():
     # append something
     # ex. gu(uriGenome, "/contigs") in datastruct_savvy.py
     # e was previously generated
-    e = rdflib.term.URIRef(u'https://www.github.com/superphy#1947b0815e6c1b11565e1ef5db9c884e3eead520/contigs')
+    e = URIRef(u'https://www.github.com/superphy#1947b0815e6c1b11565e1ef5db9c884e3eead520/contigs')
     # mock_filehash mocks the hash of a genome file
     mock_filehash = sha1('thisvaluedoesntmatterfornow').hexdigest()
     # generate the mock uriGenome
