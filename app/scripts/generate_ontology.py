@@ -30,6 +30,7 @@ def generate_ontology():
 
     # spfyId class
     graph.add((gu(':spfyId'), gu('rdf:type'), gu('owl:Class')))
+    graph.add((gu(':spfyId'), gu('rdfs:comment'), Literal(':spfyid')))
 
     # ge:0001567 'bacterium'
     graph.add((gu('ge:0001567'), gu('rdf:type'), gu('owl:ObjectProperty')))
@@ -53,9 +54,92 @@ def generate_ontology():
 
     # genome file class
     graph.add((gu('g:Genome'), gu('rdf:type'), gu('owl:Class')))
+    graph.add((gu('g:Genome'), gu('rdfs:comment'), Literal('genome instance')))
 
     # link genome file class and spfyid class
     graph = link_uris(graph, gu(':spfyId'), gu('g:Genome'))
+
+    # dc:date on g:Genome
+    graph.add((gu('dc:date'), gu('rdf:type'), gu('owl:ObjectProperty')))
+    graph.add((gu('dc:date'), gu('rdfs:comment'), Literal('submission date')))
+    graph.add((gu('dc:date'), gu('rdfs:range'), gu('g:Genome')))
+
+    # dc:description on g:Genome
+    graph.add((gu('dc:description'), gu('rdf:type'), gu('owl:ObjectProperty')))
+    graph.add((gu('dc:description'), gu('rdfs:comment'), Literal('class descriptor')))
+    graph.add((gu('dc:description'), gu('rdfs:range'), gu('g:Genome')))
+
+    # bag of contigs class
+    graph.add((gu('so:0001462'), gu('rdf:type'), gu('owl:Class')))
+    graph.add((gu('so:0001462'), gu('rdfs:comment'), Literal('bag of contigs')))
+
+    # link bag of contigs
+    graph = link_uris(graph, gu('g:Genome'), gu('so:0001462'))
+
+    # contig class
+    graph.add((gu('g:Contig'), gu('rdf:type'), gu('owl:Class')))
+    graph.add((gu('g:Contig'), gu('rdfs:comment'), Literal('a contig')))
+
+    # g:Identifier
+    graph.add((gu('g:Identifier'), gu('rdf:type'), gu('owl:ObjectProperty')))
+    graph.add((gu('g:Identifier'), gu('rdfs:comment'), Literal('accession number ie. record.id')))
+    graph.add((gu('g:Identifier'), gu('rdfs:range'), gu('g:Contig')))
+
+    # g:DNASequence
+    graph.add((gu('g:DNASequence'), gu('rdf:type'), gu('owl:ObjectProperty')))
+    graph.add((gu('g:DNASequence'), gu('rdfs:comment'), Literal('a dna sequence')))
+    graph.add((gu('g:DNASequence'), gu('rdfs:range'), gu('g:Contig')))
+
+    # g:Description
+    graph.add((gu('g:Description'), gu('rdf:type'), gu('owl:ObjectProperty')))
+    graph.add((gu('g:Description'), gu('rdfs:comment'), Literal('record.description')))
+    graph.add((gu('g:Description'), gu('rdfs:range'), gu('g:Contig')))
+
+    # faldo:Reference
+    # here, we differ from faldo's implementation:
+    # in faldo, it is diffined as an edge type
+    # instead, we define it as an addition class type a g:Contig may have
+    graph.add((gu('faldo:Reference'), gu('rdf:type'), gu('owl:Class')))
+    graph.add((gu('faldo:Reference'), gu('rdf:comment'), Literal('a g:Contig that is referenced in some :Marker')))
+    graph.add((gu('faldo:Reference'), gu('rdfs:subClassOf'), gu('g:Contig')))
+
+    # faldo:Position
+    graph.add((gu('faldo:Position'), gu('rdf:type'), gu('owl:Class')))
+    graph.add((gu('faldo:ExactPosition'), gu('rdfs:subClassOf'), gu('faldo:Position')))
+    graph.add((gu('faldo:ForwardStrandPosition'), gu('rdfs:subClassOf'), gu('faldo:ExactPosition')))
+    graph.add((gu('faldo:ReverseStrandPosition'), gu('rdfs:subClassOf'), gu('faldo:ExactPosition')))
+
+    # the faldo ontology defines the position number under faldo:position
+    # note the lower-case
+    graph.add((gu('faldo:position'), gu('rdf:type'), gu('owl:ObjectProperty')))
+    graph.add((gu('faldo:position'), gu('rdfs:comment'), Literal('the numerical location of a position')))
+    graph.add((gu('faldo:position'), gu('rdfs:range'), gu('faldo:Position')))
+
+    # faldo:Begin faldo:End
+    # here, we also differe from faldo's implementation
+    # faldo implements it as an edge type to a blank node
+    # we instead implement it as a class type applied to that blank node
+    graph.add((gu('faldo:Begin'), gu('rdfs:subClassOf'), gu('faldo:Position')))
+    graph.add((gu('faldo:End'), gu('rdfs:subClassOf'), gu('faldo:Position')))
+
+    # link faldo:Position to faldo:Reference
+    graph = link_uris(graph, gu('faldo:Reference'), gu('faldo:Position'))
+
+    # faldo:Region
+    graph.add((gu('faldo:Region'), gu('rdf:type'), gu('owl:Class')))
+    graph.add((gu('faldo:Region'), gu('rdf:comment'), Literal('a region containing the start and the end positions')))
+
+    # link faldo:Region with faldo:Begin and faldo:End
+    graph = link_uris(graph, gu('faldo:Begin'), gu('faldo:Region'))
+    graph = link_uris(graph, gu('faldo:End'), gu('faldo:Region'))
+
+    # :Marker
+    graph.add((gu(':Marker'), gu('rdf:type'), gu('owl:Class')))
+    # the subclasses AntimicrobialResistanceGene and VirulenceFactor
+    # were already defined in the generate_graph functions
+
+    # link :Marker and faldo:Region
+    graph = link_uris(graph, gu('faldo:Region'), gu(':Marker'))
 
     return write_graph(graph)
 
