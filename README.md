@@ -19,11 +19,12 @@ Platform for predicting Serotype & Virulence Factors (via [ECTyper](https://gith
 ## Architecture:
 Docker Image | Ports | Names | *Description*
 --- | --- | --- | ---
-superphy/backend-rq:2.0.0 | 80/tcp, 443/tcp | backend_worker_1 | the main redis queue workers
-superphy/backend-rq-blazegraph:2.0.0 | 80/tcp, 443/tcp | backend_worker-blazegraph-ids_1 | this handles spfyID generation for the blazegraph database
-superphy/backend:2.0.0 | 0.0.0.0:80->80/tcp, 443/tcp | backend_web-nginx-uwsgi_1 | the actual web app interface
-superphy/blazegraph:2.1.4 | 0.0.0.0:8080->8080/tcp | backend_blazegraph_1 | Blazegraph Database
+backend-rq | 80/tcp, 443/tcp | backend_worker_1 | the main redis queue workers
+backend-rq-blazegraph | 80/tcp, 443/tcp | backend_worker-blazegraph-ids_1 | this handles spfyID generation for the blazegraph database
+backend | 0.0.0.0:8000->80/tcp, 443/tcp | backend_web-nginx-uwsgi_1 | the actual web app interface
+superphy/blazegraph:2.1.4-inferencing | 0.0.0.0:8080->8080/tcp | backend_blazegraph_1 | Blazegraph Database
 redis:3.2 | 6379/tcp | backend_redis_1 | Redis Database
+reactapp | 0.0.0.0:8090->5000/tcp | backend_reactapp_1 | web-app providing group comparisons
 
 ## Further Details:
 The `superphy/backend-rq:2.0.0` image is *scalable*: you can create as many instances as you need/have processing power for. The image is responsible for listening to the `multiples` queue (12 workers) which handles most of the tasks, including `RGI` calls. It also listens to the `singles` queue (1 worker) which runs `ECTyper`. This is done as `RGI` is the slowest part of the equation. Worker management in handled in `supervisor`.
@@ -69,4 +70,10 @@ To enable:
 * If you wish to only create rdf graphs (serialized as turtle files):
   1. First install miniconda and activate the environment from https://raw.githubusercontent.com/superphy/docker-flask-conda/master/app/environment.yml
   2. cd into the app folder (where RQ workers typically run from): `cd app/`
-  2. Run savvy.py like so: `python -m modules/savvy -i tests/ecoli/GCA_001894495.1_ASM189449v1_genomic.fna` where the argument after the `-i` is your genome (FASTA) file.
+  3. Run savvy.py like so: `python -m modules/savvy -i tests/ecoli/GCA_001894495.1_ASM189449v1_genomic.fna` where the argument after the `-i` is your genome (FASTA) file.
+  
+ # Ontology
+ The ontology for Spfy is available at: https://raw.githubusercontent.com/superphy/backend/master/app/scripts/spfy_ontology.ttl
+ It was generated using https://raw.githubusercontent.com/superphy/backend/master/app/scripts/generate_ontology.py with shared functions from Spfy's backend code. If you wish to run it, do:
+  1. `cd app/`
+  2. `python -m scripts/generate_ontology` which will put the ontology in `app/`
