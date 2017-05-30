@@ -26,3 +26,8 @@ def test_generate_uri():
     # this is the test case, r is a mock uriContigs
     r = gu(mock_uriGenome, '/contigs')
     assert r == e
+
+    # test with a url in the form of a string
+    e = URIREF('https://www.github.com/superphy#')
+    r = gu('https://www.github.com/superphy#')
+    assert r == e
