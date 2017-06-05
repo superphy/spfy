@@ -92,16 +92,18 @@ def parse_gene_dict(graph, gene_dict, uriGenome, geneType):
             graph.add((bnode_start, gu('rdf:type'), gu('faldo:ExactPosition')))
             graph.add((bnode_end, gu('rdf:type'), gu('faldo:Position')))
             graph.add((bnode_end, gu('rdf:type'), gu('faldo:ExactPosition')))
-            if gene_record['ORIENTATION'] is '+':
-                graph.add((bnode_start, gu('rdf:type'), gu(
-                    'faldo:ForwardStrandPosition')))
-                graph.add((bnode_end, gu('rdf:type'), gu(
-                    'faldo:ForwardStrandPosition')))
-            else:
-                graph.add((bnode_start, gu('rdf:type'), gu(
-                    'faldo:ReverseStrandPosition')))
-                graph.add((bnode_end, gu('rdf:type'), gu(
-                    'faldo:ReverseStrandPosition')))
+
+            if 'ORIENTATION' in gene_record:
+                if gene_record['ORIENTATION'] is '+':
+                    graph.add((bnode_start, gu('rdf:type'), gu(
+                        'faldo:ForwardStrandPosition')))
+                    graph.add((bnode_end, gu('rdf:type'), gu(
+                        'faldo:ForwardStrandPosition')))
+                else:
+                    graph.add((bnode_start, gu('rdf:type'), gu(
+                        'faldo:ReverseStrandPosition')))
+                    graph.add((bnode_end, gu('rdf:type'), gu(
+                        'faldo:ReverseStrandPosition')))
 
             graph.add((bnode_start, gu('faldo:Position'),
                        Literal(gene_record['START'])))
@@ -147,10 +149,8 @@ def generate_datastruct(query_file, id_file, pickled_dictionary):
     for key in results_dict.keys():
         if key == 'Serotype':
             graph = parse_serotype(graph,results_dict['Serotype'],uriIsolate)
-        elif key == 'Virulence Factors':
-            graph = parse_gene_dict(graph, results_dict['Virulence Factors'], uriGenome, 'VirulenceFactor')
-        elif key == 'Antimicrobial Resistance':
-            graph = parse_gene_dict(graph, results_dict['Antimicrobial Resistance'], uriGenome, 'AntimicrobialResistanceGene')
+        else:
+            graph = parse_gene_dict(graph, results_dict[key], uriGenome, key)
     return graph
 
 def datastruct_savvy(query_file, id_file, pickled_dictionary):
