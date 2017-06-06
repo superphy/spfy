@@ -149,8 +149,14 @@ def generate_datastruct(query_file, id_file, pickled_dictionary):
     for key in results_dict.keys():
         if key == 'Serotype':
             graph = parse_serotype(graph,results_dict['Serotype'],uriIsolate)
-        else:
-            graph = parse_gene_dict(graph, results_dict[key], uriGenome, key)
+        elif key == 'Virulence Factors':
+            graph = parse_gene_dict(graph, results_dict['Virulence Factors'], uriGenome, 'VirulenceFactor')
+        elif key == 'Antimicrobial Resistance':
+            graph = parse_gene_dict(graph, results_dict['Antimicrobial Resistance'], uriGenome,
+                                    'AntimicrobialResistanceGene')
+        elif key == 'PanGenomeRegion':
+            graph = parse_gene_dict(graph, results_dict['key'], uriGenome, key)
+            
     return graph
 
 def datastruct_savvy(query_file, id_file, pickled_dictionary):
