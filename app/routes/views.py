@@ -21,25 +21,13 @@ def job_status_reactapp(job_id):
     '''
     This provides an endpoint for the reactapp to poll results. We leave job_status() intact to maintain backwards compatibility with the AngularJS app.
     '''
-    r = job_status(job_id)
-    print r
-    status_code = int()
-    msg = ""
-    if type(r) is tuple:
-        for value in r:
-            if type(value) is int:
-                status_code = value
-            else:
-                msg = value
-        if status_code == 202:
-            #return jsonify({'pending': True})
-            return 'pending', 204
-        elif status_code == 415:
-            # job failed and you have job.exc_info
-            return r, 500
+    job = fetch_job(job_id)
+    if job.is_finished:
+        return job.result
+    elif job.is_failed:
+        return job.exc_info, 415
     else:
-        # then job has complited succesfully
-        return r
+        return "pending", 204
 
 @bp.route('/api/v0/newgroupcomparison', methods=['POST'])
 def handle_group_comparison_submission():
