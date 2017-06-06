@@ -14,7 +14,7 @@ from modules.spfy import spfy
 from routes.utility_functions import handle_tar, handle_zip, fix_uri
 from modules.groupComparisons.frontend_queries import get_all_attribute_types, get_attribute_values, get_types
 bp = Blueprint('main', __name__)
-from modules.groupComparisons.fishers import fishers
+from modules.gc import blob_gc_enqueue
 
 @bp.route('/api/v0/newgroupcomparison', methods=['POST'])
 def handle_group_comparison_submission():
