@@ -97,7 +97,7 @@ def fetch_job(job_id):
 def job_status(job_id):
     job = fetch_job(job_id)
     if job.is_finished:
-        return jsonify(job.result)
+        return job.result, 200
     elif job.is_failed:
         return job.exc_info, 415
     else:
