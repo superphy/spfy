@@ -6,6 +6,7 @@ from flask import Flask
 from flask_bootstrap import Bootstrap
 import config
 from routes.views import bp as spfy
+from routes.reactapp import bp_ra as reactapp
 from flask_recaptcha import ReCaptcha
 from flask_cors import CORS, cross_origin
 
@@ -26,5 +27,6 @@ def create_app():
     cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 
     app.register_blueprint(spfy)
+    app.register_blueprint(reactapp)
 
     return app
