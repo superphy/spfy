@@ -2,16 +2,14 @@ import os
 import tarfile
 import zipfile
 import json
-import redis
 from datetime import datetime
 # flask/external lib
 from flask import Blueprint, render_template, request, jsonify, current_app, g, url_for, redirect
-from rq import Queue
 from werkzeug.utils import secure_filename
 from flask_recaptcha import ReCaptcha
 # spfy code
 from modules.spfy import spfy
-from routes.utility_functions import handle_tar, handle_zip, fix_uri
+from routes.utility_functions import handle_tar, handle_zip, fix_uri, fetch_job
 from modules.groupComparisons.frontend_queries import get_all_attribute_types, get_attribute_values, get_types
 bp = Blueprint('main', __name__)
 from modules.gc import blob_gc_enqueue
@@ -67,20 +65,6 @@ def call_get_all_atribute_types():
     Get all possible attribute types.
     '''
     return jsonify(get_all_attribute_types())
-
-def fetch_job(job_id):
-    '''
-    Iterates through all queues looking for the job.
-    '''
-    redis_url = current_app.config['REDIS_URL']
-    redis_connection = redis.from_url(redis_url)
-    queues = current_app.config['QUEUES_SPFY']
-    for queue in queues:
-        q = Queue(queue, connection=redis_connection)
-        job = q.fetch_job(job_id)
-        if job is not None:
-            return job
-    return {'is_failed': True, 'exc_info': 'job not found'}
 
 @bp.route('/results/<job_id>')
 def job_status(job_id):
