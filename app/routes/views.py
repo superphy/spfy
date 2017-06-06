@@ -25,20 +25,21 @@ def job_status_reactapp(job_id):
     print r
     status_code = int()
     msg = ""
-    for value in r:
-        if type(value) is int:
-            status_code = value
-        else:
-            msg = value
-    if status_code == 202:
-        #return jsonify({'pending': True})
-        return 'pending', 204
-    elif status_code == 415:
-        # job failed and you have job.exc_info
-        return r, 500
+    if type(r) is tuple:
+        for value in r:
+            if type(value) is int:
+                status_code = value
+            else:
+                msg = value
+        if status_code == 202:
+            #return jsonify({'pending': True})
+            return 'pending', 204
+        elif status_code == 415:
+            # job failed and you have job.exc_info
+            return r, 500
     else:
         # then job has complited succesfully
-        return r, 200
+        return r
 
 @bp.route('/api/v0/newgroupcomparison', methods=['POST'])
 def handle_group_comparison_submission():
@@ -97,7 +98,7 @@ def fetch_job(job_id):
 def job_status(job_id):
     job = fetch_job(job_id)
     if job.is_finished:
-        return job.result, 200
+        return job.result
     elif job.is_failed:
         return job.exc_info, 415
     else:
