@@ -16,6 +16,30 @@ from modules.groupComparisons.frontend_queries import get_all_attribute_types, g
 bp = Blueprint('main', __name__)
 from modules.gc import blob_gc_enqueue
 
+@bp.route('/api/v0/results/<job_id>')
+def job_status_reactapp(job_id):
+    '''
+    This provides an endpoint for the reactapp to poll results. We leave job_status() intact to maintain backwards compatibility with the AngularJS app.
+    '''
+    r = job_status(job_id)
+    print r
+    status_code = int()
+    msg = ""
+    for value in r:
+        if type(value) is int:
+            status_code = value
+        else:
+            msg = value
+    if status_code == 202:
+        #return jsonify({'pending': True})
+        return 'pending', 204
+    elif status_code == 415:
+        # job failed and you have job.exc_info
+        return r, 500
+    else:
+        # then job has complited succesfully
+        return r, 200
+
 @bp.route('/api/v0/newgroupcomparison', methods=['POST'])
 def handle_group_comparison_submission():
     query = request.json['groups']
