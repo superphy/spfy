@@ -92,13 +92,13 @@ def fetch_job(job_id):
         job = q.fetch_job(job_id)
         if job is not None:
             return job
-    return "fudge muffins!", 500
+    return {'is_failed': True, 'exc_info': 'job not found'}
 
 @bp.route('/results/<job_id>')
 def job_status(job_id):
     job = fetch_job(job_id)
     if job.is_finished:
-        return job.result
+        return jsonify(job.result)
     elif job.is_failed:
         return job.exc_info, 415
     else:
