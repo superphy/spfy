@@ -108,7 +108,7 @@ def savvy(args_dict):
     log.debug("id_file:" + id_file)
 
     #Call PanPredic
-    panpredic_p = pan(args_dict)
+    #panpredic_p = pan(args_dict)
 
     # (3) ECTyper Step:
     ectyper_p = call_ectyper(args_dict)
