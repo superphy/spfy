@@ -24,6 +24,7 @@ from modules.beautify.beautify import beautify
 from modules.turtleGrapher.datastruct_savvy import generate_datastruct
 from modules.turtleGrapher.turtle_grapher import generate_turtle_skeleton
 from modules.loggingFunctions import initialize_logging
+from modules.PanPredic.modules.main_queue import pan
 
 log_file = initialize_logging()
 log = logging.getLogger(__name__)
@@ -105,6 +106,9 @@ def savvy(args_dict):
     id_file = os.path.abspath(query_file) + '_id.txt'
     shutil.copy(get_spfyid_file(), id_file)
     log.debug("id_file:" + id_file)
+
+    #Call PanPredic
+    panpredic_p = pan(args_dict)
 
     # (3) ECTyper Step:
     ectyper_p = call_ectyper(args_dict)

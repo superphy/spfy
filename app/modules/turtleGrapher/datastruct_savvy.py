@@ -81,7 +81,7 @@ def parse_gene_dict(graph, gene_dict, uriGenome, geneType):
             #graph.add((bnode_region, gu(':hasPart'), bnode_end))
 
             # this is a special case for amr results
-            if 'CUT_OFF' in gene_dict.keys():
+            if 'CUT_OFF' in gene_dict:
                 graph.add((bnode_start, gu('dc:Description'),
                            Literal(gene_dict['CUT_OFF'])))
                 graph.add((bnode_end, gu('dc:Description'),
@@ -104,6 +104,8 @@ def parse_gene_dict(graph, gene_dict, uriGenome, geneType):
                         'faldo:ReverseStrandPosition')))
                     graph.add((bnode_end, gu('rdf:type'), gu(
                         'faldo:ReverseStrandPosition')))
+            if 'DNASequence' in gene_record:
+                graph.add(uriGene, gu('g:DNASequence'), Literal(gene_record['DNASequence']))
 
             graph.add((bnode_start, gu('faldo:Position'),
                        Literal(gene_record['START'])))
@@ -156,7 +158,7 @@ def generate_datastruct(query_file, id_file, pickled_dictionary):
                                     'AntimicrobialResistanceGene')
         elif key == 'PanGenomeRegion':
             graph = parse_gene_dict(graph, results_dict['key'], uriGenome, key)
-            
+
     return graph
 
 def datastruct_savvy(query_file, id_file, pickled_dictionary):
