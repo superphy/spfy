@@ -3,6 +3,7 @@ from rdflib import BNode, Literal, Graph
 from modules.turtleGrapher.turtle_utils import generate_uri as gu, generate_hash, link_uris
 from modules.turtleGrapher.turtle_grapher import generate_graph
 from modules.blazeUploader.upload_graph import upload_graph
+import modules.PanPredic.modules.uploader
 # working with Serotype, Antimicrobial Resistance, & Virulence Factor data
 # structures
 
@@ -45,13 +46,18 @@ def parse_gene_dict(graph, gene_dict, uriGenome, geneType):
     TODO: merge common components with generate_amr()
     '''
 
-    for contig_id in gene_dict.keys():
-        for gene_record in gene_dict[contig_id]:
+    for contig_id in gene_dict:
+        #makes sure that the contigs are named correctly
+        contig_name = modules.PanPredic.modules.uploader.contig_name_parse(contig_id)
+        gene_dict[contig_name] = gene_dict[contig_id]
+        del gene_dict[contig_id]
+
+        for gene_record in gene_dict[contig_name]:
             # uri for bag of contigs
             # ex. :4eb02f5676bc808f86c0f014bbce15775adf06ba/contigs/
             uriContigs = gu(uriGenome, "/contigs")
             # recreating the contig uri
-            uriContig = gu(uriContigs, '/' + contig_id)
+            uriContig = gu(uriContigs, '/' + contig_name)
 
             # after this point we switch perspective to the gene and build down to
             # relink the gene with the contig
@@ -105,7 +111,7 @@ def parse_gene_dict(graph, gene_dict, uriGenome, geneType):
                     graph.add((bnode_end, gu('rdf:type'), gu(
                         'faldo:ReverseStrandPosition')))
             if 'DNASequence' in gene_record:
-                graph.add(uriGene, gu('g:DNASequence'), Literal(gene_record['DNASequence']))
+                graph.add(uriGene, gu('g:DNASequence'), Literal(gene_record['']))
 
             graph.add((bnode_start, gu('faldo:Position'),
                        Literal(gene_record['START'])))
