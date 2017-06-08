@@ -49,8 +49,9 @@ def parse_gene_dict(graph, gene_dict, uriGenome, geneType):
     for contig_id in gene_dict:
         #makes sure that the contigs are named correctly
         contig_name = modules.PanPredic.modules.uploader.contig_name_parse(contig_id)
-        gene_dict[contig_name] = gene_dict[contig_id]
-        del gene_dict[contig_id]
+        if contig_name != contig_id:
+            gene_dict[contig_name] = gene_dict[contig_id]
+            del gene_dict[contig_id]
 
         for gene_record in gene_dict[contig_name]:
             # uri for bag of contigs
