@@ -1,7 +1,6 @@
 import os
 import tarfile
 import zipfile
-import json
 from datetime import datetime
 # flask/external lib
 from flask import Blueprint, render_template, request, jsonify, current_app, g, url_for, redirect
