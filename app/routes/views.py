@@ -22,6 +22,9 @@ def job_status(job_id):
     else:
         return "Still pending", 202
 
+# the /api/v0 prefix is set to allow CORS for any postfix
+@bp.route('/api/v0/upload', methods=['POST'])
+# this is the standard route in spfy
 @bp.route('/upload', methods=['POST'])
 def upload():
     recaptcha = ReCaptcha(app=current_app)
