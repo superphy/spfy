@@ -12,7 +12,15 @@ def job_status_reactapp(job_id):
     '''
     job = fetch_job(job_id)
     if job.is_finished:
-        return job.result
+        r = job.result
+        # subtyping results come in the form of a list and must
+        # be conv to json otherwise, you get a 500 error (isa)
+        if type(r) is list:
+            return jsonify(r)
+        # fishers results come in the form of a df.to_json object
+        # and should be returned directly
+        else:
+            return job.result
     elif job.is_failed:
         return job.exc_info, 415
     else:
