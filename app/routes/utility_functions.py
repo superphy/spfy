@@ -101,4 +101,16 @@ def fetch_job(job_id):
         job = q.fetch_job(job_id)
         if job is not None:
             return job
-    return {'is_failed': True, 'exc_info': 'job not found'}
+    return Job(is_failed=True, exc_info='job not found')
+
+class Job(object):
+    '''
+    A class to mimick the Job object returned by RQ's Queue.fetch_job()
+    We use this to create custom Job's with our own error messages.
+    This allows custom error messages to be parsed the same.
+    '''
+    def __init__(self, is_finished=False, result='', is_failed=False, exc_info=''):
+        self.is_finished = is_finished
+        self.result = result
+        self.is_failed = is_failed
+        self.exc_info = exc_info
