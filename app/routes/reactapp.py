@@ -41,7 +41,7 @@ def handle_groupresults(jobs_dict):
     # create a similar structure to the old return
     d = {}
     d[job_id] = {}
-    d[job_id]['analysis'] = 'Grouped Subtyping'
+    d[job_id]['analysis'] = "Virulence Factors and Serotype"
     st = set()
     for key in jobs_dict:
         st.add(jobs_dict[key]['file'])
