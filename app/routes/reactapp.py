@@ -140,6 +140,7 @@ def merge_job_results(jobs_dict):
             res = job.result
             # we check for type of result as we're not returning
             # Quality Control or ID Reservation results
+            print type(res)
             if type(res) is list:
                 r += job.result
         else:
@@ -156,6 +157,9 @@ def job_status_reactapp_grouped(job_id):
     # start a redis connection
     redis_url = current_app.config['REDIS_URL']
     redis_connection = redis.from_url(redis_url)
+    # set a response callback type
+    # otherwise, Python-Redis will return dicts as strings
+    redis_connection.set_response_callback(get, dict)
     #with redis.from_url(redis_url) as redis_connection:
     # Retrieves jobs_dict
     jobs_dict = redis_connection.get(job_id)
