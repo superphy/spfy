@@ -152,8 +152,10 @@ def job_status_reactapp_grouped(job_id):
     #with redis.from_url(redis_url) as redis_connection:
     # Retrieves jobs_dict
     jobs_dict = redis_connection.get(job_id)
+    print jobs_dict
     for key in jobs_dict:
         job = fetch_job(key)
+        print job
         if job.is_failed:
             return job.exc_info, 415
         elif not job.is_finished:
