@@ -160,7 +160,7 @@ def job_status_reactapp(job_id):
     # new to 4.2.0
     # check if the job_id is of the new format and should be handled diff
     if job_id.startswith('blob'):
-        return job_status_reactapp(job_id)
+        return job_status_reactapp_grouped(job_id)
     else:
         # old code
         job = fetch_job(job_id)
