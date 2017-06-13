@@ -33,9 +33,10 @@ def handle_groupresults(jobs_dict):
     job_id = 'blob' + str(hash(str(jobs_dict)))
     # start a redis connection
     redis_url = current_app.config['REDIS_URL']
-    with redis.from_url(redis_url) as redis_connection:
-        # set the job_id: jobs_dict pair in Redis
-        redis_connection.set(job_id, jobs_dict)
+    redis_connection = redis.from_url(redis_url)
+    #with redis.from_url(redis_url) as redis_connection:
+    # set the job_id: jobs_dict pair in Redis
+    redis_connection.set(job_id, jobs_dict)
     return job_id
 
 # the /api/v0 prefix is set to allow CORS for any postfix
@@ -138,9 +139,10 @@ def job_status_reactapp_grouped(job_id):
     '''
     # start a redis connection
     redis_url = current_app.config['REDIS_URL']
-    with redis.from_url(redis_url) as redis_connection:
-        # Retrieves jobs_dict
-        jobs_dict = redis_connection.get(job_id)
+    redis_connection = redis.from_url(redis_url)
+    #with redis.from_url(redis_url) as redis_connection:
+    # Retrieves jobs_dict
+    jobs_dict = redis_connection.get(job_id)
     for key in jobs_dict:
         job = fetch_job(key)
         if job.is_failed:
