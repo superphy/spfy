@@ -134,7 +134,11 @@ def merge_job_results(jobs_dict):
     for key in jobs_dict:
         job = fetch_job(key)
         if job.is_finished:
-            r += job.result
+            res = job.result
+            # we check for type of result as we're not returning
+            # Quality Control or ID Reservation results
+            if type(res) is list:
+                r += job.result
         else:
             return 'ERROR: merge_job_results() was called when all jobs werent complete', 415
     return r
@@ -155,6 +159,7 @@ def job_status_reactapp_grouped(job_id):
     print jobs_dict
     for key in jobs_dict:
         key = str(key)
+        print key
         job = fetch_job(key)
         print job
         if job.is_failed:
