@@ -101,6 +101,7 @@ def fetch_job(job_id):
         job = q.fetch_job(job_id)
         if job is not None:
             return job
+    print 'fetch_job(): ERROR ' + job_id + ' not found'
     return Job(is_failed=True, exc_info='job not found')
 
 class Job(object):

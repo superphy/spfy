@@ -141,7 +141,7 @@ def merge_job_results(jobs_dict):
             res = job.result
             # we check for type of result as we're not returning
             # Quality Control or ID Reservation results
-            print type(res)
+            # print type(res)
             if type(res) is list:
                 r += job.result
         else:
@@ -165,12 +165,12 @@ def job_status_reactapp_grouped(job_id):
     # the alt. is to set a response callback via redis_connection.set_response_callback()
     jobs_dict = literal_eval(jobs_dict)
     print jobs_dict
-    print type(jobs_dict)
+    # print type(jobs_dict)
     for key in jobs_dict:
         key = str(key)
-        print key
+        # print key
         job = fetch_job(key)
-        print job
+        # print job
         if job.is_failed:
             return job.exc_info, 415
         elif not job.is_finished:
