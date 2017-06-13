@@ -159,7 +159,7 @@ def job_status_reactapp_grouped(job_id):
     redis_connection = redis.from_url(redis_url)
     # set a response callback type
     # otherwise, Python-Redis will return dicts as strings
-    redis_connection.set_response_callback(get, dict)
+    redis_connection.set_response_callback('GET', dict)
     #with redis.from_url(redis_url) as redis_connection:
     # Retrieves jobs_dict
     jobs_dict = redis_connection.get(job_id)
