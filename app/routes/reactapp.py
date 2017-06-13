@@ -6,6 +6,7 @@ from flask import Blueprint, request, jsonify, current_app
 from flask_recaptcha import ReCaptcha
 from datetime import datetime
 from werkzeug.utils import secure_filename
+from ast import literal_eval
 from modules.groupComparisons.frontend_queries import get_all_attribute_types, get_attribute_values, get_types
 from routes.utility_functions import fetch_job, fix_uri, handle_tar, handle_zip
 from modules.gc import blob_gc_enqueue
@@ -157,13 +158,14 @@ def job_status_reactapp_grouped(job_id):
     # start a redis connection
     redis_url = current_app.config['REDIS_URL']
     redis_connection = redis.from_url(redis_url)
-    # set a response callback type
-    # otherwise, Python-Redis will return dicts as strings
-    redis_connection.set_response_callback('GET', dict)
-    #with redis.from_url(redis_url) as redis_connection:
     # Retrieves jobs_dict
     jobs_dict = redis_connection.get(job_id)
+    # redis-py returns a string by default
+    # we cast this using ast.literal_eval()
+    # the alt. is to set a response callback via redis_connection.set_response_callback()
+    jobs_dict = literal_eval(jobs_dict)
     print jobs_dict
+    print type(jobs_dict)
     for key in jobs_dict:
         key = str(key)
         print key
