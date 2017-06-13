@@ -42,9 +42,12 @@ def handle_groupresults(jobs_dict):
     d = {}
     d[job_id] = {}
     d[job_id]['analysis'] = 'Grouped Subtyping'
-    s = ''
+    st = set()
     for key in jobs_dict:
-        s += jobs_dict[key]['file'] + ' '
+        st.add(jobs_dict[key]['file'])
+    s = ''
+    for f in st:
+        s += f + ' '
     d[job_id]['file'] = s
     return d
 
