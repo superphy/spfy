@@ -106,8 +106,8 @@ def fetch_job(job_id):
 class Job(object):
     '''
     A class to mimick the Job object returned by RQ's Queue.fetch_job()
-    We use this to create custom Job's with our own error messages.
-    This allows custom error messages to be parsed the same.
+    We use this to create custom Jobs with our own error messages.
+    This allows custom error messages to be parsed by the same code.
     '''
     def __init__(self, is_finished=False, result='', is_failed=False, exc_info=''):
         self.is_finished = is_finished
