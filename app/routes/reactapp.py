@@ -25,7 +25,8 @@ def handle_groupresults(jobs_dict):
             jobs_dict (dict): a dictionary where job ids are the keys and
                 the values are also dictionaries with keys 'analysis' and 'file'
         Return:
-            (str): a novel jobid of form 'blob' + hash
+            (dict): a dictionary with key as novel jobid of form 'blob' + hash
+                meant to be parsable by same code as for old, non-grouped ver
     '''
     # generate a novel job id
     # we prepend 'blob' so the /results path can tell its our custom object
@@ -37,7 +38,15 @@ def handle_groupresults(jobs_dict):
     #with redis.from_url(redis_url) as redis_connection:
     # set the job_id: jobs_dict pair in Redis
     redis_connection.set(job_id, jobs_dict)
-    return job_id
+    # create a similar structure to the old return
+    d = {}
+    d[job_id] = {}
+    d[job_id]['analysis'] = 'Grouped Subtyping'
+    s = ''
+    for key in jobs_dict:
+        s += jobs_dict[key]['file'] + ' '
+    d[job_id]['file'] = s
+    return d
 
 # the /api/v0 prefix is set to allow CORS for any postfix
 # this is a modification of the old upload() methods in views.py
