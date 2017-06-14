@@ -165,7 +165,10 @@ def job_status_reactapp_grouped(job_id):
     # the alt. is to set a response callback via redis_connection.set_response_callback()
     jobs_dict = literal_eval(jobs_dict)
     print jobs_dict
-    # print type(jobs_dict)
+    # if any job in a grouped job fails, immediately return
+    # otherwise, check that all jobs are finished (pending = False)
+    # before merging the job results
+    pending = False
     for key in jobs_dict:
         key = str(key)
         # print key
@@ -174,9 +177,12 @@ def job_status_reactapp_grouped(job_id):
             print "job_status_reactapp_grouped(): job failed " + job_id
             return jsonify(job.exc_info)
         elif not job.is_finished:
-            return jsonify("pending")
-    # if you've gotten to this point, then all jobs are finished
-    return jsonify(merge_job_results(jobs_dict))
+            pending = True
+    if pending:
+        return jsonify("pending")
+    else:
+        # if you've gotten to this point, then all jobs are finished
+        return jsonify(merge_job_results(jobs_dict))
 
 @bp_ra.route('/api/v0/results/<job_id>')
 def job_status_reactapp(job_id):
