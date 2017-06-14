@@ -170,8 +170,8 @@ def job_status_reactapp_grouped(job_id):
         key = str(key)
         # print key
         job = fetch_job(key)
-        # print job
         if job.is_failed:
+            print "job_status_reactapp_grouped(): job failed " + job_id
             return jsonify(job.exc_info)
         elif not job.is_finished:
             return jsonify("pending")
