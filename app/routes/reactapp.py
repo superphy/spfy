@@ -207,6 +207,7 @@ def job_status_reactapp(job_id):
             else:
                 return job.result
         elif job.is_failed:
+            print 'job_status_reactapp(): job failed ' + job_id
             return jsonify(job.exc_info)
         else:
             return jsonify("pending")
