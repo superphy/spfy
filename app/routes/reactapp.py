@@ -172,7 +172,7 @@ def job_status_reactapp_grouped(job_id):
         job = fetch_job(key)
         # print job
         if job.is_failed:
-            return jsonify(job.exc_info)
+            return jsonify("failed")
         elif not job.is_finished:
             return jsonify("pending")
     # if you've gotten to this point, then all jobs are finished
@@ -201,7 +201,7 @@ def job_status_reactapp(job_id):
             else:
                 return job.result
         elif job.is_failed:
-            return jsonify(job.exc_info)
+            return jsonify("failed")
         else:
             return jsonify("pending")
 
