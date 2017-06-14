@@ -172,9 +172,9 @@ def job_status_reactapp_grouped(job_id):
         job = fetch_job(key)
         # print job
         if job.is_failed:
-            return job.exc_info, 415
+            return jsonify(job.exc_info)
         elif not job.is_finished:
-            return "pending", 204
+            return jsonify("pending")
     # if you've gotten to this point, then all jobs are finished
     return jsonify(merge_job_results(jobs_dict))
 
@@ -201,9 +201,9 @@ def job_status_reactapp(job_id):
             else:
                 return job.result
         elif job.is_failed:
-            return job.exc_info, 415
+            return jsonify(job.exc_info)
         else:
-            return "pending", 204
+            return jsonify("pending")
 
 @bp_ra.route('/api/v0/newgroupcomparison', methods=['POST'])
 def handle_group_comparison_submission():
