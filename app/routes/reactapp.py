@@ -8,12 +8,12 @@ from datetime import datetime
 from werkzeug.utils import secure_filename
 from ast import literal_eval
 from modules.groupComparisons.frontend_queries import get_all_attribute_types, get_attribute_values, get_types
-from routes.utility_functions import fetch_job, fix_uri, handle_tar, handle_zip
+from routes.file_utils import fix_uri, handle_tar, handle_zip
+from routes.job_utils import fetch_job
 from modules.gc import blob_gc_enqueue
 from modules.spfy import spfy
 
 bp_ra = Blueprint('reactapp', __name__)
-
 
 def handle_groupresults(jobs_dict):
     '''
@@ -106,7 +106,7 @@ def upload():
                 filename = os.path.join(current_app.config[
                                         'DATASTORE'], now + '-' + secure_filename(file.filename))
                 file.save(filename)
-                print 'IVE SAVED YO FILE AT', str(filename)
+                print 'Uploaded File Saved at', str(filename)
 
                 if tarfile.is_tarfile(filename):
                     # set filename to dir for spfy call

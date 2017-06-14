@@ -8,7 +8,8 @@ from werkzeug.utils import secure_filename
 from flask_recaptcha import ReCaptcha
 # spfy code
 from modules.spfy import spfy
-from routes.utility_functions import handle_tar, handle_zip, fix_uri, fetch_job
+from routes.file_utils import handle_tar, handle_zip, fix_uri
+from routes.job_utils import fetch_job
 
 bp = Blueprint('main', __name__)
 
