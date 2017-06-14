@@ -227,7 +227,7 @@ def upload():
         if groupresults:
             return jsonify(handle_groupresults(jobs_dict))
         else:
-            return jsonify(jobs_dict)
+            return jsonify(handle_singleton(jobs_dict))
     else:
         return "Captcha Failed Verification", 500
 
