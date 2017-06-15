@@ -7,6 +7,7 @@ from flask import Blueprint, request, jsonify, current_app
 from flask_recaptcha import ReCaptcha
 from werkzeug.utils import secure_filename
 from routes.file_utils import fix_uri, handle_tar, handle_zip
+from routes.ra_api import subtyping_dependencies
 from modules.gc import blob_gc_enqueue
 from modules.spfy import spfy
 
@@ -131,8 +132,6 @@ def handle_singleton(jobs_dict):
     # }
     # create a blob_ids dict to return
     blob_ids = {}
-    # dependencies tasks
-    deps = {"Quality Control", "ID Reservation"}
     # step through the by_file dict
     for f in by_file:
         # step through the job Ids and figure out which is QC and which is ID
@@ -148,7 +147,7 @@ def handle_singleton(jobs_dict):
         for jobId in by_file[f]:
             analysis = by_file[f][jobId]['analysis']
             # look for some analysis name that isn't a dependencies
-            if analysis not in deps:
+            if analysis not in subtyping_dependencies:
                 # create the blob dict to be stored in redis
                 blob_dict = {jobId: by_file[f][jobId]}
                 blob_dict.update({qc: by_file[f][qc]})
