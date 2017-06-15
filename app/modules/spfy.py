@@ -45,26 +45,25 @@ def blob_savvy_enqueue(single_dict):
     jobs = {}
     query_file = single_dict['i']
 
-    job_qc = multiples_q.enqueue(qc, query_file)
-    job_id = blazegraph_q.enqueue(write_reserve_id, query_file, depends_on=job_qc)
+    job_qc = multiples_q.enqueue(qc, query_file, result_ttl=-1)
+    job_id = blazegraph_q.enqueue(write_reserve_id, query_file, depends_on=job_qc, result_ttl=-1)
 
     #### ECTYPER PIPELINE
-    # the ectyper call is special in that it requires the entire arguments  to decide whether to carry the serotype option flag, virulance factors option flag, and percent identity field
-    job_ectyper = singles_q.enqueue(call_ectyper, single_dict, depends_on=job_id)
-    # after this call, the result is stored in Blazegraph
-    job_ectyper_datastruct = multiples_q.enqueue(datastruct_savvy, query_file, query_file + '_id.txt', query_file + '_ectyper.p', depends_on=job_ectyper)
-    # only bother parsing into json if user has requested either vf or serotype
     if single_dict['options']['vf'] or single_dict['options']['serotype']:
+        # the ectyper call is special in that it requires the entire arguments  to decide whether to carry the serotype option flag, virulance factors option flag, and percent identity field
+        job_ectyper = singles_q.enqueue(call_ectyper, single_dict, depends_on=job_id)
+        # after this call, the result is stored in Blazegraph
+        job_ectyper_datastruct = multiples_q.enqueue(datastruct_savvy, query_file, query_file + '_id.txt', query_file + '_ectyper.p', depends_on=job_ectyper)
+        # only bother parsing into json if user has requested either vf or serotype
         job_ectyper_beautify = multiples_q.enqueue(beautify, single_dict,query_file + '_ectyper.p', depends_on=job_ectyper, result_ttl=-1)
     #### END ECTYPER PIPELINE
 
     #### AMR PIPELINE
-    job_amr = multiples_q.enqueue(amr, query_file, depends_on=job_id)
-    job_amr_dict = multiples_q.enqueue(amr_to_dict, query_file + '_rgi.tsv', depends_on=job_amr)
-    # this uploads result to blazegraph
-    job_amr_datastruct = multiples_q.enqueue(datastruct_savvy, query_file, query_file + '_id.txt', query_file + '_rgi.tsv_rgi.p', depends_on=job_amr_dict)
-    # only bother parsing into json if user has requested amr
     if single_dict['options']['amr']:
+        job_amr = multiples_q.enqueue(amr, query_file, depends_on=job_id)
+        job_amr_dict = multiples_q.enqueue(amr_to_dict, query_file + '_rgi.tsv', depends_on=job_amr)
+        # this uploads result to blazegraph
+        job_amr_datastruct = multiples_q.enqueue(datastruct_savvy, query_file, query_file + '_id.txt', query_file + '_rgi.tsv_rgi.p', depends_on=job_amr_dict)
         job_amr_beautify = multiples_q.enqueue(beautify, single_dict, query_file + '_rgi.tsv_rgi.p', depends_on=job_amr_dict, result_ttl=-1)
     #### END AMR PIPELINE
 
