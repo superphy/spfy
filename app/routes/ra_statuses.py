@@ -53,11 +53,7 @@ def job_status_reactapp_grouped(job_id):
         key = str(key)
         # print key
         job = fetch_job(key)
-        # the last two checks are used to address https://github.com/superphy/backend/issues/92
-        # the issue is that job dependencies will time out
-        # they are only not found when this is the case
-        # if they throw and error, the job is stored forever
-        if job.is_failed and not ((job.exc_info == 'job not found') and (jobs_dict[key]['analysis'] in subtyping_dependencies)):
+        if job.is_failed:
             print "job_status_reactapp_grouped(): job failed " + job_id
             return jsonify(job.exc_info)
         elif not job.is_finished:

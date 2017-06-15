@@ -45,8 +45,8 @@ def blob_savvy_enqueue(single_dict):
     jobs = {}
     query_file = single_dict['i']
 
-    job_qc = multiples_q.enqueue(qc, query_file)
-    job_id = blazegraph_q.enqueue(write_reserve_id, query_file, depends_on=job_qc)
+    job_qc = multiples_q.enqueue(qc, query_file, result_ttl=-1)
+    job_id = blazegraph_q.enqueue(write_reserve_id, query_file, depends_on=job_qc, result_ttl=-1)
 
     #### ECTYPER PIPELINE
     if single_dict['options']['vf'] or single_dict['options']['serotype']:
