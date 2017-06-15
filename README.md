@@ -9,12 +9,11 @@ Platform for predicting Serotype & Virulence Factors (via [ECTyper](https://gith
 
 ## Use:
 1. Install Docker (& Docker-Compose separately if you're on Linux, [link](https://docs.docker.com/compose/install/)). mac/windows users have Compose bundled with Docker Engine.
-2. `git clone https://github.com/superphy/backend.git`
+2. `git clone --recursive https://github.com/superphy/backend.git`
 3. `cd backend/`
-4. `git submodule update --init --remote --recursive`
-5. `docker-compose up`
-6. Visit http://localhost:8000
-7. Eat cake :cake:
+4. `docker-compose up`
+5. Visit http://localhost:8000
+6. Eat cake :cake:
 
 ## Architecture:
 Docker Image | Ports | Names | *Description*
@@ -71,7 +70,7 @@ To enable:
   1. First install miniconda and activate the environment from https://raw.githubusercontent.com/superphy/docker-flask-conda/master/app/environment.yml
   2. cd into the app folder (where RQ workers typically run from): `cd app/`
   3. Run savvy.py like so: `python -m modules/savvy -i tests/ecoli/GCA_001894495.1_ASM189449v1_genomic.fna` where the argument after the `-i` is your genome (FASTA) file.
-  
+
  # Ontology
  The ontology for Spfy is available at: https://raw.githubusercontent.com/superphy/backend/master/app/scripts/spfy_ontology.ttl
  It was generated using https://raw.githubusercontent.com/superphy/backend/master/app/scripts/generate_ontology.py with shared functions from Spfy's backend code. If you wish to run it, do:
