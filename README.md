@@ -12,7 +12,7 @@ Platform for predicting Serotype & Virulence Factors (via [ECTyper](https://gith
 2. `git clone --recursive https://github.com/superphy/backend.git`
 3. `cd backend/`
 4. `docker-compose up`
-5. Visit http://localhost:8000
+5. Visit http://localhost:8090
 6. Eat cake :cake:
 
 ## Architecture:
@@ -20,10 +20,12 @@ Docker Image | Ports | Names | *Description*
 --- | --- | --- | ---
 backend-rq | 80/tcp, 443/tcp | backend_worker_1 | the main redis queue workers
 backend-rq-blazegraph | 80/tcp, 443/tcp | backend_worker-blazegraph-ids_1 | this handles spfyID generation for the blazegraph database
-backend | 0.0.0.0:8000->80/tcp, 443/tcp | backend_web-nginx-uwsgi_1 | the actual web app interface
+backend | 0.0.0.0:8000->80/tcp, 443/tcp | backend_web-nginx-uwsgi_1 | the flask backend which handles enqueueing tasks
 superphy/blazegraph:2.1.4-inferencing | 0.0.0.0:8080->8080/tcp | backend_blazegraph_1 | Blazegraph Database
 redis:3.2 | 6379/tcp | backend_redis_1 | Redis Database
-reactapp | 0.0.0.0:8090->5000/tcp | backend_reactapp_1 | web-app providing group comparisons
+reactapp | 0.0.0.0:8090->5000/tcp | backend_reactapp_1 | front-end to spfy
+
+Note: an earlier version of the front-end (written in AngularJS with limited features) is still available at http://localhost:8000
 
 ## Further Details:
 The `superphy/backend-rq:2.0.0` image is *scalable*: you can create as many instances as you need/have processing power for. The image is responsible for listening to the `multiples` queue (12 workers) which handles most of the tasks, including `RGI` calls. It also listens to the `singles` queue (1 worker) which runs `ECTyper`. This is done as `RGI` is the slowest part of the equation. Worker management in handled in `supervisor`.
