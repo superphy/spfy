@@ -11,7 +11,7 @@ Welcome to the Superphy documentation!
    :caption: Contents:
 
    intro
-
+   contributing
 
 
 Indices and tables
