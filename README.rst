@@ -1,3 +1,5 @@
+.. tag:intro-begin
+
 |Build Status| |GitHub license|
 
 **Spfy**: speedy `superphy <https://github.com/superphy/semantic>`__
@@ -27,10 +29,10 @@ Architecture:
 -------------
 
 +------+------+------+------+
-| Dock | Port | Name | *Des |
+| Dock | Port | Name | Des  |
 | er   | s    | s    | crip |
 | Imag |      |      | tion |
-| e    |      |      | *    |
+| e    |      |      |      |
 +======+======+======+======+
 | back | 80/t | back | the  |
 | end- | cp,  | end\ | main |
@@ -221,3 +223,5 @@ put the ontology in ``app/``
    :target: https://travis-ci.org/superphy/backend
 .. |GitHub license| image:: https://img.shields.io/badge/license-Apache%202-blue.svg
    :target: https://raw.githubusercontent.com/superphy/backend/master/LICENSE
+
+.. tag:intro-end

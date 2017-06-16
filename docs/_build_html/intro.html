@@ -1,0 +1,425 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Introduction &#8212; Superphy 4.2.2 documentation</title>
+    
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '4.2.2',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Welcome to the Superphy documentation!" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to the Superphy documentation!"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Superphy 4.2.2 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="introduction">
+<h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h1>
+<p><a class="reference external" href="https://travis-ci.org/superphy/backend"><img alt="Build Status" src="https://travis-ci.org/superphy/backend.svg?branch=master" /></a> <a class="reference external" href="https://raw.githubusercontent.com/superphy/backend/master/LICENSE"><img alt="GitHub license" src="https://img.shields.io/badge/license-Apache%202-blue.svg" /></a></p>
+<p><strong>Spfy</strong>: speedy <a class="reference external" href="https://github.com/superphy/semantic">superphy</a></p>
+<p>Live: <a class="reference external" href="https://lfz.corefacility.ca/superphy/spfy/">https://lfz.corefacility.ca/superphy/spfy/</a></p>
+<p>Platform for predicting Serotype &amp; Virulence Factors (via
+<a class="reference external" href="https://github.com/phac-nml/ecoli_serotyping">ECTyper</a>) and
+Antimicrobial Resistance (via
+<a class="reference external" href="https://card.mcmaster.ca/analyze/rgi">CARD</a>) from E.coli genome
+sequences bundled using task queues (RQ) and a SPA front-end
+(AngularJS/Flask).</p>
+<div class="section" id="use">
+<h2>Use:<a class="headerlink" href="#use" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li>Install Docker (&amp; Docker-Compose separately if you’re on Linux,
+<a class="reference external" href="https://docs.docker.com/compose/install/">link</a>). mac/windows
+users have Compose bundled with Docker Engine.</li>
+<li><code class="docutils literal"><span class="pre">git</span> <span class="pre">clone</span> <span class="pre">--recursive</span> <span class="pre">https://github.com/superphy/backend.git</span></code></li>
+<li><code class="docutils literal"><span class="pre">cd</span> <span class="pre">backend/</span></code></li>
+<li><code class="docutils literal"><span class="pre">docker-compose</span> <span class="pre">up</span></code></li>
+<li>Visit <a class="reference external" href="http://localhost:8090">http://localhost:8090</a></li>
+<li>Eat cake :cake:</li>
+</ol>
+</div>
+<div class="section" id="architecture">
+<h2>Architecture:<a class="headerlink" href="#architecture" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="docutils">
+<colgroup>
+<col width="25%" />
+<col width="25%" />
+<col width="25%" />
+<col width="25%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Dock
+er
+Imag
+e</th>
+<th class="head">Port
+s</th>
+<th class="head">Name
+s</th>
+<th class="head">Des
+crip
+tion</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>back
+end-
+rq</td>
+<td>80/t
+cp,
+443/
+tcp</td>
+<td>back
+end_wor
+ker_1</td>
+<td>the
+main
+redi
+s
+queu
+e
+work
+ers</td>
+</tr>
+<tr class="row-odd"><td>back
+end-
+rq-b
+laze
+grap
+h</td>
+<td>80/t
+cp,
+443/
+tcp</td>
+<td>back
+end_wor
+ker-
+blaz
+egra
+ph-i
+ds_
+1</td>
+<td>this
+hand
+les
+spfy
+ID
+gene
+rati
+on
+for
+the
+blaz
+egra
+ph
+data
+base</td>
+</tr>
+<tr class="row-even"><td>back
+end</td>
+<td>0.0.
+0.0:
+8000
+-&gt;80
+/tcp
+,
+443/
+tcp</td>
+<td>back
+end_web
+-ngi
+nx-u
+wsgi
+_1</td>
+<td>the
+flas
+k
+back
+end
+whic
+h
+hand
+les
+enqu
+euei
+ng
+task
+s</td>
+</tr>
+<tr class="row-odd"><td>supe
+rphy
+/bla
+zegr
+aph:
+2.1.
+4-in
+fere
+ncin
+g</td>
+<td>0.0.
+0.0:
+8080
+-&gt;80
+80/t
+cp</td>
+<td>back
+end_bla
+zegr
+aph_1</td>
+<td>Blaz
+egra
+ph
+Data
+base</td>
+</tr>
+<tr class="row-even"><td>redi
+s:3.
+2</td>
+<td>6379
+/tcp</td>
+<td>back
+end_red
+is_
+1</td>
+<td>Redi
+s
+Data
+base</td>
+</tr>
+<tr class="row-odd"><td>reac
+tapp</td>
+<td>0.0.
+0.0:
+8090
+-&gt;50
+00/t
+cp</td>
+<td>back
+end_rea
+ctap
+p_1</td>
+<td>fron
+t-en
+d
+to
+spfy</td>
+</tr>
+</tbody>
+</table>
+<p>Note: an earlier version of the front-end (written in AngularJS with
+limited features) is still available at <a class="reference external" href="http://localhost:8000">http://localhost:8000</a></p>
+</div>
+<div class="section" id="further-details">
+<h2>Further Details:<a class="headerlink" href="#further-details" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="docutils literal"><span class="pre">superphy/backend-rq:2.0.0</span></code> image is <em>scalable</em>: you can create as
+many instances as you need/have processing power for. The image is
+responsible for listening to the <code class="docutils literal"><span class="pre">multiples</span></code> queue (12 workers) which
+handles most of the tasks, including <code class="docutils literal"><span class="pre">RGI</span></code> calls. It also listens to
+the <code class="docutils literal"><span class="pre">singles</span></code> queue (1 worker) which runs <code class="docutils literal"><span class="pre">ECTyper</span></code>. This is done as
+<code class="docutils literal"><span class="pre">RGI</span></code> is the slowest part of the equation. Worker management in
+handled in <code class="docutils literal"><span class="pre">supervisor</span></code>.</p>
+<p>The <code class="docutils literal"><span class="pre">superphy/backend-rq-blazegraph:2.0.0</span></code> image is not scalable: it
+is responsible for querying the Blazegraph database for duplicate
+entries and for assigning spfyIDs in <em>sequential</em> order. It’s functions
+are kept as minimal as possible to improve performance (as ID generation
+is the one bottleneck in otherwise parallel pipelines); comparisons are
+done by sha1 hashes of the submitted files and non-duplicates have their
+IDs reserved by linking the generated spfyID to the file hash. Worker
+management in handled in <code class="docutils literal"><span class="pre">supervisor</span></code>.</p>
+<p>The <code class="docutils literal"><span class="pre">superphy/backend:2.0.0</span></code> which runs the main web app uses
+<code class="docutils literal"><span class="pre">supervisor</span></code> to manage inner processes: <code class="docutils literal"><span class="pre">nginx</span></code>, <code class="docutils literal"><span class="pre">uWsgi</span></code>.</p>
+</div>
+<div class="section" id="extending">
+<h2>Extending:<a class="headerlink" href="#extending" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="docutils literal"><span class="pre">blob_savvy()</span></code> in <code class="docutils literal"><span class="pre">/app/modules/spfy.py</span></code> handles the separation
+of multiple-file inputs into single file calls. The
+<code class="docutils literal"><span class="pre">blob_savvy_enqueue()</span></code>, called by <code class="docutils literal"><span class="pre">blob_savvy()</span></code>, manages the RQ
+pipeline for processing an individual file. Say you wanted to add a
+example analysis called <code class="docutils literal"><span class="pre">penguin</span></code>: 1. NOTE: everything (rq workers,
+uwsgi, etc.) run inside <code class="docutils literal"><span class="pre">/app</span></code>, import should be relative to this.
+Example:
+<code class="docutils literal"><span class="pre">from</span> <span class="pre">modules.blazeUploader.reserve_id</span> <span class="pre">import</span> <span class="pre">write_reserve_id</span></code>. The
+top-most directory is used to build Docker Images and copies the
+contents of <code class="docutils literal"><span class="pre">/app</span></code> to run inside the containers. 2. Write a
+<code class="docutils literal"><span class="pre">blob_penguin_enqueue()</span></code> to handle your enqueueing of your
+analysis-specific pipeline. 3. Add the <code class="docutils literal"><span class="pre">blob_penguin_enqueue()</span></code> call
+to <code class="docutils literal"><span class="pre">blob_savvy()</span></code>. 4. If you want to store the results to Blazegraph,
+you can add that to your pipeline. In <code class="docutils literal"><span class="pre">savvy</span></code>, the graph generation is
+handled in <code class="docutils literal"><span class="pre">/app/modules/turtleGrapher/datastruct_savvy.py</span></code>, you can
+use that as an example. Note that the <code class="docutils literal"><span class="pre">upload_graph()</span></code> call is made
+within <code class="docutils literal"><span class="pre">datastruct_savvy.py</span></code>; this is done to avoid having to pass the
+resulting <code class="docutils literal"><span class="pre">rdflib.Graph</span></code> object between tasks. Also, the base graph
+(only containing information about the file, without any results from
+analyses) is handled by
+<code class="docutils literal"><span class="pre">/app/modules/turtleGrapher/turtle_grapher.py</span></code>. 5. If you want to
+return the results to the front-end, your <code class="docutils literal"><span class="pre">blob_penguin_enqueue()</span></code>
+should return a nested dictionary in the format {<em>JobID</em>: {‘file’:
+<em>filename including path</em>, ‘analysis’: <em>type of analysis</em>}} where the
+italicized items are filled with the actual values and ‘file’/’analysis’
+are string literals. Note that the ‘file’/’analysis’ are recommended,
+but not actually used by the front-end, only the <em>JobIDs</em> are. RQ’s
+<code class="docutils literal"><span class="pre">.enqueue()</span></code> returns the JobID by default. The front-end code is
+located in <code class="docutils literal"><span class="pre">/app/static</span></code> for the <em>js</em>/<em>css</em>/<em>img</em> files and in
+<code class="docutils literal"><span class="pre">/app/templates/index.html</span></code>. Once you’ve added your code, you can
+rebuild the docker images by doing the following in the repo root: 1.
+<code class="docutils literal"><span class="pre">docker-compose</span> <span class="pre">down</span></code> 2. <code class="docutils literal"><span class="pre">docker-compose</span> <span class="pre">build</span> <span class="pre">--no-cache</span></code> 3.
+<code class="docutils literal"><span class="pre">docker-compose</span> <span class="pre">up</span></code></p>
+</div>
+<div class="section" id="recaptcha-support">
+<h2>ReCaptcha Support:<a class="headerlink" href="#recaptcha-support" title="Permalink to this headline">¶</a></h2>
+<p>To enable: 1. Get a pair of ReCaptcha keys from Google, specific to your
+site domain. 2. Uncomment the <code class="docutils literal"><span class="pre">&lt;!--</span> <span class="pre">captcha--&gt;</span></code> code in
+<code class="docutils literal"><span class="pre">/app/templates/index.html</span></code> 3. In <code class="docutils literal"><span class="pre">/app/static/main.js</span></code>, add your
+public key to <code class="docutils literal"><span class="pre">$scope.model</span></code> dictionary under the key <code class="docutils literal"><span class="pre">key</span></code> 4. In
+<code class="docutils literal"><span class="pre">/app/config.py</span></code> set <code class="docutils literal"><span class="pre">RECAPTCHA_ENABLED</span></code> to <code class="docutils literal"><span class="pre">True</span></code> and add your
+corresponding public and private (‘site’ and ‘secret’) keys. 5. Rebuild
+your docker images.</p>
+</div>
+<div class="section" id="debugging">
+<h2>Debugging:<a class="headerlink" href="#debugging" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Ideally, setup a <a class="reference external" href="https://sentry.io">https://sentry.io</a> account and copy your DSN into
+<code class="docutils literal"><span class="pre">/app/config.py</span></code></li>
+<li>Alternatively:</li>
+<li>Port 9181 is mapped to host on Service <code class="docutils literal"><span class="pre">backend-rq</span></code>, you can use
+<code class="docutils literal"><span class="pre">rq-dashboard</span></code> via:</li>
+</ul>
+<ol class="arabic simple">
+<li><code class="docutils literal"><span class="pre">docker</span> <span class="pre">exec</span> <span class="pre">-it</span> <span class="pre">backend_worker_1</span> <span class="pre">sh</span></code> this drops a shell into the
+rq worker container which has rq-dashboard installed via conda</li>
+<li><code class="docutils literal"><span class="pre">rq-dashboard</span> <span class="pre">-H</span> <span class="pre">redis</span></code> runs rq-dashboard and specifies the <em>redis</em>
+host automatically defined by docker-compose</li>
+<li>then on your host machine visit <a class="reference external" href="http://localhost:9181">http://localhost:9181</a></li>
+</ol>
+</div>
+<div class="section" id="blazegraph">
+<h2>Blazegraph:<a class="headerlink" href="#blazegraph" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>We are currently running Blazegraph version 2.1.4. If you want to run
+Blazegraph separately, please use the same version otherwise there
+may be problems in endpoint urls / returns (namely version 2.1.1).
+See <a class="reference external" href="https://github.com/superphy/backend/issues/63">#63</a>
+Alternatively, modify the endpoint accordingly under
+<code class="docutils literal"><span class="pre">database['blazegraph_url']</span></code> in <code class="docutils literal"><span class="pre">/app/config.py</span></code></li>
+</ul>
+</div>
+<div class="section" id="cli-only">
+<h2>CLI-Only:<a class="headerlink" href="#cli-only" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>If you wish to only create rdf graphs (serialized as turtle files):</li>
+</ul>
+<ol class="arabic simple">
+<li>First install miniconda and activate the environment from
+<a class="reference external" href="https://raw.githubusercontent.com/superphy/docker-flask-conda/master/app/environment.yml">https://raw.githubusercontent.com/superphy/docker-flask-conda/master/app/environment.yml</a></li>
+<li>cd into the app folder (where RQ workers typically run from):
+<code class="docutils literal"><span class="pre">cd</span> <span class="pre">app/</span></code></li>
+<li>Run savvy.py like so:
+<code class="docutils literal"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">modules/savvy</span> <span class="pre">-i</span> <span class="pre">tests/ecoli/GCA_001894495.1_ASM189449v1_genomic.fna</span></code>
+where the argument after the <code class="docutils literal"><span class="pre">-i</span></code> is your genome (FASTA) file.</li>
+</ol>
+<p># Ontology The ontology for Spfy is available at:
+<a class="reference external" href="https://raw.githubusercontent.com/superphy/backend/master/app/scripts/spfy_ontology.ttl">https://raw.githubusercontent.com/superphy/backend/master/app/scripts/spfy_ontology.ttl</a>
+It was generated using
+<a class="reference external" href="https://raw.githubusercontent.com/superphy/backend/master/app/scripts/generate_ontology.py">https://raw.githubusercontent.com/superphy/backend/master/app/scripts/generate_ontology.py</a>
+with shared functions from Spfy’s backend code. If you wish to run it,
+do: 1. <code class="docutils literal"><span class="pre">cd</span> <span class="pre">app/</span></code> 2. <code class="docutils literal"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">scripts/generate_ontology</span></code> which will
+put the ontology in <code class="docutils literal"><span class="pre">app/</span></code></p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Introduction</a><ul>
+<li><a class="reference internal" href="#use">Use:</a></li>
+<li><a class="reference internal" href="#architecture">Architecture:</a></li>
+<li><a class="reference internal" href="#further-details">Further Details:</a></li>
+<li><a class="reference internal" href="#extending">Extending:</a></li>
+<li><a class="reference internal" href="#recaptcha-support">ReCaptcha Support:</a></li>
+<li><a class="reference internal" href="#debugging">Debugging:</a></li>
+<li><a class="reference internal" href="#blazegraph">Blazegraph:</a></li>
+<li><a class="reference internal" href="#cli-only">CLI-Only:</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Welcome to the Superphy documentation!</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/intro.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to the Superphy documentation!"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Superphy 4.2.2 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017, NML.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.2.
+    </div>
+  </body>
+</html>
