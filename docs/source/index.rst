@@ -10,6 +10,8 @@ Welcome to the Superphy documentation!
    :maxdepth: 2
    :caption: Contents:
 
+   intro
+
 
 
 Indices and tables
