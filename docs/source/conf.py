@@ -156,3 +156,14 @@ texinfo_documents = [
      author, 'Superphy', 'One line description of project.',
      'Miscellaneous'),
 ]
+
+
+# jsx highlighting
+from pygments import highlight
+from pygments.formatters import HtmlFormatter
+from pygmentslexerbabylon import BabylonLexer
+
+lexer = BabylonLexer()  # You select it manually...
+formatter = HtmlFormatter(linenos=True, cssclass="source")
+code = '<ReactComponent/>'
+result = highlight(code, lexer, formatter)
