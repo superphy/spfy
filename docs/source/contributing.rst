@@ -23,6 +23,7 @@ Used Interchangeably  Notes
 ====================  =====
 jobs, tasks           A job in RQ is typically called a task when discussing the front-end.
 endpoint, api         We prefer to use endpoint for a route in Flask which the front-end interacts with.
+spfy, this repo       The superphy/backend repo.
 ====================  =====
 
 Genome Files for testing
@@ -114,10 +115,13 @@ You will have to increase the volume disk sizes: https://forums.docker.com/t/inc
 Adding a New Module
 ===================
 
-There are two ways of adding a new module:
+There are a few ways of adding a new module:
 
 1. Integrate your code into the Spfy codebase and update the RQ workers accordingly.
-2. Create a new Docker image with your code, and setup a new Queue name for your module.
+2. Add a enqueuing method to Spfy's code, but then create a new queue and a new docker image, with additional dependencies, which is added to Spfy's docker-compose.yml file.
+3. Setting up your module as a microservice running in its own Docker container, add a worker to handle requests to RQ.
+
+Currently, we only support option 1.
 
 If you wish to integrate your code with Spfy, you'll have to update any dependencies to the underlying Conda-based image the RQ workers depend on. You'll also have to include your code in the `/app` directory of this repo, as that is the only directory the current RQ workers contain. The intended structure is to create a directory in `/app/modules` for your codebase and a `.py` file above at `/app/modules/newmodule.py`, for example, which contains the method your `Queue.enqueue()` function uses.
 
@@ -172,7 +176,70 @@ Note that we allow CORS on all routes of form `/api/*` such as `/api/v0/somerout
 
 You will then have to enqueue a job, based off that request form. There is an example of how form parsing is handled for Subtyping in the `upload()` method of `ra_posts.py`_.
 
+If you're integrating your codebase with Spfy, add your code to a new directory in `/app/modules` and a method to enqueue in `/app/modules/somemodule.py` for example. The `gc.py`_ file resembles a basic template for a method to enqueue. 
+
+.. code-block:: python
+
+  import logging
+  import config
+  import redis
+  from rq import Queue
+  from modules.groupComparisons.groupcomparisons import groupcomparisons
+  from modules.loggingFunctions import initialize_logging
+
+  # logging
+  log_file = initialize_logging()
+  log = logging.getLogger(__name__)
+
+  redis_url = config.REDIS_URL
+  redis_conn = redis.from_url(redis_url)
+  multiples_q = Queue('multiples', connection=redis_conn, default_timeout=600)
+
+  def blob_gc_enqueue(query, target):
+      job_gc = multiples_q.enqueue(groupcomparisons, query, target, result_ttl=-1)
+      log.info('JOB ID IS: ' + job_gc.get_id())
+      return job_gc.get_id()
+
+Of note is that when calling RQ's enqueue() method, a custom Job class is returned. It is important that our enqueuing method returns the job id to flask, which is typically some hash such as:
+
+.. code-block:: python
+
+  16515ba5-040d-4315-9c88-a3bf5bfbe84e
+
+Generally, we expect the return from Flask to be a dictionary with the job id as the key to another dictionary with keys `analysis` and `file` (if relevant). For example, a return might be:
+
+.. code-block:: python
+
+  "c96619b8-b089-4a3a-8dd2-b09b5d5e38e9": {
+    "analysis": "Virulence Factors and Serotype",
+    file": "/datastore/2017-06-14-21-26-43-375215-GCA_001683595.1_NGF2_genomic.fna"
+  }
+
+It is expected that only 1 job id be returned per request. In `v4.2.2`_ we introduced the concept of `blob` ids in which dependency checking in handled server-side; you can find more details about this in `reactapp issue #30`_ and `backend issue #90`. The concept is only relevant if you handle parallelism & pipelines for a given task (ex. Subtyping) through multiple RQ jobs (ex. QC, ID Reservation, ECTyper, RGI, parsing, etc.); if you handle parallelism in your own codebase, then this isn't required.
+
 .. _`ra_posts.py`: https://github.com/superphy/backend/blob/master/app/routes/ra_posts.py
+.. _`v4.2.2`: https://github.com/superphy/backend/releases/tag/v4.2.2
+.. _`reactapp issue #30`: https://github.com/superphy/reactapp/issues/30
+.. _`backend issue #90`: https://github.com/superphy/backend/issues/90
+
+OPTIONAL: Adding a new Queue
+----------------------------
+
+Normally, we distribute tasks between two main queues: `singles` and `multiples`. The singles queue is intended for tasks that can't be run in parallel within the same container (though you can probably run multiple containers, if you so wish); our use-case is for ECTyper. Everything else is intended to be run on the `mulitples` queue.
+
+Eventually, we may wish to add priority queues once the number of tasks become large and we have long-running tasks alongside ones that should immediately return to the user. This can be defined by the order in which queues are named in the supervisord command:
+
+.. code-block:: bash
+  
+  command=/opt/conda/envs/backend/bin/rq worker -c config multiples
+
+For example, queues `dog` and `cat` can be ordered:
+
+.. code-block:: bash
+  
+  command=/opt/conda/envs/backend/bin/rq worker -c config dog cat
+
+which instructs the RQ workers to run tasks in `dog` first, before running tasks in `cat`.
 
 Modifying the Front-End
 -----------------------
