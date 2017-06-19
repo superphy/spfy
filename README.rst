@@ -1,6 +1,6 @@
 .. tag:intro-begin
 
-|Build Status| |GitHub license|
+|Build Status| |GitHub license| |Docs|
 
 **Spfy**: speedy `superphy <https://github.com/superphy/semantic>`__
 
@@ -24,6 +24,8 @@ Use:
 4. ``docker-compose up``
 5. Visit http://localhost:8090
 6. Eat cake :cake:
+
+NOTE: The rest of the docs are in the process of being updated.
 
 Architecture:
 -------------
@@ -132,24 +134,18 @@ The ``blob_savvy()`` in ``/app/modules/spfy.py`` handles the separation
 of multiple-file inputs into single file calls. The
 ``blob_savvy_enqueue()``, called by ``blob_savvy()``, manages the RQ
 pipeline for processing an individual file. Say you wanted to add a
-example analysis called ``penguin``: 1. NOTE: everything (rq workers,
-uwsgi, etc.) run inside ``/app``, import should be relative to this.
+example analysis called ``penguin``:
+
+1. NOTE: everything (rq workers, uwsgi, etc.) run inside ``/app``, import should be relative to this.
 Example:
 ``from modules.blazeUploader.reserve_id import write_reserve_id``. The
 top-most directory is used to build Docker Images and copies the
-contents of ``/app`` to run inside the containers. 2. Write a
-``blob_penguin_enqueue()`` to handle your enqueueing of your
-analysis-specific pipeline. 3. Add the ``blob_penguin_enqueue()`` call
-to ``blob_savvy()``. 4. If you want to store the results to Blazegraph,
-you can add that to your pipeline. In ``savvy``, the graph generation is
-handled in ``/app/modules/turtleGrapher/datastruct_savvy.py``, you can
-use that as an example. Note that the ``upload_graph()`` call is made
-within ``datastruct_savvy.py``; this is done to avoid having to pass the
-resulting ``rdflib.Graph`` object between tasks. Also, the base graph
-(only containing information about the file, without any results from
-analyses) is handled by
-``/app/modules/turtleGrapher/turtle_grapher.py``. 5. If you want to
-return the results to the front-end, your ``blob_penguin_enqueue()``
+contents of ``/app`` to run inside the containers.
+2. Write a ``blob_penguin_enqueue()`` to handle your enqueueing of your
+analysis-specific pipeline.
+3. Add the ``blob_penguin_enqueue()`` call to ``blob_savvy()``.
+4. If you want to store the results to Blazegraph, you can add that to your pipeline. In ``savvy``, the graph generation is handled in ``/app/modules/turtleGrapher/datastruct_savvy.py``, you can use that as an example. Note that the ``upload_graph()`` call is made within ``datastruct_savvy.py``; this is done to avoid having to pass the resulting ``rdflib.Graph`` object between tasks. Also, the base graph (only containing information about the file, without any results from analyses) is handled by ``/app/modules/turtleGrapher/turtle_grapher.py``.
+5. If you want to return the results to the front-end, your ``blob_penguin_enqueue()``
 should return a nested dictionary in the format {*JobID*: {'file':
 *filename including path*, 'analysis': *type of analysis*}} where the
 italicized items are filled with the actual values and 'file'/'analysis'
@@ -223,5 +219,8 @@ put the ontology in ``app/``
    :target: https://travis-ci.org/superphy/backend
 .. |GitHub license| image:: https://img.shields.io/badge/license-Apache%202-blue.svg
    :target: https://raw.githubusercontent.com/superphy/backend/master/LICENSE
+.. |Docs| image:: https://readthedocs.org/projects/superphy/badge/?version=latest
+   :target: http://superphy.readthedocs.io/en/latest/?badge=latest
+   :alt: Documentation Status
 
 .. tag:intro-end
