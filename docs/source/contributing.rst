@@ -123,7 +123,13 @@ If you wish to integrate your code with Spfy, you'll have to update any dependen
 
 There is more specific documentation for this process in `Directly Adding a New Module`_.
 
-If you wish to create your own image, you can use the RQ `worker`_ image as a starting point. Specifically you'll want to add your repo as a git submodule in `superphy/backend` and modify the `COPY ./app /app` to target your repo, similar to the way `reactapp`_ is included. You'll also want to take a look at the `supervisord-rq.conf`_ which controls the RQ workers. Specifically, the `command=/opt/conda/envs/backend/bin/rq worker -c config multiples` would have to be modified to target the name of the new Queue your container listens to; by replacing `multiples` with `newqueue`, for example.
+If you wish to create your own image, you can use the RQ `worker`_ image as a starting point. Specifically you'll want to add your repo as a git submodule in `superphy/backend` and modify the `COPY ./app /app` to target your repo, similar to the way `reactapp`_ is included. You'll also want to take a look at the `supervisord-rq.conf`_ which controls the RQ workers. Specifically, the:
+
+.. code-block:: bash
+  
+  command=/opt/conda/envs/backend/bin/rq worker -c config multiples
+
+would have to be modified to target the name of the new Queue your container listens to; by replacing `multiples` with `newqueue`, for example.
 
 There is more specific documentation for this process in `Indirectly Adding a New Module`_.
 
@@ -131,6 +137,42 @@ In both cases, the spfy webserver will have to be modified in order for the fron
 
 Adding an Endpoint in Flask
 ---------------------------
+
+We use `Flask Blueprints`_ to compartmentalize all routes. They are contained in `/app/routes` and have the following basic structure:
+
+.. code-block:: python
+
+  from flask import Blueprint, request, jsonify
+
+  bp_someroutes = Blueprint('someroutes', __name__)
+
+  # if methods is not defined, default only allows GET
+  @bp_someroutes.route('/api/v0/someroute', methods=['POST'])
+  def someroute():
+    form = request.form
+    return jsonify('Got your form')
+
+Note that a blueprint can have multiple routes defined in it such as in `ra_views.py`_ which is used to build the group options for Fisher's comparison. To add a new route, create a python file such as `/app/routes/someroutes.py` with the above structure. Then in the app `factory.py`_ import your blueprint via:
+
+.. code-block:: python
+
+  from routes.someroute import bp_someroute
+
+and register your blueprint in `create_app()` by adding:
+
+.. code-block:: python
+  
+  app.register_blueprint(bp_someroute)
+
+Note that we allow CORS on all routes of form `/api/*` such as `/api/v0/someroute`. This is required as the front-end `reactapp`_ is deployed in a separate container (and has a sepearate IP Address) from the Flask app.
+
+.. _`Flask Blueprints`: http://flask.pocoo.org/docs/0.12/blueprints/
+.. _`ra_views.py`: https://github.com/superphy/backend/blob/master/app/routes/ra_views.py
+.. _`factory.py`: https://github.com/superphy/backend/blob/master/app/factory.py
+
+You will then have to enqueue a job, based off that request form. There is an example of how form parsing is handled for Subtyping in the `upload()` method of `ra_posts.py`_.
+
+.. _`ra_posts.py`: https://github.com/superphy/backend/blob/master/app/routes/ra_posts.py
 
 Modifying the Front-End
 -----------------------
