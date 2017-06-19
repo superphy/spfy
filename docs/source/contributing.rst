@@ -8,6 +8,13 @@ Developer Guide
 Getting Started
 ===============
 
+We use Docker and Docker-Compose for managing the databases: Blazegraph and Redis, the webserver: Nginx/Flask/Conda, and Redis-Queue (RQ) workers: mostly in Conda. The official `Install Docker Compose guide`_ lists steps for installing both the base Docker Engine, and for installing Docker-Compose separately if you're on Linux. For Mac and Windows users, Docker-Compose comes bundled with Docker Engine.
+
+You'll probably also want to `install Miniconda`_ as we bundle most dependencies in Conda environments.
+
+.. _`Install Docker Compose guide`: https://docs.docker.com/compose/install/
+.. _`install Miniconda`: https://conda.io/docs/install/quick.html
+
 Terminology
 -----------
 
@@ -23,7 +30,7 @@ Genome Files for testing
 
 For testing purposes, we use E.coli genome files from GenBank. A list of ftp
 links is available at the `old github/semantic repo`_. There should be 5353
-genome files in total.
+genome files in total a .zip of which is available within the NML.
 
 .. _`old github/semantic repo`: https://raw.githubusercontent.com/superphy/semantic/master/superphy/src/upload/python/data/download_files.txt
 
