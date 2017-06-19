@@ -5,8 +5,8 @@
 # to data structure(rdf triple organization) of the modules you're dev'ing
 
 import config
-from modules.turtleGrapher.turtle_utils import generate_hash, generate_uri as gu, link_uris
-from modules.blazeUploader.upload_graph import upload_graph
+from app.modules.turtleGrapher.turtle_utils import generate_hash, generate_uri as gu, link_uris
+from app.modules.blazeUploader.upload_graph import upload_graph
 from rdflib import Namespace, Graph, Literal, plugin
 from Bio import SeqIO
 from os.path import basename
@@ -37,6 +37,9 @@ def generate_graph():
     graph.add((gu(':AntimicrobialResistanceGene'), gu('rdfs:subClassOf'), gu(':Marker')))
     graph.add((gu(':VirulenceFactor'), gu('rdfs:subClassOf'), gu(':Marker')))
     graph.add((gu(':PanGenomeRegion'), gu('rdfs:subClassOf'), gu(':Marker')))
+
+    data = graph.serialize(format="turtle")
+    print(data)
 
     return graph
 
@@ -93,6 +96,8 @@ def generate_turtle_skeleton(query_file):
                    Literal(record.description)))
         graph.add((uriContig, gu('g:Identifier'),
                    Literal(record.id)))
+        data = graph.serialize(format="turtle")
+        print(data)
     return graph
 
 def turtle_grapher(query_file):

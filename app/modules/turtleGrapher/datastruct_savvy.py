@@ -1,9 +1,9 @@
 import cPickle as pickle
 from rdflib import BNode, Literal, Graph
-from modules.turtleGrapher.turtle_utils import generate_uri as gu, generate_hash, link_uris
-from modules.turtleGrapher.turtle_grapher import generate_graph
-from modules.blazeUploader.upload_graph import upload_graph
-import modules.PanPredic.modules.uploader
+from app.modules.turtleGrapher.turtle_utils import generate_uri as gu, generate_hash, link_uris
+from app.modules.turtleGrapher.turtle_grapher import generate_graph
+from app.modules.blazeUploader.upload_graph import upload_graph
+import app.modules.PanPredic.modules.uploader
 # working with Serotype, Antimicrobial Resistance, & Virulence Factor data
 # structures
 
@@ -48,7 +48,7 @@ def parse_gene_dict(graph, gene_dict, uriGenome, geneType):
 
     for contig_id in gene_dict:
         #makes sure that the contigs are named correctly
-        contig_name = modules.PanPredic.modules.uploader.contig_name_parse(contig_id)
+        contig_name = app.modules.PanPredic.modules.uploader.contig_name_parse(contig_id)
         if contig_name != contig_id:
             gene_dict[contig_name] = gene_dict[contig_id]
             del gene_dict[contig_id]
@@ -112,7 +112,8 @@ def parse_gene_dict(graph, gene_dict, uriGenome, geneType):
                     graph.add((bnode_end, gu('rdf:type'), gu(
                         'faldo:ReverseStrandPosition')))
             if 'DNASequence' in gene_record:
-                graph.add(uriGene, gu('g:DNASequence'), Literal(gene_record['']))
+                graph.add((uriGene, gu('g:DNASequence'),
+                           Literal(gene_record['DNASequence'])))
 
             graph.add((bnode_start, gu('faldo:Position'),
                        Literal(gene_record['START'])))
@@ -126,7 +127,9 @@ def parse_gene_dict(graph, gene_dict, uriGenome, geneType):
             graph = link_uris(graph, uriContig, bnode_end)
             #graph.add((bnode_start, gu(':hasPart'), uriContig))
             #graph.add((bnode_end, gu(':hasPart'), uriContig))
+
     #### end of nested for
+
     return graph
 
 def generate_datastruct(query_file, id_file, pickled_dictionary):

@@ -24,7 +24,7 @@ from modules.beautify.beautify import beautify
 from modules.turtleGrapher.datastruct_savvy import generate_datastruct
 from modules.turtleGrapher.turtle_grapher import generate_turtle_skeleton
 from modules.loggingFunctions import initialize_logging
-#from modules.PanPredic.modules.main_queue import pan
+from modules.blazeUploader.upload_graph import upload_graph
 
 log_file = initialize_logging()
 log = logging.getLogger(__name__)
@@ -121,6 +121,7 @@ def savvy(args_dict):
 
     # (5) Graphing ECTyper Result:
     ectyper_graph = generate_datastruct(query_file, query_file + '_id.txt', query_file + '_ectyper.p')
+
     ectyper_ttl = write_graph(ectyper_graph, 'ectyper')
     log.debug('Graph Result for ECtyper: ' + ectyper_ttl)
 
