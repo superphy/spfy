@@ -127,13 +127,7 @@ If you wish to integrate your code with Spfy, you'll have to update any dependen
 
 There is more specific documentation for this process in `Directly Adding a New Module`_.
 
-If you wish to create your own image, you can use the RQ `worker`_ image as a starting point. Specifically you'll want to add your repo as a git submodule in `superphy/backend` and modify the `COPY ./app /app` to target your repo, similar to the way `reactapp`_ is included. You'll also want to take a look at the `supervisord-rq.conf`_ which controls the RQ workers. Specifically, the:
-
-.. code-block:: bash
-  
-  command=/opt/conda/envs/backend/bin/rq worker -c config multiples
-
-would have to be modified to target the name of the new Queue your container listens to; by replacing `multiples` with `newqueue`, for example.
+If you wish to create your own image, you can use the RQ `worker`_ image as a starting point. Specifically you'll want to add your repo as a git submodule in `superphy/backend` and modify the `COPY ./app /app` to target your repo, similar to the way `reactapp`_ is included. You'll also want to take a look at the `supervisord-rq.conf`_ which controls the RQ workers. 
 
 There is more specific documentation for this process in `Indirectly Adding a New Module`_.
 
@@ -206,7 +200,7 @@ Of note is that when calling RQ's enqueue() method, a custom Job class is return
 
   16515ba5-040d-4315-9c88-a3bf5bfbe84e
 
-Generally, we expect the return from Flask to be a dictionary with the job id as the key to another dictionary with keys `analysis` and `file` (if relevant). For example, a return might be:
+Generally, we expect the return from Flask (to the front-end) to be a dictionary with the job id as the key to another dictionary with keys `analysis` and `file` (if relevant). For example, a return might be:
 
 .. code-block:: python
 
@@ -215,7 +209,7 @@ Generally, we expect the return from Flask to be a dictionary with the job id as
     file": "/datastore/2017-06-14-21-26-43-375215-GCA_001683595.1_NGF2_genomic.fna"
   }
 
-It is expected that only 1 job id be returned per request. In `v4.2.2`_ we introduced the concept of `blob` ids in which dependency checking in handled server-side; you can find more details about this in `reactapp issue #30`_ and `backend issue #90`. The concept is only relevant if you handle parallelism & pipelines for a given task (ex. Subtyping) through multiple RQ jobs (ex. QC, ID Reservation, ECTyper, RGI, parsing, etc.); if you handle parallelism in your own codebase, then this isn't required.
+It is expected that only 1 job id be returned per request. In `v4.2.2`_ we introduced the concept of `blob` ids in which dependency checking in handled server-side; you can find more details about this in `reactapp issue #30`_ and `backend issue #90`_. The concept is only relevant if you handle parallelism & pipelines for a given task (ex. Subtyping) through multiple RQ jobs (ex. QC, ID Reservation, ECTyper, RGI, parsing, etc.); if you handle parallelism in your own codebase, then this isn't required.
 
 .. _`ra_posts.py`: https://github.com/superphy/backend/blob/master/app/routes/ra_posts.py
 .. _`v4.2.2`: https://github.com/superphy/backend/releases/tag/v4.2.2
@@ -226,6 +220,14 @@ OPTIONAL: Adding a new Queue
 ----------------------------
 
 Normally, we distribute tasks between two main queues: `singles` and `multiples`. The singles queue is intended for tasks that can't be run in parallel within the same container (though you can probably run multiple containers, if you so wish); our use-case is for ECTyper. Everything else is intended to be run on the `mulitples` queue.
+
+If you wish to add your own Queue, you'll have to create some worker to listen to it. Ideally, do this by creating a new Docker container for your worker by copying the `worker`_ Dockerfile as your starting point then copying and modifying the `supervisord-rq.conf`_ to listen to your new queue. Specifically, the:
+
+.. code-block:: bash
+  
+  command=/opt/conda/envs/backend/bin/rq worker -c config multiples
+
+would have to be modified to target the name of the new Queue your container listens to; by replacing `multiples` with `newqueue`, for example.
 
 Eventually, we may wish to add priority queues once the number of tasks become large and we have long-running tasks alongside ones that should immediately return to the user. This can be defined by the order in which queues are named in the supervisord command:
 
