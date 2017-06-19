@@ -206,10 +206,24 @@ Generally, we expect the return from Flask (to the front-end) to be a dictionary
 
   "c96619b8-b089-4a3a-8dd2-b09b5d5e38e9": {
     "analysis": "Virulence Factors and Serotype",
-    file": "/datastore/2017-06-14-21-26-43-375215-GCA_001683595.1_NGF2_genomic.fna"
+    "file": "/datastore/2017-06-14-21-26-43-375215-GCA_001683595.1_NGF2_genomic.fna"
   }
 
-It is expected that only 1 job id be returned per request. In `v4.2.2`_ we introduced the concept of `blob` ids in which dependency checking in handled server-side; you can find more details about this in `reactapp issue #30`_ and `backend issue #90`_. The concept is only relevant if you handle parallelism & pipelines for a given task (ex. Subtyping) through multiple RQ jobs (ex. QC, ID Reservation, ECTyper, RGI, parsing, etc.); if you handle parallelism in your own codebase, then this isn't required.
+It is expected that only 1 job id be returned per request. In `v4.2.2`_ we introduced the concept of `blob` ids in which dependency checking is handled server-side; you can find more details about this in `reactapp issue #30`_ and `backend issue #90`_. The concept is only relevant if you handle parallelism & pipelines for a given task (ex. Subtyping) through multiple RQ jobs (ex. QC, ID Reservation, ECTyper, RGI, parsing, etc.); if you handle parallelism in your own codebase, then this isn't required.
+
+Another point to note is that the:
+
+.. code-block:: python
+
+  result_ttl=-1
+
+parameter in the `enqueue()` method is required to store the result in Redis permanently; this is done so results will forever be available to the front-end. If we ever scale Spfy to widespread usage, it may be worth setting a ttl of 48 hours or so via:
+
+.. code-block:: python
+
+  result_ttl=172800
+
+where the ttl is measured in seconds. A warning message would also have to be added to `reactapp`_.
 
 .. _`ra_posts.py`: https://github.com/superphy/backend/blob/master/app/routes/ra_posts.py
 .. _`v4.2.2`: https://github.com/superphy/backend/releases/tag/v4.2.2
@@ -246,8 +260,36 @@ which instructs the RQ workers to run tasks in `dog` first, before running tasks
 Modifying the Front-End
 -----------------------
 
+To get started, `install node`_ and then `install yarn`_.
+
+Our `reactapp`_ uses `Redux` to store jobs, but also uses regular `React states` when building forms or displaying results. This was done so you don't have to be too familiar with Redux when building new modules.
+
+The first thing you'll want to do is add a description of your module to `api.js`_. For example, the old analyses const is:
+
+.. code-block:: jsx
+
+  export const analyses = [{
+    'analysis':'subtyping',
+    'description':'Serotype, Virulence Factors, Antimicrobial Resistance',
+    'text':(
+      <p>
+        Upload genome files & determine associated subtypes.
+        <br></br>
+        Subtyping is powered by <a href="https://github.com/phac-nml/ecoli_serotyping">ECTyper</a>.
+        AMR is powered by <a href="https://card.mcmaster.ca/analyze/rgi">CARD</a>.
+      </p>
+    )
+  },{
+    'analysis':'fishers',
+    'description':"Group comparisons using Fisher's Exact Test",
+    'text':'Select groups from uploaded genomes & compare for a chosen target datum.'
+  }]
+
 .. _`reactapp`: https://github.com/superphy/reactapp
 .. _`supervisord-rq.conf`: https://github.com/superphy/backend/blob/master/app/supervisord-rq.conf
+.. _`install node`: https://nodejs.org/en/
+.. _`install yarn`: https://yarnpkg.com/en/docs/install#mac-tab
+.. _`api.js`: https://github.com/superphy/reactapp/blob/master/src/middleware/api.js
 
 Directly Adding a New Module
 ============================
