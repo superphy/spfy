@@ -229,6 +229,7 @@ where the ttl is measured in seconds. A warning message would also have to be ad
 .. _`v4.2.2`: https://github.com/superphy/backend/releases/tag/v4.2.2
 .. _`reactapp issue #30`: https://github.com/superphy/reactapp/issues/30
 .. _`backend issue #90`: https://github.com/superphy/backend/issues/90
+.. _`gc.py`: https://github.com/superphy/backend/blob/master/app/modules/gc.py
 
 OPTIONAL: Adding a new Queue
 ----------------------------
@@ -260,7 +261,23 @@ which instructs the RQ workers to run tasks in `dog` first, before running tasks
 Modifying the Front-End
 -----------------------
 
-To get started, `install node`_ and then `install yarn`_.
+I'd recommend you leave Spfy's setup running in Docker-Compose and run the reactapp live so you can see immediate updates.
+
+To get started, `install node`_ and then `install yarn`_. 
+
+Then you'll want to clone `reactapp`_ and modify `ROOT` api address in `api.js`_ to point to your localhost:
+
+.. code-block:: jsx
+  
+  const ROOT = 'http://localhost:8000/'
+
+and run:
+
+.. code-block:: bash
+
+  cd reactapp/
+  yarn install
+  yarn start
 
 Our `reactapp`_ uses `Redux` to store jobs, but also uses regular `React states` when building forms or displaying results. This was done so you don't have to be too familiar with Redux when building new modules.
 
@@ -283,6 +300,31 @@ The first thing you'll want to do is add a description of your module to `api.js
     'analysis':'fishers',
     'description':"Group comparisons using Fisher's Exact Test",
     'text':'Select groups from uploaded genomes & compare for a chosen target datum.'
+  }]
+
+If we added a new module called `ml`, analyses might be:
+
+.. code-block:: jsx
+
+  export const analyses = [{
+    'analysis':'subtyping',
+    'description':'Serotype, Virulence Factors, Antimicrobial Resistance',
+    'text':(
+      <p>
+        Upload genome files & determine associated subtypes.
+        <br></br>
+        Subtyping is powered by <a href="https://github.com/phac-nml/ecoli_serotyping">ECTyper</a>.
+        AMR is powered by <a href="https://card.mcmaster.ca/analyze/rgi">CARD</a>.
+      </p>
+    )
+  },{
+    'analysis':'fishers',
+    'description':"Group comparisons using Fisher's Exact Test",
+    'text':'Select groups from uploaded genomes & compare for a chosen target datum.'
+  },{
+    'analysis':'ml',
+    'description': "Machine learning module for Spfy",
+    'text': 'Multiple machine learning algorithms such as, support vector machines, naive Bayes, and the Perceptron algorithm.'
   }]
 
 .. _`reactapp`: https://github.com/superphy/reactapp
