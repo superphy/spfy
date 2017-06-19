@@ -4,7 +4,7 @@
    contain the root `toctree` directive.
 
 Welcome to the Superphy documentation!
-====================================
+======================================
 
 .. toctree::
    :maxdepth: 2
