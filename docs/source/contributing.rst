@@ -32,6 +32,78 @@ Docker Caveats
 
 We've had problems with Ubuntu Desktop versions 16.04.2 LTS and 17.04 not connecting to NPM when building Docker images and from within the building. Builds work fine with Ubuntu Server 16.04.2 LTS on Cybera and for Ubuntu Server 12.04 or 14.04 LTS on Travis-CI. Within the building, RHEL-based operating systems (CentOS / Scientific Linux) build our NPM-dependent images (namely, `reactapp`_) just fine.
 
+For RHEL-based OSs, I don't recommend using `devicemapper`, but instead use `overlayfs`. Reasons are documented at https://github.com/moby/moby/issues/3182. There is a guide on setting up Docker with `overlayfs` at https://dcos.io/docs/1.7/administration/installing/custom/system-requirements/install-docker-centos/, though I haven't personally tested it.
+
+If you do end up using `devicemapper` and run into disk space issues, such as:
+
+.. code-block:: bash
+
+  172.18.0.1 - - [05/Jun/2017:17:50:01 +0000] "GET / HTTP/1.1" 200 12685 "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36" "-"
+  2017/06/05 17:50:13 [warn] 11#11: *2 a client request body is buffered to a temporary file /var/cache/nginx/client_temp/0000000001, client: 172.18.0.1, server: , request: "POST /upload HTTP/1.1", host: "localhost:8000", referrer: "http://localhost:8000/"
+  [2017-06-05 17:58:31,417] ERROR in app: Exception on /upload [POST]
+  Traceback (most recent call last):
+    File "/opt/conda/envs/backend/lib/python2.7/site-packages/flask/app.py", line 1982, in wsgi_app
+      response = self.full_dispatch_request()
+    File "/opt/conda/envs/backend/lib/python2.7/site-packages/flask/app.py", line 1614, in full_dispatch_request
+      rv = self.handle_user_exception(e)
+    File "/opt/conda/envs/backend/lib/python2.7/site-packages/flask_cors/extension.py", line 161, in wrapped_function
+      return cors_after_request(app.make_response(f(*args, **kwargs)))
+    File "/opt/conda/envs/backend/lib/python2.7/site-packages/flask/app.py", line 1517, in handle_user_exception
+      reraise(exc_type, exc_value, tb)
+    File "/opt/conda/envs/backend/lib/python2.7/site-packages/flask/app.py", line 1612, in full_dispatch_request
+      rv = self.dispatch_request()
+    File "/opt/conda/envs/backend/lib/python2.7/site-packages/flask/app.py", line 1598, in dispatch_request
+      return self.view_functions[rule.endpoint](**req.view_args)
+    File "./routes/views.py", line 86, in upload
+      form = request.form
+    File "/opt/conda/envs/backend/lib/python2.7/site-packages/werkzeug/local.py", line 343, in __getattr__
+      return getattr(self._get_current_object(), name)
+    File "/opt/conda/envs/backend/lib/python2.7/site-packages/werkzeug/utils.py", line 73, in __get__
+      value = self.func(obj)
+    File "/opt/conda/envs/backend/lib/python2.7/site-packages/werkzeug/wrappers.py", line 492, in form
+      self._load_form_data()
+    File "/opt/conda/envs/backend/lib/python2.7/site-packages/flask/wrappers.py", line 185, in _load_form_data
+      RequestBase._load_form_data(self)
+    File "/opt/conda/envs/backend/lib/python2.7/site-packages/werkzeug/wrappers.py", line 361, in _load_form_data
+      mimetype, content_length, options)
+    File "/opt/conda/envs/backend/lib/python2.7/site-packages/werkzeug/formparser.py", line 195, in parse
+      content_length, options)
+    File "/opt/conda/envs/backend/lib/python2.7/site-packages/werkzeug/formparser.py", line 100, in wrapper
+      return f(self, stream, *args, **kwargs)
+    File "/opt/conda/envs/backend/lib/python2.7/site-packages/werkzeug/formparser.py", line 212, in _parse_multipart
+      form, files = parser.parse(stream, boundary, content_length)
+    File "/opt/conda/envs/backend/lib/python2.7/site-packages/werkzeug/formparser.py", line 523, in parse
+      return self.cls(form), self.cls(files)
+    File "/opt/conda/envs/backend/lib/python2.7/site-packages/werkzeug/datastructures.py", line 384, in __init__
+      for key, value in mapping or ():
+    File "/opt/conda/envs/backend/lib/python2.7/site-packages/werkzeug/formparser.py", line 521, in <genexpr>
+      form = (p[1] for p in formstream if p[0] == 'form')
+    File "/opt/conda/envs/backend/lib/python2.7/site-packages/werkzeug/formparser.py", line 497, in parse_parts
+      _write(ell)
+  IOError: [Errno 28] No space left on device
+  [pid: 44|app: 0|req: 2/2] 172.18.0.1 () {46 vars in 867 bytes} [Mon Jun  5 17:53:08 2017] POST /upload => generated 291 bytes in 323526 msecs (HTTP/1.1 500) 2 headers in 84 bytes (54065 switches on core 0)
+  172.18.0.1 - - [05/Jun/2017:17:58:32 +0000] "POST /upload HTTP/1.1" 500 291 "http://localhost:8000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36" "-"
+
+Which was displayed by running:
+
+.. code-block:: bash
+
+  docker-compose logs backend_webserver_1
+
+You will have to increase the volume disk sizes: https://forums.docker.com/t/increase-container-volume-disk-size/1652/8
+
+.. code-block:: bash
+
+  # With Centos 7 I did the following to increase the default size of the containers
+  # Modify the docker config in /etc/sysconfig/docker-storage to add the line:
+  DOCKER_STORAGE_OPTIONS= - -storage-opt dm.basesize=20G
+  service docker stop
+  rm /var/lib/docker NOTE THIS DELETES ALL IMAGES etc. SO MAKE A BACKUP
+  service docker start
+  docker load < [each_save_in_backup.tar]
+  docker run -i -t [imagename] /bin/bash
+  # In the bash prompt of the docker container "df -k" should show 20GB / file system size now.
+
 Adding a New Module
 ===================
 
