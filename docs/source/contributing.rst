@@ -198,7 +198,7 @@ Otherwise, build and push the image under your own tag, for example `0.0.1`:
   docker build -t superphy/docker-flask-conda:0.0.1 .
   docker push superphy/docker-flask-conda:0.0.1
 
-Then specific your image in the corresponding Dockerfiles: `worker`_. If you're adding dependcies to flask, also update the `webserver`_ Dockerfile.
+Then specific your image in the corresponding Dockerfiles: `worker`_. If you're adding dependencies to flask, also update the `webserver`_ Dockerfile.
 
 .. code-block:: bash
 
@@ -218,7 +218,7 @@ There are two ways of approaching this:
 1. If you're not using any of Spfy's codebase, add your code as a git submodule in `/app/modules/`
 2. If you are using Spfy's codebase, fork and create a directory in `/app/modules/` with your code.
 
-In both cases, you should add a method in `/app/module/pickaname.py` which enqueues a call to your package. More information on this is documated at `Enqueing a Job to RQ`_.
+In both cases, you should add a method in `/app/module/pickaname.py` which enqueues a call to your package. More information on this is documented at `Enqueing a Job to RQ`_.
 
 To add a git submodule, clone the repo and create a branch:
 
@@ -285,7 +285,7 @@ and register your blueprint in `create_app()` by adding:
   
   app.register_blueprint(bp_someroute)
 
-Note that we allow CORS on all routes of form `/api/*` such as `/api/v0/someroute`. This is required as the front-end `reactapp`_ is deployed in a separate container (and has a sepearate IP Address) from the Flask app.
+Note that we allow CORS on all routes of form `/api/*` such as `/api/v0/someroute`. This is required as the front-end `reactapp`_ is deployed in a separate container (and has a separate IP Address) from the Flask app.
 
 .. _`Flask Blueprints`: http://flask.pocoo.org/docs/0.12/blueprints/
 .. _`ra_views.py`: https://github.com/superphy/backend/blob/master/app/routes/ra_views.py
@@ -338,7 +338,7 @@ Generally, we expect the return from Flask (to the front-end) to be a dictionary
     "file": "/datastore/2017-06-14-21-26-43-375215-GCA_001683595.1_NGF2_genomic.fna"
   }
 
-It is expected that only 1 job id be returned per request. In `v4.2.2`_ we introduced the concept of `blob` ids in which dependency checking is handled server-side; you can find more details about this in `reactapp issue #30`_ and `backend issue #90`_. The Redis DB was also set to run in persistant-mode, with results stored to disk inside a docker volume. The `blob` concept is only relevant if you handle parallelism & pipelines for a given task (ex. Subtyping) through multiple RQ jobs (ex. QC, ID Reservation, ECTyper, RGI, parsing, etc.); if you handle parallelism in your own codebase, then this isn't required.
+It is expected that only 1 job id be returned per request. In `v4.2.2`_ we introduced the concept of `blob` ids in which dependency checking is handled server-side; you can find more details about this in `reactapp issue #30`_ and `backend issue #90`_. The Redis DB was also set to run in persistent-mode, with results stored to disk inside a docker volume. The `blob` concept is only relevant if you handle parallelism & pipelines for a given task (ex. Subtyping) through multiple RQ jobs (ex. QC, ID Reservation, ECTyper, RGI, parsing, etc.); if you handle parallelism in your own codebase, then this isn't required.
 
 Another point to note is that the:
 
@@ -363,7 +363,7 @@ where the ttl is measured in seconds. A warning message would also have to be ad
 OPTIONAL: Adding a new Queue
 ============================
 
-Normally, we distribute tasks between two main queues: `singles` and `multiples`. The singles queue is intended for tasks that can't be run in parallel within the same container (though you can probably run multiple containers, if you so wish); our use-case is for ECTyper. Everything else is intended to be run on the `mulitples` queue.
+Normally, we distribute tasks between two main queues: `singles` and `multiples`. The singles queue is intended for tasks that can't be run in parallel within the same container (though you can probably run multiple containers, if you so wish); our use-case is for ECTyper. Everything else is intended to be run on the `multiples` queue.
 
 If you wish to add your own Queue, you'll have to create some worker to listen to it. Ideally, do this by creating a new Docker container for your worker by copying the `worker`_ Dockerfile as your starting point then copying and modifying the `supervisord-rq.conf`_ to listen to your new queue. Specifically, the:
 
@@ -467,7 +467,7 @@ This will create a new card for in tasks at the root page.
 Adding a New Task Form
 ----------------------
 
-  A note on terminology: we consider `containers` to be *Redux-aware*; that is, they require the `connect()` function from `react-redux`. `Components` are generally not directly connected to Redux and instead get information from the Redux store passed down to it via the componenet's `props`. Note that this is not strictly true as we make use of `react-refetch`, which is a fork of Redux and uses a separate `connect()` function, to poll for job statuses and results. However, the interaction between `react-refetch` and `redux` is largely abstracted away from you and instead maps a components props directly to updates via `react-refetch` - you don't have to dispatch actions or pull down updates separately.
+  A note on terminology: we consider `containers` to be *Redux-aware*; that is, they require the `connect()` function from `react-redux`. `Components` are generally not directly connected to Redux and instead get information from the Redux store passed down to it via the component's `props`. Note that this is not strictly true as we make use of `react-refetch`, which is a fork of Redux and uses a separate `connect()` function, to poll for job statuses and results. However, the interaction between `react-refetch` and `redux` is largely abstracted away from you and instead maps a components props directly to updates via `react-refetch` - you don't have to dispatch actions or pull down updates separately.
 
 Then create a container in `/src/containers` which will be your request form. You can look at `Subtyping.js`_ for an example.
 
