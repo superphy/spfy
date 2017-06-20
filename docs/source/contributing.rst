@@ -265,7 +265,7 @@ I'd recommend you leave Spfy's setup running in Docker-Compose and run the react
 
 To get started, `install node`_ and then `install yarn`_. 
 
-Then you'll want to clone `reactapp`_ and modify `ROOT` api address in `api.js`_ to point to your localhost:
+Then, with Spfy's composition running, you'll want to clone `reactapp`_ and modify `ROOT` api address in `api.js`_ to point to your localhost:
 
 .. code-block:: jsx
   
@@ -279,7 +279,7 @@ and run:
   yarn install
   yarn start
 
-Our `reactapp`_ uses `Redux` to store jobs, but also uses regular `React states` when building forms or displaying results. This was done so you don't have to be too familiar with Redux when building new modules.
+Our `reactapp`_ uses `Redux` to store jobs, but also uses regular `React states` when building forms or displaying results. This was done so you don't have to be too familiar with Redux when building new modules. The codebase is largely JSX+ES6.
 
 The first thing you'll want to do is add a description of your module to `api.js`_. For example, the old analyses const is:
 
@@ -327,11 +327,214 @@ If we added a new module called `ml`, analyses might be:
     'text': 'Multiple machine learning algorithms such as, support vector machines, naive Bayes, and the Perceptron algorithm.'
   }]
 
+This will create a new card for in tasks at the root page.
+
+Then create a container in `/src/containers` which will be your request form. You can look at `Fishers.js`_ for an example.
+
+.. code-block:: jsx
+
+  import React, { PureComponent } from 'react';
+  import GroupsForm from '../containers/GroupsForm'
+  import Loading from '../components/Loading'
+  // axios is a http client lib
+  import axios from 'axios'
+  import { API_ROOT } from '../middleware/api'
+  // Snackbar
+  import Snackbar from 'material-ui/Snackbar';
+  import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+  // redux
+  import { connect } from 'react-redux'
+  import { addJob } from '../actions'
+  import { fishersDescription } from '../middleware/fishers'
+
+  class Fishers extends PureComponent {
+    constructor(props) {
+      super(props);
+      this.state = {
+        jobId: "",
+        hasResult: false,
+        open: false, //for the snackbar
+        msg: ""
+      }
+      this.handleChangeSubmit = this.handleChangeSubmit.bind(this);
+    }
+    handleChangeSubmit(groups, target){
+      // form validations
+      let valid = true
+      // check groups
+      for(let i in groups){
+        for(let j in groups[i]){
+          let relation = groups[i][j]
+          // check that all attributes are set (which req all relations to be set)
+          if(!relation.attribute > 0){
+            console.log('Form failed valid for attribute: ' + relation.attribute)
+            this.setState({
+              msg: "Please select an attribute for Group " + i + " Relation " + j
+            });
+            valid = false
+          }
+          // check that all necessary joining operators are set
+          // only check logical operators for joining relations
+          if(j < groups[i].length-1){
+            if(!relation.logical){
+              console.log('Form failed valid for logical: ' + relation.logical)
+              this.setState({
+                msg: "Please select a logical operator for Group " + i + " Relation " + j
+              });
+              valid = false
+            }
+          }
+        }
+      }
+      // check that a target was set
+      if(!target > 0){
+        valid = false
+        this.setState({
+          msg: "Please select a target"
+        });
+      }
+      // form validation complete
+      console.log(valid)
+      if(valid){
+        this.setState({
+          open: true,
+          msg: "Comparison was submitted"
+        });
+        // submit the form
+        axios.post(API_ROOT + 'newgroupcomparison', {
+          groups: groups,
+          target: target
+        })
+          .then(response => {
+            console.log(response);
+            const jobId = response.data;
+            const hasResult = true;
+            this.setState({jobId})
+            this.setState({hasResult})
+            // add jobid to redux store
+            this.props.dispatch(addJob(jobId,
+              'fishers',
+              new Date().toLocaleTimeString(),
+              fishersDescription(groups, target)
+            ))
+          });
+      } else {
+        this.setState({
+          open: true
+        });
+      }
+    }
+    // Snackbar
+    handleRequestClose = () => {
+      this.setState({
+        open: false,
+      });
+    };
+    render() {
+      return (
+        <div className="md-grid">
+          {!this.state.hasResult ? <GroupsForm handleChangeSubmit={this.handleChangeSubmit} /> : <Loading jobId={this.state.jobId} />}
+          <MuiThemeProvider>
+            <Snackbar
+              open={this.state.open}
+              message={this.state.msg}
+              autoHideDuration={4000}
+              onRequestClose={this.handleRequestClose}
+            />
+          </MuiThemeProvider>
+        </div>
+      );
+    }
+  }
+
+  Fishers = connect()(Fishers)
+
+  export default Fishers
+
+The important part to note is the form submission:
+
+.. code-block:: jsx
+
+  axios.post(API_ROOT + 'newgroupcomparison', {
+          groups: groups,
+          target: target
+        })
+          .then(response => {
+            console.log(response);
+            const jobId = response.data;
+            const hasResult = true;
+            this.setState({jobId})
+            this.setState({hasResult})
+            // add jobid to redux store
+            this.props.dispatch(addJob(jobId,
+              'fishers',
+              new Date().toLocaleTimeString(),
+              fishersDescription(groups, target)
+            ))
+          });
+
+Note how we're dispatching an `addJob` action to Redux. This stores the job information in our Redux store, under the `jobs` list. In our example, we used a function to generate the description, but if you were to add a dispatch for your `ml` module, for example, you might do something like:
+
+.. code-block:: jsx
+
+  axios.post(API_ROOT + 'newgroupcomparison', {
+          groups: groups,
+          target: target
+        })
+          .then(response => {
+            console.log(response);
+            const jobId = response.data;
+            const hasResult = true;
+            this.setState({jobId})
+            this.setState({hasResult})
+            // add jobid to redux store
+            this.props.dispatch(addJob(jobId,
+              'ml',
+              new Date().toLocaleTimeString(),
+              'my description of what ml options were chosen'
+            ))
+          });
+
+Then, after creating your form, in `/src/containers/App.js`_ add an import for your container:
+
+.. code-block:: jsx
+
+  import ML from '../containers/ML'
+
+then add a route:
+
+.. code-block:: jsx
+
+   <Switch key={location.key}>
+      <Route exact path="/" location={location} component={Home} />
+      <Route path="/fishers" location={location} component={Fishers} />
+      <Route path="/subtyping" location={location} component={Subtyping} />
+      <Route exact path="/results" location={location} component={Results} />
+      <Route path="/results/:hash" location={location} component={VisibleResult} />
+    </Switch>
+
+would become:
+
+.. code-block:: jsx
+
+   <Switch key={location.key}>
+      <Route exact path="/" location={location} component={Home} />
+      <Route path="/fishers" location={location} component={Fishers} />
+      <Route path="/subtyping" location={location} component={Subtyping} />
+      <Route path="/ml" location={location} component={ML} />
+      <Route exact path="/results" location={location} component={Results} />
+      <Route path="/results/:hash" location={location} component={VisibleResult} />
+    </Switch>
+
+Now your form will render at `/ml`.
+
 .. _`reactapp`: https://github.com/superphy/reactapp
 .. _`supervisord-rq.conf`: https://github.com/superphy/backend/blob/master/app/supervisord-rq.conf
 .. _`install node`: https://nodejs.org/en/
 .. _`install yarn`: https://yarnpkg.com/en/docs/install#mac-tab
 .. _`api.js`: https://github.com/superphy/reactapp/blob/master/src/middleware/api.js
+.. _`Fishers.js`: https://github.com/superphy/reactapp/blob/master/src/containers/Fishers.js
+.. _`/src/containers/App.js`: https://github.com/superphy/reactapp/blob/master/src/containers/App.js
 
 Directly Adding a New Module
 ============================
