@@ -193,12 +193,18 @@ You can then export the env:
 
 If you push your changes to github on `master`, Travis-CI is setup to build the Docker Image and push it to Docker Hub automatically under the tag `latest`.
 
-Otherwise, build and push the image under your own tag, for example `8.8.8`:
+Otherwise, build and push the image under your own tag, for example `0.0.1`:
 
 .. code-block:: sh
 
-  docker build -t superphy/docker-flask-conda:8.8.8 .
-  docker push superphy/docker-flask-conda:8.8.8
+  docker build -t superphy/docker-flask-conda:0.0.1 .
+  docker push superphy/docker-flask-conda:0.0.1
+
+Then specific your image in the corresponding Dockerfiles: `worker`_. If you're adding dependcies to flask, also update the `webserver`_ Dockerfile.
+
+.. code-block:: bash
+
+  FROM superphy/docker-flask-conda:0.0.1
 
 .. _`environment.yml`: https://raw.githubusercontent.com/superphy/docker-flask-conda/master/app/environment.yml
 .. _`superphy/docker-flask-conda`: https://github.com/superphy/docker-flask-conda
