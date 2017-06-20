@@ -100,3 +100,33 @@ def submit(func):
         log.debug(results)
         return results
     return func_wrapper
+
+def todict(func):
+    '''
+    :param : a query result in json that includes genome and assoc genes
+    
+    A decorator to convert json format to dict in format of {genome: [genelist]}
+    when given results that are in format genome gene
+    '''
+    @wraps(func)
+    def func_wrapper(*args, **kwargs):
+        results = func(*args, **kwargs)
+        genome_dict = {}
+        for result in results['results']['bindings']:
+            genome = result['g']['value']
+            pan_region = result['p']['value']
+            regions = []
+            keys = result.keys()
+            if genome in genome_dict:
+                genome_dict[genome].append(pan_region)
+
+            else:
+                genome_dict[genome] = []
+                genome_dict[genome] = [pan_region]
+        log.debug(regions)
+        return genome_dict
+    return func_wrapper
+
+
+
+
