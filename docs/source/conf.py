@@ -159,11 +159,11 @@ texinfo_documents = [
 
 
 # jsx highlighting
-from pygments import highlight
-from pygments.formatters import HtmlFormatter
-from pygmentslexerbabylon import BabylonLexer
+# from pygments import highlight
+# from pygments.formatters import HtmlFormatter
+# from pygmentslexerbabylon import BabylonLexer
 
-lexer = BabylonLexer()  # You select it manually...
-formatter = HtmlFormatter(linenos=True, cssclass="source")
-code = '<ReactComponent/>'
-result = highlight(code, lexer, formatter)
+# lexer = BabylonLexer()  # You select it manually...
+# formatter = HtmlFormatter(linenos=True, cssclass="source")
+# code = '<ReactComponent/>'
+# result = highlight(code, lexer, formatter)
