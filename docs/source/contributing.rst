@@ -121,7 +121,7 @@ There are a few ways of adding a new module:
 2. Add a enqueuing method to Spfy's code, but then create a new queue and a new docker image, with additional dependencies, which is added to Spfy's docker-compose.yml file.
 3. Setting up your module as a microservice running in its own Docker container, add a worker to handle requests to RQ.
 
-Currently, we only have documentation supporting option 1.
+The quickest approach is option 1.
 
 If you wish to integrate your code with Spfy, you'll have to update any dependencies to the underlying Conda-based image the RQ workers depend on. You'll also have to include your code in the `/app` directory of this repo, as that is the only directory the current RQ workers contain. The intended structure is to create a directory in `/app/modules` for your codebase and a `.py` file above at `/app/modules/newmodule.py`, for example, which contains the method your `Queue.enqueue()` function uses.
 
@@ -129,9 +129,111 @@ There is more specific documentation for this process in `Directly Adding a New 
 
 If you wish to create your own image, you can use the RQ `worker`_ image as a starting point. Specifically you'll want to add your repo as a git submodule in `superphy/backend` and modify the `COPY ./app /app` to target your repo, similar to the way `reactapp`_ is included. You'll also want to take a look at the `supervisord-rq.conf`_ which controls the RQ workers. 
 
-There is more specific documentation for this process in `Indirectly Adding a New Module`_.
-
 In both cases, the spfy webserver will have to be modified in order for the front-end to have an endpoint target; this is documented in `Adding an Endpoint in Flask`_. The front-end will also have to be modified for there to be a form to submit tasks and have a results view generated for your new module; this is documented in `Modifying the Front-End`_.
+
+Directly Adding a New Module
+============================
+
+Adding Dependencies via Conda
+-----------------------------
+
+The main `environment.yml`_ file is located in our `superphy/docker-flask-conda`_
+repo. This is used by the `worker`_ and `worker-blazegraph-ids`_ containers
+(and the `webserver`_ container, though that may/should change). We also pull
+this base superphy/docker-flask-conda image from Docker Hub. So you would have
+to:
+
+1. push the new image
+2. specify the new version on each Dockerfile, namely via the
+
+.. code-block:: bash
+
+  FROM superphy/docker-flask-conda:2.0.0
+
+tag.
+
+To get started, `install Miniconda`_ and clone the docker-flask-conda repo:
+
+.. code-block:: sh
+
+  git clone https://github.com/superphy/docker-flask-conda.git && cd docker-flask-conda
+
+Recreate the env:
+
+.. code-block:: sh
+  
+  conda env create -f app/environment.yml
+
+Activate the env:
+
+.. code-block:: sh
+
+  source activate backend
+
+Then you can install any dependencies as usual.
+Via pip:
+
+.. code-block:: sh
+
+  pip install whateverpackage
+
+or conda
+
+.. code-block:: sh
+
+  conda install whateverpackage
+
+You can then export the env:
+
+.. code-block:: sh
+
+  conda env export > app/environment.yml
+
+If you push your changes to github on `master`, Travis-CI is setup to build the Docker Image and push it to Docker Hub automatically under the tag `latest`.
+
+Otherwise, build and push the image under your own tag, for example `0.0.1`:
+
+.. code-block:: sh
+
+  docker build -t superphy/docker-flask-conda:0.0.1 .
+  docker push superphy/docker-flask-conda:0.0.1
+
+Then specific your image in the corresponding Dockerfiles: `worker`_. If you're adding dependcies to flask, also update the `webserver`_ Dockerfile.
+
+.. code-block:: bash
+
+  FROM superphy/docker-flask-conda:0.0.1
+
+.. _`environment.yml`: https://raw.githubusercontent.com/superphy/docker-flask-conda/master/app/environment.yml
+.. _`superphy/docker-flask-conda`: https://github.com/superphy/docker-flask-conda
+.. _`worker`: https://github.com/superphy/backend/blob/master/Dockerfile-rq
+.. _`worker-blazegraph-ids`: https://github.com/superphy/backend/blob/master/Dockerfile-rq-blazegraph
+.. _`webserver`: https://github.com/superphy/backend/blob/master/Dockerfile-spfy
+
+Integrating your Codebase into Spfy
+-----------------------------------
+
+There are two ways of approaching this:
+
+1. If you're not using any of Spfy's codebase, add your code as a git submodule in `/app/modules/`
+2. If you are using Spfy's codebase, fork and create a directory in `/app/modules/` with your code.
+
+In both cases, you should add a method in `/app/module/pickaname.py` which enqueues a call to your package. More information on this is documated at `Enqueing a Job to RQ`_.
+
+To add a git submodule, clone the repo and create a branch:
+
+.. code-block:: sh
+
+  git clone --recursive https://github.com/superphy/backend.git && cd backend/
+  git checkout -b somenewmodule
+
+You can then add your repo and commit it to `superphy/backend` as usual:
+
+.. code-block:: sh
+
+  git submodule add https://github.com/chaconinc/DbConnector app/modules/DbConnector
+  git add .
+  git commit -m 'ADD: my new module'
 
 Adding an Endpoint in Flask
 ===========================
@@ -182,7 +284,7 @@ Enqueing a Job to RQ
 
 You will then have to enqueue a job, based off that request form. There is an example of how form parsing is handled for Subtyping in the `upload()` method of `ra_posts.py`_.
 
-If you're integrating your codebase with Spfy, add your code to a new directory in `/app/modules` and a method to enqueue in `/app/modules/somemodule.py` for example. The `gc.py`_ file resembles a basic template for a method to enqueue. 
+If you're integrating your codebase with Spfy, add your code to a new directory in `/app/modules` and a method which handles enqueing in `/app/modules/somemodule.py` for example. The `gc.py`_ file resembles a basic template for a method to enqueue. 
 
 .. code-block:: python
 
@@ -818,48 +920,3 @@ and add the case to the switch which decides which result view to return:
 .. _`/src/containers/App.js`: https://github.com/superphy/reactapp/blob/master/src/containers/App.js
 .. _`/src/components/ResultsFishers.js`: https://github.com/superphy/reactapp/blob/master/src/components/ResultFishers.js
 .. _`/src/components/ResultsTemplates.js`: https://github.com/superphy/reactapp/blob/master/src/components/ResultsTemplates.js
-
-Directly Adding a New Module
-============================
-
-Adding Dependencies via Conda
------------------------------
-
-The main `environment.yml`_ file is located in our `superphy/docker-flask-conda`_
-repo. This is used by the `worker`_ and `worker-blazegraph-ids`_ containers
-(and the `webserver`_ container, though that may/should change). We also pull
-this base superphy/docker-flask-conda image from Docker Hub. So you would have
-to:
-
-1. push the new image
-2. specify the new version on each Dockerfile, namely via the
-
-.. code-block:: bash
-
-  FROM superphy/docker-flask-conda:2.0.0
-
-tag.
-
-.. _`environment.yml`: https://raw.githubusercontent.com/superphy/docker-flask-conda/master/app/environment.yml
-.. _`superphy/docker-flask-conda`: https://github.com/superphy/docker-flask-conda
-.. _`worker`: https://github.com/superphy/backend/blob/master/Dockerfile-rq
-.. _`worker-blazegraph-ids`: https://github.com/superphy/backend/blob/master/Dockerfile-rq-blazegraph
-.. _`webserver`: https://github.com/superphy/backend/blob/master/Dockerfile-spfy
-
-Integrating your Codebase into Spfy
------------------------------------
-
-Indirectly Adding a New Module
-==============================
-
-Adding your Repo as a Git Submodule
------------------------------------
-
-Picking a Base Docker Image
----------------------------
-
-Adding your Dependencies
-------------------------
-
-Updating Docker-Compose.yml
----------------------------
