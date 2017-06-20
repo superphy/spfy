@@ -360,7 +360,18 @@ where the ttl is measured in seconds. A warning message would also have to be ad
 .. _`backend issue #90`: https://github.com/superphy/backend/issues/90
 .. _`gc.py`: https://github.com/superphy/backend/blob/master/app/modules/gc.py
 
-OPTIONAL: Adding a new Queue
+Seeing Your Changes in Docker
+-----------------------------
+
+To rebuild the Flask image, in `/backend`:
+
+.. code-block:: sh
+
+  docker-compose stop webserver worker
+  docker-compose build --no-cache webserver worker
+  docker-compose up
+
+Optional: Adding a new Queue
 ============================
 
 Normally, we distribute tasks between two main queues: `singles` and `multiples`. The singles queue is intended for tasks that can't be run in parallel within the same container (though you can probably run multiple containers, if you so wish); our use-case is for ECTyper. Everything else is intended to be run on the `multiples` queue.
@@ -397,13 +408,13 @@ To get started, `install node`_ and then `install yarn`_. For debugging, I also 
 .. _`React Dev Tools`: https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi?hl=en
 .. _`Redux Dev Tools`: https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd?hl=en
 
-Then, with Spfy's composition running, you'll want to clone `reactapp`_ and modify `ROOT` api address in `api.js`_ to point to your localhost:
+  Optionally, I like to run Spfy's composition on one of the Desktops while coding away on my laptop. You can do the same by modifying `ROOT` api address in `api.js`_ to point to a different IP address or name:
 
-.. code-block:: jsx
-  
-  const ROOT = 'http://localhost:8000/'
+  .. code-block:: jsx
+    
+    const ROOT = 'http://10.139.14.212:8000/'
 
-and run:
+Then, with Spfy's composition running, you'll want to clone `reactapp`_ and run:
 
 .. code-block:: bash
 
@@ -932,3 +943,20 @@ and add the case to the switch which decides which result view to return:
 .. _`/src/containers/App.js`: https://github.com/superphy/reactapp/blob/master/src/containers/App.js
 .. _`/src/components/ResultsFishers.js`: https://github.com/superphy/reactapp/blob/master/src/components/ResultFishers.js
 .. _`/src/components/ResultsTemplates.js`: https://github.com/superphy/reactapp/blob/master/src/components/ResultsTemplates.js
+
+Packaging It All Together
+=========================
+
+Once the main `superphy/backend` repo has any submodule you specified at the correct head, you can rebuild the entire composition by running:
+
+.. code-block:: sh
+
+  git submodule update
+  docker-compose build --no-cache .
+  docker-compose up
+
+Alternatively, to run docker-compose in detached-head mode (where the composition runs entirely by the Docker daemon, without need for a linked shell), run:
+
+.. code-block:: sh
+
+  docker-compose up -d
