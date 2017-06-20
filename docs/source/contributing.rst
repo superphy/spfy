@@ -121,7 +121,7 @@ There are a few ways of adding a new module:
 2. Add a enqueuing method to Spfy's code, but then create a new queue and a new docker image, with additional dependencies, which is added to Spfy's docker-compose.yml file.
 3. Setting up your module as a microservice running in its own Docker container, add a worker to handle requests to RQ.
 
-Currently, we only support option 1.
+Currently, we only have documentation supporting option 1.
 
 If you wish to integrate your code with Spfy, you'll have to update any dependencies to the underlying Conda-based image the RQ workers depend on. You'll also have to include your code in the `/app` directory of this repo, as that is the only directory the current RQ workers contain. The intended structure is to create a directory in `/app/modules` for your codebase and a `.py` file above at `/app/modules/newmodule.py`, for example, which contains the method your `Queue.enqueue()` function uses.
 
@@ -134,7 +134,16 @@ There is more specific documentation for this process in `Indirectly Adding a Ne
 In both cases, the spfy webserver will have to be modified in order for the front-end to have an endpoint target; this is documented in `Adding an Endpoint in Flask`_. The front-end will also have to be modified for there to be a form to submit tasks and have a results view generated for your new module; this is documented in `Modifying the Front-End`_.
 
 Adding an Endpoint in Flask
----------------------------
+===========================
+
+To create a new endpoint in Flask, you'll have to:
+
+1. Create a Blueprint with your route(s) and register it to the app.
+2. Enqueue a job in RQ
+3. Return the job id via Flask to the front-end
+
+Creating a Blueprint
+--------------------
 
 We use `Flask Blueprints`_ to compartmentalize all routes. They are contained in `/app/routes` and have the following basic structure:
 
@@ -168,6 +177,9 @@ Note that we allow CORS on all routes of form `/api/*` such as `/api/v0/somerout
 .. _`ra_views.py`: https://github.com/superphy/backend/blob/master/app/routes/ra_views.py
 .. _`factory.py`: https://github.com/superphy/backend/blob/master/app/factory.py
 
+Enqueing a Job to RQ
+--------------------
+
 You will then have to enqueue a job, based off that request form. There is an example of how form parsing is handled for Subtyping in the `upload()` method of `ra_posts.py`_.
 
 If you're integrating your codebase with Spfy, add your code to a new directory in `/app/modules` and a method to enqueue in `/app/modules/somemodule.py` for example. The `gc.py`_ file resembles a basic template for a method to enqueue. 
@@ -200,7 +212,10 @@ Of note is that when calling RQ's enqueue() method, a custom Job class is return
 
   16515ba5-040d-4315-9c88-a3bf5bfbe84e
 
-Generally, we expect the return from Flask (to the front-end) to be a dictionary with the job id as the key to another dictionary with keys `analysis` and `file` (if relevant). For example, a return might be:
+Returning the Job ID to the Front-End
+-------------------------------------
+
+Generally, we expect the return from Flask (to the front-end) to be a dictionary with the job id as the key to another dictionary with keys `analysis` and `file` (if relevant), though this is not strictly required (a single line containing the key will also work, as you handle naming of analysis again when doing a `dispatch()` in `reactapp`_ - more on this later). For example, a return might be:
 
 .. code-block:: python
 
@@ -209,7 +224,7 @@ Generally, we expect the return from Flask (to the front-end) to be a dictionary
     "file": "/datastore/2017-06-14-21-26-43-375215-GCA_001683595.1_NGF2_genomic.fna"
   }
 
-It is expected that only 1 job id be returned per request. In `v4.2.2`_ we introduced the concept of `blob` ids in which dependency checking is handled server-side; you can find more details about this in `reactapp issue #30`_ and `backend issue #90`_. The concept is only relevant if you handle parallelism & pipelines for a given task (ex. Subtyping) through multiple RQ jobs (ex. QC, ID Reservation, ECTyper, RGI, parsing, etc.); if you handle parallelism in your own codebase, then this isn't required.
+It is expected that only 1 job id be returned per request. In `v4.2.2`_ we introduced the concept of `blob` ids in which dependency checking is handled server-side; you can find more details about this in `reactapp issue #30`_ and `backend issue #90`_. The Redis DB was also set to run in persistant-mode, with results stored to disk inside a docker volume. The `blob` concept is only relevant if you handle parallelism & pipelines for a given task (ex. Subtyping) through multiple RQ jobs (ex. QC, ID Reservation, ECTyper, RGI, parsing, etc.); if you handle parallelism in your own codebase, then this isn't required.
 
 Another point to note is that the:
 
@@ -232,7 +247,7 @@ where the ttl is measured in seconds. A warning message would also have to be ad
 .. _`gc.py`: https://github.com/superphy/backend/blob/master/app/modules/gc.py
 
 OPTIONAL: Adding a new Queue
-----------------------------
+============================
 
 Normally, we distribute tasks between two main queues: `singles` and `multiples`. The singles queue is intended for tasks that can't be run in parallel within the same container (though you can probably run multiple containers, if you so wish); our use-case is for ECTyper. Everything else is intended to be run on the `mulitples` queue.
 
@@ -259,13 +274,16 @@ For example, queues `dog` and `cat` can be ordered:
 which instructs the RQ workers to run tasks in `dog` first, before running tasks in `cat`.
 
 Modifying the Front-End
------------------------
+=======================
 
 I'd recommend you leave Spfy's setup running in Docker-Compose and run the reactapp live so you can see immediate updates.
 
-To get started, `install node`_ and then `install yarn`_. 
+To get started, `install node`_ and then `install yarn`_. For debugging, I also recommend using Google Chrome and installing the `React Dev Tools`_ and `Redux Dev Tools`_.
 
-Then you'll want to clone `reactapp`_ and modify `ROOT` api address in `api.js`_ to point to your localhost:
+.. _`React Dev Tools`: https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi?hl=en
+.. _`Redux Dev Tools`: https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd?hl=en
+
+Then, with Spfy's composition running, you'll want to clone `reactapp`_ and modify `ROOT` api address in `api.js`_ to point to your localhost:
 
 .. code-block:: jsx
   
@@ -279,7 +297,10 @@ and run:
   yarn install
   yarn start
 
-Our `reactapp`_ uses `Redux` to store jobs, but also uses regular `React states` when building forms or displaying results. This was done so you don't have to be too familiar with Redux when building new modules.
+Our `reactapp`_ uses `Redux` to store jobs, but also uses regular `React states` when building forms or displaying results. This was done so you don't have to be too familiar with Redux when building new modules. The codebase is largely JSX+ES6.
+
+Adding a New Task Card
+----------------------
 
 The first thing you'll want to do is add a description of your module to `api.js`_. For example, the old analyses const is:
 
@@ -327,11 +348,476 @@ If we added a new module called `ml`, analyses might be:
     'text': 'Multiple machine learning algorithms such as, support vector machines, naive Bayes, and the Perceptron algorithm.'
   }]
 
+This will create a new card for in tasks at the root page.
+
+Adding a New Task Form
+----------------------
+
+  A note on terminology: we consider `containers` to be *Redux-aware*; that is, they require the `connect()` function from `react-redux`. `Components` are generally not directly connected to Redux and instead get information from the Redux store passed down to it via the componenet's `props`. Note that this is not strictly true as we make use of `react-refetch`, which is a fork of Redux and uses a separate `connect()` function, to poll for job statuses and results. However, the interaction between `react-refetch` and `redux` is largely abstracted away from you and instead maps a components props directly to updates via `react-refetch` - you don't have to dispatch actions or pull down updates separately.
+
+Then create a container in `/src/containers` which will be your request form. You can look at `Subtyping.js`_ for an example.
+
+.. code-block:: jsx
+
+  import React, { PureComponent } from 'react';
+  // react-md
+  import FileInput from 'react-md/lib/FileInputs';
+  import Checkbox from 'react-md/lib/SelectionControls/Checkbox'
+  import TextField from 'react-md/lib/TextFields';
+  import Button from 'react-md/lib/Buttons';
+  import Switch from 'react-md/lib/SelectionControls/Switch';
+  import Subheader from 'react-md/lib/Subheaders';
+  import CircularProgress from 'react-md/lib/Progress/CircularProgress';
+  // redux
+  import { connect } from 'react-redux'
+  import { addJob } from '../actions'
+  import { subtypingDescription } from '../middleware/subtyping'
+  // axios
+  import axios from 'axios'
+  import { API_ROOT } from '../middleware/api'
+  // router
+  import { Redirect } from 'react-router'
+  import Loading from '../components/Loading'
+
+  class Subtyping extends PureComponent {
+    constructor(props) {
+      super(props);
+      this.state = {
+        file: null,
+        pi: 90,
+        amr: false,
+        serotype: true,
+        vf: true,
+        submitted: false,
+        open: false,
+        msg: '',
+        jobId: "",
+        hasResult: false,
+        groupresults: true,
+        progress: 0
+      }
+    }
+    _selectFile = (file) => {
+      console.log(file)
+      if (!file) { return; }
+      this.setState({ file });
+    }
+    _updatePi = (value) => {
+      this.setState({ pi: value });
+    }
+    _updateSerotype = (value) => {
+      this.setState({ serotype: value })
+    }
+    _updateAmr = (value) => {
+      this.setState({ amr: value })
+    }
+    _updateVf = (value) => {
+      this.setState({ vf: value })
+    }
+    _updateGroupResults = (groupresults) => {
+      this.setState({ groupresults })
+    }
+    _updateUploadProgress = ( progress ) => {
+      this.setState({progress})
+    }
+    _handleSubmit = (e) => {
+      e.preventDefault() // disable default HTML form behavior
+      // open and msg are for Snackbar
+      // uploading is to notify users
+      this.setState({
+        uploading: true
+      });
+      // configure a progress for axios
+      const createConfig = (_updateUploadProgress) => {
+        var config = {
+          onUploadProgress: function(progressEvent) {
+            var percentCompleted = Math.round( (progressEvent.loaded * 100) / progressEvent.total );
+            _updateUploadProgress(percentCompleted)
+          }
+        }
+        return config
+      }
+      // create form data with files
+      var data = new FormData()
+      // eslint-disable-next-line
+      this.state.file.map((f) => {
+        data.append('file', f)
+      })
+      // append options
+      // to match spfy(angular)'s format, we dont use a dict
+      data.append('options.pi', this.state.pi)
+      data.append('options.amr', this.state.amr)
+      data.append('options.serotype', this.state.serotype)
+      data.append('options.vf', this.state.vf)
+      // new option added in 4.2.0, group all files into a single result
+      // this means polling in handled server-side
+      data.append('options.groupresults', this.state.groupresults)
+      // put
+      axios.post(API_ROOT + 'upload', data, createConfig(this._updateUploadProgress))
+        .then(response => {
+          console.log(response)
+          // no longer uploading
+          this.setState({
+            uploading: false
+          })
+          let jobs = response.data
+          // handle the return
+          for(let job in jobs){
+            let f = (this.state.file.length > 1 ?
+            String(this.state.file.length + ' Files')
+            :this.state.file[0].name)
+            if(jobs[job].analysis === "Antimicrobial Resistance"){
+              this.props.dispatch(addJob(job,
+                "Antimicrobial Resistance",
+                new Date().toLocaleTimeString(),
+                subtypingDescription(f, this.state.pi, false, false, this.state.amr)
+              ))
+            } else if (jobs[job].analysis === "Virulence Factors and Serotype") {
+              let descrip = ''
+              if (this.state.vf && this.state.serotype){descrip = "Virulence Factors and Serotype"}
+              else if (this.state.vf && !this.state.serotype) {descrip = "Virulence Factors"}
+              else if (!this.state.vf && this.state.serotype) {descrip = "Serotype"}
+              this.props.dispatch(addJob(job,
+                descrip,
+                new Date().toLocaleTimeString(),
+                subtypingDescription(f, this.state.pi, this.state.serotype, this.state.vf, false)
+              ))
+            } else if (jobs[job].analysis === "Subtyping") {
+              // set the jobId state so we can use Loading
+              const jobId = job
+              this.setState({jobId})
+              // dispatch
+              this.props.dispatch(addJob(job,
+                "Subtyping",
+                new Date().toLocaleTimeString(),
+                subtypingDescription(
+                  f , this.state.pi, this.state.serotype, this.state.vf, this.state.amr)
+              ))
+            }
+          }
+          const hasResult = true
+          this.setState({hasResult})
+        })
+    };
+    render(){
+      const { file, pi, amr, serotype, vf, groupresults, uploading, hasResult, progress } = this.state
+      return (
+        <div>
+          {/* uploading bar */}
+          {(uploading && !hasResult) ?
+            <div>
+              <CircularProgress key="progress" id="loading" value={progress} centered={false} />
+              Uploading... {progress} %
+            </div>
+            : ""
+          }
+          {/* actual form */}
+          {(!hasResult && !uploading)?
+            <form className="md-text-container md-grid">
+              <div className="md-cell md-cell--12">
+                <FileInput
+                  id="inputFile"
+                  secondary
+                  label="Select File(s)"
+                  onChange={this._selectFile}
+                  multiple
+                />
+                <Switch
+                  id="groupResults"
+                  name="groupResults"
+                  label="Group files into a single result"
+                  checked={groupresults}
+                  onChange={this._updateGroupResults}
+                />
+                {!groupresults ?
+                  <Subheader primaryText="(Will split files & subtyping methods into separate results)" inset />
+                : ''}
+                <Checkbox
+                  id="serotype"
+                  name="check serotype"
+                  checked={serotype}
+                  onChange={this._updateSerotype}
+                  label="Serotype"
+                />
+                <Checkbox
+                  id="vf"
+                  name="check vf"
+                  checked={vf}
+                  onChange={this._updateVf}
+                  label="Virulence Factors"
+                />
+                <Checkbox
+                  id="amr"
+                  name="check amr"
+                  checked={amr}
+                  onChange={this._updateAmr}
+                  label="Antimicrobial Resistance"
+                />
+                {amr ?
+                  <Subheader primaryText="(Note: AMR increases run-time by several minutes per file)" inset />
+                : ''}
+                <TextField
+                  id="pi"
+                  value={pi}
+                  onChange={this._updatePi}
+                  helpText="Percent Identity for BLAST"
+                />
+                <Button
+                  raised
+                  secondary
+                  type="submit"
+                  label="Submit"
+                  disabled={!file}
+                  onClick={this._handleSubmit}
+                />
+              </div>
+              <div className="md-cell md-cell--12">
+                {this.state.file ? this.state.file.map(f => (
+                  <TextField
+                    key={f.name}
+                    defaultValue={f.name}
+                  />
+                )) : ''}
+              </div>
+            </form> :
+            // if results are grouped, display the Loading page
+            // else, results are separate and display the JobsList cards page
+            (!uploading?(!groupresults?
+              <Redirect to='/results' />:
+              <Loading jobId={this.state.jobId} />
+            ):"")
+          }
+        </div>
+      )
+    }
+  }
+
+  Subtyping = connect()(Subtyping)
+
+  export default Subtyping
+
+
+The important part to note is the form submission:
+
+.. code-block:: jsx
+
+  axios.post(API_ROOT + 'upload', data, createConfig(this._updateUploadProgress))
+        .then(response => {
+          console.log(response)
+          // no longer uploading
+          this.setState({
+            uploading: false
+          })
+          let jobs = response.data
+          // handle the return
+          for(let job in jobs){
+            let f = (this.state.file.length > 1 ?
+            String(this.state.file.length + ' Files')
+            :this.state.file[0].name)
+            if(jobs[job].analysis === "Antimicrobial Resistance"){
+              this.props.dispatch(addJob(job,
+                "Antimicrobial Resistance",
+                new Date().toLocaleTimeString(),
+                subtypingDescription(f, this.state.pi, false, false, this.state.amr)
+              ))
+
+(truncated)
+
+We can take a look at a simpler example in `Fishers.js`_ where there aren't multiple `jobs[job].analysis === "Antimicrobial Resistance"` analysis types in a single form.
+
+.. code-block:: jsx
+
+  axios.post(API_ROOT + 'newgroupcomparison', {
+        groups: groups,
+        target: target
+      })
+        .then(response => {
+          console.log(response);
+          const jobId = response.data;
+          const hasResult = true;
+          this.setState({jobId})
+          this.setState({hasResult})
+          // add jobid to redux store
+          this.props.dispatch(addJob(jobId,
+            'fishers',
+            new Date().toLocaleTimeString(),
+            fishersDescription(groups, target)
+          ))
+        });
+
+First you'd want to change the POST route so it targets your new endpoint.
+
+.. code-block:: jsx
+
+  axios.post(API_ROOT + 'someroute', {
+
+Note that `API_ROOT` prepends the `api/v0/` so the full route might be `api/v0/someroute`.
+
+Now we need to dispatch an `addJob` action to Redux. This stores the job information in our Redux store, under the `jobs` list. In our example, we used a function to generate the description, but if you were to add a dispatch for your `ml` module you might do something like:
+
+.. code-block:: jsx
+
+  axios.post(API_ROOT + 'someroute', {
+          groups: groups,
+          target: target
+        })
+          .then(response => {
+            console.log(response);
+            const jobId = response.data;
+            const hasResult = true;
+            this.setState({jobId})
+            this.setState({hasResult})
+            // add jobid to redux store
+            this.props.dispatch(addJob(jobId,
+              'ml',
+              new Date().toLocaleTimeString(),
+              'my description of what ml options were chosen'
+            ))
+          });
+
+Then, after creating your form, in `/src/containers/App.js`_ add an import for your container:
+
+.. code-block:: jsx
+
+  import ML from '../containers/ML'
+
+then add a route:
+
+.. code-block:: jsx
+
+   <Switch key={location.key}>
+      <Route exact path="/" location={location} component={Home} />
+      <Route path="/fishers" location={location} component={Fishers} />
+      <Route path="/subtyping" location={location} component={Subtyping} />
+      <Route exact path="/results" location={location} component={Results} />
+      <Route path="/results/:hash" location={location} component={VisibleResult} />
+    </Switch>
+
+would become:
+
+.. code-block:: jsx
+
+   <Switch key={location.key}>
+      <Route exact path="/" location={location} component={Home} />
+      <Route path="/fishers" location={location} component={Fishers} />
+      <Route path="/subtyping" location={location} component={Subtyping} />
+      <Route path="/ml" location={location} component={ML} />
+      <Route exact path="/results" location={location} component={Results} />
+      <Route path="/results/:hash" location={location} component={VisibleResult} />
+    </Switch>
+
+Now your form will render at `/ml`.
+
+Adding a Results Page
+---------------------
+
+When your form dispatches an `addJob` action to Redux, the `/results` page will automatically populate and poll for the status of your job. You'll now need to add a component to display the results to the user. For tabular results, we use the `react-bootstrap-table`_ package. You can look at `/src/components/ResultsFishers.js`_ as a starting point.
+
+.. _`react-bootstrap-table`: https://github.com/AllenFang/react-bootstrap-table
+
+.. code-block:: jsx
+
+  import React, { Component } from 'react';
+  import { connect } from 'react-refetch'
+  // progress bar
+  import CircularProgress from 'react-md/lib/Progress/CircularProgress';
+  // requests
+  import { API_ROOT } from '../middleware/api'
+  // Table
+  import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
+
+  class ResultFishers extends Component {
+    render() {
+      const { results } = this.props
+      const options = {
+        searchPosition: 'left'
+      };
+      if (results.pending){
+        return <div>Waiting for server response...<CircularProgress key="progress" id='contentLoadingProgress' /></div>
+      } else if (results.rejected){
+        return <div>Couldn't retrieve job: {this.props.jobId}</div>
+      } else if (results.fulfilled){
+        console.log(results)
+        return (
+          <BootstrapTable data={results.value.data} exportCSV search options={options}>
+            <TableHeaderColumn  isKey dataField='0' dataSort filter={ { type: 'TextFilter', placeholder: 'Please enter a value' } } width='400' csvHeader='Target'>Target</TableHeaderColumn>
+            <TableHeaderColumn  dataField='1' dataSort filter={ { type: 'TextFilter', placeholder: 'Please enter a value' } } csvHeader='QueryA'>QueryA</TableHeaderColumn>
+            <TableHeaderColumn  dataField='2' dataSort filter={ { type: 'TextFilter', placeholder: 'Please enter a value' } } csvHeader='QueryB'>QueryB</TableHeaderColumn>
+            <TableHeaderColumn  dataField='3' dataSort filter={ { type: 'TextFilter', placeholder: 'Please enter a value' } } width='140' csvHeader='#Present QueryA'>#Present QueryA</TableHeaderColumn>
+            <TableHeaderColumn  dataField='4' dataSort filter={ { type: 'TextFilter', placeholder: 'Please enter a value' } } width='140' csvHeader='#Absent QueryA'>#Absent QueryA</TableHeaderColumn>
+            <TableHeaderColumn  dataField='5' dataSort filter={ { type: 'TextFilter', placeholder: 'Please enter a value' } } width='140' csvHeader='#Present QueryB'>#Present QueryB</TableHeaderColumn>
+            <TableHeaderColumn  dataField='6' dataSort filter={ { type: 'TextFilter', placeholder: 'Please enter a value' } } width='140' csvHeader='#Absent QueryB'>#Absent QueryB</TableHeaderColumn>
+            <TableHeaderColumn  dataField='7' dataSort filter={ { type: 'TextFilter', placeholder: 'Please enter a value' } } width='140' csvHeader='P-Value'>P-Value</TableHeaderColumn>
+            <TableHeaderColumn  dataField='8' dataSort filter={ { type: 'TextFilter', placeholder: 'Please enter a value' } } width='140' csvHeader='Odds Ratio'>Odds Ratio</TableHeaderColumn>
+          </BootstrapTable>
+        );
+      }
+    }
+  }
+
+  export default connect(props => ({
+    results: {url: API_ROOT + `results/${props.jobId}`}
+  }))(ResultFishers)
+
+In the case of Fisher's, the response from Flask is generated by the:
+
+.. code-block:: python
+
+  df.to_json(orient='split')
+
+from the Pandas DataFrame. This creates an object with keys `columns`, `data`, and `index`. In particular, under the `data` key is an array of arrays:
+
+.. code-block:: jsx
+
+  [["https:\/\/www.github.com\/superphy#hlyC","O111","O24",1.0,0.0,0.0,1.0,null,1.0],["https:\/\/www.github.com\/superphy#hlyB","O111","O24",1.0,0.0,0.0,1.0,null,1.0],["https:\/\/www.github.com\/superphy#hlyA","O111","O24",1.0,0.0,0.0,1.0,null,1.0]]
+
+(only an example, the full results.value.data array is 387 arrays long, and can vary)
+
+Note that we use
+
+.. code-block:: jsx
+
+  dataField='5'
+
+for example, which we apply to:
+
+.. code-block:: jsx
+
+  csvHeader='#Present QueryB'
+
+which is used for exporting to .csv. And in between the TableHeaderColumn tags:
+
+.. code-block:: jsx
+
+  <TableHeaderColumn>#Present QueryB</TableHeaderColumn>
+
+(options removed)
+
+The `#Present QueryB` is used when displaying the webpage.
+
+Finally, in `/src/components/ResultsTemplates.js`_ import you component:
+
+.. code-block:: jsx
+
+  import ResultML from './ResultML'
+
+and add the case to the switch which decides which result view to return:
+
+.. code-block:: javascript
+
+  case "ml":
+      return <ML jobId={job.hash} />
+
 .. _`reactapp`: https://github.com/superphy/reactapp
 .. _`supervisord-rq.conf`: https://github.com/superphy/backend/blob/master/app/supervisord-rq.conf
 .. _`install node`: https://nodejs.org/en/
 .. _`install yarn`: https://yarnpkg.com/en/docs/install#mac-tab
 .. _`api.js`: https://github.com/superphy/reactapp/blob/master/src/middleware/api.js
+.. _`Fishers.js`: https://github.com/superphy/reactapp/blob/master/src/containers/Fishers.js
+.. _`Subtyping.js`: https://github.com/superphy/reactapp/blob/master/src/containers/Subtyping.js
+.. _`/src/containers/App.js`: https://github.com/superphy/reactapp/blob/master/src/containers/App.js
+.. _`/src/components/ResultsFishers.js`: https://github.com/superphy/reactapp/blob/master/src/components/ResultFishers.js
+.. _`/src/components/ResultsTemplates.js`: https://github.com/superphy/reactapp/blob/master/src/components/ResultsTemplates.js
 
 Directly Adding a New Module
 ============================

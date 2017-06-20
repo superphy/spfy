@@ -1,17 +1,10 @@
 name: readthedocs
 channels:
-- !!python/unicode
-  'conda-forge'
-- !!python/unicode
-  'defaults'
+- conda-forge
+- defaults
 dependencies:
-- !!python/unicode
-  'nodejs=6.11.0=0'
-- !!python/unicode
-  'libgcc=5.2.0=0'
+- nodejs=6.11.0=0
+- libgcc=5.2.0=0
+- pip=9.0.1=py27_1
 - pip:
-  - alembic==0.8.10
-- pip:
-  - Pygments==2.2.0
   - pygments-lexer-babylon==0.12.0
-prefix: !!python/unicode '/home/ubuntu/miniconda2/envs/readthedocs'
