@@ -235,6 +235,18 @@ You can then add your repo and commit it to `superphy/backend` as usual:
   git add .
   git commit -m 'ADD: my new module'
 
+or a specific branch:
+
+.. code-block:: sh
+
+  git submodule add -b somebranch https://github.com/chaconinc/DbConnector app/modules/DbConnector
+
+Note that the main repo `superphy/backend` will pin your git submodule to a specific commit. You can update it to the HEAD of w/e branch was used by running a `git pull` from within the submodule's directory and then adding it in the main repo. If you push this change to GitHub, to update other clones of superphy/backend run:
+
+.. code-block:: sh
+
+  git submodule update
+
 Adding an Endpoint in Flask
 ===========================
 
