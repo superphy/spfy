@@ -134,7 +134,16 @@ There is more specific documentation for this process in `Indirectly Adding a Ne
 In both cases, the spfy webserver will have to be modified in order for the front-end to have an endpoint target; this is documented in `Adding an Endpoint in Flask`_. The front-end will also have to be modified for there to be a form to submit tasks and have a results view generated for your new module; this is documented in `Modifying the Front-End`_.
 
 Adding an Endpoint in Flask
----------------------------
+===========================
+
+To create a new endpoint in Flask, you'll have to:
+
+1. Create a Blueprint with your route(s) and register it to the app.
+2. Enqueue a job in RQ
+3. Return the job id via Flask to the front-end
+
+Creating a Blueprint
+--------------------
 
 We use `Flask Blueprints`_ to compartmentalize all routes. They are contained in `/app/routes` and have the following basic structure:
 
@@ -168,6 +177,9 @@ Note that we allow CORS on all routes of form `/api/*` such as `/api/v0/somerout
 .. _`ra_views.py`: https://github.com/superphy/backend/blob/master/app/routes/ra_views.py
 .. _`factory.py`: https://github.com/superphy/backend/blob/master/app/factory.py
 
+Enqueing a Job to RQ
+--------------------
+
 You will then have to enqueue a job, based off that request form. There is an example of how form parsing is handled for Subtyping in the `upload()` method of `ra_posts.py`_.
 
 If you're integrating your codebase with Spfy, add your code to a new directory in `/app/modules` and a method to enqueue in `/app/modules/somemodule.py` for example. The `gc.py`_ file resembles a basic template for a method to enqueue. 
@@ -199,6 +211,9 @@ Of note is that when calling RQ's enqueue() method, a custom Job class is return
 .. code-block:: python
 
   16515ba5-040d-4315-9c88-a3bf5bfbe84e
+
+Returning the Job ID to the Front-End
+-------------------------------------
 
 Generally, we expect the return from Flask (to the front-end) to be a dictionary with the job id as the key to another dictionary with keys `analysis` and `file` (if relevant), though this is not strictly required (a single line containing the key will also work, as you handle naming of analysis again when doing a `dispatch()` in `reactapp`_ - more on this later). For example, a return might be:
 
@@ -232,7 +247,7 @@ where the ttl is measured in seconds. A warning message would also have to be ad
 .. _`gc.py`: https://github.com/superphy/backend/blob/master/app/modules/gc.py
 
 OPTIONAL: Adding a new Queue
-----------------------------
+============================
 
 Normally, we distribute tasks between two main queues: `singles` and `multiples`. The singles queue is intended for tasks that can't be run in parallel within the same container (though you can probably run multiple containers, if you so wish); our use-case is for ECTyper. Everything else is intended to be run on the `mulitples` queue.
 
@@ -259,7 +274,7 @@ For example, queues `dog` and `cat` can be ordered:
 which instructs the RQ workers to run tasks in `dog` first, before running tasks in `cat`.
 
 Modifying the Front-End
------------------------
+=======================
 
 I'd recommend you leave Spfy's setup running in Docker-Compose and run the reactapp live so you can see immediate updates.
 
@@ -283,6 +298,9 @@ and run:
   yarn start
 
 Our `reactapp`_ uses `Redux` to store jobs, but also uses regular `React states` when building forms or displaying results. This was done so you don't have to be too familiar with Redux when building new modules. The codebase is largely JSX+ES6.
+
+Adding a New Task Card
+----------------------
 
 The first thing you'll want to do is add a description of your module to `api.js`_. For example, the old analyses const is:
 
@@ -331,6 +349,9 @@ If we added a new module called `ml`, analyses might be:
   }]
 
 This will create a new card for in tasks at the root page.
+
+Adding a New Task Form
+----------------------
 
   A note on terminology: we consider `containers` to be *Redux-aware*; that is, they require the `connect()` function from `react-redux`. `Components` are generally not directly connected to Redux and instead get information from the Redux store passed down to it via the componenet's `props`. Note that this is not strictly true as we make use of `react-refetch`, which is a fork of Redux and uses a separate `connect()` function, to poll for job statuses and results. However, the interaction between `react-refetch` and `redux` is largely abstracted away from you and instead maps a components props directly to updates via `react-refetch` - you don't have to dispatch actions or pull down updates separately.
 
@@ -686,6 +707,9 @@ would become:
     </Switch>
 
 Now your form will render at `/ml`.
+
+Adding a Results Page
+---------------------
 
 When your form dispatches an `addJob` action to Redux, the `/results` page will automatically populate and poll for the status of your job. You'll now need to add a component to display the results to the user. For tabular results, we use the `react-bootstrap-table`_ package. You can look at `/src/components/ResultsFishers.js`_ as a starting point.
 
