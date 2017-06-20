@@ -771,6 +771,19 @@ which is used for exporting to .csv. And in between the TableHeaderColumn tags:
 
 The `#Present QueryB` is used when displaying the webpage.
 
+Finally, in `/src/components/ResultsTemplates.js`_ import you component:
+
+.. code-block:: jsx
+
+  import ResultML from './ResultML'
+
+and add the case to the switch which decides which result view to return:
+
+.. code-block:: javascript
+
+  case "ml":
+      return <ML jobId={job.hash} />
+
 .. _`reactapp`: https://github.com/superphy/reactapp
 .. _`supervisord-rq.conf`: https://github.com/superphy/backend/blob/master/app/supervisord-rq.conf
 .. _`install node`: https://nodejs.org/en/
@@ -780,6 +793,7 @@ The `#Present QueryB` is used when displaying the webpage.
 .. _`Subtyping.js`: https://github.com/superphy/reactapp/blob/master/src/containers/Subtyping.js
 .. _`/src/containers/App.js`: https://github.com/superphy/reactapp/blob/master/src/containers/App.js
 .. _`/src/components/ResultsFishers.js`: https://github.com/superphy/reactapp/blob/master/src/components/ResultFishers.js
+.. _`/src/components/ResultsTemplates.js`: https://github.com/superphy/reactapp/blob/master/src/components/ResultsTemplates.js
 
 Directly Adding a New Module
 ============================
