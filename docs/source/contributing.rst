@@ -121,7 +121,7 @@ There are a few ways of adding a new module:
 2. Add a enqueuing method to Spfy's code, but then create a new queue and a new docker image, with additional dependencies, which is added to Spfy's docker-compose.yml file.
 3. Setting up your module as a microservice running in its own Docker container, add a worker to handle requests to RQ.
 
-Currently, we only support option 1.
+Currently, we only have documentation supporting option 1.
 
 If you wish to integrate your code with Spfy, you'll have to update any dependencies to the underlying Conda-based image the RQ workers depend on. You'll also have to include your code in the `/app` directory of this repo, as that is the only directory the current RQ workers contain. The intended structure is to create a directory in `/app/modules` for your codebase and a `.py` file above at `/app/modules/newmodule.py`, for example, which contains the method your `Queue.enqueue()` function uses.
 
@@ -200,7 +200,7 @@ Of note is that when calling RQ's enqueue() method, a custom Job class is return
 
   16515ba5-040d-4315-9c88-a3bf5bfbe84e
 
-Generally, we expect the return from Flask (to the front-end) to be a dictionary with the job id as the key to another dictionary with keys `analysis` and `file` (if relevant). For example, a return might be:
+Generally, we expect the return from Flask (to the front-end) to be a dictionary with the job id as the key to another dictionary with keys `analysis` and `file` (if relevant), though this is not strictly required (a single line containing the key will also work, as you handle naming of analysis again when doing a `dispatch()` in `reactapp`_ - more on this later). For example, a return might be:
 
 .. code-block:: python
 
@@ -209,7 +209,7 @@ Generally, we expect the return from Flask (to the front-end) to be a dictionary
     "file": "/datastore/2017-06-14-21-26-43-375215-GCA_001683595.1_NGF2_genomic.fna"
   }
 
-It is expected that only 1 job id be returned per request. In `v4.2.2`_ we introduced the concept of `blob` ids in which dependency checking is handled server-side; you can find more details about this in `reactapp issue #30`_ and `backend issue #90`_. The concept is only relevant if you handle parallelism & pipelines for a given task (ex. Subtyping) through multiple RQ jobs (ex. QC, ID Reservation, ECTyper, RGI, parsing, etc.); if you handle parallelism in your own codebase, then this isn't required.
+It is expected that only 1 job id be returned per request. In `v4.2.2`_ we introduced the concept of `blob` ids in which dependency checking is handled server-side; you can find more details about this in `reactapp issue #30`_ and `backend issue #90`_. The Redis DB was also set to run in persistant-mode, with results stored to disk inside a docker volume. The `blob` concept is only relevant if you handle parallelism & pipelines for a given task (ex. Subtyping) through multiple RQ jobs (ex. QC, ID Reservation, ECTyper, RGI, parsing, etc.); if you handle parallelism in your own codebase, then this isn't required.
 
 Another point to note is that the:
 
@@ -626,13 +626,13 @@ We can take a look at a simpler example in `Fishers.js`_ where there aren't mult
 
 First you'd want to change the POST route so it targets your new endpoint.
 
-. code-block:: jsx
+.. code-block:: jsx
 
   axios.post(API_ROOT + 'someroute', {
 
 Note that `API_ROOT` prepends the `api/v0/` so the full route might be `api/v0/someroute`.
 
-Now we need to dispatch an `addJob` action to Redux. This stores the job information in our Redux store, under the `jobs` list. In our example, we used a function to generate the description, but if you were to add a dispatch for your `ml` module, for example, you might do something like:
+Now we need to dispatch an `addJob` action to Redux. This stores the job information in our Redux store, under the `jobs` list. In our example, we used a function to generate the description, but if you were to add a dispatch for your `ml` module you might do something like:
 
 .. code-block:: jsx
 
