@@ -129,8 +129,6 @@ There is more specific documentation for this process in `Directly Adding a New 
 
 If you wish to create your own image, you can use the RQ `worker`_ image as a starting point. Specifically you'll want to add your repo as a git submodule in `superphy/backend` and modify the `COPY ./app /app` to target your repo, similar to the way `reactapp`_ is included. You'll also want to take a look at the `supervisord-rq.conf`_ which controls the RQ workers. 
 
-There is more specific documentation for this process in `Indirectly Adding a New Module`_.
-
 In both cases, the spfy webserver will have to be modified in order for the front-end to have an endpoint target; this is documented in `Adding an Endpoint in Flask`_. The front-end will also have to be modified for there to be a form to submit tasks and have a results view generated for your new module; this is documented in `Modifying the Front-End`_.
 
 Directly Adding a New Module
@@ -215,20 +213,27 @@ Then specific your image in the corresponding Dockerfiles: `worker`_. If you're 
 Integrating your Codebase into Spfy
 -----------------------------------
 
-Indirectly Adding a New Module
-==============================
+There are two ways of approaching this:
 
-Adding your Repo as a Git Submodule
------------------------------------
+1. If you're not using any of Spfy's codebase, add your code as a git submodule in `/app/modules/`
+2. If you are using Spfy's codebase, fork and create a directory in `/app/modules/` with your code.
 
-Picking a Base Docker Image
----------------------------
+In both cases, you should add a method in `/app/module/pickaname.py` which enqueues a call to your package. More information on this is documated at `Enqueing a Job to RQ`_.
 
-Adding your Dependencies
-------------------------
+To add a git submodule, clone the repo and create a branch:
 
-Updating Docker-Compose.yml
----------------------------
+.. code-block:: sh
+
+  git clone --recursive https://github.com/superphy/backend.git && cd backend/
+  git checkout -b somenewmodule
+
+You can then add your repo and commit it to `superphy/backend` as usual:
+
+.. code-block:: sh
+
+  git submodule add https://github.com/chaconinc/DbConnector app/modules/DbConnector
+  git add .
+  git commit -m 'ADD: my new module'
 
 Adding an Endpoint in Flask
 ===========================
@@ -279,7 +284,7 @@ Enqueing a Job to RQ
 
 You will then have to enqueue a job, based off that request form. There is an example of how form parsing is handled for Subtyping in the `upload()` method of `ra_posts.py`_.
 
-If you're integrating your codebase with Spfy, add your code to a new directory in `/app/modules` and a method to enqueue in `/app/modules/somemodule.py` for example. The `gc.py`_ file resembles a basic template for a method to enqueue. 
+If you're integrating your codebase with Spfy, add your code to a new directory in `/app/modules` and a method which handles enqueing in `/app/modules/somemodule.py` for example. The `gc.py`_ file resembles a basic template for a method to enqueue. 
 
 .. code-block:: python
 
