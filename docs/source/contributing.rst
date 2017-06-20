@@ -263,7 +263,10 @@ Modifying the Front-End
 
 I'd recommend you leave Spfy's setup running in Docker-Compose and run the reactapp live so you can see immediate updates.
 
-To get started, `install node`_ and then `install yarn`_. 
+To get started, `install node`_ and then `install yarn`_. For debugging, I also recommend using Google Chrome and installing the `React Dev Tools`_ and `Redux Dev Tools`_.
+
+.. _`React Dev Tools`: https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi?hl=en
+.. _`Redux Dev Tools`: https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd?hl=en
 
 Then, with Spfy's composition running, you'll want to clone `reactapp`_ and modify `ROOT` api address in `api.js`_ to point to your localhost:
 
@@ -329,155 +332,311 @@ If we added a new module called `ml`, analyses might be:
 
 This will create a new card for in tasks at the root page.
 
-Then create a container in `/src/containers` which will be your request form. You can look at `Fishers.js`_ for an example.
+  A note on terminology: we consider `containers` to be *Redux-aware*; that is, they require the `connect()` function from `react-redux`. `Components` are generally not directly connected to Redux and instead get information from the Redux store passed down to it via the componenet's `props`. Note that this is not strictly true as we make use of `react-refetch`, which is a fork of Redux and uses a separate `connect()` function, to poll for job statuses and results. However, the interaction between `react-refetch` and `redux` is largely abstracted away from you and instead maps a components props directly to updates via `react-refetch` - you don't have to dispatch actions or pull down updates separately.
+
+Then create a container in `/src/containers` which will be your request form. You can look at `Subtyping.js`_ for an example.
 
 .. code-block:: jsx
 
   import React, { PureComponent } from 'react';
-  import GroupsForm from '../containers/GroupsForm'
-  import Loading from '../components/Loading'
-  // axios is a http client lib
-  import axios from 'axios'
-  import { API_ROOT } from '../middleware/api'
-  // Snackbar
-  import Snackbar from 'material-ui/Snackbar';
-  import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+  // react-md
+  import FileInput from 'react-md/lib/FileInputs';
+  import Checkbox from 'react-md/lib/SelectionControls/Checkbox'
+  import TextField from 'react-md/lib/TextFields';
+  import Button from 'react-md/lib/Buttons';
+  import Switch from 'react-md/lib/SelectionControls/Switch';
+  import Subheader from 'react-md/lib/Subheaders';
+  import CircularProgress from 'react-md/lib/Progress/CircularProgress';
   // redux
   import { connect } from 'react-redux'
   import { addJob } from '../actions'
-  import { fishersDescription } from '../middleware/fishers'
+  import { subtypingDescription } from '../middleware/subtyping'
+  // axios
+  import axios from 'axios'
+  import { API_ROOT } from '../middleware/api'
+  // router
+  import { Redirect } from 'react-router'
+  import Loading from '../components/Loading'
 
-  class Fishers extends PureComponent {
+  class Subtyping extends PureComponent {
     constructor(props) {
       super(props);
       this.state = {
+        file: null,
+        pi: 90,
+        amr: false,
+        serotype: true,
+        vf: true,
+        submitted: false,
+        open: false,
+        msg: '',
         jobId: "",
         hasResult: false,
-        open: false, //for the snackbar
-        msg: ""
+        groupresults: true,
+        progress: 0
       }
-      this.handleChangeSubmit = this.handleChangeSubmit.bind(this);
     }
-    handleChangeSubmit(groups, target){
-      // form validations
-      let valid = true
-      // check groups
-      for(let i in groups){
-        for(let j in groups[i]){
-          let relation = groups[i][j]
-          // check that all attributes are set (which req all relations to be set)
-          if(!relation.attribute > 0){
-            console.log('Form failed valid for attribute: ' + relation.attribute)
-            this.setState({
-              msg: "Please select an attribute for Group " + i + " Relation " + j
-            });
-            valid = false
-          }
-          // check that all necessary joining operators are set
-          // only check logical operators for joining relations
-          if(j < groups[i].length-1){
-            if(!relation.logical){
-              console.log('Form failed valid for logical: ' + relation.logical)
-              this.setState({
-                msg: "Please select a logical operator for Group " + i + " Relation " + j
-              });
-              valid = false
-            }
+    _selectFile = (file) => {
+      console.log(file)
+      if (!file) { return; }
+      this.setState({ file });
+    }
+    _updatePi = (value) => {
+      this.setState({ pi: value });
+    }
+    _updateSerotype = (value) => {
+      this.setState({ serotype: value })
+    }
+    _updateAmr = (value) => {
+      this.setState({ amr: value })
+    }
+    _updateVf = (value) => {
+      this.setState({ vf: value })
+    }
+    _updateGroupResults = (groupresults) => {
+      this.setState({ groupresults })
+    }
+    _updateUploadProgress = ( progress ) => {
+      this.setState({progress})
+    }
+    _handleSubmit = (e) => {
+      e.preventDefault() // disable default HTML form behavior
+      // open and msg are for Snackbar
+      // uploading is to notify users
+      this.setState({
+        uploading: true
+      });
+      // configure a progress for axios
+      const createConfig = (_updateUploadProgress) => {
+        var config = {
+          onUploadProgress: function(progressEvent) {
+            var percentCompleted = Math.round( (progressEvent.loaded * 100) / progressEvent.total );
+            _updateUploadProgress(percentCompleted)
           }
         }
+        return config
       }
-      // check that a target was set
-      if(!target > 0){
-        valid = false
-        this.setState({
-          msg: "Please select a target"
-        });
-      }
-      // form validation complete
-      console.log(valid)
-      if(valid){
-        this.setState({
-          open: true,
-          msg: "Comparison was submitted"
-        });
-        // submit the form
-        axios.post(API_ROOT + 'newgroupcomparison', {
-          groups: groups,
-          target: target
+      // create form data with files
+      var data = new FormData()
+      // eslint-disable-next-line
+      this.state.file.map((f) => {
+        data.append('file', f)
+      })
+      // append options
+      // to match spfy(angular)'s format, we dont use a dict
+      data.append('options.pi', this.state.pi)
+      data.append('options.amr', this.state.amr)
+      data.append('options.serotype', this.state.serotype)
+      data.append('options.vf', this.state.vf)
+      // new option added in 4.2.0, group all files into a single result
+      // this means polling in handled server-side
+      data.append('options.groupresults', this.state.groupresults)
+      // put
+      axios.post(API_ROOT + 'upload', data, createConfig(this._updateUploadProgress))
+        .then(response => {
+          console.log(response)
+          // no longer uploading
+          this.setState({
+            uploading: false
+          })
+          let jobs = response.data
+          // handle the return
+          for(let job in jobs){
+            let f = (this.state.file.length > 1 ?
+            String(this.state.file.length + ' Files')
+            :this.state.file[0].name)
+            if(jobs[job].analysis === "Antimicrobial Resistance"){
+              this.props.dispatch(addJob(job,
+                "Antimicrobial Resistance",
+                new Date().toLocaleTimeString(),
+                subtypingDescription(f, this.state.pi, false, false, this.state.amr)
+              ))
+            } else if (jobs[job].analysis === "Virulence Factors and Serotype") {
+              let descrip = ''
+              if (this.state.vf && this.state.serotype){descrip = "Virulence Factors and Serotype"}
+              else if (this.state.vf && !this.state.serotype) {descrip = "Virulence Factors"}
+              else if (!this.state.vf && this.state.serotype) {descrip = "Serotype"}
+              this.props.dispatch(addJob(job,
+                descrip,
+                new Date().toLocaleTimeString(),
+                subtypingDescription(f, this.state.pi, this.state.serotype, this.state.vf, false)
+              ))
+            } else if (jobs[job].analysis === "Subtyping") {
+              // set the jobId state so we can use Loading
+              const jobId = job
+              this.setState({jobId})
+              // dispatch
+              this.props.dispatch(addJob(job,
+                "Subtyping",
+                new Date().toLocaleTimeString(),
+                subtypingDescription(
+                  f , this.state.pi, this.state.serotype, this.state.vf, this.state.amr)
+              ))
+            }
+          }
+          const hasResult = true
+          this.setState({hasResult})
         })
-          .then(response => {
-            console.log(response);
-            const jobId = response.data;
-            const hasResult = true;
-            this.setState({jobId})
-            this.setState({hasResult})
-            // add jobid to redux store
-            this.props.dispatch(addJob(jobId,
-              'fishers',
-              new Date().toLocaleTimeString(),
-              fishersDescription(groups, target)
-            ))
-          });
-      } else {
-        this.setState({
-          open: true
-        });
-      }
-    }
-    // Snackbar
-    handleRequestClose = () => {
-      this.setState({
-        open: false,
-      });
     };
-    render() {
+    render(){
+      const { file, pi, amr, serotype, vf, groupresults, uploading, hasResult, progress } = this.state
       return (
-        <div className="md-grid">
-          {!this.state.hasResult ? <GroupsForm handleChangeSubmit={this.handleChangeSubmit} /> : <Loading jobId={this.state.jobId} />}
-          <MuiThemeProvider>
-            <Snackbar
-              open={this.state.open}
-              message={this.state.msg}
-              autoHideDuration={4000}
-              onRequestClose={this.handleRequestClose}
-            />
-          </MuiThemeProvider>
+        <div>
+          {/* uploading bar */}
+          {(uploading && !hasResult) ?
+            <div>
+              <CircularProgress key="progress" id="loading" value={progress} centered={false} />
+              Uploading... {progress} %
+            </div>
+            : ""
+          }
+          {/* actual form */}
+          {(!hasResult && !uploading)?
+            <form className="md-text-container md-grid">
+              <div className="md-cell md-cell--12">
+                <FileInput
+                  id="inputFile"
+                  secondary
+                  label="Select File(s)"
+                  onChange={this._selectFile}
+                  multiple
+                />
+                <Switch
+                  id="groupResults"
+                  name="groupResults"
+                  label="Group files into a single result"
+                  checked={groupresults}
+                  onChange={this._updateGroupResults}
+                />
+                {!groupresults ?
+                  <Subheader primaryText="(Will split files & subtyping methods into separate results)" inset />
+                : ''}
+                <Checkbox
+                  id="serotype"
+                  name="check serotype"
+                  checked={serotype}
+                  onChange={this._updateSerotype}
+                  label="Serotype"
+                />
+                <Checkbox
+                  id="vf"
+                  name="check vf"
+                  checked={vf}
+                  onChange={this._updateVf}
+                  label="Virulence Factors"
+                />
+                <Checkbox
+                  id="amr"
+                  name="check amr"
+                  checked={amr}
+                  onChange={this._updateAmr}
+                  label="Antimicrobial Resistance"
+                />
+                {amr ?
+                  <Subheader primaryText="(Note: AMR increases run-time by several minutes per file)" inset />
+                : ''}
+                <TextField
+                  id="pi"
+                  value={pi}
+                  onChange={this._updatePi}
+                  helpText="Percent Identity for BLAST"
+                />
+                <Button
+                  raised
+                  secondary
+                  type="submit"
+                  label="Submit"
+                  disabled={!file}
+                  onClick={this._handleSubmit}
+                />
+              </div>
+              <div className="md-cell md-cell--12">
+                {this.state.file ? this.state.file.map(f => (
+                  <TextField
+                    key={f.name}
+                    defaultValue={f.name}
+                  />
+                )) : ''}
+              </div>
+            </form> :
+            // if results are grouped, display the Loading page
+            // else, results are separate and display the JobsList cards page
+            (!uploading?(!groupresults?
+              <Redirect to='/results' />:
+              <Loading jobId={this.state.jobId} />
+            ):"")
+          }
         </div>
-      );
+      )
     }
   }
 
-  Fishers = connect()(Fishers)
+  Subtyping = connect()(Subtyping)
 
-  export default Fishers
+  export default Subtyping
+
 
 The important part to note is the form submission:
 
 .. code-block:: jsx
 
-  axios.post(API_ROOT + 'newgroupcomparison', {
-          groups: groups,
-          target: target
-        })
-          .then(response => {
-            console.log(response);
-            const jobId = response.data;
-            const hasResult = true;
-            this.setState({jobId})
-            this.setState({hasResult})
-            // add jobid to redux store
-            this.props.dispatch(addJob(jobId,
-              'fishers',
-              new Date().toLocaleTimeString(),
-              fishersDescription(groups, target)
-            ))
-          });
+  axios.post(API_ROOT + 'upload', data, createConfig(this._updateUploadProgress))
+        .then(response => {
+          console.log(response)
+          // no longer uploading
+          this.setState({
+            uploading: false
+          })
+          let jobs = response.data
+          // handle the return
+          for(let job in jobs){
+            let f = (this.state.file.length > 1 ?
+            String(this.state.file.length + ' Files')
+            :this.state.file[0].name)
+            if(jobs[job].analysis === "Antimicrobial Resistance"){
+              this.props.dispatch(addJob(job,
+                "Antimicrobial Resistance",
+                new Date().toLocaleTimeString(),
+                subtypingDescription(f, this.state.pi, false, false, this.state.amr)
+              ))
 
-Note how we're dispatching an `addJob` action to Redux. This stores the job information in our Redux store, under the `jobs` list. In our example, we used a function to generate the description, but if you were to add a dispatch for your `ml` module, for example, you might do something like:
+(truncated)
+
+We can take a look at a simpler example in `Fishers.js`_ where there aren't multiple `jobs[job].analysis === "Antimicrobial Resistance"` analysis types in a single form.
 
 .. code-block:: jsx
 
   axios.post(API_ROOT + 'newgroupcomparison', {
+        groups: groups,
+        target: target
+      })
+        .then(response => {
+          console.log(response);
+          const jobId = response.data;
+          const hasResult = true;
+          this.setState({jobId})
+          this.setState({hasResult})
+          // add jobid to redux store
+          this.props.dispatch(addJob(jobId,
+            'fishers',
+            new Date().toLocaleTimeString(),
+            fishersDescription(groups, target)
+          ))
+        });
+
+First you'd want to change the POST route so it targets your new endpoint.
+
+. code-block:: jsx
+
+  axios.post(API_ROOT + 'someroute', {
+
+Note that `API_ROOT` prepends the `api/v0/` so the full route might be `api/v0/someroute`.
+
+Now we need to dispatch an `addJob` action to Redux. This stores the job information in our Redux store, under the `jobs` list. In our example, we used a function to generate the description, but if you were to add a dispatch for your `ml` module, for example, you might do something like:
+
+.. code-block:: jsx
+
+  axios.post(API_ROOT + 'someroute', {
           groups: groups,
           target: target
         })
@@ -528,13 +687,99 @@ would become:
 
 Now your form will render at `/ml`.
 
+When your form dispatches an `addJob` action to Redux, the `/results` page will automatically populate and poll for the status of your job. You'll now need to add a component to display the results to the user. For tabular results, we use the `react-bootstrap-table`_ package. You can look at `/src/components/ResultsFishers.js`_ as a starting point.
+
+.. _`react-bootstrap-table`: https://github.com/AllenFang/react-bootstrap-table
+
+.. code-block:: jsx
+
+  import React, { Component } from 'react';
+  import { connect } from 'react-refetch'
+  // progress bar
+  import CircularProgress from 'react-md/lib/Progress/CircularProgress';
+  // requests
+  import { API_ROOT } from '../middleware/api'
+  // Table
+  import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
+
+  class ResultFishers extends Component {
+    render() {
+      const { results } = this.props
+      const options = {
+        searchPosition: 'left'
+      };
+      if (results.pending){
+        return <div>Waiting for server response...<CircularProgress key="progress" id='contentLoadingProgress' /></div>
+      } else if (results.rejected){
+        return <div>Couldn't retrieve job: {this.props.jobId}</div>
+      } else if (results.fulfilled){
+        console.log(results)
+        return (
+          <BootstrapTable data={results.value.data} exportCSV search options={options}>
+            <TableHeaderColumn  isKey dataField='0' dataSort filter={ { type: 'TextFilter', placeholder: 'Please enter a value' } } width='400' csvHeader='Target'>Target</TableHeaderColumn>
+            <TableHeaderColumn  dataField='1' dataSort filter={ { type: 'TextFilter', placeholder: 'Please enter a value' } } csvHeader='QueryA'>QueryA</TableHeaderColumn>
+            <TableHeaderColumn  dataField='2' dataSort filter={ { type: 'TextFilter', placeholder: 'Please enter a value' } } csvHeader='QueryB'>QueryB</TableHeaderColumn>
+            <TableHeaderColumn  dataField='3' dataSort filter={ { type: 'TextFilter', placeholder: 'Please enter a value' } } width='140' csvHeader='#Present QueryA'>#Present QueryA</TableHeaderColumn>
+            <TableHeaderColumn  dataField='4' dataSort filter={ { type: 'TextFilter', placeholder: 'Please enter a value' } } width='140' csvHeader='#Absent QueryA'>#Absent QueryA</TableHeaderColumn>
+            <TableHeaderColumn  dataField='5' dataSort filter={ { type: 'TextFilter', placeholder: 'Please enter a value' } } width='140' csvHeader='#Present QueryB'>#Present QueryB</TableHeaderColumn>
+            <TableHeaderColumn  dataField='6' dataSort filter={ { type: 'TextFilter', placeholder: 'Please enter a value' } } width='140' csvHeader='#Absent QueryB'>#Absent QueryB</TableHeaderColumn>
+            <TableHeaderColumn  dataField='7' dataSort filter={ { type: 'TextFilter', placeholder: 'Please enter a value' } } width='140' csvHeader='P-Value'>P-Value</TableHeaderColumn>
+            <TableHeaderColumn  dataField='8' dataSort filter={ { type: 'TextFilter', placeholder: 'Please enter a value' } } width='140' csvHeader='Odds Ratio'>Odds Ratio</TableHeaderColumn>
+          </BootstrapTable>
+        );
+      }
+    }
+  }
+
+  export default connect(props => ({
+    results: {url: API_ROOT + `results/${props.jobId}`}
+  }))(ResultFishers)
+
+In the case of Fisher's, the response from Flask is generated by the:
+
+.. code-block:: python
+
+  df.to_json(orient='split')
+
+from the Pandas DataFrame. This creates an object with keys `columns`, `data`, and `index`. In particular, under the `data` key is an array of arrays:
+
+.. code-block:: jsx
+
+  [["https:\/\/www.github.com\/superphy#hlyC","O111","O24",1.0,0.0,0.0,1.0,null,1.0],["https:\/\/www.github.com\/superphy#hlyB","O111","O24",1.0,0.0,0.0,1.0,null,1.0],["https:\/\/www.github.com\/superphy#hlyA","O111","O24",1.0,0.0,0.0,1.0,null,1.0]]
+
+(only an example, the full results.value.data array is 387 arrays long, and can vary)
+
+Note that we use
+
+.. code-block:: jsx
+
+  dataField='5'
+
+for example, which we apply to:
+
+.. code-block:: jsx
+
+  csvHeader='#Present QueryB'
+
+which is used for exporting to .csv. And in between the TableHeaderColumn tags:
+
+.. code-block:: jsx
+
+  <TableHeaderColumn>#Present QueryB</TableHeaderColumn>
+
+(options removed)
+
+The `#Present QueryB` is used when displaying the webpage.
+
 .. _`reactapp`: https://github.com/superphy/reactapp
 .. _`supervisord-rq.conf`: https://github.com/superphy/backend/blob/master/app/supervisord-rq.conf
 .. _`install node`: https://nodejs.org/en/
 .. _`install yarn`: https://yarnpkg.com/en/docs/install#mac-tab
 .. _`api.js`: https://github.com/superphy/reactapp/blob/master/src/middleware/api.js
 .. _`Fishers.js`: https://github.com/superphy/reactapp/blob/master/src/containers/Fishers.js
+.. _`Subtyping.js`: https://github.com/superphy/reactapp/blob/master/src/containers/Subtyping.js
 .. _`/src/containers/App.js`: https://github.com/superphy/reactapp/blob/master/src/containers/App.js
+.. _`/src/components/ResultsFishers.js`: https://github.com/superphy/reactapp/blob/master/src/components/ResultFishers.js
 
 Directly Adding a New Module
 ============================
