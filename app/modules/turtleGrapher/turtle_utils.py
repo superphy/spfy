@@ -1,3 +1,4 @@
+import urlparse
 import config  # this is the config.py
 from rdflib import Namespace, URIRef, Literal
 
@@ -38,6 +39,9 @@ def generate_uri(uri, s=''):
     if isinstance(uri, URIRef):
         s = slugify(s)
         return URIRef(str(uri) + s)
+    elif type(uri) is str and 'http' in uri:
+        # if you called with a string in the form of a url
+        return URIRef(uri)
 
     prefix = uri.split(':')[0]
     postfix = uri.split(':')[1]

@@ -1,7 +1,6 @@
 import os
 import tarfile
 import zipfile
-import json
 import logging
 from modules.loggingFunctions import initialize_logging
 from flask import current_app
@@ -59,13 +58,6 @@ def fix_uri(s):
     uri = URIRef(s)
     return uri
 
-def is_json(myjson):
-  try:
-    json_object = json.loads(myjson)
-  except:
-    return False
-  return True
-
 def to_readable(values,readable):
     '''
     Converts URI to human readable form.
@@ -82,7 +74,7 @@ def to_readable(values,readable):
             except:
                 log.error('to_readable(): No readable form found for ' + value)
                 st.add(value)
-        if type(uris) is set:
+        if type(values) is set:
             return st
         else:
             return list(st)
