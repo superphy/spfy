@@ -144,7 +144,7 @@ NOTE: everything (rq workers, uwsgi, etc.) run inside ``/app``, and all python i
 
   from modules.blazeUploader.reserve_id import write_reserve_id
 
-The top-most directory is used to build Docker Images and copies the contents of ``/app`` to run inside the containers.
+The top-most directory is used to build Docker Images and copies the contents of ``/app`` to run inside the containers. This is done as the apps (Flask, Reactapp) themselves don't need copies of the Dockerfiles, other apps, etc.
 
 About the Existing Codebase
 ---------------------------
