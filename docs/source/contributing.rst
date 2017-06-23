@@ -984,10 +984,38 @@ Alternatively, to run docker-compose in detached-head mode (where the compositio
 Debugging
 =========
 
+You can see all the containers on your host computer by running:
+
+.. code-block:: sh
+
+  docker ps
+
+When running commands within ``/backend`` (at the same location as the ``docker-compose.yml`` file), you can see the composition-specific containers by running:
+
+.. code-block:: sh
+
+  docker-compose logs
+
+Within the repo, you can also see logs for specific containers by referencing the service name, as defined in the ``docker-compose.yml`` file. For example, logs for the Flask webserver can be retrieved by running:
+
+.. code-block:: sh
+
+  docker-compose logs webserver
+
+or for Blazegraph:
+
+.. code-block:: sh
+
+  docker-compose logs blazegraph
+
+To clean up after Docker, see the excellent Digital Ocean guide on `How To Remove Docker Images, Containers, and Volumes`_.
+
+.. _`How To Remove Docker Images, Containers, and Volumes`: https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes
+
 Monitoring Flask
 ----------------
 
-Two options:
+Three options:
 
 1. Docker captures all `stdout` messages into Docker's logs. You can see them by running:
 
@@ -996,6 +1024,8 @@ Two options:
     docker logs backend_webserver_1
 
 2. Flask is also configured to report errors via Sentry; copy your DSN key and uncomment the ``SENTRY_DSN`` option in ``/app/config.py``.
+
+3. Drop a shell info the webserver container, then you can run explore the file structure from there. The webserver will typically run as ``backend_webserver_1``. Note that there won't be any ``access.log`` or similar as this information is collected through Docker's logs.
 
 Monitoring RQ
 -------------
