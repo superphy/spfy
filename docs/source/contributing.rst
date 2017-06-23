@@ -12,6 +12,8 @@ We use Docker and Docker-Compose for managing the databases: Blazegraph and Redi
 
 You'll probably also want to `install Miniconda`_ as we bundle most dependencies in Conda environments.
 
+Note that there is a `Debugging`_ section dedicated to tracking down the source of problems you may encounter.
+
 .. _`Install Docker Compose guide`: https://docs.docker.com/compose/install/
 .. _`install Miniconda`: https://conda.io/docs/install/quick.html
 
@@ -257,6 +259,8 @@ To create a new endpoint in Flask, you'll have to:
 1. Create a Blueprint with your route(s) and register it to the app.
 2. Enqueue a job in RQ
 3. Return the job id via Flask to the front-end
+
+We recommend you perform the setup in `Monitoring RQ`_ before you begin.
 
 Creating a Blueprint
 --------------------
@@ -962,3 +966,39 @@ Alternatively, to run docker-compose in detached-head mode (where the compositio
 .. code-block:: sh
 
   docker-compose up -d
+
+Debugging
+=========
+
+Monitoring RQ
+-------------
+
+To monitor the status of RQ tasks and check on failed jobs, you have two options:
+
+1. Ideally, setup a https://sentry.io account and copy your DSN into
+   ``/app/config.py``
+2. Port 9181 is mapped to host on Service ``backend-rq``, you can use
+   ``rq-dashboard`` via:
+
+  1. ``docker exec -it backend_worker_1 sh`` this drops a shell into the
+     rq worker container which has rq-dashboard installed via conda
+  2. ``rq-dashboard -H redis`` runs rq-dashboard and specifies the *redis*
+     host automatically defined by docker-compose
+  3. then on your host machine visit http://localhost:9181
+
+We recommend using ``RQ-dashboard`` to see jobs being enqueued live when testing as ``Sentry`` only reports failed jobs. On remote deployments, we use ``Sentry`` for error reporting.
+
+Note: both options only report errors in RQ, not for the Flask webserver.
+
+Editing the Docs
+================
+
+Setup
+-----
+
+.. code-block:: sh
+
+  cd docs/
+  sphinx-autobuild source _build_html
+
+Then you can visit http://localhost:8000 to see you changes live. Note that it uses the default python theme locally, and the default readthedocs theme when pushed.

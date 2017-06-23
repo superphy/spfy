@@ -169,21 +169,6 @@ public key to ``$scope.model`` dictionary under the key ``key`` 4. In
 corresponding public and private ('site' and 'secret') keys. 5. Rebuild
 your docker images.
 
-Debugging:
-----------
-
--  Ideally, setup a https://sentry.io account and copy your DSN into
-   ``/app/config.py``
--  Alternatively:
--  Port 9181 is mapped to host on Service ``backend-rq``, you can use
-   ``rq-dashboard`` via:
-
-1. ``docker exec -it backend_worker_1 sh`` this drops a shell into the
-   rq worker container which has rq-dashboard installed via conda
-2. ``rq-dashboard -H redis`` runs rq-dashboard and specifies the *redis*
-   host automatically defined by docker-compose
-3. then on your host machine visit http://localhost:9181
-
 Blazegraph:
 -----------
 
