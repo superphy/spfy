@@ -164,4 +164,11 @@ put the ontology in ``app/``
    :target: http://superphy.readthedocs.io/en/latest/?badge=latest
    :alt: Documentation Status
 
+Contributing:
+-------------
+
+Steps required to add new modules are documented in the `Developer Guide`_.
+
+.. _`Developer Guide`: http://superphy.readthedocs.io/en/latest/contributing.html
+
 .. tag:intro-end
