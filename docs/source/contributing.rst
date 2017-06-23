@@ -38,7 +38,8 @@ genome files in total a .zip of which is available within the NML.
 Docker Caveats
 --------------
 
-We've had problems with Ubuntu Desktop versions 16.04.2 LTS and 17.04 not connecting to NPM when building Docker images and from within the building. Builds work fine with Ubuntu Server 16.04.2 LTS on Cybera and for Ubuntu Server 12.04 or 14.04 LTS on Travis-CI. Within the building, RHEL-based operating systems (CentOS / Scientific Linux) build our NPM-dependent images (namely, `reactapp`_) just fine.
+We've had problems with Ubuntu Desktop versions 16.04.2 LTS and 17.04, and Ubuntu Server 16.04.2 LTS not connecting to NPM when building Docker images and from within the building. Builds work fine with Ubuntu Server 16.04.2 LTS on Cybera and for Ubuntu Server 12.04 or 14.04 LTS on Travis-CI. Within the building, RHEL-based operating systems (CentOS / Scientific Linux) build our NPM-dependent images (namely, `reactapp`_) just fine.
+UPDATE: (June 22'17) Tested this at home on Ubuntu Server Ubuntu 16.04.2 LTS and it builds fine. Looks like this is isolated to within the buildng @NML Lethbridge.
 
 For RHEL-based OSs, I don't recommend using `devicemapper`, but instead use `overlayfs`. Reasons are documented at https://github.com/moby/moby/issues/3182. There is a guide on setting up Docker with `overlayfs` at https://dcos.io/docs/1.7/administration/installing/custom/system-requirements/install-docker-centos/, though I haven't personally tested it.
 UPDATE: (June 22'17) Came across a guide written by a Red Hat dev. http://www.projectatomic.io/blog/2015/06/notes-on-fedora-centos-and-docker-storage-drivers/
