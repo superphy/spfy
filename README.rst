@@ -25,8 +25,6 @@ Use:
 5. Visit http://localhost:8090
 6. Eat cake :cake:
 
-NOTE: The rest of the docs are in the process of being updated.
-
 Architecture:
 -------------
 
@@ -124,50 +122,8 @@ done by sha1 hashes of the submitted files and non-duplicates have their
 IDs reserved by linking the generated spfyID to the file hash. Worker
 management in handled in ``supervisor``.
 
-The ``superphy/backend:2.0.0`` which runs the main web app uses
+The ``superphy/backend:2.0.0`` which runs the Flask endpoints uses
 ``supervisor`` to manage inner processes: ``nginx``, ``uWsgi``.
-
-Extending:
-----------
-
-The ``blob_savvy()`` in ``/app/modules/spfy.py`` handles the separation
-of multiple-file inputs into single file calls. The
-``blob_savvy_enqueue()``, called by ``blob_savvy()``, manages the RQ
-pipeline for processing an individual file. Say you wanted to add a
-example analysis called ``penguin``:
-
-1. NOTE: everything (rq workers, uwsgi, etc.) run inside ``/app``, import should be relative to this.
-Example:
-``from modules.blazeUploader.reserve_id import write_reserve_id``. The
-top-most directory is used to build Docker Images and copies the
-contents of ``/app`` to run inside the containers.
-2. Write a ``blob_penguin_enqueue()`` to handle your enqueueing of your
-analysis-specific pipeline.
-3. Add the ``blob_penguin_enqueue()`` call to ``blob_savvy()``.
-4. If you want to store the results to Blazegraph, you can add that to your pipeline. In ``savvy``, the graph generation is handled in ``/app/modules/turtleGrapher/datastruct_savvy.py``, you can use that as an example. Note that the ``upload_graph()`` call is made within ``datastruct_savvy.py``; this is done to avoid having to pass the resulting ``rdflib.Graph`` object between tasks. Also, the base graph (only containing information about the file, without any results from analyses) is handled by ``/app/modules/turtleGrapher/turtle_grapher.py``.
-5. If you want to return the results to the front-end, your ``blob_penguin_enqueue()``
-should return a nested dictionary in the format {*JobID*: {'file':
-*filename including path*, 'analysis': *type of analysis*}} where the
-italicized items are filled with the actual values and 'file'/'analysis'
-are string literals. Note that the 'file'/'analysis' are recommended,
-but not actually used by the front-end, only the *JobIDs* are. RQ's
-``.enqueue()`` returns the JobID by default. The front-end code is
-located in ``/app/static`` for the *js*/*css*/*img* files and in
-``/app/templates/index.html``. Once you've added your code, you can
-rebuild the docker images by doing the following in the repo root: 1.
-``docker-compose down`` 2. ``docker-compose build --no-cache`` 3.
-``docker-compose up``
-
-ReCaptcha Support:
-------------------
-
-To enable: 1. Get a pair of ReCaptcha keys from Google, specific to your
-site domain. 2. Uncomment the ``<!-- captcha-->`` code in
-``/app/templates/index.html`` 3. In ``/app/static/main.js``, add your
-public key to ``$scope.model`` dictionary under the key ``key`` 4. In
-``/app/config.py`` set ``RECAPTCHA_ENABLED`` to ``True`` and add your
-corresponding public and private ('site' and 'secret') keys. 5. Rebuild
-your docker images.
 
 Blazegraph:
 -----------

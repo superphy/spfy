@@ -138,6 +138,20 @@ In both cases, the spfy webserver will have to be modified in order for the fron
 Directly Adding a New Module
 ============================
 
+NOTE: everything (rq workers, uwsgi, etc.) run inside ``/app``, and all python imports should be relative to this. Such as
+
+.. code-block:: python
+
+  from modules.blazeUploader.reserve_id import write_reserve_id
+
+The top-most directory is used to build Docker Images and copies the contents of ``/app`` to run inside the containers.
+
+About the Existing Codebase
+---------------------------
+
+If you want to store the results to Blazegraph, you can add that to your pipeline. For subtyping tasks (ECTyper, RGI), the graph generation is handled in ``/app/modules/turtleGrapher/datastruct_savvy.py``, you can use that as an example. Note that the ``upload_graph()`` call is made within ``datastruct_savvy.py``; this is done to avoid having to pass the resulting ``rdflib.Graph`` object between tasks.
+Also, the base graph (only containing information about the file, without any results from analyses) is handled by ``/app/modules/turtleGrapher/turtle_grapher.py``.
+
 Adding Dependencies via Conda
 -----------------------------
 
