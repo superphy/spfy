@@ -38,9 +38,11 @@ genome files in total a .zip of which is available within the NML.
 Docker Caveats
 --------------
 
-We've had problems with Ubuntu Desktop versions 16.04.2 LTS and 17.04 not connecting to NPM when building Docker images and from within the building. Builds work fine with Ubuntu Server 16.04.2 LTS on Cybera and for Ubuntu Server 12.04 or 14.04 LTS on Travis-CI. Within the building, RHEL-based operating systems (CentOS / Scientific Linux) build our NPM-dependent images (namely, `reactapp`_) just fine.
+We've had problems with Ubuntu Desktop versions 16.04.2 LTS and 17.04, and Ubuntu Server 16.04.2 LTS not connecting to NPM when building Docker images and from within the building. Builds work fine with Ubuntu Server 16.04.2 LTS on Cybera and for Ubuntu Server 12.04 or 14.04 LTS on Travis-CI. Within the building, RHEL-based operating systems (CentOS / Scientific Linux) build our NPM-dependent images (namely, `reactapp`_) just fine.
+UPDATE: (June 22'17) Tested this at home on Ubuntu Server Ubuntu 16.04.2 LTS and it builds fine. Looks like this is isolated to within the buildng @NML Lethbridge.
 
 For RHEL-based OSs, I don't recommend using `devicemapper`, but instead use `overlayfs`. Reasons are documented at https://github.com/moby/moby/issues/3182. There is a guide on setting up Docker with `overlayfs` at https://dcos.io/docs/1.7/administration/installing/custom/system-requirements/install-docker-centos/, though I haven't personally tested it.
+UPDATE: (June 22'17) Came across a guide written by a Red Hat dev. http://www.projectatomic.io/blog/2015/06/notes-on-fedora-centos-and-docker-storage-drivers/
 
 If you do end up using `devicemapper` and run into disk space issues, such as:
 
@@ -127,7 +129,7 @@ If you wish to integrate your code with Spfy, you'll have to update any dependen
 
 There is more specific documentation for this process in `Directly Adding a New Module`_.
 
-If you wish to create your own image, you can use the RQ `worker`_ image as a starting point. Specifically you'll want to add your repo as a git submodule in `superphy/backend` and modify the `COPY ./app /app` to target your repo, similar to the way `reactapp`_ is included. You'll also want to take a look at the `supervisord-rq.conf`_ which controls the RQ workers. 
+If you wish to create your own image, you can use the RQ `worker`_ image as a starting point. Specifically you'll want to add your repo as a git submodule in `superphy/backend` and modify the `COPY ./app /app` to target your repo, similar to the way `reactapp`_ is included. You'll also want to take a look at the `supervisord-rq.conf`_ which controls the RQ workers.
 
 In both cases, the spfy webserver will have to be modified in order for the front-end to have an endpoint target; this is documented in `Adding an Endpoint in Flask`_. The front-end will also have to be modified for there to be a form to submit tasks and have a results view generated for your new module; this is documented in `Modifying the Front-End`_.
 
@@ -161,7 +163,7 @@ To get started, `install Miniconda`_ and clone the docker-flask-conda repo:
 Recreate the env:
 
 .. code-block:: sh
-  
+
   conda env create -f app/environment.yml
 
 Activate the env:
@@ -282,7 +284,7 @@ Note that a blueprint can have multiple routes defined in it such as in `ra_view
 and register your blueprint in `create_app()` by adding:
 
 .. code-block:: python
-  
+
   app.register_blueprint(bp_someroute)
 
 Note that we allow CORS on all routes of form `/api/*` such as `/api/v0/someroute`. This is required as the front-end `reactapp`_ is deployed in a separate container (and has a separate IP Address) from the Flask app.
@@ -296,7 +298,7 @@ Enqueing a Job to RQ
 
 You will then have to enqueue a job, based off that request form. There is an example of how form parsing is handled for Subtyping in the `upload()` method of `ra_posts.py`_.
 
-If you're integrating your codebase with Spfy, add your code to a new directory in `/app/modules` and a method which handles enqueing in `/app/modules/somemodule.py` for example. The `gc.py`_ file resembles a basic template for a method to enqueue. 
+If you're integrating your codebase with Spfy, add your code to a new directory in `/app/modules` and a method which handles enqueing in `/app/modules/somemodule.py` for example. The `gc.py`_ file resembles a basic template for a method to enqueue.
 
 .. code-block:: python
 
@@ -379,7 +381,7 @@ Normally, we distribute tasks between two main queues: `singles` and `multiples`
 If you wish to add your own Queue, you'll have to create some worker to listen to it. Ideally, do this by creating a new Docker container for your worker by copying the `worker`_ Dockerfile as your starting point then copying and modifying the `supervisord-rq.conf`_ to listen to your new queue. Specifically, the:
 
 .. code-block:: bash
-  
+
   command=/opt/conda/envs/backend/bin/rq worker -c config multiples
 
 would have to be modified to target the name of the new Queue your container listens to; by replacing `multiples` with `newqueue`, for example.
@@ -387,13 +389,13 @@ would have to be modified to target the name of the new Queue your container lis
 Eventually, we may wish to add priority queues once the number of tasks become large and we have long-running tasks alongside ones that should immediately return to the user. This can be defined by the order in which queues are named in the supervisord command:
 
 .. code-block:: bash
-  
+
   command=/opt/conda/envs/backend/bin/rq worker -c config multiples
 
 For example, queues `dog` and `cat` can be ordered:
 
 .. code-block:: bash
-  
+
   command=/opt/conda/envs/backend/bin/rq worker -c config dog cat
 
 which instructs the RQ workers to run tasks in `dog` first, before running tasks in `cat`.
@@ -411,7 +413,7 @@ To get started, `install node`_ and then `install yarn`_. For debugging, I also 
   Optionally, I like to run Spfy's composition on one of the Desktops while coding away on my laptop. You can do the same by modifying `ROOT` api address in `api.js`_ to point to a different IP address or name:
 
   .. code-block:: jsx
-    
+
     const ROOT = 'http://10.139.14.212:8000/'
 
 Then, with Spfy's composition running, you'll want to clone `reactapp`_ and run:
