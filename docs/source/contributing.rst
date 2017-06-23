@@ -41,7 +41,9 @@ Docker Caveats
 --------------
 
 We've had problems with Ubuntu Desktop versions 16.04.2 LTS and 17.04, and Ubuntu Server 16.04.2 LTS not connecting to NPM when building Docker images and from within the building. Builds work fine with Ubuntu Server 16.04.2 LTS on Cybera and for Ubuntu Server 12.04 or 14.04 LTS on Travis-CI. Within the building, RHEL-based operating systems (CentOS / Scientific Linux) build our NPM-dependent images (namely, `reactapp`_) just fine.
-UPDATE: (June 22'17) Tested this at home on Ubuntu Server Ubuntu 16.04.2 LTS and it builds fine. Looks like this is isolated to within the buildng @NML Lethbridge.
+UPDATE: (June 22'17) Tested this at home on Ubuntu Server 16.04.2 LTS and it builds fine. Looks like this is isolated to within the buildng @NML Lethbridge.
+
+.. note:: In general, we recommend you run Docker on Ubuntu 16.04.2 LTS (Server or Desktop) if you're outside the NML's Lethrbidge location. Otherwise, CentOS is a secondary option.
 
 For RHEL-based OSs, I don't recommend using `devicemapper`, but instead use `overlayfs`. Reasons are documented at https://github.com/moby/moby/issues/3182. There is a guide on setting up Docker with `overlayfs` at https://dcos.io/docs/1.7/administration/installing/custom/system-requirements/install-docker-centos/, though I haven't personally tested it.
 UPDATE: (June 22'17) Came across a guide written by a Red Hat dev. http://www.projectatomic.io/blog/2015/06/notes-on-fedora-centos-and-docker-storage-drivers/
@@ -125,7 +127,7 @@ There are a few ways of adding a new module:
 2. Add a enqueuing method to Spfy's code, but then create a new queue and a new docker image, with additional dependencies, which is added to Spfy's docker-compose.yml file.
 3. Setting up your module as a microservice running in its own Docker container, add a worker to handle requests to RQ.
 
-The quickest approach is option 1.
+.. note:: The quickest approach is to integrate your code into the Spfy codebase and update the RQ workers accordingly.
 
 If you wish to integrate your code with Spfy, you'll have to update any dependencies to the underlying Conda-based image the RQ workers depend on. You'll also have to include your code in the `/app` directory of this repo, as that is the only directory the current RQ workers contain. The intended structure is to create a directory in `/app/modules` for your codebase and a `.py` file above at `/app/modules/newmodule.py`, for example, which contains the method your `Queue.enqueue()` function uses.
 
@@ -138,7 +140,7 @@ In both cases, the spfy webserver will have to be modified in order for the fron
 Directly Adding a New Module
 ============================
 
-NOTE: everything (rq workers, uwsgi, etc.) run inside ``/app``, and all python imports should be relative to this. Such as
+.. warning:: Everything (rq workers, uwsgi, etc.) run inside ``/app``, and all python imports should be relative to this. Such as
 
 .. code-block:: python
 
@@ -498,7 +500,7 @@ This will create a new card for in tasks at the root page.
 Adding a New Task Form
 ----------------------
 
-  A note on terminology: we consider `containers` to be *Redux-aware*; that is, they require the `connect()` function from `react-redux`. `Components` are generally not directly connected to Redux and instead get information from the Redux store passed down to it via the component's `props`. Note that this is not strictly true as we make use of `react-refetch`, which is a fork of Redux and uses a separate `connect()` function, to poll for job statuses and results. However, the interaction between `react-refetch` and `redux` is largely abstracted away from you and instead maps a components props directly to updates via `react-refetch` - you don't have to dispatch actions or pull down updates separately.
+.. note:: On terminology: we consider `containers` to be *Redux-aware*; that is, they require the `connect()` function from `react-redux`. `Components` are generally not directly connected to Redux and instead get information from the Redux store passed down to it via the component's `props`. Note that this is not strictly true as we make use of `react-refetch`, which is a fork of Redux and uses a separate `connect()` function, to poll for job statuses and results. However, the interaction between `react-refetch` and `redux` is largely abstracted away from you and instead maps a components props directly to updates via `react-refetch` - you don't have to dispatch actions or pull down updates separately.
 
 Then create a container in `/src/containers` which will be your request form. You can look at `Subtyping.js`_ for an example.
 
