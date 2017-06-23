@@ -11,6 +11,7 @@ from routes.ra_posts import bp_ra_posts
 from routes.ra_statuses import bp_ra_statuses
 from flask_recaptcha import ReCaptcha
 from flask_cors import CORS, cross_origin
+from raven.contrib.flask import Sentry
 
 def create_app():
     app = Flask(__name__)
@@ -27,6 +28,10 @@ def create_app():
     recaptcha = ReCaptcha()
     recaptcha.init_app(app)
     cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
+    # sentry
+    if hasattr(config, 'SENTRY_DSN'):
+        sentry = Sentry(dsn=config.SENTRY_DSN)
+        sentry.init_app(app)
 
     app.register_blueprint(spfy)
     # register the new blueprints used by reactapp
