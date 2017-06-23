@@ -984,12 +984,25 @@ Alternatively, to run docker-compose in detached-head mode (where the compositio
 Debugging
 =========
 
+Monitoring Flask
+----------------
+
+Two options:
+
+1. Docker captures all `stdout` messages into Docker's logs. You can see them by running:
+
+  .. code-block:: sh
+
+    docker logs backend_webserver_1
+
+2. Flask is also configured to report errors via Sentry; copy your DSN key and uncomment the ``SENTRY_DSN`` option in ``/app/config.py``.
+
 Monitoring RQ
 -------------
 
 To monitor the status of RQ tasks and check on failed jobs, you have two options:
 
-1. Ideally, setup a https://sentry.io account and copy your DSN into
+1. Setup a https://sentry.io account and copy your DSN into
    ``/app/config.py``
 2. Port 9181 is mapped to host on Service ``backend-rq``, you can use
    ``rq-dashboard`` via:
@@ -1002,7 +1015,7 @@ To monitor the status of RQ tasks and check on failed jobs, you have two options
 
 We recommend using ``RQ-dashboard`` to see jobs being enqueued live when testing as ``Sentry`` only reports failed jobs. On remote deployments, we use ``Sentry`` for error reporting.
 
-Note: both options only report errors in RQ, not for the Flask webserver.
+Note: ``RQ-dashboard`` will not report errors from the Flask webserver.
 
 Editing the Docs
 ================
