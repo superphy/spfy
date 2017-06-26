@@ -13,11 +13,10 @@ def query_everything():
     Grabs all objectids having the relation.
     '''
     query = """
-    SELECT DISTINCT ?spfyId ?Genome ?otype ?htype ?Contig WHERE {{
+    SELECT DISTINCT ?spfyId ?Genome ?otype ?htype WHERE {{
+        ?s a :spfyId .
         ?s (:hasPart|:isFoundIn) ?o .
         ?Genome a g:Genome.
-        ?s (:hasPart|:isFoundIn) ?o2 .
-        ?o2 a g:Contig .
         ?s ge:0001076 ?otype .
         ?s ge:0001077 ?htype .
     }}
