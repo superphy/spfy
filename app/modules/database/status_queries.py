@@ -1,4 +1,5 @@
 import logging
+from modules.loggingFunctions import initialize_logging
 from modules.decorators import toset, tolist, tostring, prefix, submit
 
 # logging
