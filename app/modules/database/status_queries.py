@@ -15,12 +15,12 @@ def query_db_status():
     '''
     query = """
     SELECT DISTINCT ?spfyId ?Genome ?otype ?htype WHERE {{
-        ?spfyIdObject a :spfyId ; dc:identifier ?spfyId
-        ?spfyId (:hasPart|:isFoundIn) ?GenomeObject .
+        ?spfyIdObject a :spfyId ; dc:identifier ?spfyId .
+        ?spfyIdObject (:hasPart|:isFoundIn) ?GenomeObject .
         ?GenomeObject a g:Genome ; dc:description ?Genome
         OPTIONAL {
-            ?spfyId ge:0001076 ?otype .
-            ?spfyId ge:0001077 ?htype .
+            ?spfyIdObject ge:0001076 ?otype .
+            ?spfyIdObject ge:0001077 ?htype .
         }
     }}
     """
