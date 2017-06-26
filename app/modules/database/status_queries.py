@@ -1,11 +1,12 @@
 import logging
 from modules.loggingFunctions import initialize_logging
-from modules.decorators import toset, tolist, tostring, prefix, submit
+from modules.decorators import tojson, prefix, submit
 
 # logging
 log_file = initialize_logging()
 log = logging.getLogger(__name__)
 
+@tojson
 @submit
 @prefix
 def query_everything():
@@ -14,7 +15,7 @@ def query_everything():
     '''
     query = """
     SELECT DISTINCT ?spfyId ?Genome ?otype ?htype WHERE {{
-        ?s a :spfyId .
+        ?spfyId a :spfyId .
         ?s (:hasPart|:isFoundIn) ?Genome .
         ?Genome a g:Genome.
         OPTIONAL {
