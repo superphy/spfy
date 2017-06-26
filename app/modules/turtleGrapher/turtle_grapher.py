@@ -37,6 +37,12 @@ def generate_graph():
     graph.add((gu(':AntimicrobialResistanceGene'), gu('rdfs:subClassOf'), gu(':Marker')))
     graph.add((gu(':VirulenceFactor'), gu('rdfs:subClassOf'), gu(':Marker')))
 
+    # human-readable dc:description for edge types
+    graph.add((gu('ge:0001076'), gu('dc:description'), Literal('O-Type')))
+    graph.add((gu('ge:0001077'), gu('dc:description'), Literal('H-Type')))
+    # human-readable dc:description for object types
+    graph.add((gu('so:0001462'), gu('dc:description'), Literal('Bag of Contigs')))
+
     return graph
 
 def generate_turtle_skeleton(query_file):
