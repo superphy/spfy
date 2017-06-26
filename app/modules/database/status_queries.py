@@ -9,7 +9,7 @@ log = logging.getLogger(__name__)
 @tojson
 @submit
 @prefix
-def query_everything():
+def query_db_status():
     '''
     Grabs all objectids having the relation.
     '''
