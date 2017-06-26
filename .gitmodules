@@ -5,4 +5,3 @@
 [submodule "reactapp"]
 	path = reactapp
 	url = https://github.com/superphy/reactapp.git
-	branch = release-3.1.0
