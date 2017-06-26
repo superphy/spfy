@@ -27,6 +27,7 @@ def tojson(func):
             for k in keys:
                 # get the value at that key
                 d[k] = result[k]['value']
+            l.append(d)
         log.debug(l)
         return l
     return func_wrapper
