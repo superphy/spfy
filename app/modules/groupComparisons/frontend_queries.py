@@ -7,7 +7,7 @@ from SPARQLWrapper import SPARQLWrapper, JSON
 from modules.loggingFunctions import initialize_logging
 from modules.turtleGrapher.turtle_utils import generate_uri as gu
 from modules.groupComparisons.sparql_utils import generate_prefixes
-from modules.groupComparisons.decorators import toset, tolist, submit
+from modules.decorators import toset, tolist, submit
 
 # logging
 log_file = initialize_logging()

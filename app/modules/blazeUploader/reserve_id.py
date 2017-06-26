@@ -88,7 +88,7 @@ def reservation_triple(uriGenome, spfyid):
 
     # timestamp
     now = datetime.now()
-    now = now.strftime("%Y-%m-%d-%H-%M-%S-%f")
+    now = now.strftime("%Y-%m-%d")
     graph.add((uriGenome, gu('dc:date'), Literal(now)))
     return graph
 

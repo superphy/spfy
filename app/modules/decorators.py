@@ -11,6 +11,27 @@ log = logging.getLogger(__name__)
 blazegraph_url = config.database['blazegraph_url']
 #blazegraph_url = 'http://localhost:8080/bigdata/sparql'
 
+def tojson(func):
+    '''
+    A decorator to convert JSON response of sparql query to a simple string.
+    '''
+    @wraps(func)
+    def func_wrapper(*args, **kwargs):
+        results = func(*args, **kwargs)
+        l = []
+        for result in results['results']['bindings']:
+            # create a blank dictionary per result
+            d = {}
+            keys = sorted(result.keys())
+            # Note: though this is writeen as a loop, we expect only 1 key in keys
+            for k in keys:
+                # get the value at that key
+                d[k] = result[k]['value']
+            l.append(d)
+        log.debug(l)
+        return l
+    return func_wrapper
+
 def tostring(func):
     '''
     A decorator to convert JSON response of sparql query to a simple string.

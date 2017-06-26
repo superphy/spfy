@@ -10,7 +10,7 @@ Getting Started
 
 We use Docker and Docker-Compose for managing the databases: Blazegraph and Redis, the webserver: Nginx/Flask/Conda, and Redis-Queue (RQ) workers: mostly in Conda. The official `Install Docker Compose guide`_ lists steps for installing both the base Docker Engine, and for installing Docker-Compose separately if you're on Linux. For Mac and Windows users, Docker-Compose comes bundled with Docker Engine.
 
-You'll probably also want to `install Miniconda`_ as we bundle most dependencies in Conda environments.
+You'll probably also want to `install Miniconda`_ as we bundle most dependencies in Conda environments. Specific instructions to Spfy are available at 'Installing Miniconda'_.
 
 Note that there is a `Debugging`_ section dedicated to tracking down the source of problems you may encounter.
 
@@ -27,6 +27,24 @@ jobs, tasks           A job in RQ is typically called a task when discussing the
 endpoint, api         We prefer to use endpoint for a route in Flask which the front-end interacts with.
 spfy, this repo       The superphy/backend repo.
 ====================  =====
+
+Installing Miniconda
+--------------------
+
+For Linux-64 based distros, grab the Pyhon 2.7 Miniconda install script and install it (be sure to select the option to add Miniconda's path for your .bashrc):
+
+.. code-block:: sh
+
+  wget https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh
+  bash Miniconda2-latest-Linux-x86_64.sh
+
+Then get, install, and activate our Conda environment.yml:
+
+.. code-block:: sh
+
+  wget https://raw.githubusercontent.com/superphy/docker-flask-conda/master/app/environment.yml
+  conda env create -f environment.yml
+  source activate backend
 
 Genome Files for testing
 ------------------------
@@ -1003,6 +1021,12 @@ Within the repo, you can also see logs for specific containers by referencing th
 .. code-block:: sh
 
   docker-compose logs webserver
+
+or if you wanted the tail:
+
+.. code-block:: sh
+
+  docker-compose logs --tail=100 webserver
 
 or for Blazegraph:
 

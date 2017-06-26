@@ -4,7 +4,7 @@ import time
 from modules.loggingFunctions import initialize_logging
 from modules.turtleGrapher.turtle_utils import generate_uri as gu
 from modules.groupComparisons.sparql_utils import generate_prefixes
-from modules.groupComparisons.decorators import toset, tolist, tostring, prefix, submit
+from modules.decorators import toset, tolist, tostring, prefix, submit
 from modules.groupComparisons.frontend_queries import is_group
 
 # logging
