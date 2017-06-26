@@ -15,7 +15,7 @@ def query_everything():
     query = """
     SELECT DISTINCT ?spfyId ?Genome ?otype ?htype WHERE {{
         ?s a :spfyId .
-        ?s (:hasPart|:isFoundIn) ?o .
+        ?s (:hasPart|:isFoundIn) ?Genome .
         ?Genome a g:Genome.
         ?s ge:0001076 ?otype .
         ?s ge:0001077 ?htype .
