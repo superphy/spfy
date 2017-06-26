@@ -66,7 +66,7 @@ def generate_turtle_skeleton(query_file):
     # set the object type for uriGenome
     graph.add((uriGenome, gu('rdf:type'), gu('g:Genome')))
     # this is used as the human readable display of Genome
-    graph.add((uriGenome, gu('dc:description'), Literal(basename(query_file))))
+    graph.add((uriGenome, gu('dc:description'), Literal(basename(query_file)[27:])))
     # note that timestamps are not added in base graph generation, they are only added during the check for duplicate files in blazegraph
 
     # uri for bag of contigs
