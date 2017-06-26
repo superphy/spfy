@@ -15,5 +15,5 @@ multiples_q = Queue('multiples', connection=redis_conn, default_timeout=600)
 
 def blob_db_enqueue():
     job_db = multiples_q.enqueue(query_db_status, result_ttl=-1)
-    log.info('JOB ID IS: ' + job_gc.get_id())
+    log.info('JOB ID IS: ' + job_db.get_id())
     return job_db.get_id()

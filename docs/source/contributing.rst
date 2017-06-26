@@ -1022,6 +1022,12 @@ Within the repo, you can also see logs for specific containers by referencing th
 
   docker-compose logs webserver
 
+or if you wanted the tail:
+
+.. code-block:: sh
+
+  docker-compose logs --tail=100 webserver
+
 or for Blazegraph:
 
 .. code-block:: sh
