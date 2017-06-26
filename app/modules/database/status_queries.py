@@ -17,8 +17,10 @@ def query_everything():
         ?s a :spfyId .
         ?s (:hasPart|:isFoundIn) ?Genome .
         ?Genome a g:Genome.
-        ?s ge:0001076 ?otype .
-        ?s ge:0001077 ?htype .
+        OPTIONAL {
+            ?s ge:0001076 ?otype .
+            ?s ge:0001077 ?htype .
+        }
     }}
     """
     return query
