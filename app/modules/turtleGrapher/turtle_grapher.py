@@ -92,6 +92,11 @@ def generate_turtle_skeleton(query_file):
                    Literal(record.description)))
         graph.add((uriContig, gu('g:Identifier'),
                    Literal(record.id)))
+        # human-readable ; the description here is different because
+        # record.description tends to be rather long
+        # instead, record.id is the accession eg: FLOF01006689.1
+        graph.add((uriContig, gu('dc:description'),
+                   Literal(record.description)))
     return graph
 
 def turtle_grapher(query_file):
