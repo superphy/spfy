@@ -14,10 +14,10 @@ def query_db_status():
     Grabs all objectids having the relation.
     '''
     query = """
-    SELECT DISTINCT ?spfyId ?Genome ?otype ?htype WHERE {{
+    SELECT DISTINCT ?spfyId ?Genome ?otype ?htype ?submitted WHERE {{
         ?spfyIdObject a :spfyId ; dc:identifier ?spfyId .
         ?spfyIdObject (:hasPart|:isFoundIn) ?GenomeObject .
-        ?GenomeObject a g:Genome ; dc:description ?Genome
+        ?GenomeObject a g:Genome ; dc:description ?Genome; dc:date ?submitted .
         OPTIONAL {
             ?spfyIdObject ge:0001076 ?otype .
             ?spfyIdObject ge:0001077 ?htype .
