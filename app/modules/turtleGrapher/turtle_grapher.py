@@ -42,6 +42,7 @@ def generate_graph():
     graph.add((gu('ge:0001077'), gu('dc:description'), Literal('H-Type')))
     # human-readable dc:description for object types
     graph.add((gu('so:0001462'), gu('dc:description'), Literal('Bag of Contigs')))
+    graph.add((gu(':spfyId'), gu('dc:description'), Literal('Unique Identifier for A Genome File')))
 
     return graph
 
