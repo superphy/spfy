@@ -35,12 +35,14 @@ def tofromHumanReadable(func):
             def query_uri():
                 query = """
                 SELECT ?uri WHERE {{
-                    ?uri dc:description <{r}> .
+                    ?uri dc:description "{r}" .
                 }}
                 """.format(r=r)
                 return query
+
             # check if this is a uri
             if 'http' in r:
+                print 'tofromHumanReadable(): http found in ' + r
                 # query for a description
                 response = query_description()
                 # no description found
@@ -51,6 +53,7 @@ def tofromHumanReadable(func):
             # we've received a description
             else:
                 # check for a URI
+                print 'tofromHumanReadable(): http not found in ' + r
                 response = query_uri()
                 if response == "":
                     return r
