@@ -39,6 +39,13 @@ def groupcomparisons(groups, target):
     if type(target) not in (str, unicode):
         raise Exception('groupcomparisons() was called with target: ' + str(target) + ' of type ' + str(type(target)) + ' which is not str')
     target = convert(target)
+    # iterate through the groups and convert them back to uris as well
+    d = []
+    for group in groups:
+        g = dict(group)
+        g.update({'relation':convert(group['relation'])})
+        d.append(g)
+    groups = d
 
     log.debug(groups)
     # define a list of sets to hold all spfyids per group
