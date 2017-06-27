@@ -12,7 +12,7 @@ We use Docker and Docker-Compose for managing the databases: Blazegraph and Redi
 
 You'll probably also want to `install Miniconda`_ as we bundle most dependencies in Conda environments. Specific instructions to Spfy are available at `Installing Miniconda`_.
 
-Note that there is a `Debugging`_ section dedicated to tracking down the source of problems you may encounter.
+Note that there is a `Debugging`_ section for tracking down the source of problems you may encounter.
 
 .. _`Install Docker Compose guide`: https://docs.docker.com/compose/install/
 .. _`install Miniconda`: https://conda.io/docs/install/quick.html
@@ -58,13 +58,12 @@ genome files in total a .zip of which is available within the NML.
 Docker Caveats
 --------------
 
-We've had problems with Ubuntu Desktop versions 16.04.2 LTS and 17.04, and Ubuntu Server 16.04.2 LTS not connecting to NPM when building Docker images and from within the building. Builds work fine with Ubuntu Server 16.04.2 LTS on Cybera and for Ubuntu Server 12.04 or 14.04 LTS on Travis-CI. Within the building, RHEL-based operating systems (CentOS / Scientific Linux) build our NPM-dependent images (namely, `reactapp`_) just fine.
-UPDATE: (June 22'17) Tested this at home on Ubuntu Server 16.04.2 LTS and it builds fine. Looks like this is isolated to within the buildng @NML Lethbridge.
+We've had problems with Ubuntu Desktop versions 16.04.2 LTS and 17.04, and Ubuntu Server 16.04.2 LTS not connecting to NPM when building Docker images and from within the building. Builds work fine with Ubuntu Server 16.04.2 LTS on Cybera and for Ubuntu Server 12.04 and 14.04 LTS on Travis-CI. Within the building, RHEL-based operating systems (CentOS / Scientific Linux) build our NPM-dependent images (namely, `reactapp`_) just fine. Tested the build at home on Ubuntu Server 16.04.2 LTS and it works fine - looks like this is isolated to within the buildng @NML Lethbridge.
 
 .. note:: In general, we recommend you run Docker on Ubuntu 16.04.2 LTS (Server or Desktop) if you're outside the NML's Lethrbidge location. Otherwise, CentOS is a secondary option.
 
 For RHEL-based OSs, I don't recommend using `devicemapper`, but instead use `overlayfs`. Reasons are documented at https://github.com/moby/moby/issues/3182. There is a guide on setting up Docker with `overlayfs` at https://dcos.io/docs/1.7/administration/installing/custom/system-requirements/install-docker-centos/, though I haven't personally tested it.
-UPDATE: (June 22'17) Came across a guide written by a Red Hat dev. http://www.projectatomic.io/blog/2015/06/notes-on-fedora-centos-and-docker-storage-drivers/
+UPDATE: (June 22'17) There is a guide written by a Red Hat dev. http://www.projectatomic.io/blog/2015/06/notes-on-fedora-centos-and-docker-storage-drivers/
 
 If you do end up using `devicemapper` and run into disk space issues, such as:
 
