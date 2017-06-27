@@ -10,7 +10,7 @@ Getting Started
 
 We use Docker and Docker-Compose for managing the databases: Blazegraph and Redis, the webserver: Nginx/Flask/Conda, and Redis-Queue (RQ) workers: mostly in Conda. The official `Install Docker Compose guide`_ lists steps for installing both the base Docker Engine, and for installing Docker-Compose separately if you're on Linux. For Mac and Windows users, Docker-Compose comes bundled with Docker Engine.
 
-You'll probably also want to `install Miniconda`_ as we bundle most dependencies in Conda environments. Specific instructions to Spfy are available at 'Installing Miniconda'_.
+You'll probably also want to `install Miniconda`_ as we bundle most dependencies in Conda environments. Specific instructions to Spfy are available at `Installing Miniconda`_.
 
 Note that there is a `Debugging`_ section dedicated to tracking down the source of problems you may encounter.
 
