@@ -64,11 +64,13 @@ def tofromHumanReadable(func):
             for r in results:
                 l.append(parse(r))
             if type(results) is set:
-                return set(l)
+                ret = set(l)
             else:
-                return l
+                ret = l
         else:
-            return parse(results)
+            ret = parse(results)
+        print 'tofromHumanReadable(): Received: ' + str(results) + ' Returning: ' + str(ret)
+        return ret
     return func_wrapper
 
 def tojson(func):
