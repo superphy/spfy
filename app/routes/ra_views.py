@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify, current_app
 from modules.groupComparisons.frontend_queries import get_all_attribute_types, get_attribute_values, get_types
 from routes.file_utils import fix_uri
+from modules.decorators import tofromHumanReadable
 
 bp_ra_views = Blueprint('reactapp_views', __name__)
 
