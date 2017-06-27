@@ -41,10 +41,14 @@ def groupcomparisons(groups, target):
     target = convert(target)
     # iterate through the groups and convert them back to uris as well
     d = []
+    # groups is a list of two lists
     for group in groups:
-        g = dict(group)
-        g.update({'relation':convert(group['relation'])})
-        d.append(g)
+        # group is a list of dicts
+        for relation in group:
+            # relation is a dict
+            g = dict(relation)
+            g.update({'relation':convert(relation['relation'])})
+            d.append(g)
     groups = d
 
     log.debug(groups)
