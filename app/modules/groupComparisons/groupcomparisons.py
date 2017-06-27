@@ -40,9 +40,11 @@ def groupcomparisons(groups, target):
         raise Exception('groupcomparisons() was called with target: ' + str(target) + ' of type ' + str(type(target)) + ' which is not str')
     # we want everything to be uris, so only convert when necessary
     if 'http:' not in target:
-        print 'groupcomparisons(): target before is ' + str(target)
+        print 'groupcomparisons(): target before is ' + str(target) + ' of type ' + str(type(target))
         target = unicode(convert(target))
-        print 'groupcomparisons(): target after is ' + str(target)
+        print 'groupcomparisons(): target after is ' + str(target) + ' of type ' + str(type(target))
+    else:
+        print 'groupcomparisons(): not converting target which is ' + str(target) + ' of type ' + str(type(target))
     # iterate through the groups and convert them back to uris as well
     d = []
     # groups is a list of two lists
