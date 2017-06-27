@@ -50,7 +50,6 @@ def get_all_attribute_types():
     """
     return query
 
-@tofromHumanReadable
 @tolist
 @submit
 def get_attribute_values(attributeTypeUri):
