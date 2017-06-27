@@ -22,6 +22,7 @@ def call_get_attribute_values(attributetype):
     # workaround: Flask's path converter allows slashes, but only a SINGLE slash
     # this adds the second slash
     # also convert to a rdflib.URIRef object
+    print 'call_get_attribute_values(): ' + attributetype
     uri = fix_uri(convert(attributetype))
     return jsonify(get_attribute_values(attributeTypeUri=uri))
     # set_attribute_types = set(get_all_attribute_types())
