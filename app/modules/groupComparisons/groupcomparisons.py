@@ -39,9 +39,9 @@ def groupcomparisons(groups, target):
     if type(target) not in (str, unicode):
         raise Exception('groupcomparisons() was called with target: ' + str(target) + ' of type ' + str(type(target)) + ' which is not str')
     # we want everything to be uris, so only convert when necessary
-    if 'http' not in target:
+    if 'http:' not in target:
         print 'groupcomparisons(): target before is ' + str(target)
-        target = convert(target)
+        target = unicode(convert(target))
         print 'groupcomparisons(): target after is ' + str(target)
     # iterate through the groups and convert them back to uris as well
     d = []
@@ -54,7 +54,7 @@ def groupcomparisons(groups, target):
             g = dict(relation)
             r = relation['relation']
             # again, have to check
-            if 'http' not in r:
+            if 'http:' not in r:
                 g.update({'relation':convert(r)})
             l.append(g)
         d.append(l)
