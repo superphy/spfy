@@ -9,6 +9,7 @@ def call_get_attribute_values(attributetype):
     '''
     Front-End API:
     Get all attribute values for a given attribute type.
+    This is used to populate the 'Attributes' section of GroupsForm.
     '''
     # workaround: Flask's path converter allows slashes, but only a SINGLE slash
     # this adds the second slash
@@ -23,6 +24,7 @@ def call_get_attribute_values(attributetype):
 def combine_types():
     '''
     Returns all URIs that is either a attribute type or and object type.
+    This is used to populate the 'Relations' section of GroupsForm.
     '''
     set_attribute_types = set(get_all_attribute_types())
     set_object_types = get_types() # get types returns a set by default
@@ -33,5 +35,6 @@ def call_get_all_atribute_types():
     '''
     Front-End API:
     Get all possible attribute types.
+    This is used to populate the 'Targets' section of GroupsForm.
     '''
     return jsonify(get_all_attribute_types())

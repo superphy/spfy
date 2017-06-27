@@ -11,7 +11,7 @@ log = logging.getLogger(__name__)
 blazegraph_url = config.database['blazegraph_url']
 #blazegraph_url = 'http://localhost:8080/bigdata/sparql'
 
-def convertHumanReadable(func):
+def tofromHumanReadable(func):
     '''
     Converts between to and from URIs and human-readable names.
     '''
