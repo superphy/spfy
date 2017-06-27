@@ -4,6 +4,13 @@ from routes.file_utils import fix_uri
 
 bp_ra_views = Blueprint('reactapp_views', __name__)
 
+@tofromHumanReadable
+def convert(q):
+    """
+    Used to convert the human-readable string back into a proper URI.
+    """
+    return q
+
 @bp_ra_views.route('/api/v0/get_attribute_values/type/<path:attributetype>')
 def call_get_attribute_values(attributetype):
     '''
@@ -14,7 +21,7 @@ def call_get_attribute_values(attributetype):
     # workaround: Flask's path converter allows slashes, but only a SINGLE slash
     # this adds the second slash
     # also convert to a rdflib.URIRef object
-    uri = fix_uri(attributetype)
+    uri = fix_uri(convert(attributetype))
     return jsonify(get_attribute_values(attributeTypeUri=uri))
     # set_attribute_types = set(get_all_attribute_types())
     # set_object_types = get_types() # get types returns a set by default
