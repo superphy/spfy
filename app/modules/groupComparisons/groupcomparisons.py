@@ -36,7 +36,7 @@ def collapse(dict_targets):
 def groupcomparisons(groups, target):
     # convert the target from its human-readable string as displayed
     # to the user, back to the actual user
-    if type(target) not str:
+    if not type(target) == str:
         raise Exception('groupcomparisons() was called with a target not str')
     target = convert(target)
 
