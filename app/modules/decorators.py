@@ -42,7 +42,7 @@ def tofromHumanReadable(func):
 
             # check if this is a uri
             if 'http' in r:
-                print 'tofromHumanReadable(): http found in ' + r
+                print 'tofromHumanReadable(): http found in ' + str(r)
                 # query for a description
                 response = query_description()
                 # no description found
@@ -53,7 +53,7 @@ def tofromHumanReadable(func):
             # we've received a description
             else:
                 # check for a URI
-                print 'tofromHumanReadable(): http not found in ' + r
+                print 'tofromHumanReadable(): http not found in ' + str(r)
                 response = query_uri()
                 if response == "":
                     return r
@@ -65,6 +65,7 @@ def tofromHumanReadable(func):
             # create a blank list for results
             l = []
             for r in results:
+                print 'tofromHumanReadable(): calling parse() with ' + str(r)
                 l.append(parse(r))
             if type(results) is set:
                 ret = set(l)
