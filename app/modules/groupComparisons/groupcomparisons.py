@@ -3,10 +3,18 @@ from modules.loggingFunctions import initialize_logging
 from modules.groupComparisons.handle_logical import handle_logical
 from modules.groupComparisons.logical_queries import query_targets
 from modules.groupComparisons.fishers import fishers
+from modules.decorators import tofromHumanReadable
 
 # logging
 log_file = initialize_logging()
 log = logging.getLogger(__name__)
+
+@tofromHumanReadable
+def convert(q):
+    """
+    Used to convert the human-readable string back into a proper URI.
+    """
+    return q
 
 def collapse(dict_targets):
     '''
@@ -26,6 +34,12 @@ def collapse(dict_targets):
     return d
 
 def groupcomparisons(groups, target):
+    # convert the target from its human-readable string as displayed
+    # to the user, back to the actual user
+    if type(target) not str:
+        raise Exception('groupcomparisons() was called with a target not str')
+    target = convert(target)
+
     log.debug(groups)
     # define a list of sets to hold all spfyids per group
     sets_spfyids = []
@@ -67,7 +81,7 @@ def groupcomparisons(groups, target):
             if query['negated']:
                 queryAttributeUris[index] += 'NOT '
             # attribute
-            queryAttributeUris[index] += query['attribute'] + ' '
+            queryAttributeUris[index] += convert(query['attribute']) + ' '
             # logical operator
             if len(group) > 1 and i < len(group)-1 and 'logical' in query.keys():
                 queryAttributeUris[index] += query['logical'] + ' '
