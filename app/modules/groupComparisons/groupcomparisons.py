@@ -37,7 +37,7 @@ def groupcomparisons(groups, target):
     # convert the target from its human-readable string as displayed
     # to the user, back to the actual user
     if not type(target) == str:
-        raise Exception('groupcomparisons() was called with a target not str')
+        raise Exception('groupcomparisons() was called with target: ' + str(target) + ' of type ' + str(type(target)) + ' which is not str')
     target = convert(target)
 
     log.debug(groups)
