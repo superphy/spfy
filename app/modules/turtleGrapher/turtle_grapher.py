@@ -41,9 +41,12 @@ def generate_graph():
     graph.add((gu('ge:0001076'), gu('dc:description'), Literal('O-Type')))
     graph.add((gu('ge:0001077'), gu('dc:description'), Literal('H-Type')))
     graph.add((gu('ge:0000024'), gu('dc:description'), Literal('Upload_Date')))
+    graph.add((gu(':Marker'), gu('dc:description'), Literal('Any_Marker')))
+    graph.add((gu(':VirulenceFactor'), gu('dc:description'), Literal('Virulence_Factor')))
+    graph.add((gu(':AntimicrobialResistanceGene'), gu('dc:description'), Literal('AMR_Gene')))
     # human-readable dc:description for object types
     graph.add((gu('so:0001462'), gu('dc:description'), Literal('Bag_of_Contigs')))
-    graph.add((gu(':spfyId'), gu('dc:description'), Literal('Unique_Identifier_for_A_Genome_File')))
+    graph.add((gu(':spfyId'), gu('dc:description'), Literal('SpfyId')))
 
     return graph
 
