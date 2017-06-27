@@ -11,6 +11,66 @@ log = logging.getLogger(__name__)
 blazegraph_url = config.database['blazegraph_url']
 #blazegraph_url = 'http://localhost:8080/bigdata/sparql'
 
+def convertHumanReadable(func):
+    '''
+    Converts between to and from URIs and human-readable names.
+    '''
+    @wraps(func)
+    def func_wrapper(*args, **kwargs):
+        def parse(r):
+            @tostring
+            @submit
+            @prefix
+            def query_description():
+                query = """
+                SELECT ?description WHERE {{
+                    <{r}> dc:description ?description .
+                }}
+                """.format(r=r)
+                return query
+
+            @tostring
+            @submit
+            @prefix
+            def query_uri():
+                query = """
+                SELECT ?uri WHERE {{
+                    ?uri dc:description <{r}> .
+                }}
+                """.format(r=r)
+                return query
+            # check if this is a uri
+            if 'http' in r:
+                # query for a description
+                response = query_description()
+                # no description found
+                if response == "":
+                    return r
+                else:
+                    return response
+            # we've received a description
+            else:
+                # check for a URI
+                response = query_uri()
+                if response == "":
+                    return r
+                else:
+                    return response
+        results = func(*args, **kwargs)
+        # check if we received a list or set
+        if type(results) in (list, set):
+            # create a blank list for results
+            l = []
+            for r in results:
+                l.append(parse(r))
+            if type(results) is set:
+                return set(l)
+            else:
+                return l
+        else:
+            return parse(results)
+    return func_wrapper
+
 def tojson(func):
     '''
     A decorator to convert JSON response of sparql query to a simple string.
