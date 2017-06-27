@@ -40,10 +40,10 @@ def generate_graph():
     # human-readable dc:description for edge types
     graph.add((gu('ge:0001076'), gu('dc:description'), Literal('O-Type')))
     graph.add((gu('ge:0001077'), gu('dc:description'), Literal('H-Type')))
-    graph.add((gu('ge:0000024'), gu('dc:description'), Literal('Upload Date')))
+    graph.add((gu('ge:0000024'), gu('dc:description'), Literal('Upload_Date')))
     # human-readable dc:description for object types
-    graph.add((gu('so:0001462'), gu('dc:description'), Literal('Bag of Contigs')))
-    graph.add((gu(':spfyId'), gu('dc:description'), Literal('Unique Identifier for A Genome File')))
+    graph.add((gu('so:0001462'), gu('dc:description'), Literal('Bag_of_Contigs')))
+    graph.add((gu(':spfyId'), gu('dc:description'), Literal('Unique_Identifier_for_A_Genome_File')))
 
     return graph
 
