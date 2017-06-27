@@ -44,11 +44,13 @@ def groupcomparisons(groups, target):
     # groups is a list of two lists
     for group in groups:
         # group is a list of dicts
+        l = []
         for relation in group:
             # relation is a dict
             g = dict(relation)
             g.update({'relation':convert(relation['relation'])})
-            d.append(g)
+            l.append(g)
+        d.append(l)
     groups = d
 
     log.debug(groups)
