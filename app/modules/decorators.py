@@ -66,13 +66,13 @@ def tofromHumanReadable(func):
             l = []
             for r in results:
                 print 'tofromHumanReadable(): calling parse() with ' + str(r)
-                l.append(parse(r))
+                l.append(parse(str(r)))
             if type(results) is set:
                 ret = set(l)
             else:
                 ret = l
         else:
-            ret = parse(results)
+            ret = parse(str(results))
         print 'tofromHumanReadable(): Received: ' + str(results) + ' Returning: ' + str(ret)
         return ret
     return func_wrapper
