@@ -38,7 +38,11 @@ def groupcomparisons(groups, target):
     # to the user, back to the actual user
     if type(target) not in (str, unicode):
         raise Exception('groupcomparisons() was called with target: ' + str(target) + ' of type ' + str(type(target)) + ' which is not str')
-    target = convert(target)
+    # we want everything to be uris, so only convert when necessary
+    if 'http' not in target:
+        print 'groupcomparisons(): target before is ' + str(target)
+        target = convert(target)
+        print 'groupcomparisons(): target after is ' + str(target)
     # iterate through the groups and convert them back to uris as well
     d = []
     # groups is a list of two lists
@@ -48,7 +52,10 @@ def groupcomparisons(groups, target):
         for relation in group:
             # relation is a dict
             g = dict(relation)
-            g.update({'relation':convert(relation['relation'])})
+            r = relation['relation']
+            # again, have to check
+            if 'http' not in r:
+                g.update({'relation':convert(r)})
             l.append(g)
         d.append(l)
     groups = d
