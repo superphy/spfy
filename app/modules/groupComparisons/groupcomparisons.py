@@ -81,7 +81,7 @@ def groupcomparisons(groups, target):
             if query['negated']:
                 queryAttributeUris[index] += 'NOT '
             # attribute
-            queryAttributeUris[index] += convert(query['attribute']) + ' '
+            queryAttributeUris[index] += query['attribute'] + ' '
             # logical operator
             if len(group) > 1 and i < len(group)-1 and 'logical' in query.keys():
                 queryAttributeUris[index] += query['logical'] + ' '
