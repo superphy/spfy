@@ -3,7 +3,7 @@ from modules.loggingFunctions import initialize_logging
 from modules.groupComparisons.handle_logical import handle_logical
 from modules.groupComparisons.logical_queries import query_targets
 from modules.groupComparisons.fishers import fishers
-# from modules.decorators import tofromHumanReadable
+from modules.decorators import tofromHumanReadable
 
 # logging
 log_file = initialize_logging()
