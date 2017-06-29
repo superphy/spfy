@@ -3,18 +3,18 @@ from modules.loggingFunctions import initialize_logging
 from modules.groupComparisons.handle_logical import handle_logical
 from modules.groupComparisons.logical_queries import query_targets
 from modules.groupComparisons.fishers import fishers
-from modules.decorators import tofromHumanReadable
+# from modules.decorators import tofromHumanReadable
 
 # logging
 log_file = initialize_logging()
 log = logging.getLogger(__name__)
 
-@tofromHumanReadable
-def convert(q):
-    """
-    Used to convert the human-readable string back into a proper URI.
-    """
-    return q
+# @tofromHumanReadable
+# def convert(q):
+#     """
+#     Used to convert the human-readable string back into a proper URI.
+#     """
+#     return q
 
 def collapse(dict_targets):
     '''
@@ -34,33 +34,33 @@ def collapse(dict_targets):
     return d
 
 def groupcomparisons(groups, target):
-    # convert the target from its human-readable string as displayed
-    # to the user, back to the actual user
-    if type(target) not in (str, unicode):
-        raise Exception('groupcomparisons() was called with target: ' + str(target) + ' of type ' + str(type(target)) + ' which is not str')
-    # we want everything to be uris, so only convert when necessary
-    if 'http:' not in target:
-        print 'groupcomparisons(): target before is ' + str(target) + ' of type ' + str(type(target))
-        target = unicode(convert(target))
-        print 'groupcomparisons(): target after is ' + str(target) + ' of type ' + str(type(target))
-    else:
-        print 'groupcomparisons(): not converting target which is ' + str(target) + ' of type ' + str(type(target))
-    # iterate through the groups and convert them back to uris as well
-    d = []
-    # groups is a list of two lists
-    for group in groups:
-        # group is a list of dicts
-        l = []
-        for relation in group:
-            # relation is a dict
-            g = dict(relation)
-            r = relation['relation']
-            # again, have to check
-            if 'http:' not in r:
-                g.update({'relation':convert(r)})
-            l.append(g)
-        d.append(l)
-    groups = d
+    # # convert the target from its human-readable string as displayed
+    # # to the user, back to the actual user
+    # if type(target) not in (str, unicode):
+    #     raise Exception('groupcomparisons() was called with target: ' + str(target) + ' of type ' + str(type(target)) + ' which is not str')
+    # # we want everything to be uris, so only convert when necessary
+    # if 'http:' not in target:
+    #     print 'groupcomparisons(): target before is ' + str(target) + ' of type ' + str(type(target))
+    #     target = unicode(convert(target))
+    #     print 'groupcomparisons(): target after is ' + str(target) + ' of type ' + str(type(target))
+    # else:
+    #     print 'groupcomparisons(): not converting target which is ' + str(target) + ' of type ' + str(type(target))
+    # # iterate through the groups and convert them back to uris as well
+    # d = []
+    # # groups is a list of two lists
+    # for group in groups:
+    #     # group is a list of dicts
+    #     l = []
+    #     for relation in group:
+    #         # relation is a dict
+    #         g = dict(relation)
+    #         r = relation['relation']
+    #         # again, have to check
+    #         if 'http:' not in r:
+    #             g.update({'relation':convert(r)})
+    #         l.append(g)
+    #     d.append(l)
+    # groups = d
 
     log.debug(groups)
     # define a list of sets to hold all spfyids per group
@@ -112,8 +112,8 @@ def groupcomparisons(groups, target):
     log.debug(queryAttributeUris[0])
     log.debug(queryAttributeUris[1])
     df = fishers(queryAttributeUris[0], queryAttributeUris[1], target, results)
-    # apply the human-readable conversion
-    df['target'] = df['target'].apply(convert)
+    # # apply the human-readable conversion
+    # df['target'] = df['target'].apply(convert)
     return df.to_json(orient='split')
 
 if __name__ == "__main__":
