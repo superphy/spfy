@@ -9,12 +9,12 @@ from modules.groupComparisons.fishers import fishers
 log_file = initialize_logging()
 log = logging.getLogger(__name__)
 
-# @tofromHumanReadable
-# def convert(q):
-#     """
-#     Used to convert the human-readable string back into a proper URI.
-#     """
-#     return q
+@tofromHumanReadable
+def convert(q):
+    """
+    Used to convert the human-readable string back into a proper URI.
+    """
+    return q
 
 def collapse(dict_targets):
     '''
@@ -112,8 +112,8 @@ def groupcomparisons(groups, target):
     log.debug(queryAttributeUris[0])
     log.debug(queryAttributeUris[1])
     df = fishers(queryAttributeUris[0], queryAttributeUris[1], target, results)
-    # # apply the human-readable conversion
-    # df['target'] = df['target'].apply(convert)
+    # apply the human-readable conversion
+    df['target'] = df['target'].apply(convert)
     return df.to_json(orient='split')
 
 if __name__ == "__main__":
