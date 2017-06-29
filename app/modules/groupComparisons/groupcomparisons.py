@@ -14,7 +14,7 @@ def convert(value):
     Used to convert the human-readable string back into a proper URI.
     """
     @tofromHumanReadable
-    def todict(q)
+    def todict(q):
         return q
     d = todict(value)
     return d.keys()
