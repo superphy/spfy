@@ -11,6 +11,74 @@ log = logging.getLogger(__name__)
 blazegraph_url = config.database['blazegraph_url']
 #blazegraph_url = 'http://localhost:8080/bigdata/sparql'
 
+def tofromHumanReadable(func):
+    '''
+    Converts between to and from URIs and human-readable names.
+    '''
+    @wraps(func)
+    def func_wrapper(*args, **kwargs):
+        def parse(r):
+            @tostring
+            @submit
+            @prefix
+            def query_description():
+                query = """
+                SELECT ?description WHERE {{
+                    <{r}> dc:description ?description .
+                }}
+                """.format(r=r)
+                return query
+
+            @tostring
+            @submit
+            @prefix
+            def query_uri():
+                query = """
+                SELECT ?uri WHERE {{
+                    ?uri dc:description "{r}" .
+                }}
+                """.format(r=r)
+                return query
+
+            # check if this is a uri
+            if 'http' in r:
+                print 'tofromHumanReadable(): http found in ' + str(r)
+                # query for a description
+                response = query_description()
+                # no description found
+                if response == "":
+                    return r
+                else:
+                    return response
+            # we've received a description
+            else:
+                # check for a URI
+                print 'tofromHumanReadable(): http not found in ' + str(r)
+                response = query_uri()
+                if response == "":
+                    return r
+                else:
+                    return response
+        results = func(*args, **kwargs)
+        # check if we received a list or set
+        if type(results) in (list, set):
+            # create a blank list for results
+            d = {}
+            for r in results:
+                print 'tofromHumanReadable(): calling parse() with ' + str(r)
+                d[parse(str(r))] = str(r)
+                # l.append()
+            # if type(results) is set:
+            #     ret = set(l)
+            # else:
+            #     ret = l
+            ret = d
+        else:
+            ret = {parse(str(results)) : str(results)}
+        print 'tofromHumanReadable(): Received: ' + str(results) + ' Returning: ' + str(ret)
+        return ret
+    return func_wrapper
+
 def tojson(func):
     '''
     A decorator to convert JSON response of sparql query to a simple string.

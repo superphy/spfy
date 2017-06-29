@@ -51,10 +51,17 @@ def fix_uri(s):
     This adds the second slash.
     Also converts to rdflib.URIRef
     '''
-    if 'http:/' in s:
+    # we perform a check for a working URI because
+    # sometimes the URI is pulled directly from the db
+    # when we to tofromHumanReadable() decorator
+    if 'http://' in s or 'https://' in s:
+        return s
+    elif 'http:/' in s:
         s = s.replace('http:/', 'http://')
     elif 'https:/' in s:
         s = s.replace('https:/', 'https://')
+    else:
+        raise Exception('Not sure why you are calling fix_uri() with a valid string')
     uri = URIRef(s)
     return uri
 
