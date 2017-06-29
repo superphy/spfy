@@ -1072,6 +1072,28 @@ We recommend using ``RQ-dashboard`` to see jobs being enqueued live when testing
 
 Note: ``RQ-dashboard`` will not report errors from the Flask webserver.
 
+Debugging Javascript
+--------------------
+
+For testing simple commands, I use the Node interpreter similar to how one might use Python's interpreter:
+
+.. code-block:: sh
+
+  node
+  .exit
+
+We use the Chrome extension `React Dev Tools`_ to see our components and state, as defined in React; Chrome's DevTools will list ``Elements`` in their HTML form which, while not particularly useful to debug React-specific code, can be used to check which CSS stylings are applied.
+
+The `Redux Dev Tools`_ extension is used to monitor the state of our reactapp's Redux store. This is useful to see that your ``jobs`` are added correctly.
+
+Finally, if you clone our `reactapp`_ repo, and run:
+
+.. code-block:: sh
+
+  yarn start
+
+any saved changes will be linted with ``eslint``.
+
 Editing the Docs
 ================
 
