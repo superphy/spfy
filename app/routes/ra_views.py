@@ -10,7 +10,7 @@ def convert(q):
     """
     Used to convert the human-readable string back into a proper URI.
     """
-    print 'ra_views call_get_attribute_values() convert(): ' + q
+    print 'ra_views call_get_attribute_values() convert(): ' + str(q)
     return q
 
 @bp_ra_views.route('/api/v0/get_attribute_values/type/<path:attributetype>')
