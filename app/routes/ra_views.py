@@ -28,7 +28,8 @@ def call_get_attribute_values(attributetype):
     print 'call_get_attribute_values() uri: ' + str(uri)
     values = get_attribute_values(attributeTypeUri=uri)
     print 'call_get_attribute_values() values: ' + str(values)
-    return jsonify(values)
+    d = convert(values)
+    return jsonify(d)
     # set_attribute_types = set(get_all_attribute_types())
     # set_object_types = get_types() # get types returns a set by default
     # return jsonify(list(set_attribute_types.union(set_object_types)))
