@@ -63,16 +63,18 @@ def tofromHumanReadable(func):
         # check if we received a list or set
         if type(results) in (list, set):
             # create a blank list for results
-            l = []
+            d = {}
             for r in results:
                 print 'tofromHumanReadable(): calling parse() with ' + str(r)
-                l.append(parse(str(r)))
-            if type(results) is set:
-                ret = set(l)
-            else:
-                ret = l
+                d[str(r)] = parse(str(r))
+                # l.append()
+            # if type(results) is set:
+            #     ret = set(l)
+            # else:
+            #     ret = l
+            ret = d
         else:
-            ret = parse(str(results))
+            ret = {str(results) : parse(str(results))}
         print 'tofromHumanReadable(): Received: ' + str(results) + ' Returning: ' + str(ret)
         return ret
     return func_wrapper
