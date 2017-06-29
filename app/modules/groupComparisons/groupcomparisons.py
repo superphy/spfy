@@ -9,12 +9,15 @@ from modules.decorators import tofromHumanReadable
 log_file = initialize_logging()
 log = logging.getLogger(__name__)
 
-@tofromHumanReadable
-def convert(q):
+def convert(value):
     """
     Used to convert the human-readable string back into a proper URI.
     """
-    return q
+    @tofromHumanReadable
+    def todict(q)
+        return q
+    d = todict(value)
+    return d.keys()
 
 def collapse(dict_targets):
     '''
