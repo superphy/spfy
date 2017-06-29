@@ -24,7 +24,7 @@ def call_get_attribute_values(attributetype):
     # this adds the second slash
     # also convert to a rdflib.URIRef object
     print 'call_get_attribute_values() attributetype:  ' + attributetype
-    uri = fix_uri(convert(attributetype))
+    uri = fix_uri(attributetype)
     print 'call_get_attribute_values() uri: ' + str(uri)
     values = get_attribute_values(attributeTypeUri=uri)
     print 'call_get_attribute_values() values: ' + str(values)
@@ -41,7 +41,9 @@ def combine_types():
     '''
     set_attribute_types = set(get_all_attribute_types())
     set_object_types = get_types() # get types returns a set by default
-    return jsonify(list(set_attribute_types.union(set_object_types)))
+    l = list(set_attribute_types.union(set_object_types))
+    d = convert(l)
+    return jsonify(d)
 
 @bp_ra_views.route('/api/v0/get_all_attribute_types')
 def call_get_all_atribute_types():
@@ -50,4 +52,6 @@ def call_get_all_atribute_types():
     Get all possible attribute types.
     This is used to populate the 'Targets' section of GroupsForm.
     '''
-    return jsonify(get_all_attribute_types())
+    l = get_all_attribute_types()
+    d = convert(l)
+    return jsonify(d)

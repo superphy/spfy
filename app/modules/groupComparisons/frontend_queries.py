@@ -7,7 +7,7 @@ from SPARQLWrapper import SPARQLWrapper, JSON
 from modules.loggingFunctions import initialize_logging
 from modules.turtleGrapher.turtle_utils import generate_uri as gu
 from modules.groupComparisons.sparql_utils import generate_prefixes
-from modules.decorators import toset, tolist, submit, tofromHumanReadable
+from modules.decorators import toset, tolist, submit
 
 # logging
 log_file = initialize_logging()
@@ -35,7 +35,6 @@ def get_instances(objectTypeUri):
     """.format(objectTypeUri=objectTypeUri)
     return query
 
-@tofromHumanReadable
 @tolist
 @submit
 def get_all_attribute_types():
@@ -76,7 +75,6 @@ def get_attribute_values(attributeTypeUri):
 
     return query
 
-@tofromHumanReadable
 @toset
 @submit
 def get_types():
