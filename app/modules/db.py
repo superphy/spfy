@@ -11,7 +11,7 @@ log = logging.getLogger(__name__)
 
 redis_url = config.REDIS_URL
 redis_conn = redis.from_url(redis_url)
-priority_q = Queue('priority', connection=redis_conn, config.DEFAULT_TIMEOUT)
+priority_q = Queue('priority', connection=redis_conn, default_timeout=config.DEFAULT_TIMEOUT)
 
 def blob_db_enqueue():
     job_db = priority_q.enqueue(query_db_status, result_ttl=-1)
