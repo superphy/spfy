@@ -28,6 +28,25 @@ endpoint, api         We prefer to use endpoint for a route in Flask which the f
 spfy, this repo       The superphy/backend repo.
 ====================  =====
 
+Reading
+-------
+
+For the libraries you're not familiar with, we recommend you skim the docs below before starting:
+
+* Flask Blueprints (for routes): http://exploreflask.com/en/latest/blueprints.html
+* Redis Queue docs: http://python-rq.org/docs/
+* Thinking In React: https://facebook.github.io/react/docs/thinking-in-react.html
+* JSX In Depth: https://facebook.github.io/react/docs/jsx-in-depth.html
+
+Reference Docs
+--------------
+
+Javascript:
+
+* Yarn commands for npm users: https://yarnpkg.com/lang/en/docs/migrating-from-npm/
+* React Material Design docs: https://react-md.mlaursen.com/components/text-fields
+* React-Bootstrap-Table docs: https://allenfang.github.io/react-bootstrap-table/example.html#basic
+
 Installing Miniconda
 --------------------
 
