@@ -91,7 +91,6 @@ def blob_savvy_enqueue(single_dict):
         job_amr_beautify = amr_jobs['job_amr_beautify']
     elif config.BACKLOG_ENABLED:
         amr_pipeline(backlog_multiples_q)
-
     #### END AMR PIPELINE
 
     # the base file data for blazegraph
