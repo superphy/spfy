@@ -32,12 +32,12 @@ from modules.turtleGrapher.turtle_grapher import turtle_grapher
 redis_url = config.REDIS_URL
 redis_conn = redis.from_url(redis_url)
 singles_q = Queue('singles', connection=redis_conn)
-multiples_q = Queue('multiples', connection=redis_conn,default_timeout=config.default_TIMEOUT)
+multiples_q = Queue('multiples', connection=redis_conn,default_timeout=config.DEFAULT_TIMEOUT)
 blazegraph_q = Queue('blazegraph', connection=redis_conn)
 if config.BACKLOG_ENABLED:
     # backlog queues
     backlog_singles_q = Queue('backlog_singles', connection=redis_conn)
-    backlog_multiples_q = Queue('backlog_multiples', connection=redis_conn,default_timeout=config.default_TIMEOUT)
+    backlog_multiples_q = Queue('backlog_multiples', connection=redis_conn,default_timeout=config.DEFAULT_TIMEOUT)
 
 def blob_savvy_enqueue(single_dict):
     '''
