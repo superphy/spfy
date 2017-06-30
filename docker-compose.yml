@@ -45,9 +45,19 @@ services:
     depends_on:
     - webserver
 
+  worker-priority:
+    build:
+      context: .
+      dockerfile: Dockerfile-rq-priority
+    image: backend-rq-priority
+    volumes_from:
+    - webserver
+    depends_on:
+    - webserver
+
   redis:
     image: redis:3.2
-    command: redis-server --appendonly yes
+    command: redis-server --appendonly yes # for persistance
     volumes:
     - /data
 
