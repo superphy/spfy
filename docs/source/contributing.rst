@@ -77,7 +77,9 @@ genome files in total a .zip of which is available within the NML.
 Docker Caveats
 --------------
 
-We've had problems with Ubuntu Desktop versions 16.04.2 LTS and 17.04, and Ubuntu Server 16.04.2 LTS not connecting to NPM when building Docker images and from within the building. Builds work fine with Ubuntu Server 16.04.2 LTS on Cybera and for Ubuntu Server 12.04 and 14.04 LTS on Travis-CI. Within the building, RHEL-based operating systems (CentOS / Scientific Linux) build our NPM-dependent images (namely, `reactapp`_) just fine. Tested the build at home on Ubuntu Server 16.04.2 LTS and it works fine - looks like this is isolated to within the buildng @NML Lethbridge.
+We've had problems in the past with Ubuntu Desktop versions 16.04.2 LTS and 17.04, and Ubuntu Server 16.04.2 LTS not connecting to NPM when building Docker images and from within the building. Builds work fine with Ubuntu Server 16.04.2 LTS on Cybera and for Ubuntu Server 12.04 and 14.04 LTS on Travis-CI. Within the building, RHEL-based operating systems (CentOS / Scientific Linux) build our NPM-dependent images (namely, `reactapp`_) just fine. Tested the build at home on Ubuntu Server 16.04.2 LTS and it works fine - looks like this is isolated to within the buildng @NML Lethbridge.
+
+.. warning:: As of June 30, 2017 Ubuntu Server 16.04.2 LTS is building NPM-dependent images okay @NML Lethbridge.
 
 .. note:: In general, we recommend you run Docker on Ubuntu 16.04.2 LTS (Server or Desktop) if you're outside the NML's Lethrbidge location. Otherwise, CentOS is a secondary option.
 
