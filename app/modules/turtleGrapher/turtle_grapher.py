@@ -37,6 +37,17 @@ def generate_graph():
     graph.add((gu(':AntimicrobialResistanceGene'), gu('rdfs:subClassOf'), gu(':Marker')))
     graph.add((gu(':VirulenceFactor'), gu('rdfs:subClassOf'), gu(':Marker')))
 
+    # human-readable dc:description for edge types
+    graph.add((gu('ge:0001076'), gu('dc:description'), Literal('O-Type')))
+    graph.add((gu('ge:0001077'), gu('dc:description'), Literal('H-Type')))
+    graph.add((gu('ge:0000024'), gu('dc:description'), Literal('Upload_Date')))
+    graph.add((gu(':Marker'), gu('dc:description'), Literal('Any_Marker')))
+    graph.add((gu(':VirulenceFactor'), gu('dc:description'), Literal('Virulence_Factor')))
+    graph.add((gu(':AntimicrobialResistanceGene'), gu('dc:description'), Literal('AMR_Gene')))
+    # human-readable dc:description for object types
+    graph.add((gu('so:0001462'), gu('dc:description'), Literal('Bag_of_Contigs')))
+    graph.add((gu(':spfyId'), gu('dc:description'), Literal('SpfyId')))
+
     return graph
 
 def generate_turtle_skeleton(query_file):
@@ -66,7 +77,7 @@ def generate_turtle_skeleton(query_file):
     # set the object type for uriGenome
     graph.add((uriGenome, gu('rdf:type'), gu('g:Genome')))
     # this is used as the human readable display of Genome
-    graph.add((uriGenome, gu('dc:description'), Literal(basename(query_file))))
+    graph.add((uriGenome, gu('dc:description'), Literal(basename(query_file)[27:])))
     # note that timestamps are not added in base graph generation, they are only added during the check for duplicate files in blazegraph
 
     # uri for bag of contigs
@@ -92,6 +103,11 @@ def generate_turtle_skeleton(query_file):
                    Literal(record.description)))
         graph.add((uriContig, gu('g:Identifier'),
                    Literal(record.id)))
+        # human-readable ; the description here is different because
+        # record.description tends to be rather long
+        # instead, record.id is the accession eg: FLOF01006689.1
+        graph.add((uriContig, gu('dc:description'),
+                   Literal(record.description)))
     return graph
 
 def turtle_grapher(query_file):

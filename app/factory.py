@@ -9,6 +9,7 @@ from routes.views import bp as spfy
 from routes.ra_views import bp_ra_views
 from routes.ra_posts import bp_ra_posts
 from routes.ra_statuses import bp_ra_statuses
+from routes.ra_module_databse import bp_ra_db
 from flask_recaptcha import ReCaptcha
 from flask_cors import CORS, cross_origin
 from raven.contrib.flask import Sentry
@@ -38,5 +39,6 @@ def create_app():
     app.register_blueprint(bp_ra_views)
     app.register_blueprint(bp_ra_posts)
     app.register_blueprint(bp_ra_statuses)
+    app.register_blueprint(bp_ra_db)
 
     return app

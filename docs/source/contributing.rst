@@ -10,9 +10,9 @@ Getting Started
 
 We use Docker and Docker-Compose for managing the databases: Blazegraph and Redis, the webserver: Nginx/Flask/Conda, and Redis-Queue (RQ) workers: mostly in Conda. The official `Install Docker Compose guide`_ lists steps for installing both the base Docker Engine, and for installing Docker-Compose separately if you're on Linux. For Mac and Windows users, Docker-Compose comes bundled with Docker Engine.
 
-You'll probably also want to `install Miniconda`_ as we bundle most dependencies in Conda environments.
+You'll probably also want to `install Miniconda`_ as we bundle most dependencies in Conda environments. Specific instructions to Spfy are available at `Installing Miniconda`_.
 
-Note that there is a `Debugging`_ section dedicated to tracking down the source of problems you may encounter.
+Note that there is a `Debugging`_ section for tracking down the source of problems you may encounter.
 
 .. _`Install Docker Compose guide`: https://docs.docker.com/compose/install/
 .. _`install Miniconda`: https://conda.io/docs/install/quick.html
@@ -28,6 +28,24 @@ endpoint, api         We prefer to use endpoint for a route in Flask which the f
 spfy, this repo       The superphy/backend repo.
 ====================  =====
 
+Installing Miniconda
+--------------------
+
+For Linux-64 based distros, grab the Pyhon 2.7 Miniconda install script and install it (be sure to select the option to add Miniconda's path for your .bashrc):
+
+.. code-block:: sh
+
+  wget https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh
+  bash Miniconda2-latest-Linux-x86_64.sh
+
+Then get, install, and activate our Conda environment.yml:
+
+.. code-block:: sh
+
+  wget https://raw.githubusercontent.com/superphy/docker-flask-conda/master/app/environment.yml
+  conda env create -f environment.yml
+  source activate backend
+
 Genome Files for testing
 ------------------------
 
@@ -40,13 +58,12 @@ genome files in total a .zip of which is available within the NML.
 Docker Caveats
 --------------
 
-We've had problems with Ubuntu Desktop versions 16.04.2 LTS and 17.04, and Ubuntu Server 16.04.2 LTS not connecting to NPM when building Docker images and from within the building. Builds work fine with Ubuntu Server 16.04.2 LTS on Cybera and for Ubuntu Server 12.04 or 14.04 LTS on Travis-CI. Within the building, RHEL-based operating systems (CentOS / Scientific Linux) build our NPM-dependent images (namely, `reactapp`_) just fine.
-UPDATE: (June 22'17) Tested this at home on Ubuntu Server 16.04.2 LTS and it builds fine. Looks like this is isolated to within the buildng @NML Lethbridge.
+We've had problems with Ubuntu Desktop versions 16.04.2 LTS and 17.04, and Ubuntu Server 16.04.2 LTS not connecting to NPM when building Docker images and from within the building. Builds work fine with Ubuntu Server 16.04.2 LTS on Cybera and for Ubuntu Server 12.04 and 14.04 LTS on Travis-CI. Within the building, RHEL-based operating systems (CentOS / Scientific Linux) build our NPM-dependent images (namely, `reactapp`_) just fine. Tested the build at home on Ubuntu Server 16.04.2 LTS and it works fine - looks like this is isolated to within the buildng @NML Lethbridge.
 
 .. note:: In general, we recommend you run Docker on Ubuntu 16.04.2 LTS (Server or Desktop) if you're outside the NML's Lethrbidge location. Otherwise, CentOS is a secondary option.
 
 For RHEL-based OSs, I don't recommend using `devicemapper`, but instead use `overlayfs`. Reasons are documented at https://github.com/moby/moby/issues/3182. There is a guide on setting up Docker with `overlayfs` at https://dcos.io/docs/1.7/administration/installing/custom/system-requirements/install-docker-centos/, though I haven't personally tested it.
-UPDATE: (June 22'17) Came across a guide written by a Red Hat dev. http://www.projectatomic.io/blog/2015/06/notes-on-fedora-centos-and-docker-storage-drivers/
+UPDATE: (June 22'17) There is a guide written by a Red Hat dev. http://www.projectatomic.io/blog/2015/06/notes-on-fedora-centos-and-docker-storage-drivers/
 
 If you do end up using `devicemapper` and run into disk space issues, such as:
 
@@ -1004,6 +1021,12 @@ Within the repo, you can also see logs for specific containers by referencing th
 
   docker-compose logs webserver
 
+or if you wanted the tail:
+
+.. code-block:: sh
+
+  docker-compose logs --tail=100 webserver
+
 or for Blazegraph:
 
 .. code-block:: sh
@@ -1048,6 +1071,28 @@ To monitor the status of RQ tasks and check on failed jobs, you have two options
 We recommend using ``RQ-dashboard`` to see jobs being enqueued live when testing as ``Sentry`` only reports failed jobs. On remote deployments, we use ``Sentry`` for error reporting.
 
 Note: ``RQ-dashboard`` will not report errors from the Flask webserver.
+
+Debugging Javascript
+--------------------
+
+For testing simple commands, I use the Node interpreter similar to how one might use Python's interpreter:
+
+.. code-block:: sh
+
+  node
+  .exit
+
+We use the Chrome extension `React Dev Tools`_ to see our components and state, as defined in React; Chrome's DevTools will list ``Elements`` in their HTML form which, while not particularly useful to debug React-specific code, can be used to check which CSS stylings are applied.
+
+The `Redux Dev Tools`_ extension is used to monitor the state of our reactapp's Redux store. This is useful to see that your ``jobs`` are added correctly.
+
+Finally, if you clone our `reactapp`_ repo, and run:
+
+.. code-block:: sh
+
+  yarn start
+
+any saved changes will be linted with ``eslint``.
 
 Editing the Docs
 ================
