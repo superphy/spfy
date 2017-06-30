@@ -8,6 +8,10 @@ QUEUES = ['default']
 QUEUES_SPFY = ['singles', 'blazegraph', 'multiples']
 BOOTSTRAP_SERVE_LOCAL = True
 MAX_TIME_TO_WAIT = 10
+DEFAULT_TIMEOUT = 600 # in seconds (ie. 10 mins)
+# if BACKLOG_ENABLED = True, then all analyses modules will be run in the
+# in the background for every submitted file
+BACKLOG_ENABLED = False
 
 DATASTORE = '/datastore'
 RECAPTCHA_ENABLED = False
