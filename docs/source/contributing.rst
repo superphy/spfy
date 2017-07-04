@@ -163,7 +163,7 @@ Redis
 
 To run Redis in non-persistant mode, in ``docker-compose.yml`` replace:
 
-.. code-block: bash
+.. code-block:: bash
 
   redis:
     image: redis:3.2
