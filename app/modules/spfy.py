@@ -165,7 +165,7 @@ def spfy(args_dict):
     # abs path resolution should be handled in spfy.py
     #args_dict['i'] = os.path.abspath(args_dict['i'])
 
-    print 'Starting blob_savvy call'
+    #print 'Starting blob_savvy call'
     jobs_dict = blob_savvy(args_dict)
 
     return jobs_dict
