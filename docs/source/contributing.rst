@@ -1091,7 +1091,7 @@ To monitor the status of RQ tasks and check on failed jobs, you have two options
 
 We recommend using ``RQ-dashboard`` to see jobs being enqueued live when testing as ``Sentry`` only reports failed jobs. On remote deployments, we use ``Sentry`` for error reporting.
 
-..warning:: ``RQ-dashboard`` will not report errors from the Flask webserver. In addition, jobs enqueued with ``depends_on`` will not appear on the queues list until their dependencies are complete.
+.. warning:: ``RQ-dashboard`` will not report errors from the Flask webserver. In addition, jobs enqueued with ``depends_on`` will not appear on the queues list until their dependencies are complete.
 
 Debugging Javascript
 --------------------
