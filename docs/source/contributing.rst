@@ -156,6 +156,28 @@ You will have to increase the volume disk sizes: https://forums.docker.com/t/inc
   docker run -i -t [imagename] /bin/bash
   # In the bash prompt of the docker container "df -k" should show 20GB / file system size now.
 
+Redis
+-----
+
+.. warning:: By default, our docker composition is setup to run Redis db with persistant storage so jobs are kept even in you stop and restart the ``redis`` service. This is useful in production and regular usage scenarios as all your jobs are not lost if the composition is stopped or the server/computer is rebooted. However, this also means that if you write a job which errors out and also upload a bunch of files, they will continue to be started even if you stop the composition to write fixes.
+
+To run Redis in non-persistant mode, in ``docker-compose.yml`` replace:
+
+.. code-block: bash
+
+  redis:
+    image: redis:3.2
+    command: redis-server --appendonly yes # for persistance
+    volumes:
+    - /data
+
+with:
+
+.. code-block:: bash
+
+  redis:
+    image: redis:3.2
+
 Adding a New Module
 ===================
 
