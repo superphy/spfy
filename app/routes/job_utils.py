@@ -1,5 +1,4 @@
 import redis
-import config
 from flask import current_app
 from rq import Queue
 
