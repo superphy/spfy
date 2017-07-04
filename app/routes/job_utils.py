@@ -1,4 +1,5 @@
 import redis
+import config
 from flask import current_app
 from rq import Queue
 
@@ -8,7 +9,7 @@ from rq import Queue
 # out the number of possible connections
 
 
-def fetch_job(job_id, redis_connection=redis.from_url(current_app.config['REDIS_URL'])):
+def fetch_job(job_id, redis_connection=redis.from_url(config['REDIS_URL'])):
     '''
     Iterates through all queues looking for the job.
     '''
