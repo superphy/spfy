@@ -63,9 +63,12 @@ def blob_savvy_enqueue(single_dict):
         job_ectyper = singles.enqueue(call_ectyper, single_dict, depends_on=job_id)
         # after this call, the result is stored in Blazegraph
         job_ectyper_datastruct = multiples.enqueue(datastruct_savvy, query_file, query_file + '_id.txt', query_file + '_ectyper.p', depends_on=job_ectyper)
+        d = {'job_ectyper': job_ectyper, 'job_ectyper_datastruct' : job_ectyper_datastruct}
         # only bother parsing into json if user has requested either vf or serotype
-        job_ectyper_beautify = multiples.enqueue(beautify, single_dict,query_file + '_ectyper.p', depends_on=job_ectyper, result_ttl=-1)
-        return {'job_ectyper': job_ectyper, 'job_ectyper_datastruct' : job_ectyper_datastruct, 'job_ectyper_beautify': job_ectyper_beautify}
+        if single_dict['options']['vf'] or single_dict['options']['serotype']:
+            job_ectyper_beautify = multiples.enqueue(beautify, single_dict,query_file + '_ectyper.p', depends_on=job_ectyper, result_ttl=-1)
+            d.update({'job_ectyper_beautify': job_ectyper_beautify})
+        return d
 
     # if user selected any ectyper-dependent options on the front-end
     if single_dict['options']['vf'] or single_dict['options']['serotype']:
@@ -87,8 +90,14 @@ def blob_savvy_enqueue(single_dict):
         job_amr_dict = multiples_q.enqueue(amr_to_dict, query_file + '_rgi.tsv', depends_on=job_amr)
         # this uploads result to blazegraph
         job_amr_datastruct = multiples_q.enqueue(datastruct_savvy, query_file, query_file + '_id.txt', query_file + '_rgi.tsv_rgi.p', depends_on=job_amr_dict)
-        job_amr_beautify = multiples_q.enqueue(beautify, single_dict, query_file + '_rgi.tsv_rgi.p', depends_on=job_amr_dict, result_ttl=-1)
-        return {'job_amr': job_amr, 'job_amr_dict':job_amr_dict, 'job_amr_datastruct':job_amr_datastruct, 'job_amr_beautify':job_amr_beautify}
+        d = {'job_amr': job_amr, 'job_amr_dict':job_amr_dict, 'job_amr_datastruct':job_amr_datastruct}
+        # we still check for the user-selected amr option again because
+        # if it was not selected but BACKLOG_ENABLED=True, we dont have to
+        # enqueue it to backlog_multiples_q since beautify doesnt upload blazegraph
+        if single_dict['options']['amr']:
+            job_amr_beautify = multiples_q.enqueue(beautify, single_dict, query_file + '_rgi.tsv_rgi.p', depends_on=job_amr_dict, result_ttl=-1)
+            d.update({'job_amr_beautify':job_amr_beautify})
+        return d
 
     if single_dict['options']['amr']:
         amr_jobs = amr_pipeline(multiples_q)
