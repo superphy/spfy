@@ -13,6 +13,10 @@ Antimicrobial Resistance (via
 sequences bundled using task queues (RQ) and a SPA front-end
 (AngularJS/Flask).
 
+.. image:: screenshots/screen-results_list.png
+    :align: center
+    :alt: screenshot of the results page
+
 Use:
 ----
 
