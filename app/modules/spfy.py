@@ -32,12 +32,15 @@ from modules.turtleGrapher.turtle_grapher import turtle_grapher
 redis_url = config.REDIS_URL
 redis_conn = redis.from_url(redis_url)
 singles_q = Queue('singles', connection=redis_conn)
-multiples_q = Queue('multiples', connection=redis_conn,default_timeout=config.DEFAULT_TIMEOUT)
+multiples_q = Queue('multiples', connection=redis_conn,
+                    default_timeout=config.DEFAULT_TIMEOUT)
 blazegraph_q = Queue('blazegraph', connection=redis_conn)
 if config.BACKLOG_ENABLED:
     # backlog queues
     backlog_singles_q = Queue('backlog_singles', connection=redis_conn)
-    backlog_multiples_q = Queue('backlog_multiples', connection=redis_conn,default_timeout=config.DEFAULT_TIMEOUT)
+    backlog_multiples_q = Queue(
+        'backlog_multiples', connection=redis_conn, default_timeout=config.DEFAULT_TIMEOUT)
+
 
 def blob_savvy_enqueue(single_dict):
     '''
@@ -55,18 +58,26 @@ def blob_savvy_enqueue(single_dict):
     query_file = single_dict['i']
 
     job_qc = multiples_q.enqueue(qc, query_file, result_ttl=-1)
-    job_id = blazegraph_q.enqueue(write_reserve_id, query_file, depends_on=job_qc, result_ttl=-1)
+    job_id = blazegraph_q.enqueue(
+        write_reserve_id, query_file, depends_on=job_qc, result_ttl=-1)
 
-    #### ECTYPER PIPELINE
+    # ECTYPER PIPELINE
     def ectyper_pipeline(singles, multiples):
-        # the ectyper call is special in that it requires the entire arguments  to decide whether to carry the serotype option flag, virulance factors option flag, and percent identity field
-        job_ectyper = singles.enqueue(call_ectyper, single_dict, depends_on=job_id)
+        # the ectyper call is special in that it requires the entire arguments
+        # to decide whether to carry the serotype option flag, virulance
+        # factors option flag, and percent identity field
+        job_ectyper = singles.enqueue(
+            call_ectyper, single_dict, depends_on=job_id)
         # after this call, the result is stored in Blazegraph
-        job_ectyper_datastruct = multiples.enqueue(datastruct_savvy, query_file, query_file + '_id.txt', query_file + '_ectyper.p', depends_on=job_ectyper)
-        d = {'job_ectyper': job_ectyper, 'job_ectyper_datastruct' : job_ectyper_datastruct}
-        # only bother parsing into json if user has requested either vf or serotype
+        job_ectyper_datastruct = multiples.enqueue(
+            datastruct_savvy, query_file, query_file + '_id.txt', query_file + '_ectyper.p', depends_on=job_ectyper)
+        d = {'job_ectyper': job_ectyper,
+             'job_ectyper_datastruct': job_ectyper_datastruct}
+        # only bother parsing into json if user has requested either vf or
+        # serotype
         if single_dict['options']['vf'] or single_dict['options']['serotype']:
-            job_ectyper_beautify = multiples.enqueue(beautify, single_dict,query_file + '_ectyper.p', depends_on=job_ectyper, result_ttl=-1)
+            job_ectyper_beautify = multiples.enqueue(
+                beautify, single_dict, query_file + '_ectyper.p', depends_on=job_ectyper, result_ttl=-1)
             d.update({'job_ectyper_beautify': job_ectyper_beautify})
         return d
 
@@ -82,21 +93,26 @@ def blob_savvy_enqueue(single_dict):
 
         # just enqueue the jobs, we don't care about returning them
         ectyper_pipeline(backlog_singles_q, backlog_multiples_q)
-    #### END ECTYPER PIPELINE
+    # END ECTYPER PIPELINE
 
-    #### AMR PIPELINE
+    # AMR PIPELINE
     def amr_pipeline(multiples):
-        job_amr = multiples_q.enqueue(amr, query_file, depends_on=job_id)
-        job_amr_dict = multiples_q.enqueue(amr_to_dict, query_file + '_rgi.tsv', depends_on=job_amr)
+        job_amr = multiples.enqueue(amr, query_file, depends_on=job_id)
+        job_amr_dict = multiples.enqueue(
+            amr_to_dict, query_file + '_rgi.tsv', depends_on=job_amr)
         # this uploads result to blazegraph
-        job_amr_datastruct = multiples_q.enqueue(datastruct_savvy, query_file, query_file + '_id.txt', query_file + '_rgi.tsv_rgi.p', depends_on=job_amr_dict)
-        d = {'job_amr': job_amr, 'job_amr_dict':job_amr_dict, 'job_amr_datastruct':job_amr_datastruct}
+        job_amr_datastruct = multiples.enqueue(
+            datastruct_savvy, query_file, query_file + '_id.txt', query_file + '_rgi.tsv_rgi.p', depends_on=job_amr_dict)
+        d = {'job_amr': job_amr, 'job_amr_dict': job_amr_dict,
+             'job_amr_datastruct': job_amr_datastruct}
         # we still check for the user-selected amr option again because
         # if it was not selected but BACKLOG_ENABLED=True, we dont have to
-        # enqueue it to backlog_multiples_q since beautify doesnt upload blazegraph
+        # enqueue it to backlog_multiples_q since beautify doesnt upload
+        # blazegraph
         if single_dict['options']['amr']:
-            job_amr_beautify = multiples_q.enqueue(beautify, single_dict, query_file + '_rgi.tsv_rgi.p', depends_on=job_amr_dict, result_ttl=-1)
-            d.update({'job_amr_beautify':job_amr_beautify})
+            job_amr_beautify = multiples.enqueue(
+                beautify, single_dict, query_file + '_rgi.tsv_rgi.p', depends_on=job_amr_dict, result_ttl=-1)
+            d.update({'job_amr_beautify': job_amr_beautify})
         return d
 
     if single_dict['options']['amr']:
@@ -107,19 +123,25 @@ def blob_savvy_enqueue(single_dict):
         job_amr_beautify = amr_jobs['job_amr_beautify']
     elif config.BACKLOG_ENABLED:
         amr_pipeline(backlog_multiples_q)
-    #### END AMR PIPELINE
+    # END AMR PIPELINE
 
     # the base file data for blazegraph
-    job_turtle = multiples_q.enqueue(turtle_grapher, query_file, depends_on=job_qc)
+    job_turtle = multiples_q.enqueue(
+        turtle_grapher, query_file, depends_on=job_qc)
 
-    jobs[job_qc.get_id()] = {'file': single_dict['i'], 'analysis':'Quality Control'}
-    jobs[job_id.get_id()] = {'file': single_dict['i'], 'analysis':'ID Reservation'}
+    jobs[job_qc.get_id()] = {'file': single_dict['i'],
+                             'analysis': 'Quality Control'}
+    jobs[job_id.get_id()] = {'file': single_dict['i'],
+                             'analysis': 'ID Reservation'}
     if single_dict['options']['vf'] or single_dict['options']['serotype']:
-        jobs[job_ectyper_beautify.get_id()] = {'file': single_dict['i'], 'analysis': 'Virulence Factors and Serotype'}
+        jobs[job_ectyper_beautify.get_id()] = {'file': single_dict[
+            'i'], 'analysis': 'Virulence Factors and Serotype'}
     if single_dict['options']['amr']:
-        jobs[job_amr_beautify.get_id()] = {'file': single_dict['i'], 'analysis': 'Antimicrobial Resistance'}
+        jobs[job_amr_beautify.get_id()] = {'file': single_dict[
+            'i'], 'analysis': 'Antimicrobial Resistance'}
 
     return jobs
+
 
 def blob_savvy(args_dict):
     '''
@@ -128,12 +150,14 @@ def blob_savvy(args_dict):
     d = {}
     if os.path.isdir(args_dict['i']):
         for f in os.listdir(args_dict['i']):
-            single_dict = dict(args_dict.items() + {'i': os.path.join(args_dict['i'], f)}.items())
+            single_dict = dict(args_dict.items() +
+                               {'i': os.path.join(args_dict['i'], f)}.items())
             d.update(blob_savvy_enqueue(single_dict))
     else:
         d.update(blob_savvy_enqueue(args_dict))
 
     return d
+
 
 def spfy(args_dict):
     '''
