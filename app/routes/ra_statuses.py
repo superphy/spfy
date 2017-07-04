@@ -6,6 +6,10 @@ from routes.ra_api import subtyping_dependencies
 
 bp_ra_statuses = Blueprint('reactapp_statuses', __name__)
 
+# start a redis connection
+redis_url = current_app.config['REDIS_URL']
+redis_connection = redis.from_url(redis_url)
+
 # new to 4.2.0
 def merge_job_results(jobs_dict):
     '''
@@ -16,7 +20,7 @@ def merge_job_results(jobs_dict):
     '''
     r = []
     for key in jobs_dict:
-        job = fetch_job(key)
+        job = fetch_job(key, redis_connection)
         if job.is_finished:
             res = job.result
             # we check for type of result as we're not returning
@@ -35,9 +39,6 @@ def job_status_reactapp_grouped(job_id):
     status of all jobs
     Returns the complete result only if all jobs are finished
     '''
-    # start a redis connection
-    redis_url = current_app.config['REDIS_URL']
-    redis_connection = redis.from_url(redis_url)
     # Retrieves jobs_dict
     jobs_dict = redis_connection.get(job_id)
     # redis-py returns a string by default
@@ -52,7 +53,7 @@ def job_status_reactapp_grouped(job_id):
     for key in jobs_dict:
         key = str(key)
         # print key
-        job = fetch_job(key)
+        job = fetch_job(key, redis_connection)
         if job.is_failed:
             print "job_status_reactapp_grouped(): job failed " + job_id
             return jsonify(job.exc_info)
@@ -75,7 +76,7 @@ def job_status_reactapp(job_id):
         return job_status_reactapp_grouped(job_id)
     else:
         # old code
-        job = fetch_job(job_id)
+        job = fetch_job(job_id, redis_connection)
         if job.is_finished:
             r = job.result
             # subtyping results come in the form of a list and must
