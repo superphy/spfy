@@ -25,9 +25,7 @@ Use:
 5. Visit http://localhost:8090
 6. Eat cake :cake:
 
-.. warning:: There is a option to run all subtyping methods in the background even
-if the user doesn't select them. This is enabled by DEFAULT. You can disable
-the option by setting BACKLOG_ENABLED = False in app/config.py
+.. warning:: There is a option to run all subtyping methods in the background even if the user doesn't select them. This is enabled by DEFAULT. You can disable the option by setting ``BACKLOG_ENABLED = False`` in app/config.py
 
 Architecture:
 -------------
