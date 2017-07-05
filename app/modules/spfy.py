@@ -86,7 +86,7 @@ def blob_savvy_enqueue(single_dict):
         ectyper_jobs = ectyper_pipeline(singles_q, multiples_q)
         job_ectyper = ectyper_jobs['job_ectyper']
         job_ectyper_datastruct = ectyper_jobs['job_ectyper_datastruct']
-        if not  single_dict['options']['bulk']:
+        if not single_dict['options']['bulk']:
             job_ectyper_beautify = ectyper_jobs['job_ectyper_beautify']
     # or if the backlog queue is enabled
     elif config.BACKLOG_ENABLED:
@@ -135,11 +135,20 @@ def blob_savvy_enqueue(single_dict):
                              'analysis': 'Quality Control'}
     jobs[job_id.get_id()] = {'file': single_dict['i'],
                              'analysis': 'ID Reservation'}
-    if single_dict['options']['vf'] or single_dict['options']['serotype']:
-        jobs[job_ectyper_beautify.get_id()] = {'file': single_dict[
+
+    # new to 4.3.3 if bulk ids used return the endpoint of datastruct generation
+    # to poll for completion of all jobs
+    ret_job_ectyper = job_ectyper_datastruct
+    ret_job_amr = job_amr_datastruct
+    # if bulk uploading isnt used, return the beautify result as the final task
+    if not single_dict['options']['bulk']:
+        ret_job_ectyper = job_ectyper_beautify
+        ret_job_amr = job_amr_beautify
+    if (single_dict['options']['vf'] or single_dict['options']['serotype']):
+        jobs[ret_job_ectyper.get_id()] = {'file': single_dict[
             'i'], 'analysis': 'Virulence Factors and Serotype'}
     if single_dict['options']['amr']:
-        jobs[job_amr_beautify.get_id()] = {'file': single_dict[
+        jobs[ret_job_amr.get_id()] = {'file': single_dict[
             'i'], 'analysis': 'Antimicrobial Resistance'}
 
     return jobs
@@ -167,7 +176,7 @@ def spfy(args_dict):
     # abs path resolution should be handled in spfy.py
     #args_dict['i'] = os.path.abspath(args_dict['i'])
 
-    #print 'Starting blob_savvy call'
+    # print 'Starting blob_savvy call'
     jobs_dict = blob_savvy(args_dict)
 
     return jobs_dict
