@@ -69,8 +69,15 @@ def blob_savvy_enqueue(single_dict):
         job_ectyper = singles.enqueue(
             call_ectyper, single_dict, depends_on=job_id)
         # after this call, the result is stored in Blazegraph
-        job_ectyper_datastruct = multiples.enqueue(
-            datastruct_savvy, query_file, query_file + '_id.txt', query_file + '_ectyper.p', depends_on=job_ectyper)
+        # new to 4.3.3
+        # if bulk uploading is set, we return the datastruct as the end task
+        # to poll for job completion, therefore must set ttl of -1
+        if single_dict['options']['bulk']:
+            job_ectyper_datastruct = multiples.enqueue(
+                datastruct_savvy, query_file, query_file + '_id.txt', query_file + '_ectyper.p', depends_on=job_ectyper, result_ttl=-1)
+        else:
+            job_ectyper_datastruct = multiples.enqueue(
+                datastruct_savvy, query_file, query_file + '_id.txt', query_file + '_ectyper.p', depends_on=job_ectyper)
         d = {'job_ectyper': job_ectyper,
              'job_ectyper_datastruct': job_ectyper_datastruct}
         # only bother parsing into json if user has requested either vf or
@@ -102,8 +109,12 @@ def blob_savvy_enqueue(single_dict):
         job_amr_dict = multiples.enqueue(
             amr_to_dict, query_file + '_rgi.tsv', depends_on=job_amr)
         # this uploads result to blazegraph
-        job_amr_datastruct = multiples.enqueue(
-            datastruct_savvy, query_file, query_file + '_id.txt', query_file + '_rgi.tsv_rgi.p', depends_on=job_amr_dict)
+        if single_dict['options']['bulk']:
+            job_amr_datastruct = multiples.enqueue(
+                datastruct_savvy, query_file, query_file + '_id.txt', query_file + '_rgi.tsv_rgi.p', depends_on=job_amr_dict, result_ttl=-1)
+        else:
+            job_amr_datastruct = multiples.enqueue(
+                datastruct_savvy, query_file, query_file + '_id.txt', query_file + '_rgi.tsv_rgi.p', depends_on=job_amr_dict)
         d = {'job_amr': job_amr, 'job_amr_dict': job_amr_dict,
              'job_amr_datastruct': job_amr_datastruct}
         # we still check for the user-selected amr option again because
@@ -146,8 +157,10 @@ def blob_savvy_enqueue(single_dict):
         ret_job_amr = job_amr_datastruct
     # if bulk uploading isnt used, return the beautify result as the final task
     if not single_dict['options']['bulk']:
-        ret_job_ectyper = job_ectyper_beautify
-        ret_job_amr = job_amr_beautify
+        if (single_dict['options']['vf'] or single_dict['options']['serotype']):
+            ret_job_ectyper = job_ectyper_beautify
+        if single_dict['options']['amr']:
+            ret_job_amr = job_amr_beautify
     # add the jobs to the return
     if (single_dict['options']['vf'] or single_dict['options']['serotype']):
         jobs[ret_job_ectyper.get_id()] = {'file': single_dict[
