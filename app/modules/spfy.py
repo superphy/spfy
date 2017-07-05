@@ -75,7 +75,7 @@ def blob_savvy_enqueue(single_dict):
              'job_ectyper_datastruct': job_ectyper_datastruct}
         # only bother parsing into json if user has requested either vf or
         # serotype
-        if single_dict['options']['vf'] or single_dict['options']['serotype']:
+        if (single_dict['options']['vf'] or single_dict['options']['serotype']) and not single_dict['options']['bulk']:
             job_ectyper_beautify = multiples.enqueue(
                 beautify, single_dict, query_file + '_ectyper.p', depends_on=job_ectyper, result_ttl=-1)
             d.update({'job_ectyper_beautify': job_ectyper_beautify})
@@ -86,7 +86,8 @@ def blob_savvy_enqueue(single_dict):
         ectyper_jobs = ectyper_pipeline(singles_q, multiples_q)
         job_ectyper = ectyper_jobs['job_ectyper']
         job_ectyper_datastruct = ectyper_jobs['job_ectyper_datastruct']
-        job_ectyper_beautify = ectyper_jobs['job_ectyper_beautify']
+        if not  single_dict['options']['bulk']:
+            job_ectyper_beautify = ectyper_jobs['job_ectyper_beautify']
     # or if the backlog queue is enabled
     elif config.BACKLOG_ENABLED:
         # we need to create a dict with these options enabled:
@@ -109,7 +110,7 @@ def blob_savvy_enqueue(single_dict):
         # if it was not selected but BACKLOG_ENABLED=True, we dont have to
         # enqueue it to backlog_multiples_q since beautify doesnt upload
         # blazegraph
-        if single_dict['options']['amr']:
+        if single_dict['options']['amr'] and not single_dict['options']['bulk']:
             job_amr_beautify = multiples.enqueue(
                 beautify, single_dict, query_file + '_rgi.tsv_rgi.p', depends_on=job_amr_dict, result_ttl=-1)
             d.update({'job_amr_beautify': job_amr_beautify})
@@ -120,7 +121,8 @@ def blob_savvy_enqueue(single_dict):
         job_amr = amr_jobs['job_amr']
         job_amr_dict = amr_jobs['job_amr_dict']
         job_amr_datastruct = amr_jobs['job_amr_datastruct']
-        job_amr_beautify = amr_jobs['job_amr_beautify']
+        if not single_dict['options']['bulk']:
+            job_amr_beautify = amr_jobs['job_amr_beautify']
     elif config.BACKLOG_ENABLED:
         amr_pipeline(backlog_multiples_q)
     # END AMR PIPELINE

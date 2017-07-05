@@ -175,6 +175,10 @@ def upload():
         # we consider False as default as the front-end should override this
         # to use the new feature
         groupresults = False
+        # new to 4.3.3
+        # allows bulk uploading where results are not returned to user
+        # only the blobid to check statuses is returned (ie. don't run beautify)
+        options['bulk'] = False
 
         # processing form data
         for key, value in form.items():
@@ -193,6 +197,8 @@ def upload():
                     options['serotype']=value
                 if key == 'options.groupresults':
                     groupresults = value
+                if key == 'options.bulk':
+                    options['bulk'] = value
             else:
                 if key =='options.pi':
                     options['pi']=int(value)
