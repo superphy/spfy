@@ -59,7 +59,7 @@ def job_status_reactapp_grouped(job_id, redis_connection):
         return jsonify("pending")
     else:
         # if you've gotten to this point, then all jobs are finished
-        return jsonify(merge_job_results(jobs_dict))
+        return jsonify(merge_job_results(jobs_dict, redis_connection))
 
 @bp_ra_statuses.route('/api/v0/results/<job_id>')
 def job_status_reactapp(job_id):
