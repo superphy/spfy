@@ -138,12 +138,17 @@ def blob_savvy_enqueue(single_dict):
 
     # new to 4.3.3 if bulk ids used return the endpoint of datastruct generation
     # to poll for completion of all jobs
-    ret_job_ectyper = job_ectyper_datastruct
-    ret_job_amr = job_amr_datastruct
+    # these two ifs handle the case where amr (or vf or serotype) might not
+    # be selected but bulk is
+    if (single_dict['options']['vf'] or single_dict['options']['serotype']):
+        ret_job_ectyper = job_ectyper_datastruct
+    if single_dict['options']['amr']:
+        ret_job_amr = job_amr_datastruct
     # if bulk uploading isnt used, return the beautify result as the final task
     if not single_dict['options']['bulk']:
         ret_job_ectyper = job_ectyper_beautify
         ret_job_amr = job_amr_beautify
+    # add the jobs to the return
     if (single_dict['options']['vf'] or single_dict['options']['serotype']):
         jobs[ret_job_ectyper.get_id()] = {'file': single_dict[
             'i'], 'analysis': 'Virulence Factors and Serotype'}
