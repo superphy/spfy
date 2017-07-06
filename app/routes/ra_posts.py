@@ -242,9 +242,12 @@ def upload():
                         for f in files:
                             if f.lower().endswith(current_app.config['GENOME_EXTENSIONS']):
                                 fn = os.path.join(rootDirs, secure_filename(f))
+                                # every file we process gets a timestamp
+                                new_fn = os.path.join(rootDirs, now + '-' + secure_filename(f))
+                                os.rename(fn, new_fn)
                                 # for enqueing task
                                 jobs_enqueued = spfy(
-                                    {'i': fn, 'disable_serotype': False, 'disable_amr': False, 'disable_vf': False, 'pi':options['pi'], 'options':options})
+                                    {'i': new_fn, 'disable_serotype': False, 'disable_amr': False, 'disable_vf': False, 'pi':options['pi'], 'options':options})
                                 jobs_dict.update(jobs_enqueued)
                     # wipe the compressed copy
                     os.remove(filename)
