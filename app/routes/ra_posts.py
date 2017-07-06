@@ -213,26 +213,48 @@ def upload():
         now = now.strftime("%Y-%m-%d-%H-%M-%S-%f")
         jobs_dict = {}
 
+        # new to 5.0.0
+        # create a folder to move all the files into
+        submission_folder = os.path.join(current_app.config['DATASTORE'], now)
+
         for file in uploaded_files:
             if file:
                 # for saving file
-                filename = os.path.join(current_app.config[
-                                        'DATASTORE'], now + '-' + secure_filename(file.filename))
+                filename = os.path.join(submission_folder, now + '-' + secure_filename(file.filename))
                 file.save(filename)
                 #print 'Uploaded File Saved at', str(filename)
 
+                folder = None
                 if tarfile.is_tarfile(filename):
-                    # set filename to dir for spfy call
+                    # retrive the folder everything was extracted to
                     print 'upload(): handling tarfile'
-                    filename = handle_tar(filename, now)
+                    folder = handle_tar(filename, now)
                 elif zipfile.is_zipfile(filename):
                     print 'upload(): handling zipfile'
-                    filename = handle_zip(filename, now)
+                    folder = handle_zip(filename, now)
 
-                # for enqueing task
-                jobs_enqueued = spfy(
-                    {'i': filename, 'disable_serotype': False, 'disable_amr': False, 'disable_vf': False, 'pi':options['pi'], 'options':options})
-                jobs_dict.update(jobs_enqueued)
+                # new to 5.0.0
+                # if we had to extract the files, crawl and make sure spfy
+                # gets called with correct paths
+                if folder:
+                    filesList = os.walk(folder)
+                    for rootDirs, folders, files in filesList:
+                        for f in files:
+                            if f.lower().endswith(current_app.config['GENOME_EXTENSIONS']):
+                                fn = os.path.join(rootDirs, secure_filename(f))
+                                # for enqueing task
+                                jobs_enqueued = spfy(
+                                    {'i': fn, 'disable_serotype': False, 'disable_amr': False, 'disable_vf': False, 'pi':options['pi'], 'options':options})
+                                jobs_dict.update(jobs_enqueued)
+                    # wipe the compressed copy
+                    os.remove(filename)
+                else:
+                    if filename.lower().endswith(current_app.config['GENOME_EXTENSIONS']):
+                        # for enqueing task
+                        jobs_enqueued = spfy(
+                            {'i': filename, 'disable_serotype': False, 'disable_amr': False, 'disable_vf': False, 'pi':options['pi'], 'options':options})
+                        jobs_dict.update(jobs_enqueued)
+
         # new in 4.2.0
         print 'upload(): all files enqueued, returning...'
         if groupresults:
