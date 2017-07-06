@@ -21,7 +21,7 @@ def handle_tar(filename, submission_folder):
         tar.extractall(path=submission_folder)
         tar.close()
         # set filename to dir for spfy call
-        return extracted_dir
+        return submission_folder
 
 def handle_zip(filename,submission_folder):
     z = zipfile.ZipFile(filename,'r')
@@ -31,7 +31,7 @@ def handle_zip(filename,submission_folder):
     z.extractall(path=submission_folder)
     z.close()
     # set filename to dir for spfy call
-    return extracted_dir
+    return submission_folder
 
 def fix_uri(s):
     '''
