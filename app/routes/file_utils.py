@@ -15,7 +15,7 @@ def handle_tar(filename, now):
     if tarfile.is_tarfile(filename):
         tar = tarfile.open(filename)
         extracted_dir = os.path.join(
-            current_app.config['DATASTORE'] + '/' + now)
+            current_app.config['DATASTORE'] + '/' + now + '-' + filename)
         os.mkdir(extracted_dir)
         for member in tar.getmembers():
             if not secure_filename(member.name):
@@ -32,7 +32,7 @@ def handle_tar(filename, now):
 def handle_zip(filename,now):
     z = zipfile.ZipFile(filename,'r')
     extracted_dir = os.path.join(
-        current_app.config['DATASTORE'] + '/' + now)
+        current_app.config['DATASTORE'] + '/' + now + '-' + filename)
     os.mkdir(extracted_dir)
     for info in z.infolist():
         if not secure_filename(info.filename):
