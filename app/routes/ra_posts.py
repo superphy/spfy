@@ -230,10 +230,10 @@ def upload():
                 if tarfile.is_tarfile(filename):
                     # retrive the folder everything was extracted to
                     print 'upload(): handling tarfile'
-                    folder = handle_tar(filename, now)
+                    folder = handle_tar(filename, submission_folder)
                 elif zipfile.is_zipfile(filename):
                     print 'upload(): handling zipfile'
-                    folder = handle_zip(filename, now)
+                    folder = handle_zip(filename, submission_folder)
 
                 # new to 5.0.0
                 # if we had to extract the files, crawl and make sure spfy
