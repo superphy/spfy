@@ -15,7 +15,7 @@ def handle_tar(filename, now):
     if tarfile.is_tarfile(filename):
         tar = tarfile.open(filename)
         extracted_dir = os.path.join(
-            current_app.config['DATASTORE'] + '/' + now + '-' + filename)
+            current_app.config['DATASTORE'] + '/' + now)
         os.mkdir(extracted_dir)
         for member in tar.getmembers():
             if not secure_filename(member.name):
@@ -32,13 +32,14 @@ def handle_tar(filename, now):
 def handle_zip(filename,now):
     z = zipfile.ZipFile(filename,'r')
     extracted_dir = os.path.join(
-        current_app.config['DATASTORE'] + '/' + now + '-' + filename)
+        current_app.config['DATASTORE'] + '/' + now)
     os.mkdir(extracted_dir)
     for info in z.infolist():
         if not secure_filename(info.filename):
             return 'invalid upload', 500
     z.extractall(path=extracted_dir)
     for fn in os.listdir(extracted_dir):
+        print fn
         os.rename(extracted_dir +'/' + fn, extracted_dir +'/'+ now + '-' + fn)
     z.close()
 
