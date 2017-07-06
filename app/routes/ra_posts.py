@@ -223,8 +223,10 @@ def upload():
 
                 if tarfile.is_tarfile(filename):
                     # set filename to dir for spfy call
+                    print 'upload(): handling tarfile'
                     filename = handle_tar(filename, now)
                 elif zipfile.is_zipfile(filename):
+                    print 'upload(): handling zipfile'
                     filename = handle_zip(filename, now)
 
                 # for enqueing task
