@@ -81,15 +81,8 @@ def blob_savvy_enqueue(single_dict):
         job_ectyper = singles.enqueue(
             call_ectyper, single_dict, depends_on=job_id)
         # after this call, the result is stored in Blazegraph
-        # new to 4.3.3
-        # if bulk uploading is set, we return the datastruct as the end task
-        # to poll for job completion, therefore must set ttl of -1
-        if single_dict['options']['bulk']:
-            job_ectyper_datastruct = multiples.enqueue(
-                datastruct_savvy, query_file, query_file + '_id.txt', query_file + '_ectyper.p', depends_on=job_ectyper, result_ttl=-1)
-        else:
-            job_ectyper_datastruct = multiples.enqueue(
-                datastruct_savvy, query_file, query_file + '_id.txt', query_file + '_ectyper.p', depends_on=job_ectyper)
+        job_ectyper_datastruct = multiples.enqueue(
+            datastruct_savvy, query_file, query_file + '_id.txt', query_file + '_ectyper.p', depends_on=job_ectyper)
         d = {job_ectyper.get_id(): {'file': single_dict['i'], 'analysis': 'job_ectyper'}, job_ectyper_datastruct.get_id(): {
             'file': single_dict['i'], 'analysis': 'job_ectyper_datastruct'}}
         # only bother parsing into json if user has requested either vf or
@@ -118,12 +111,8 @@ def blob_savvy_enqueue(single_dict):
         job_amr_dict = multiples.enqueue(
             amr_to_dict, query_file + '_rgi.tsv', depends_on=job_amr)
         # this uploads result to blazegraph
-        if single_dict['options']['bulk']:
-            job_amr_datastruct = multiples.enqueue(
-                datastruct_savvy, query_file, query_file + '_id.txt', query_file + '_rgi.tsv_rgi.p', depends_on=job_amr_dict, result_ttl=-1)
-        else:
-            job_amr_datastruct = multiples.enqueue(
-                datastruct_savvy, query_file, query_file + '_id.txt', query_file + '_rgi.tsv_rgi.p', depends_on=job_amr_dict)
+        job_amr_datastruct = multiples.enqueue(
+            datastruct_savvy, query_file, query_file + '_id.txt', query_file + '_rgi.tsv_rgi.p', depends_on=job_amr_dict)
         d = {job_amr.get_id(): {'file': single_dict['i'], 'analysis': 'job_amr'}, job_amr_dict.get_id(): {'file': single_dict[
             'i'], 'analysis': job_amr_dict}, job_amr_datastruct.get_id(): {'file': single_dict['i'], 'analysis': 'job_amr_datastruct'}}
         # we still check for the user-selected amr option again because

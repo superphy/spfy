@@ -17,7 +17,7 @@ def merge_job_results(jobs_dict, redis_connection):
     r = []
     for key in jobs_dict:
         job = fetch_job(key, redis_connection)
-        if job.is_finished:
+        if job.is_finished and job.exc_info != 'job not found':
             res = job.result
             # we check for type of result as we're not returning
             # Quality Control or ID Reservation results
@@ -78,7 +78,7 @@ def job_status_reactapp(job_id):
     else:
         # old code
         job = fetch_job(job_id, redis_connection)
-        if job.is_finished:
+        if job.is_finished and job.exc_info != 'job not found':
             r = job.result
             # subtyping results come in the form of a list and must
             # be conv to json otherwise, you get a 500 error (isa)
@@ -91,5 +91,7 @@ def job_status_reactapp(job_id):
         elif job.is_failed:
             print 'job_status_reactapp(): job failed ' + job_id
             return jsonify(job.exc_info)
+        elif job.exc_info == 'job not found':
+            return jsonify("job not found")
         else:
             return jsonify("pending")
