@@ -12,18 +12,17 @@ log_file = initialize_logging()
 log = logging.getLogger(__name__)
 
 def handle_tar(filename, submission_folder):
-    if tarfile.is_tarfile(filename):
-        tar = tarfile.open(filename)
-        for member in tar.getmembers():
-            if not secure_filename(member.name):
-                return 'invalid upload', 500
-                # TODO: wipe temp data
-        tar.extractall(path=submission_folder)
-        tar.close()
-        # set filename to dir for spfy call
-        return submission_folder
+    tar = tarfile.open(filename)
+    for member in tar.getmembers():
+        if not secure_filename(member.name):
+            return 'invalid upload', 500
+            # TODO: wipe temp data
+    tar.extractall(path=submission_folder)
+    tar.close()
+    # set filename to dir for spfy call
+    return submission_folder
 
-def handle_zip(filename,submission_folder):
+def handle_zip(filename, submission_folder):
     z = zipfile.ZipFile(filename,'r')
     for info in z.infolist():
         if not secure_filename(info.filename):
