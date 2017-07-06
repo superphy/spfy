@@ -243,9 +243,9 @@ def upload():
                     for rootDirs, folders, files in filesList:
                         for f in files:
                             if f.lower().endswith(current_app.config['GENOME_EXTENSIONS']):
-                                fn = os.path.join(rootDirs, secure_filename(f))
+                                fn = os.path.join(secure_filename(rootDirs), secure_filename(f))
                                 # every file we process gets a timestamp
-                                new_fn = os.path.join(rootDirs, now + '-' + secure_filename(f))
+                                new_fn = os.path.join(secure_filename(rootDirs), now + '-' + secure_filename(f))
                                 os.rename(fn, new_fn)
                                 # for enqueing task
                                 jobs_enqueued = spfy(
