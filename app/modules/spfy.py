@@ -154,11 +154,13 @@ def blob_savvy(args_dict):
     '''
     d = {}
     if os.path.isdir(args_dict['i']):
+        print 'blob_savvy(): ' + args_dict['i'] + ' is a directory.'
         for f in os.listdir(args_dict['i']):
             single_dict = dict(args_dict.items() +
                                {'i': os.path.join(args_dict['i'], f)}.items())
             d.update(blob_savvy_enqueue(single_dict))
     else:
+        print 'blob_savvy(): ' + args_dict['i'] + ' is not a directory.'
         d.update(blob_savvy_enqueue(args_dict))
 
     return d
