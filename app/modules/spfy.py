@@ -1,6 +1,3 @@
-#!/usr/bin/env python2
-# -*- coding: UTF-8 -*-
-
 import os
 
 import redis
@@ -47,6 +44,18 @@ def blob_savvy_enqueue(single_dict):
 
     job_qc = multiples_q.enqueue(qc, query_file, result_ttl=-1)
     job_id = blazegraph_q.enqueue(write_reserve_id, query_file, depends_on=job_qc, result_ttl=-1)
+
+
+
+    #### PANPREDICT PIPELINE
+    if single_dict['options']['pan']:
+        job_pan = singles_q.enqueue(pan, single_dict, depends_on=job_id)
+        # after this call, the result is stored in Blazegraph
+        job_pan_datastruct = multiples_q.enqueue(datastruct_savvy, query_file, query_file + '_id.txt', query_file + '_ectyper.p', depends_on=job_pan)
+        # only bother parsing into json if user has requested either vf or serotype
+        job_pan_beautify = multiples_q.enqueue(beautify, single_dict,query_file + '_ectyper.p', depends_on=job_ectyper, result_ttl=-1)
+    #### END PAN PIPELINE
+
 
     #### ECTYPER PIPELINE
     if single_dict['options']['vf'] or single_dict['options']['serotype']:

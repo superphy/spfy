@@ -167,7 +167,7 @@ def generate_datastruct(query_file, id_file, pickled_dictionary):
             graph = parse_gene_dict(graph, results_dict['Antimicrobial Resistance'], uriGenome,
                                     'AntimicrobialResistanceGene')
         elif key == 'PanGenomeRegion':
-            graph = parse_gene_dict(graph, results_dict['key'], uriGenome, key)
+            graph = parse_gene_dict(graph, results_dict[key], uriGenome, key)
 
     return graph
 
