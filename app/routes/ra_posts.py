@@ -216,6 +216,7 @@ def upload():
         # new to 5.0.0
         # create a folder to move all the files into
         submission_folder = os.path.join(current_app.config['DATASTORE'], now)
+        os.mkdir(submission_folder)
 
         for file in uploaded_files:
             if file:
