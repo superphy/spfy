@@ -163,7 +163,7 @@ Redis
 
 To run Redis in non-persistant mode, in ``docker-compose.yml`` replace:
 
-.. code-block:: yml
+.. code-block:: yaml
 
   redis:
     image: redis:3.2
@@ -173,7 +173,7 @@ To run Redis in non-persistant mode, in ``docker-compose.yml`` replace:
 
 with:
 
-.. code-block:: yml
+.. code-block:: yaml
 
   redis:
     image: redis:3.2
@@ -1042,6 +1042,23 @@ Alternatively, to run docker-compose in detached-head mode (where the compositio
 .. code-block:: sh
 
   docker-compose up -d
+
+Adding a New Option to the Subtyping Module
+===========================================
+
+While reviewing `Adding a New Module`_ is important to see the general workflow, if you're modifying the Subtyping task to add a new analysis option you'll have to *modify* the existing codebase instead of simply *adding* a new module. There are a few things you'll have to do:
+
+1. Add a Switch to the `Subtyping.js`_ and ensure the selection is appended to the formData
+2. Handle the selected option in the ``upload()`` function in `ra_posts.py`_
+3. Create a enqueue() call in its own module under ``/modules``, for example: ``app/modules/somemodule.py``
+4. Create a folder or git submodule in ``app/modules`` which contains the rest of the code your option needs
+5. If you want to return the results to the front-end, you'll have to modify your return to fit the format of `datastruct_savvy.py`_ and then enqueue the datastruct_savvy() call with your results as the arg and all that job to the ``jobs`` dict in ``upload()`` of `ra_posts.py`
+6. If you do 5. correctly, then the ``merge_job_results()`` in `ra_statuses.py`_ will automatically merge the result and return it to the front-end
+
+.. _`Subtyping.js`: https://github.com/superphy/reactapp/blob/master/src/containers/Subtyping.js
+.. _`ra_posts.py`: https://github.com/superphy/backend/blob/master/app/routes/ra_posts.py
+.. _`datastruct_savvy.py`: https://github.com/superphy/backend/blob/master/app/modules/turtleGrapher/datastruct_savvy.py
+.. _`ra_statuses.py`: https://github.com/superphy/backend/blob/master/app/routes/ra_statuses.py
 
 Debugging
 =========
