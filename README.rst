@@ -11,7 +11,11 @@ Platform for predicting Serotype & Virulence Factors (via
 Antimicrobial Resistance (via
 `CARD <https://card.mcmaster.ca/analyze/rgi>`__) from E.coli genome
 sequences bundled using task queues (RQ) and a SPA front-end
-(AngularJS/Flask).
+(React/Flask).
+
+.. image:: screenshots/screen-results_list.png
+    :align: center
+    :alt: screenshot of the results page
 
 Use:
 ----
@@ -24,6 +28,8 @@ Use:
 4. ``docker-compose up``
 5. Visit http://localhost:8090
 6. Eat cake :cake:
+
+.. warning:: There is a option to run all subtyping methods in the background even if the user doesn't select them. This is enabled by DEFAULT. You can disable the option by setting ``BACKLOG_ENABLED = False`` in app/config.py
 
 Architecture:
 -------------

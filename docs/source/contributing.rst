@@ -77,7 +77,9 @@ genome files in total a .zip of which is available within the NML.
 Docker Caveats
 --------------
 
-We've had problems with Ubuntu Desktop versions 16.04.2 LTS and 17.04, and Ubuntu Server 16.04.2 LTS not connecting to NPM when building Docker images and from within the building. Builds work fine with Ubuntu Server 16.04.2 LTS on Cybera and for Ubuntu Server 12.04 and 14.04 LTS on Travis-CI. Within the building, RHEL-based operating systems (CentOS / Scientific Linux) build our NPM-dependent images (namely, `reactapp`_) just fine. Tested the build at home on Ubuntu Server 16.04.2 LTS and it works fine - looks like this is isolated to within the buildng @NML Lethbridge.
+We've had problems in the past with Ubuntu Desktop versions 16.04.2 LTS and 17.04, and Ubuntu Server 16.04.2 LTS not connecting to NPM when building Docker images and from within the building. Builds work fine with Ubuntu Server 16.04.2 LTS on Cybera and for Ubuntu Server 12.04 and 14.04 LTS on Travis-CI. Within the building, RHEL-based operating systems (CentOS / Scientific Linux) build our NPM-dependent images (namely, `reactapp`_) just fine. Tested the build at home on Ubuntu Server 16.04.2 LTS and it works fine - looks like this is isolated to within the buildng @NML Lethbridge.
+
+.. warning:: As of June 30, 2017 Ubuntu Server 16.04.2 LTS is building NPM-dependent images okay @NML Lethbridge.
 
 .. note:: In general, we recommend you run Docker on Ubuntu 16.04.2 LTS (Server or Desktop) if you're outside the NML's Lethrbidge location. Otherwise, CentOS is a secondary option.
 
@@ -153,6 +155,28 @@ You will have to increase the volume disk sizes: https://forums.docker.com/t/inc
   docker load < [each_save_in_backup.tar]
   docker run -i -t [imagename] /bin/bash
   # In the bash prompt of the docker container "df -k" should show 20GB / file system size now.
+
+Redis
+-----
+
+.. warning:: By default, our docker composition is setup to run Redis db with persistant storage so jobs are kept even in you stop and restart the ``redis`` service. This is useful in production and regular usage scenarios as all your jobs are not lost if the composition is stopped or the server/computer is rebooted. However, this also means that if you write a job which errors out and also upload a bunch of files, they will continue to be started even if you stop the composition to write fixes.
+
+To run Redis in non-persistant mode, in ``docker-compose.yml`` replace:
+
+.. code-block:: yml
+
+  redis:
+    image: redis:3.2
+    command: redis-server --appendonly yes # for persistance
+    volumes:
+    - /data
+
+with:
+
+.. code-block:: yml
+
+  redis:
+    image: redis:3.2
 
 Adding a New Module
 ===================
@@ -1089,7 +1113,7 @@ To monitor the status of RQ tasks and check on failed jobs, you have two options
 
 We recommend using ``RQ-dashboard`` to see jobs being enqueued live when testing as ``Sentry`` only reports failed jobs. On remote deployments, we use ``Sentry`` for error reporting.
 
-Note: ``RQ-dashboard`` will not report errors from the Flask webserver.
+.. warning:: ``RQ-dashboard`` will not report errors from the Flask webserver. In addition, jobs enqueued with ``depends_on`` will not appear on the queues list until their dependencies are complete.
 
 Debugging Javascript
 --------------------

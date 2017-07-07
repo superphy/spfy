@@ -5,9 +5,16 @@ REDIS_URL = 'redis://redis:6379/0'
 # this is done to isolate the RQ-Blazegraph worker to avoid race conditions
 QUEUES = ['default']
 # QUEUES_SPFY is for spfy web-app to poll
-QUEUES_SPFY = ['singles', 'blazegraph', 'multiples']
+QUEUES_SPFY = ['singles', 'blazegraph', 'multiples', 'priority']
 BOOTSTRAP_SERVE_LOCAL = True
 MAX_TIME_TO_WAIT = 10
+# DEFAULT_TIMEOUT is used to tell the rq-workers tha maximum time to wait for an
+# enqueued function to complete before terminating it with and ERROR
+# If note specified, jobs must execute within 3 mins
+DEFAULT_TIMEOUT = 600 # in seconds (ie. 10 mins)
+# if BACKLOG_ENABLED = True, then all analyses modules will be run in the
+# in the background for every submitted file
+BACKLOG_ENABLED = True
 
 DATASTORE = '/datastore'
 RECAPTCHA_ENABLED = False
