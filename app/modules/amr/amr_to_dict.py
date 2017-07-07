@@ -26,7 +26,7 @@ def amr_to_dict(amr_file):
         if contig_id not in amr_dict.keys():
             amr_dict[contig_id] = []
         amr_dict[contig_id].append(dict((keys, amr_results[i][keys]) for keys in (
-            'START', 'STOP', 'GENE_NAME', 'ORIENTATION', 'CUT_OFF', 'GENE_NAME')))
+            'START', 'STOP', 'GENE_NAME', 'ORIENTATION', 'CUT_OFF')))
 
     amr_dict = {'Antimicrobial Resistance':amr_dict}
 
