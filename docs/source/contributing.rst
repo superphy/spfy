@@ -1053,13 +1053,14 @@ While reviewing `Adding a New Module`_ is important to see the general workflow,
 3. Create an enqueue() call in `spfy.py`_
 4. Create a folder or git submodule in ``app/modules`` which contains the rest of the code your option needs
 5. If you want to return the results to the front-end or upload the results to blazegraph, you'll have to parse your return to fit the format of `datastruct_savvy.py`_ and then enqueue the datastruct_savvy() call with your results as the arg and all that job to the ``jobs`` dict in ``upload()`` of `ra_posts.py`
-6. If you do 5. correctly, then the ``merge_job_results()`` in `ra_statuses.py`_ will automatically merge the result and return it to the front-end
+6. Then we need to edit `beautify.py`_ to parse the same dict used for `datastruct_savvy.py`_. Afterwhich, the ``merge_job_results()`` in `ra_statuses.py`_ will automatically merge the result and return it to the front-end
 
 .. _`Subtyping.js`: https://github.com/superphy/reactapp/blob/master/src/containers/Subtyping.js
 .. _`ra_posts.py`: https://github.com/superphy/backend/blob/master/app/routes/ra_posts.py
 .. _`datastruct_savvy.py`: https://github.com/superphy/backend/blob/master/app/modules/turtleGrapher/datastruct_savvy.py
 .. _`ra_statuses.py`: https://github.com/superphy/backend/blob/master/app/routes/ra_statuses.py
 .. _`spfy.py`: https://github.com/superphy/backend/blob/master/app/modules/spfy.py
+.. _`beautify.py`: https://github.com/superphy/backend/blob/master/app/modules/beautify/beautify.py
 
 Adding a Checkbox to the Subtyping.js
 -----------------------------------
@@ -1306,6 +1307,197 @@ The additional functions: ``amr_to_dict`` converts the amr results into the stru
 The ``beautify`` function is used to convert the return of ``amr_to_dict`` to the format required by the front-end React application. It is only enqueued if the ``amr`` option, for example, was selected but bulk uploading was not selected.
 
 .. _`ra_statuses.py`: https://github.com/superphy/backend/blob/master/app/routes/ra_statuses.py
+
+Adding a Git Submodule
+----------------------
+
+.. warning:: RQ enqueus functions relative to being inside the ``app/`` folder, depending on your code base you may have to refactor.
+
+The process to add a submodule for an option in the Subtyping card is the same as in `Integrating your Codebase into Spfy`_. Please refer to that sectio for details.
+
+Pickling the Result of Intermediate Tasks
+-----------------------------------------
+
+We handle parsing of intermediate results by pickling the python object and storing it in the same location as the genome file. For example, `amr_to_dict.py`_ handles this by:
+
+.. code-block:: python
+
+  p = os.path.join(amr_file + '_rgi.p')
+  pickle.dump(amr_dict, open(p, 'wb'))
+
+If you need to store results between tasks, do so in the same manner.
+
+.. note:: A cleanup task will be added in release candidate v5.0.0 which wipes the temporary containing folder once all jobs are complete, so you don't have to worry about cleanup for now.
+
+Modifying your Return to Fit datastruct_savvy.py
+------------------------------------------------
+
+`datastruct_savvy.py`_ expects the format of modules which return gene hits (ex. Virulence Factors or Antimicrobial Resistance Genes) to have the form (an example of the conversion can be found in `amr_to_dict.py`_:
+
+.. code-block:: python
+
+  {'Antimicrobial Resistance':
+    {'somecontigid1':{'START':1, 'STOP':2, 'GENE_NAME': 'somename', 'ORIENTATION':'+', 'CUT_OFF':90},
+    'somecontigid2':{'START':1, 'STOP':2, 'GENE_NAME': 'somename', 'ORIENTATION':'+', 'CUT_OFF':90},
+    'somecontigid3':{'START':1, 'STOP':2, 'GENE_NAME': 'somename', 'ORIENTATION':'+', 'CUT_OFF':90}
+  }}
+
+and expects the result of serotyping as:
+
+  {'Serotype':
+    {'O-Type':'O1',
+    'H-Type':'H2',}
+  }
+
+If you were adding a return similar to ``serotype``, such as with phylotyper, define a parsing function in `datastruct_savvy.py`_ similar to ``parse_serotype()``:
+
+.. code-block:: python
+
+  def parse_serotype(graph, serotyper_dict, uriIsolate):
+    if 'O type' in serotyper_dict:
+        graph.add((uriIsolate, gu('ge:0001076'),
+                   Literal(serotyper_dict['O type'])))
+    if 'H type' in serotyper_dict:
+        graph.add((uriIsolate, gu('ge:0001077'),
+                   Literal(serotyper_dict['H type'])))
+    if 'K type' in serotyper_dict:
+        graph.add((uriIsolate, gu('ge:0001684'),
+                   Literal(serotyper_dict['K type'])))
+
+    return graph
+
+Then add the call in the elif in ``generate_datastruct()``:
+
+.. code-block:: python
+
+  # graphing functions
+  for key in results_dict.keys():
+      if key == 'Serotype':
+          graph = parse_serotype(graph,results_dict['Serotype'],uriIsolate)
+      elif key == 'Virulence Factors':
+          graph = parse_gene_dict(graph, results_dict['Virulence Factors'], uriGenome, 'VirulenceFactor')
+      elif key == 'Antimicrobial Resistance':
+          graph = parse_gene_dict(graph, results_dict['Antimicrobial Resistance'], uriGenome, 'AntimicrobialResistanceGene')
+  return graph
+
+If you're adding an option that returns specific hits, such as PanSeq, parse to results as before and call ``parse_gene_dict()`` on it.
+
+.. code-block:: python
+
+  # graphing functions
+  for key in results_dict.keys():
+      if key == 'Serotype':
+          graph = parse_serotype(graph,results_dict['Serotype'],uriIsolate)
+      elif key == 'Virulence Factors':
+          graph = parse_gene_dict(graph, results_dict['Virulence Factors'], uriGenome, 'VirulenceFactor')
+      elif key == 'Antimicrobial Resistance':
+          graph = parse_gene_dict(graph, results_dict['Antimicrobial Resistance'], uriGenome, 'AntimicrobialResistanceGene')
+      elif key == 'Panseq':
+          graph = parse_gene_dict(graph, results_dict['Panseq'], uriGenome, 'PanseqRegion')
+  return graph
+
+.. _`datastruct_savvy.py`: https://github.com/superphy/backend/blob/master/app/modules/turtleGrapher/datastruct_savvy.py
+.. _`amr_to_dict.py`: https://github.com/superphy/backend/blob/master/app/modules/amr/amr_to_dict.py
+
+You'll then have to enqueue the ``datastruct_savvy()`` call in `spfy.py`_ similar to:
+
+.. code-block:: python
+
+  # this uploads result to blazegraph
+  if single_dict['options']['bulk']:
+      job_amr_datastruct = multiples.enqueue(
+          datastruct_savvy, query_file, query_file + '_id.txt', query_file + '_rgi.tsv_rgi.p', depends_on=job_amr_dict, result_ttl=-1)
+  else:
+      job_amr_datastruct = multiples.enqueue(
+          datastruct_savvy, query_file, query_file + '_id.txt', query_file + '_rgi.tsv_rgi.p', depends_on=job_amr_dict)
+
+Then the datastruct result is added to the `d` dictionary of your inner pipeline function:
+
+.. code-block:: python
+
+  d = {'job_amr': job_amr, 'job_amr_dict': job_amr_dict,
+       'job_amr_datastruct': job_amr_datastruct}
+
+and, outside of the inner function, it's assigned as ``job_amr_datastruct``:
+
+.. code-block:: python
+
+  job_amr_datastruct = amr_jobs['job_amr_datastruct']
+
+By default, we set the datastruct as the end task to send back - this is to faciliate bulk uploading. If the user-doesn't select the bulk option, then the return is the result from ``beautify()``:
+
+.. code-block:: python
+
+  # new to 4.3.3 if bulk ids used return the endpoint of datastruct generation
+  # to poll for completion of all jobs
+  # these two ifs handle the case where amr (or vf or serotype) might not
+  # be selected but bulk is
+  if (single_dict['options']['vf'] or single_dict['options']['serotype']):
+      ret_job_ectyper = job_ectyper_datastruct
+  if single_dict['options']['amr']:
+      ret_job_amr = job_amr_datastruct
+  # if bulk uploading isnt used, return the beautify result as the final task
+  if not single_dict['options']['bulk']:
+      if (single_dict['options']['vf'] or single_dict['options']['serotype']):
+          ret_job_ectyper = job_ectyper_beautify
+      if single_dict['options']['amr']:
+          ret_job_amr = job_amr_beautify
+  # add the jobs to the return
+  if (single_dict['options']['vf'] or single_dict['options']['serotype']):
+      jobs[ret_job_ectyper.get_id()] = {'file': single_dict[
+          'i'], 'analysis': 'Virulence Factors and Serotype'}
+  if single_dict['options']['amr']:
+      jobs[ret_job_amr.get_id()] = {'file': single_dict[
+          'i'], 'analysis': 'Antimicrobial Resistance'}
+
+Modifying beautify.py
+---------------------
+
+Technically, you'll mostly be using the ``json_return()`` method from `beautify.py`_ as it performs the core conversion to json. ``beautify()`` also performs a number of checks that are specific to ECTyper and RGI: namely, we parse the ``gene_dict`` and find the widest hit in a given contig. For new modules, we recommand you just create a basic function in `beautify.py`_ to perform the ``pickle.load()`` to bypass the widest_hit search and failed handling. For example:
+
+.. code-block:: python
+
+  def beautify_myoption(args_dict, pickled_dictionary):
+    gene_dict = pickle.load(open(pickled_dictionary, 'rb'))
+    # this converts our dictionary structure into json and adds metadata (filename, etc.)
+    json_r =  json_return(args_dict, gene_dict)
+    return json_r
+
+If you're adding a serotyping tool such as ``phylotyper``, modifying:
+
+.. code-block:: python
+
+  if analysis == 'Serotype':
+
+to be:
+
+.. code-block:: python
+
+  if analysis in ('Serotype','Phylotyper'):
+
+should be all the modification to ``json_return()`` that is required.
+
+For results similar to VF/AMR, where we have a list of genes, you can call ``json_return()`` directly without modification.
+
+With `beautify.py`_ modified, add the ``beautify_myoption()`` call to your pipeline like so:
+
+.. code-block:: python
+
+  if single_dict['options']['phylotyper'] and not single_dict['options']['bulk']:
+    job_phylotyper_beautify = multiples.enqueue(
+        beautify_myoption, single_dict, query_file + '_phylotyper.p', depends_on=job_phylotyper_dict, result_ttl=-1)
+    d.update({'job_phylotyper_beautify': job_phylotyper_beautify})
+
+and then set the result as the return to the front-end:
+
+.. code-block:: python
+
+  # if bulk uploading isnt used, return the beautify result as the final task
+  if not single_dict['options']['bulk']:
+      if (single_dict['options']['vf'] or single_dict['options']['serotype']):
+          ret_job_ectyper = job_ectyper_beautify
+      if single_dict['options']['amr']:
+          ret_job_amr = job_amr_beautify
 
 Debugging
 =========
