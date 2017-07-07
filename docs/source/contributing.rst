@@ -1060,6 +1060,92 @@ While reviewing `Adding a New Module`_ is important to see the general workflow,
 .. _`datastruct_savvy.py`: https://github.com/superphy/backend/blob/master/app/modules/turtleGrapher/datastruct_savvy.py
 .. _`ra_statuses.py`: https://github.com/superphy/backend/blob/master/app/routes/ra_statuses.py
 
+Adding a Switch to the Subtyping.js
+-----------------------------------
+
+As shown in `Subtyping.js`_ , checkboxes are defined like so:
+
+.. code-block:: jsx
+
+  <Checkbox
+    id="serotype"
+    name="check serotype"
+    checked={serotype}
+    onChange={this._updateSerotype}
+    label="Serotype"
+  />
+
+The important points are the ``checked={serotype}`` where ``serotype`` refers to a state defined by:
+
+.. code-block:: jsx
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      file: null,
+      pi: 90,
+      amr: false,
+      serotype: true,
+      vf: true,
+      submitted: false,
+      open: false,
+      msg: '',
+      jobId: "",
+      hasResult: false,
+      groupresults: true,
+      bulk: false,
+      progress: 0
+    }
+  }
+
+and uses the ``onChange`` function:
+
+.. code-block:: jsx
+
+  _updateSerotype = (value) => {
+    this.setState({ serotype: value })
+  }
+
+which is appended to the form by:
+
+.. code-block:: jsx
+
+  data.append('options.serotype', this.state.serotype)
+
+So if you wanted to add a new option, say ``Phylotyper``, you'd create a checkbox like so:
+
+.. code-block:: jsx
+
+  <Checkbox
+    id="phylotyper"
+    name="check phylotyper"
+    checked={phylotyper}
+    onChange={this._updatePhylotyper}
+    label="Use Phylotyper"
+  />
+
+and add the default state as true in the constructor:
+
+.. code-block:: jsx
+
+  phylotyper: true
+
+with the corresponding ``onChange`` function:
+
+.. code-block:: jsx
+
+  _updatePhylotyper = (value) => {
+    this.setState({ phylotyper: value })
+  }
+
+which is appended to the form by:
+
+.. code-block:: jsx
+
+  data.append('options.phylotyper', this.state.phylotyper)
+
+and that's it for the form part!
+
 Debugging
 =========
 
