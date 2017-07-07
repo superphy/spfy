@@ -47,7 +47,7 @@ def blob_savvy_enqueue(single_dict):
     Handles enqueueing of single file to multiple queues.
     :param f: a fasta file
     :param single_dict: single dictionary of arguments
-        ex. {'disable_amr': False, 'i': '/datastore/2017-06-30-21-53-27-595283-GCA_000023365.1_ASM2336v1_genomic.fna', 'disable_vf': False, 'disable_serotype': False, 'pi': 90, 'options': {'pi': 90, 'amr': False, 'serotype': True, 'vf': True}}}
+        ex. {'i': '/datastore/2017-06-30-21-53-27-595283-GCA_000023365.1_ASM2336v1_genomic.fna', 'pi': 90, 'options': {'pi': 90, 'amr': False, 'serotype': True, 'vf': True}}}
         Where `options` is the user-selected choices for serotyping and
         the disable_* is used for running Ectyper; these are separate so we can
         always run ectyper in singles/backlog_singles while still returning to

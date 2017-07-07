@@ -1050,17 +1050,18 @@ While reviewing `Adding a New Module`_ is important to see the general workflow,
 
 1. Add a Switch to the `Subtyping.js`_ and ensure the selection is appended to the formData
 2. Handle the selected option in the ``upload()`` function in `ra_posts.py`_
-3. Create a enqueue() call in its own module under ``/modules``, for example: ``app/modules/somemodule.py``
+3. Create an enqueue() call in `spfy.py`_
 4. Create a folder or git submodule in ``app/modules`` which contains the rest of the code your option needs
-5. If you want to return the results to the front-end, you'll have to modify your return to fit the format of `datastruct_savvy.py`_ and then enqueue the datastruct_savvy() call with your results as the arg and all that job to the ``jobs`` dict in ``upload()`` of `ra_posts.py`
+5. If you want to return the results to the front-end or upload the results to blazegraph, you'll have to parse your return to fit the format of `datastruct_savvy.py`_ and then enqueue the datastruct_savvy() call with your results as the arg and all that job to the ``jobs`` dict in ``upload()`` of `ra_posts.py`
 6. If you do 5. correctly, then the ``merge_job_results()`` in `ra_statuses.py`_ will automatically merge the result and return it to the front-end
 
 .. _`Subtyping.js`: https://github.com/superphy/reactapp/blob/master/src/containers/Subtyping.js
 .. _`ra_posts.py`: https://github.com/superphy/backend/blob/master/app/routes/ra_posts.py
 .. _`datastruct_savvy.py`: https://github.com/superphy/backend/blob/master/app/modules/turtleGrapher/datastruct_savvy.py
 .. _`ra_statuses.py`: https://github.com/superphy/backend/blob/master/app/routes/ra_statuses.py
+.. _`spfy.py`: https://github.com/superphy/backend/blob/master/app/modules/spfy.py
 
-Adding a Switch to the Subtyping.js
+Adding a Checkbox to the Subtyping.js
 -----------------------------------
 
 As shown in `Subtyping.js`_ , checkboxes are defined like so:
@@ -1145,6 +1146,164 @@ which is appended to the form by:
   data.append('options.phylotyper', this.state.phylotyper)
 
 and that's it for the form part!
+
+Handling a New Option in ra_posts.py
+------------------------------------
+
+Looking at the function definition, we can see that ``upload()`` in `ra_posts.py`_ is the route we want to edit:
+
+.. code-block:: python
+
+  # for Subtyping module
+  # the /api/v0 prefix is set to allow CORS for any postfix
+  # this is a modification of the old upload() methods in views.py
+  @bp_ra_posts.route('/api/v0/upload', methods=['POST'])
+  def upload():
+
+We store user-selected options in the ``options`` dictionary defined at the beginning, with a slight exception in the ``pi`` option due to legacy reasons. For example, the ``serotype`` is defined via:
+
+.. code-block:: python
+
+  options['serotype']=True
+
+So let's define the default for phylotyper to be true:
+
+.. code-block:: python
+
+  options['phylotyper']=True
+
+Then we need to process the formdata. The following code block is used to convert the lower-case ``false`` is javascript to the upper case ``False`` in python, likewise with ``true``:
+
+.. code-block:: python
+
+  # processing form data
+  for key, value in form.items():
+      #we need to convert lower-case true/false in js to upper case in python
+          #remember, we also have numbers
+      if not value.isdigit():
+          if value.lower() == 'false':
+              value = False
+          else:
+              value = True
+          if key == 'options.amr':
+              options['amr']=value
+          if key == 'options.vf':
+              options['vf']=value
+          if key == 'options.serotype':
+              options['serotype']=value
+          if key == 'options.groupresults':
+              groupresults = value
+          if key == 'options.bulk':
+              options['bulk'] = value
+      else:
+          if key =='options.pi':
+              options['pi']=int(value)
+
+So for ``phylotyper``, we'll add an ``if`` block:
+
+.. code-block:: python
+
+  if key == 'options.phylotyper':
+    options['phylotyper']=value
+
+After this point, your option will be passed to the `spfy.py`_ call.
+
+Create an enqueue() Call in spfy.py
+-----------------------------------
+
+.. warning:: A previous version of the docs recommended you create your own module (adjacent to `spfy.py`_) to enqueue your option. Note that this is no longer recommended as you have to support the bulk uploading and the backlog option in the `Subtyping.js`_ card.
+
+Currently, we define pipelines denoted within comment blocks:
+
+.. code-block:: python
+
+  # AMR PIPELINE
+  def amr_pipeline(multiples):
+      job_amr = multiples.enqueue(amr, query_file, depends_on=job_id)
+      job_amr_dict = multiples.enqueue(
+          amr_to_dict, query_file + '_rgi.tsv', depends_on=job_amr)
+      # this uploads result to blazegraph
+      if single_dict['options']['bulk']:
+          job_amr_datastruct = multiples.enqueue(
+              datastruct_savvy, query_file, query_file + '_id.txt', query_file + '_rgi.tsv_rgi.p', depends_on=job_amr_dict, result_ttl=-1)
+      else:
+          job_amr_datastruct = multiples.enqueue(
+              datastruct_savvy, query_file, query_file + '_id.txt', query_file + '_rgi.tsv_rgi.p', depends_on=job_amr_dict)
+      d = {'job_amr': job_amr, 'job_amr_dict': job_amr_dict,
+           'job_amr_datastruct': job_amr_datastruct}
+      # we still check for the user-selected amr option again because
+      # if it was not selected but BACKLOG_ENABLED=True, we dont have to
+      # enqueue it to backlog_multiples_q since beautify doesnt upload
+      # blazegraph
+      if single_dict['options']['amr'] and not single_dict['options']['bulk']:
+          job_amr_beautify = multiples.enqueue(
+              beautify, single_dict, query_file + '_rgi.tsv_rgi.p', depends_on=job_amr_dict, result_ttl=-1)
+          d.update({'job_amr_beautify': job_amr_beautify})
+      return d
+
+  if single_dict['options']['amr']:
+      amr_jobs = amr_pipeline(multiples_q)
+      job_amr = amr_jobs['job_amr']
+      job_amr_dict = amr_jobs['job_amr_dict']
+      job_amr_datastruct = amr_jobs['job_amr_datastruct']
+      if not single_dict['options']['bulk']:
+          job_amr_beautify = amr_jobs['job_amr_beautify']
+  elif config.BACKLOG_ENABLED:
+      amr_pipeline(backlog_multiples_q)
+  # END AMR PIPELINE
+
+The ``AMR PIPELINE`` is a good reference point to start from. Note the relative imports to `app/` in `spfy.py`:
+
+.. code-block:: python
+
+  from modules.amr.amr import amr
+
+In this case, there is an folder called ``amr`` with module ``amr`` and main method ``amr``. You don't have to follow the same naming structure of course.
+
+A simple definition for ``phylotyper`` might start like so:
+
+.. code-block:: python
+  
+  def blob_savvy_enqueue(single_dict):
+    # ...
+    # PHYLOTYPER PIPEINE
+    def phylotyper_pipeline(singles):
+      # the main enqueue call
+      job_phylotyper = singles.enqueue(phylotyper_main, query_file, depends_on=job_id)
+      d.update('job_phylotyper': job_phylotyper)
+      return d
+
+    # check if the phylotyper option was selected by the user
+    if single_dict['options']['phylotyper']:
+      phylotyper_jobs = phylotyper_pipeline(singles_q)
+      job_phylotyper = phylotyper_jobs['job_phylotyper']
+    elif config.BACKLOG_ENABLED:
+      phylotyper_pipeline(backlog_singles_q)
+
+.. note:: the ``singles``-type queues are used when the enqueued module can't be run in parallel on the same machine (eg. you cant open up two terminals and run the module at the same time). If the module you're adding can be run in parrallel, you can replace the ``singles`` queues with the ``multiples`` queues.
+
+The way enqueue() works is that the first *args is the function to enqueue and the following *args are for the function itself. ``depends_on`` alows us to specify a job in RQ that must be completed prior to your function.
+
+The code above is just a start and doesn't support the bulk uploading option, storing of results in blazegraph, or return to the front-end. In this case, the inner `phylotyper_pipeline()` function is used to enqueue the task. We do this to support the bulk uploading option: in the regular case where the user has selected the phylotyper option, we call the pipeline method with the ``singles_q`` which always runs before tasks in any ``backlog_*`` queue (See `Optional: Adding a new Queue`_ for how this is implemented). Now, if the user have enabled backlog tasks, where all tasks are run even if the user doesn't select them, then phylotyper_pipeline() is still called except:
+
+1. We call the pipeline with the backlog queue
+2. We don't care to store any job data
+
+The additional functions: ``amr_to_dict`` converts the amr results into the structure required by ``datastruct_savvy``. The following code-block is used to enable bulk uploading. Note that if bulk uploading is selected, we set a ``result_ttl=-1`` for the status checking functions in `ra_statuses.py`_ to use for checking completion.
+
+.. note:: This ``result_ttl=-1`` requirement will no longer be necessary when job dependency checking is streamlined in release candidate v5.0.0
+
+# this uploads result to blazegraph
+if single_dict['options']['bulk']:
+    job_amr_datastruct = multiples.enqueue(
+        datastruct_savvy, query_file, query_file + '_id.txt', query_file + '_rgi.tsv_rgi.p', depends_on=job_amr_dict, result_ttl=-1)
+else:
+    job_amr_datastruct = multiples.enqueue(
+        datastruct_savvy, query_file, query_file + '_id.txt', query_file + '_rgi.tsv_rgi.p', depends_on=job_amr_dict)
+
+The ``beautify`` function is used to convert the return of ``amr_to_dict`` to the format required by the front-end React application. It is only enqueued if the ``amr`` option, for example, was selected but bulk uploading was not selected.
+
+.. _`ra_statuses.py`: https://github.com/superphy/backend/blob/master/app/routes/ra_statuses.py
 
 Debugging
 =========

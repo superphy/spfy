@@ -229,7 +229,7 @@ def upload():
 
                 # for enqueing task
                 jobs_enqueued = spfy(
-                    {'i': filename, 'disable_serotype': False, 'disable_amr': False, 'disable_vf': False, 'pi':options['pi'], 'options':options})
+                    {'i': filename, 'pi':options['pi'], 'options':options})
                 jobs_dict.update(jobs_enqueued)
         # new in 4.2.0
         print 'upload(): all files enqueued, returning...'
