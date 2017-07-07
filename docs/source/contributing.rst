@@ -1060,7 +1060,7 @@ While reviewing `Adding a New Module`_ is important to see the general workflow,
 .. _`datastruct_savvy.py`: https://github.com/superphy/backend/blob/master/app/modules/turtleGrapher/datastruct_savvy.py
 .. _`ra_statuses.py`: https://github.com/superphy/backend/blob/master/app/routes/ra_statuses.py
 
-Adding a Switch to the Subtyping.js
+Adding a Checkbox to the Subtyping.js
 -----------------------------------
 
 As shown in `Subtyping.js`_ , checkboxes are defined like so:
