@@ -1293,13 +1293,15 @@ The additional functions: ``amr_to_dict`` converts the amr results into the stru
 
 .. note:: This ``result_ttl=-1`` requirement will no longer be necessary when job dependency checking is streamlined in release candidate v5.0.0
 
-# this uploads result to blazegraph
-if single_dict['options']['bulk']:
-    job_amr_datastruct = multiples.enqueue(
-        datastruct_savvy, query_file, query_file + '_id.txt', query_file + '_rgi.tsv_rgi.p', depends_on=job_amr_dict, result_ttl=-1)
-else:
-    job_amr_datastruct = multiples.enqueue(
-        datastruct_savvy, query_file, query_file + '_id.txt', query_file + '_rgi.tsv_rgi.p', depends_on=job_amr_dict)
+.. code-block:: python
+
+  # this uploads result to blazegraph
+  if single_dict['options']['bulk']:
+      job_amr_datastruct = multiples.enqueue(
+          datastruct_savvy, query_file, query_file + '_id.txt', query_file + '_rgi.tsv_rgi.p', depends_on=job_amr_dict, result_ttl=-1)
+  else:
+      job_amr_datastruct = multiples.enqueue(
+          datastruct_savvy, query_file, query_file + '_id.txt', query_file + '_rgi.tsv_rgi.p', depends_on=job_amr_dict)
 
 The ``beautify`` function is used to convert the return of ``amr_to_dict`` to the format required by the front-end React application. It is only enqueued if the ``amr`` option, for example, was selected but bulk uploading was not selected.
 
