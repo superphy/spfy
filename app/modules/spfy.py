@@ -18,8 +18,11 @@ from modules.ectyper.call_ectyper import call_ectyper
 from modules.amr.amr import amr
 from modules.amr.amr_to_dict import amr_to_dict
 from modules.beautify.beautify import beautify
-from modules.turtleGrapher.datastruct_savvy import datastruct_savvy
+from modules.turtleGrapher.datastruct_savvy import datastruct_savvy, generate_graph, parse_gene_dict
 from modules.turtleGrapher.turtle_grapher import turtle_grapher
+from modules.PanPredic import pan
+from modules.PanPredic.modules.grapher import pan_graph
+
 
 
 # the only ONE time for global variables
@@ -48,15 +51,14 @@ def blob_savvy_enqueue(single_dict):
 
 
     #### PANPREDICT PIPELINE
+    '''
     if single_dict['options']['pan']:
-        job_pan = singles_q.enqueue(pan, single_dict, depends_on=job_id)
-        # after this call, the result is stored in Blazegraph
-        job_pan_datastruct = multiples_q.enqueue(datastruct_savvy, query_file, query_file + '_id.txt', query_file + '_ectyper.p', depends_on=job_pan)
-        # only bother parsing into json if user has requested either vf or serotype
-        job_pan_beautify = multiples_q.enqueue(beautify, single_dict,query_file + '_ectyper.p', depends_on=job_ectyper, result_ttl=-1)
+
+        pan_graph(single_dict, job_id, query_file)
+
     #### END PAN PIPELINE
 
-
+   '''
     #### ECTYPER PIPELINE
     if single_dict['options']['vf'] or single_dict['options']['serotype']:
         # the ectyper call is special in that it requires the entire arguments  to decide whether to carry the serotype option flag, virulance factors option flag, and percent identity field
@@ -112,3 +114,4 @@ def spfy(args_dict):
     jobs_dict = blob_savvy(args_dict)
 
     return jobs_dict
+
