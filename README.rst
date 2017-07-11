@@ -4,7 +4,7 @@
 
 **Spfy**: speedy `superphy <https://github.com/superphy/semantic>`__
 
-Live: https://lfz.corefacility.ca/superphy/spfy/
+Live: https://lfz.corefacility.ca/superphy/grouch/
 
 Platform for predicting Serotype & Virulence Factors (via
 `ECTyper <https://github.com/phac-nml/ecoli_serotyping>`__) and
