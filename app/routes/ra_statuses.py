@@ -7,7 +7,7 @@ from routes.ra_api import subtyping_dependencies
 bp_ra_statuses = Blueprint('reactapp_statuses', __name__)
 
 # new to 4.2.0
-def merge_job_results(jobs_dict):
+def merge_job_results(jobs_dict, redis_connection):
     '''
     Appends all results together and returns it.
     We don't do this while retriving job statuses as in most checks, the jobs
@@ -16,7 +16,7 @@ def merge_job_results(jobs_dict):
     '''
     r = []
     for key in jobs_dict:
-        job = fetch_job(key)
+        job = fetch_job(key, redis_connection)
         if job.is_finished:
             res = job.result
             # we check for type of result as we're not returning
@@ -29,15 +29,12 @@ def merge_job_results(jobs_dict):
     return r
 
 # new to 4.2.0
-def job_status_reactapp_grouped(job_id):
+def job_status_reactapp_grouped(job_id, redis_connection):
     '''
     Retrieves a dictionary of job_id from Redis (not RQ) and checks
     status of all jobs
     Returns the complete result only if all jobs are finished
     '''
-    # start a redis connection
-    redis_url = current_app.config['REDIS_URL']
-    redis_connection = redis.from_url(redis_url)
     # Retrieves jobs_dict
     jobs_dict = redis_connection.get(job_id)
     # redis-py returns a string by default
@@ -52,7 +49,7 @@ def job_status_reactapp_grouped(job_id):
     for key in jobs_dict:
         key = str(key)
         # print key
-        job = fetch_job(key)
+        job = fetch_job(key, redis_connection)
         if job.is_failed:
             print "job_status_reactapp_grouped(): job failed " + job_id
             return jsonify(job.exc_info)
@@ -62,20 +59,23 @@ def job_status_reactapp_grouped(job_id):
         return jsonify("pending")
     else:
         # if you've gotten to this point, then all jobs are finished
-        return jsonify(merge_job_results(jobs_dict))
+        return jsonify(merge_job_results(jobs_dict, redis_connection))
 
 @bp_ra_statuses.route('/api/v0/results/<job_id>')
 def job_status_reactapp(job_id):
     '''
     This provides an endpoint for the reactapp to poll results. We leave job_status() intact to maintain backwards compatibility with the AngularJS app.
     '''
+    # start a redis connection
+    redis_url = current_app.config['REDIS_URL']
+    redis_connection = redis.from_url(redis_url)
     # new to 4.2.0
     # check if the job_id is of the new format and should be handled diff
     if job_id.startswith('blob'):
-        return job_status_reactapp_grouped(job_id)
+        return job_status_reactapp_grouped(job_id, redis_connection)
     else:
         # old code
-        job = fetch_job(job_id)
+        job = fetch_job(job_id, redis_connection)
         if job.is_finished:
             r = job.result
             # subtyping results come in the form of a list and must

@@ -72,6 +72,9 @@ def parse_gene_dict(graph, gene_dict, uriGenome, geneType):
             uriGene = gu(':' + gene_name)
             # define the object type of the gene
             graph.add((uriGene, gu('rdf:type'), gu(':' + geneType)))
+            # human-readable
+            graph.add((uriGene, gu('dc:description'), Literal(gene_name)))
+
             # define the object type of bnode_region
             graph.add((bnode_region, gu('rdf:type'), gu('faldo:Region')))
             # link the region (eg. the occurance of the gene in a contig)

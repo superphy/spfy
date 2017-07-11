@@ -7,7 +7,7 @@ from SPARQLWrapper import SPARQLWrapper, JSON
 from modules.loggingFunctions import initialize_logging
 from modules.turtleGrapher.turtle_utils import generate_uri as gu
 from modules.groupComparisons.sparql_utils import generate_prefixes
-from modules.groupComparisons.decorators import toset, tolist, submit
+from modules.decorators import toset, tolist, submit
 
 # logging
 log_file = initialize_logging()
@@ -56,14 +56,23 @@ def get_attribute_values(attributeTypeUri):
     Given an attribute type(ex. ge:0001076, aka. O-Type).
     Returns a list of all distinct attribute values.
     '''
-    is_group(attributeTypeUri)
-    # SPARQL Query
-    query = """
-    SELECT DISTINCT ?attribute WHERE {{
-        ?s <{attributeTypeUri}> ?attribute .
-    }}
-    LIMIT 100
-    """.format(attributeTypeUri=attributeTypeUri)
+    if is_group(attributeTypeUri):
+        # SPARQL Query
+        query = """
+        SELECT DISTINCT ?s WHERE {{
+            ?s a <{attributeTypeUri}> .
+        }}
+        LIMIT 100
+        """.format(attributeTypeUri=attributeTypeUri)
+    else:
+        # SPARQL Query
+        query = """
+        SELECT DISTINCT ?attribute WHERE {{
+            ?s <{attributeTypeUri}> ?attribute .
+        }}
+        LIMIT 100
+        """.format(attributeTypeUri=attributeTypeUri)
+
     return query
 
 @toset
@@ -86,12 +95,12 @@ def is_group(uri):
     '''
     Returns True if a given URI is in the list of possible object types (ie. group types), otherwise False (ie. attributeType).
     '''
-    log.info('is_group:' + uri)
-    log.info('is_group: get_types()')
+    #log.info('is_group:' + uri)
+    #log.info('is_group: get_types()')
     types = get_types()
-    log.info(types)
+    #log.info(types)
     isgroup = unicode(uri) in types
-    log.info('is_group:' + str(isgroup))
+    #log.info('is_group:' + str(isgroup))
     return isgroup
 
 if __name__ == "__main__":

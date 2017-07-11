@@ -28,6 +28,7 @@ def handle_groupresults(jobs_dict):
             (dict): a dictionary with key as novel jobid of form 'blob' + hash
                 meant to be parsable by same code as for old, non-grouped ver
     '''
+    print 'handle_groupresults(): started'
     # generate a novel job id
     # we prepend 'blob' so the /results path can tell its our custom object
     # and shouldnt be retrieved from RQ
@@ -49,6 +50,7 @@ def handle_groupresults(jobs_dict):
     for f in st:
         s += f + ' '
     d[job_id]['file'] = s
+    print 'handle_groupresults(): finished'
     return d
 
 # for Subtyping module
@@ -173,6 +175,10 @@ def upload():
         # we consider False as default as the front-end should override this
         # to use the new feature
         groupresults = False
+        # new to 4.3.3
+        # allows bulk uploading where results are not returned to user
+        # only the blobid to check statuses is returned (ie. don't run beautify)
+        options['bulk'] = False
 
         # processing form data
         for key, value in form.items():
@@ -191,6 +197,8 @@ def upload():
                     options['serotype']=value
                 if key == 'options.groupresults':
                     groupresults = value
+                if key == 'options.bulk':
+                    options['bulk'] = value
             else:
                 if key =='options.pi':
                     options['pi']=int(value)
@@ -199,6 +207,7 @@ def upload():
         uploaded_files = request.files.getlist("file")
         print uploaded_files
 
+        print 'upload(): about to enqueue files'
         #set up constants for identifying this sessions
         now = datetime.now()
         now = now.strftime("%Y-%m-%d-%H-%M-%S-%f")
@@ -210,7 +219,7 @@ def upload():
                 filename = os.path.join(current_app.config[
                                         'DATASTORE'], now + '-' + secure_filename(file.filename))
                 file.save(filename)
-                print 'Uploaded File Saved at', str(filename)
+                #print 'Uploaded File Saved at', str(filename)
 
                 if tarfile.is_tarfile(filename):
                     # set filename to dir for spfy call
@@ -220,9 +229,10 @@ def upload():
 
                 # for enqueing task
                 jobs_enqueued = spfy(
-                    {'i': filename, 'disable_serotype': False, 'disable_amr': False, 'disable_vf': False, 'pi':options['pi'], 'options':options})
+                    {'i': filename, 'pi':options['pi'], 'options':options})
                 jobs_dict.update(jobs_enqueued)
         # new in 4.2.0
+        print 'upload(): all files enqueued, returning...'
         if groupresults:
             return jsonify(handle_groupresults(jobs_dict))
         else:

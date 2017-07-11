@@ -56,7 +56,7 @@ def check_largest_spfyid():
         ?genomeid <{dateIdType}> ?date .
     }}
     ORDER BY DESC(?date) LIMIT 1
-    """.format(spfyIdType=gu(':spfyId'), hasPart=gu(':hasPart'), genomeIdType=gu('g:Genome'), dateIdType=gu('dc:date'))
+    """.format(spfyIdType=gu(':spfyId'), hasPart=gu(':hasPart'), genomeIdType=gu('g:Genome'), dateIdType=gu('ge:0000024'))
     sparql.setQuery(query)
     sparql.setReturnFormat(JSON)
     results = sparql.query().convert()
@@ -79,6 +79,8 @@ def reservation_triple(uriGenome, spfyid):
     graph.add((uriIsolate, gu('rdf:type'), gu(':spfyId')))
     # add plain id # as an attribute
     graph.add((uriIsolate, gu('dc:identifier'), Literal(spfyid)))
+    # human-readable
+    graph.add((uriIsolate, gu('dc:description'), Literal('Spfy' + str(spfyid))))
 
     # associatting isolate URI with assembly URI
     graph = link_uris(graph, uriIsolate, uriGenome)
@@ -88,8 +90,11 @@ def reservation_triple(uriGenome, spfyid):
 
     # timestamp
     now = datetime.now()
-    now = now.strftime("%Y-%m-%d-%H-%M-%S-%f")
-    graph.add((uriGenome, gu('dc:date'), Literal(now)))
+    now_readable = now.strftime("%Y-%m-%d")
+    now_accurate = now.strftime("%Y-%m-%d-%H-%M-%S-%f")
+    graph.add((uriGenome, gu('dc:date'), Literal(now_readable)))
+    # upload date
+    graph.add((uriGenome, gu('ge:0000024'), Literal(now_accurate)))
     return graph
 
 def reserve_id(query_file):

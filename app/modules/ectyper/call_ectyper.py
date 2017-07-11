@@ -15,7 +15,7 @@ def call_ectyper(args_dict):
     # imports in it - not sure if we'll use them all)
     # concurrency is handled at the batch level, not here (note: this might change)
     # we only use ectyper for serotyping and vf, amr is handled by rgi directly
-    if not args_dict['disable_serotype'] or not args_dict['disable_vf']:
+    if args_dict['options']['serotype'] or args_dict['options']['vf']:
 
         #hack to allow ectyper to run in docker
         filepath=(args_dict['i'])
@@ -33,9 +33,9 @@ def call_ectyper(args_dict):
         ectyper_dict = subprocess.check_output([ectyper_path,
                                                 '-in', args_dict['i'],
                                                 '-s', str(
-                                                    int(not args_dict['disable_serotype'])),
+                                                    int(args_dict['options']['serotype'])),
                                                 '-vf', str(
-                                                    int(not args_dict['disable_vf'])),
+                                                    int(args_dict['options']['vf'])),
                                                 '-pi', str(args_dict['pi'])
                                                 ])
         # removing that temp file we created
