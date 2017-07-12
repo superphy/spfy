@@ -8,6 +8,10 @@ Developer Guide
 Getting Started
 ===============
 
+Don't worry, genome files are just like Excel spreadsheets.
+
+.. image:: https://imgs.xkcd.com/comics/algorithms.png
+
 We use Docker and Docker-Compose for managing the databases: Blazegraph and Redis, the webserver: Nginx/Flask/Conda, and Redis-Queue (RQ) workers: mostly in Conda. The official `Install Docker Compose guide`_ lists steps for installing both the base Docker Engine, and for installing Docker-Compose separately if you're on Linux. For Mac and Windows users, Docker-Compose comes bundled with Docker Engine.
 
 You'll probably also want to `install Miniconda`_ as we bundle most dependencies in Conda environments. Specific instructions to Spfy are available at `Installing Miniconda`_.
@@ -33,6 +37,7 @@ Reading
 
 For the libraries you're not familiar with, we recommend you skim the docs below before starting:
 
+* An overview of HTTP requests: https://developer.mozilla.org/en-US/docs/Web/HTTP/Overview
 * Flask Blueprints (for routes): http://exploreflask.com/en/latest/blueprints.html
 * Redis Queue docs: http://python-rq.org/docs/
 * Thinking In React: https://facebook.github.io/react/docs/thinking-in-react.html
@@ -177,6 +182,70 @@ with:
 
   redis:
     image: redis:3.2
+
+The General Workflow
+--------------------
+
+.. note:: To use ``docker-compose`` commands, you must be in the same directory as the ``docker-compose.yml`` file you're trying to work with. This is because Docker-Compose uses that .yml file to determine the names of services you're running commands against; for example you might run ``docker-compose logs webserver``. You can still access the underlying docker containers outside of the folder by interfacing with the docker engine directly: ``docker logs backend_webserver_1``.
+
+For working on the backend:
+
+1. Make your changes/additions
+2. Rebuild the images
+
+  .. code-block:: sh
+
+    docker-compose build --no-cache
+
+  or selectively:
+
+  .. code-block:: sh
+
+    docker-compose build --no-cache webserver worker
+
+3. Bring up the composition and use Chrome's devtools for testing
+
+  .. code-block:: sh
+
+    docker-compose up
+
+4. Check logs as appropriate:
+
+  .. code-block:: sh
+
+    docker-compose logs webserver
+    docker-compose logs worker
+
+5. Cleanup the composition you just started
+
+  .. code-block:: sh
+
+    docker-compose down
+
+6. Make more changes and rebuild
+
+  .. code-block:: sh
+
+    docker-compose build --no-cache
+
+For working on the front-end:
+
+We reccomend using ``yarn start`` as it has hot-reloading enabled so it'll automatically rebuild and display your changes at ``localhost:3000``.
+
+1. First, start up the backend (if you're now making changes to the backend, we'll use the default build step when bringing up the composition)
+
+  .. code-block:: sh
+
+    docker-compose up
+
+2. In a separate terminal, fork and clone the reactapp repo, and then bring it up (you'll have to install ``node`` and ``yarn``:
+
+  .. code-block:: sh
+
+    yarn install
+    yarn start
+
+3. Make changes to your fork of reactapp and you'll see them refreshed live at ``localhost:3000``.
 
 Adding a New Module
 ===================
