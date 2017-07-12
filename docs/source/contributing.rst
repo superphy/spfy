@@ -182,7 +182,7 @@ with:
 The General Workflow
 --------------------
 
-..note:: To use ``docker-compose`` commands, you must be in the same directory as the ``docker-compose.yml`` file you're trying to work with. This is because Docker-Compose uses that .yml file to determine the names of services you're running commands against; for example you might run ``docker-compose logs webserver``. You can still access the underlying docker containers outside of the folder by interfacing with the docker engine directly: ``docker logs backend_webserver_1``.
+.. note:: To use ``docker-compose`` commands, you must be in the same directory as the ``docker-compose.yml`` file you're trying to work with. This is because Docker-Compose uses that .yml file to determine the names of services you're running commands against; for example you might run ``docker-compose logs webserver``. You can still access the underlying docker containers outside of the folder by interfacing with the docker engine directly: ``docker logs backend_webserver_1``.
 
 For working on the backend:
 
