@@ -1,9 +1,8 @@
 import cPickle as pickle
 from rdflib import BNode, Literal, Graph
-from app.modules.turtleGrapher.turtle_utils import generate_uri as gu, generate_hash, link_uris
-from app.modules.turtleGrapher.turtle_grapher import generate_graph
-from app.modules.blazeUploader.upload_graph import upload_graph
-import app.modules.PanPredic.modules.uploader
+from modules.turtleGrapher.turtle_utils import generate_uri as gu, generate_hash, link_uris
+from modules.turtleGrapher.turtle_grapher import generate_graph
+from modules.blazeUploader.upload_graph import upload_graph
 # working with Serotype, Antimicrobial Resistance, & Virulence Factor data
 # structures
 

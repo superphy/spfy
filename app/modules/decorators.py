@@ -2,7 +2,7 @@ import config
 import logging
 from functools import wraps
 from SPARQLWrapper import SPARQLWrapper, JSON
-from app.modules.loggingFunctions import initialize_logging
+from modules.loggingFunctions import initialize_logging
 
 # logging
 log_file = initialize_logging()

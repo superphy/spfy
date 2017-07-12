@@ -171,6 +171,7 @@ def upload():
         options['vf']=True
         options['serotype']=True
         options['pi']=90
+        options['pan'] = True
         # new to 4.2.0
         # we consider False as default as the front-end should override this
         # to use the new feature
