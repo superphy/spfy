@@ -9,6 +9,8 @@ FROM superphy/docker-flask-conda:2.0.0
 #TEMPORARY RUN rm /etc/nginx/conf.d/default.conf
 # Copy the modified Nginx conf
 COPY nginx.conf /etc/nginx/conf.d/
+# Copy the base uWSGI ini file to enable default dynamic uwsgi process number
+COPY uwsgi-base.ini /etc/uwsgi/
 # Add maximum upload of 100 m
 COPY upload_60G.conf /etc/nginx/conf.d/
 #TEMPORARY
