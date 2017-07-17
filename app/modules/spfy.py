@@ -23,7 +23,7 @@ from modules.amr.amr_to_dict import amr_to_dict
 from modules.beautify.beautify import beautify
 from modules.turtleGrapher.datastruct_savvy import datastruct_savvy
 from modules.turtleGrapher.turtle_grapher import turtle_grapher
-from modules.PanPredic.mods.grapher import pan_graph
+from modules.PanPredic.grapher import pan_graph
 
 
 
@@ -64,20 +64,16 @@ def blob_savvy_enqueue(single_dict):
         write_reserve_id, query_file, depends_on=job_qc, result_ttl=-1)
 
 
-
     #### PANPREDICT PIPELINE
-    '''
-    if single_dict['options']['pan']:
 
-        pan_graph(single_dict, job_id, query_file)
+    if single_dict['options']['pan']:
+        print('james_debug single_dict: ' + str(single_dict))
+
+        pan_job_dict = pan_graph(single_dict, job_id, query_file)
 
     #### END PAN PIPELINE
 
-   '''
-    #### ECTYPER PIPELINE
-    if single_dict['options']['vf'] or single_dict['options']['serotype']:
-        # the ectyper call is special in that it requires the entire arguments  to decide whether to carry the serotype option flag, virulance factors option flag, and percent identity field
-        job_ectyper = singles_q.enqueue(call_ectyper, single_dict, depends_on=job_id)
+
     # ECTYPER PIPELINE
     def ectyper_pipeline(singles, multiples):
         # the ectyper call is special in that it requires the entire arguments
@@ -155,6 +151,7 @@ def blob_savvy_enqueue(single_dict):
         amr_pipeline(backlog_multiples_q)
     # END AMR PIPELINE
 
+
     # the base file data for blazegraph
     job_turtle = multiples_q.enqueue(
         turtle_grapher, query_file, depends_on=job_qc)
@@ -210,8 +207,7 @@ def spfy(args_dict):
     '''
     # abs path resolution should be handled in spfy.py
     #args_dict['i'] = os.path.abspath(args_dict['i'])
-
-    # print 'Starting blob_savvy call'
+    print('james_debug :args_dict    ' + str(args_dict))
     jobs_dict = blob_savvy(args_dict)
 
     return jobs_dict
