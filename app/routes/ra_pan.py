@@ -81,12 +81,16 @@ def upload():
                     filename = handle_tar(filename, now)
                 elif zipfile.is_zipfile(filename):
                     filename = handle_zip(filename, now)
-
-                # for enqueing task
-                jobs_enqueued = spfy(
-                    {'i': filename, 'pi':options['pi'], 'options':options})
-                jobs_dict.update(jobs_enqueued)
+                if not pan:
+                    # for enqueing task
+                    jobs_enqueued = spfy(
+                        {'i': filename, 'pi':options['pi'], 'options':options})
+                    jobs_dict.update(jobs_enqueued)
         # new in 4.2.0
+        if pan:
+            jobs_enqueued = spfy9({'i': uploaded_files, 'pi':options['pi'], 'options':options})
+            jobs_dict.update(jobs_enqueued)
+                    
         print 'upload(): all files enqueued, returning...'
         if groupresults:
             return jsonify(handle_groupresults(jobs_dict))

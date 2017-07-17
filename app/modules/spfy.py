@@ -22,14 +22,15 @@ from modules.amr.amr import amr
 from modules.amr.amr_to_dict import amr_to_dict
 from modules.beautify.beautify import beautify
 from modules.turtleGrapher.datastruct_savvy import datastruct_savvy
-from modules.turtleGrapher.turtle_grapher import turtle_grapher
-from modules.PanPredic.grapher import pan_graph
-
-
+from modules.turtleGrapher.turtle_grapher import turtle_grapher, generate_graph
+#from modules.PanPredic.grapher import pan_graph
+from modules.PanPredic.grapher import graph_upload
+from modules.PanPredic.pan import pan
+import ast
 
 # the only ONE time for global variables
 # when naming queues, make sure you actually set a worker to listen to that queue
-# we use the high priority queue for things that should be immediately
+# we use tnnhe high priority queue for things that should be immediately
 # returned to the user
 redis_url = config.REDIS_URL
 redis_conn = redis.from_url(redis_url)
@@ -63,16 +64,40 @@ def blob_savvy_enqueue(single_dict):
     job_id = blazegraph_q.enqueue(
         write_reserve_id, query_file, depends_on=job_qc, result_ttl=-1)
 
+    def pan_pipeline(singles, multiples):
+        print('james_debug query_dir: ' + str(query_file))
 
+        job_dict = {}
+       
+        job_pan = singles_q.enqueue(pan, single_dict, depends_on=job_id)
+            
+        dict = ast.literal_eval(job_pan.result)
+        print('james_debug : job_pan.restults: ' + str(dict))
+        graph = generate_graph()
+        for region in dict:
+            for genomeURI in dict[region]:
+            #checks if genome URI already has a pangenome associated, if so we don't need to process it further
+                if not get_single_region(genomeURI):
+                    job_pan_datastruct = multiples_q.enqueue(graph_upload, graph, dict[region][genomeURI], genomeURI, 'PanGenomeRegion', depends_on=job_pan)
+                    job_dict[str(genomeURI) + '_job_pan_datastruct'] = job_pan_datastruct
+                #clears graph
+                    graph = generate_graph()
+                else: print('Pangenome for this genome is already in Blazegraph')
+
+
+                job_pan_beautify = singles_q.enqueue(beautify, single_dict, query_dir + '_panseq.p', depends_on=job_pan,
+                                                 result_ttl=-1)
+
+        return job_dict
     #### PANPREDICT PIPELINE
-
+    '''
     if single_dict['options']['pan']:
         print('james_debug single_dict: ' + str(single_dict))
 
         pan_job_dict = pan_graph(single_dict, job_id, query_file)
 
     #### END PAN PIPELINE
-
+    '''
 
     # ECTYPER PIPELINE
     def ectyper_pipeline(singles, multiples):
@@ -100,6 +125,11 @@ def blob_savvy_enqueue(single_dict):
                 beautify, single_dict, query_file + '_ectyper.p', depends_on=job_ectyper, result_ttl=-1)
             d.update({'job_ectyper_beautify': job_ectyper_beautify})
         return d
+
+    if single_dict['options']['pan']:
+        print('james_debug single_dict: ' + str(single_dict))
+
+        pan_job_dict = pan_pipeline(singles_q, multiples_q)
 
     # if user selected any ectyper-dependent options on the front-end
     if single_dict['options']['vf'] or single_dict['options']['serotype']:
