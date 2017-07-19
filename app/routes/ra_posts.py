@@ -7,7 +7,6 @@ import tempfile
 import time
 
 import flask
-import psutil
 import werkzeug
 
 from datetime import datetime
@@ -216,8 +215,6 @@ def upload():
             total_size += os.path.getsize(fil.stream.name)
         mb_per_s = "%.1f" % ((total_size / (1024.0*1024.0)) / ((1.0+ms(raw=True))/1000.0))
         print " ".join([str(x) for x in ["handling POST request, spent", ms(), "ms.", mb_per_s, "MB/s.", "Number of files:", len(files.values())]])
-        process = psutil.Process(os.getpid())
-        print "memory usage: %.1f MiB" % (process.memory_info().rss / (1024.0*1024.0))
 
         # old file saving
         form = request.form
