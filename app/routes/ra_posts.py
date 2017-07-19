@@ -2,6 +2,14 @@ import os
 import tarfile
 import zipfile
 import redis
+
+import tempfile
+import time
+
+import flask
+import psutil
+import werkzeug
+
 from datetime import datetime
 from flask import Blueprint, request, jsonify, current_app
 from flask_recaptcha import ReCaptcha
@@ -157,6 +165,33 @@ def handle_singleton(jobs_dict):
                 blob_ids.update(create_blob_id(f,analysis,blob_dict))
     return blob_ids
 
+def current_milli_time():
+    return int(round(time.time() * 1000))
+
+def intWithCommas(x):
+    if type(x) not in [type(0), type(0L)]:
+        raise TypeError("Parameter must be an integer.")
+    if x < 0:
+        return '-' + intWithCommas(-x)
+    result = ''
+    while x >= 1000:
+        x, r = divmod(x, 1000)
+        result = ",%03d%s" % (r, result)
+    return "%d%s" % (x, result)
+
+def measure_spent_time():
+    start = current_milli_time()
+    diff = { 'res' : None }
+    def get_spent_time(raw=False):
+        if diff['res'] == None:
+            diff['res'] = current_milli_time() - start
+        if raw:
+            return diff['res']
+        else:
+            return intWithCommas(diff['res'])
+    return get_spent_time
+
+
 # for Subtyping module
 # the /api/v0 prefix is set to allow CORS for any postfix
 # this is a modification of the old upload() methods in views.py
@@ -165,6 +200,26 @@ def upload():
     print 'upload(): received req. at ' + str(datetime.now().strftime("%Y-%m-%d-%H-%M"))
     recaptcha = ReCaptcha(app=current_app)
     if recaptcha.verify():
+        # new file saving
+        print 'upload(): in new file saving'
+        def custom_stream_factory(total_content_length, filename, content_type, content_length=None):
+            tmpfile = tempfile.NamedTemporaryFile('wb+', prefix='flaskapp')
+            print "start receiving file ... filename => " + str(tmpfile.name)
+            return tmpfile
+        ms = measure_spent_time()
+
+        stream,form,files = werkzeug.formparser.parse_form_data(flask.request.environ, stream_factory=custom_stream_factory)
+        total_size = 0
+
+        for fil in files.values():
+            print " ".join(["saved form name", fil.name, "submitted as", fil.filename, "to temporary file", fil.stream.name])
+            total_size += os.path.getsize(fil.stream.name)
+        mb_per_s = "%.1f" % ((total_size / (1024.0*1024.0)) / ((1.0+ms(raw=True))/1000.0))
+        print " ".join([str(x) for x in ["handling POST request, spent", ms(), "ms.", mb_per_s, "MB/s.", "Number of files:", len(files.values())]])
+        process = psutil.Process(os.getpid())
+        print "memory usage: %.1f MiB" % (process.memory_info().rss / (1024.0*1024.0))
+
+        # old file saving
         form = request.form
         options = {}
         # defaults
