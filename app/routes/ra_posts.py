@@ -86,7 +86,7 @@ def create_blob_id(f, analysis, blob_dict):
     d[blob_id]['file'] = f
     return d
 
-# for Subtyping module
+# for Subtyping moduleo
 def handle_singleton(jobs_dict):
     '''
     Takes the jobs_dict dict and creates "blob" jobs which have the QC/ID

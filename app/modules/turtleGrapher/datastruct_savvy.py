@@ -3,6 +3,7 @@ from rdflib import BNode, Literal, Graph
 from modules.turtleGrapher.turtle_utils import generate_uri as gu, generate_hash, link_uris
 from modules.turtleGrapher.turtle_grapher import generate_graph
 from modules.blazeUploader.upload_graph import upload_graph
+from modules.PanPredic.pan_utils import contig_name_parse
 # working with Serotype, Antimicrobial Resistance, & Virulence Factor data
 # structures
 
@@ -47,7 +48,7 @@ def parse_gene_dict(graph, gene_dict, uriGenome, geneType):
 
     for contig_id in gene_dict:
         #makes sure that the contigs are named correctly
-        contig_name = app.modules.PanPredic.modules.uploader.contig_name_parse(contig_id)
+        contig_name = contig_name_parse(contig_id)
         if contig_name != contig_id:
             gene_dict[contig_name] = gene_dict[contig_id]
             del gene_dict[contig_id]

@@ -15,6 +15,9 @@ def call_ectyper(args_dict):
     # imports in it - not sure if we'll use them all)
     # concurrency is handled at the batch level, not here (note: this might change)
     # we only use ectyper for serotyping and vf, amr is handled by rgi directly
+
+    p = 'no pickle'
+    
     if args_dict['options']['serotype'] or args_dict['options']['vf']:
 
         #hack to allow ectyper to run in docker

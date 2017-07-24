@@ -13,6 +13,7 @@ from routes.ra_module_databse import bp_ra_db
 from flask_recaptcha import ReCaptcha
 from flask_cors import CORS, cross_origin
 from raven.contrib.flask import Sentry
+from routes.ra_pan import bp_ra_pan
 
 def create_app():
     app = Flask(__name__)
@@ -29,6 +30,7 @@ def create_app():
     recaptcha = ReCaptcha()
     recaptcha.init_app(app)
     cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
+    print('james_debug : cors ' + str(cors))
     # sentry
     if hasattr(config, 'SENTRY_DSN'):
         sentry = Sentry(dsn=config.SENTRY_DSN)
@@ -40,5 +42,6 @@ def create_app():
     app.register_blueprint(bp_ra_posts)
     app.register_blueprint(bp_ra_statuses)
     app.register_blueprint(bp_ra_db)
+    app.register_blueprint(bp_ra_pan)
 
     return app

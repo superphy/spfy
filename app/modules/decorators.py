@@ -9,7 +9,7 @@ log_file = initialize_logging()
 log = logging.getLogger(__name__)
 
 #blazegraph_url = config.database['blazegraph_url']
-blazegraph_url = 'http://localhost:8080/bigdata/sparql'
+blazegraph_url = 'http://blazegraph:8080/bigdata/sparql'
 
 def tofromHumanReadable(func):
     '''
