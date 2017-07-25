@@ -276,9 +276,13 @@ def upload():
 
                 if tarfile.is_tarfile(filename):
                     # set filename to dir for spfy call
+                    print 'upload(): handling tar'
                     filename = handle_tar(filename, now)
+                    print 'upload(): done handling tar'
                 elif zipfile.is_zipfile(filename):
+                    print 'upload(): handling zip'
                     filename = handle_zip(filename, now)
+                    print 'upload(): done handling zip'
 
                 # for enqueing task
                 jobs_enqueued = spfy(
