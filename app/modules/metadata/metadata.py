@@ -2,7 +2,7 @@ import pandas as pd
 from rdflib import Graph
 from werkzeug.utils import secure_filename
 from modules.groupComparisons.logical_queries import resolve_spfyids
-from modules.turtleGrapher.turtle_utils import generate_uri as gu,
+from modules.turtleGrapher.turtle_utils import generate_uri as gu
 from modules.blazeUploader.upload_graph import upload_graph
 
 d = {'Human': 'http://purl.bioontology.org/ontology/NCBITAXON/9606',
