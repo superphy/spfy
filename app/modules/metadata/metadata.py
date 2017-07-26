@@ -17,7 +17,7 @@ def upload_metadata(csv_file):
         # Note: spfyid should be a Set
         if spfyid:
             # take the first (and only) spfyid
-            sid = spfyid.pop()
+            sid = str(spfyid.pop())
             # grab the host
             host = df.Host[df.Filename==f]
             host = host.iloc[0]
