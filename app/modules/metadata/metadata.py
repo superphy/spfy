@@ -22,6 +22,6 @@ def upload_metadata(csv_file):
             host = df.Host[df.Filename==f]
             host = host.iloc[0]
             # add the host URI to the spfyID URI
-            graph.add((sid, gu('ge:0001567'), gu(d[host])))
+            graph.add((gu(sid), gu('ge:0001567'), gu(d[host])))
     upload_graph(graph)
     return graph.serialize(format='json-ld')
