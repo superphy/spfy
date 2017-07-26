@@ -22,7 +22,6 @@ def slugify(value):
     value = unicodedata.normalize('NFKD', value).encode('ascii', 'ignore')
     value = unicode(re.sub('[^\w\s\/\./:-]', '', value).strip())
     value = unicode(re.sub('[-\s]+', '-', value))
-    value = value.replace(' ','_')
     return value
 
 def generate_uri(uri, s=''):
