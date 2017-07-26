@@ -1,7 +1,8 @@
 import pandas as pd
 from rdflib import Graph
+from werkzeug.utils import secure_filename
 from modules.groupComparisons.logical_queries import resolve_spfyids
-from modules.turtleGrapher.turtle_utils import generate_uri as gu, slugify
+from modules.turtleGrapher.turtle_utils import generate_uri as gu,
 from modules.blazeUploader.upload_graph import upload_graph
 
 d = {'Human': 'http://purl.bioontology.org/ontology/NCBITAXON/9606',
@@ -12,9 +13,9 @@ def upload_metadata(csv_file):
     graph = Graph()
     for f in df.Filename:
         # resolve the spfyid for that file
-        # note: we have to slugify the filename to ensure it is the same as the
-        # db
-        spfyid = resolve_spfyids(gu('dc:description'), slugify(f))
+        # note: we have to run secure_filename to replicate the same saved
+        # name in the db
+        spfyid = resolve_spfyids(gu('dc:description'), secure_filename(f))
         # check if a spfyid was found
         # Note: spfyid should be a Set
         if spfyid:
