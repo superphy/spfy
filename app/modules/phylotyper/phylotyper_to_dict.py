@@ -2,7 +2,7 @@
 
 """Phylotyper module
 
-Start phylotyper job
+Start phylotyper job. Uses default result directories
 
 Example:
     :
