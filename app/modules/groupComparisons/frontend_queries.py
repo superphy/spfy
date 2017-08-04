@@ -1,3 +1,4 @@
+# this module generates the options for selection by the user on the front-end
 import config
 import logging
 import time
