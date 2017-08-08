@@ -23,7 +23,7 @@ def create_fake(f, fake_dir):
 
 def gen(directory, n):
     # create a directory for the fakes
-    fake_dir = directory + 'fakes'
+    fake_dir = os.path.join(directory,'fakes')
     if not os.path.exists(fake_dir):
         os.makedirs(fake_dir)
 
