@@ -45,6 +45,7 @@ def gen(directory, n):
         while p < len_seeds-1:
             create_fake(seeds[p], fake_dir)
             p += 1
+        c += 1
 
 if __name__ == "__main__":
     import argparse
