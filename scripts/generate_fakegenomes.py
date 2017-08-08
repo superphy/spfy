@@ -38,15 +38,16 @@ def gen(directory, n):
     c = 0
     # check how many seed files were supplied
     len_seeds = len(seeds)
+    # create a pointer for where you are in the list of seed files
+    p = 0
     # begin generating files
     while c < n:
-        # create a pointer for where you are in the list of seed files
-        p = 0
-        while p < len_seeds-1:
-            create_fake(seeds[p], fake_dir)
-            p += 1
-        print str(c) + '/' + str(n) + ' generated'
+        if p = len_seeds:
+            p =0
+        create_fake(seeds[p], fake_dir)
+        p += 1
         c += 1
+        print str(c) + '/' + str(n) + ' generated'
 
 if __name__ == "__main__":
     import argparse
