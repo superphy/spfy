@@ -42,7 +42,7 @@ def gen(directory, n):
     p = 0
     # begin generating files
     while c < n:
-        if p = len_seeds:
+        if p == len_seeds:
             p =0
         create_fake(seeds[p], fake_dir)
         p += 1
