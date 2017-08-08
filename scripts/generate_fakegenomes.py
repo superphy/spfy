@@ -43,7 +43,7 @@ def gen(directory, n):
     # begin generating files
     while c < n:
         if p == len_seeds:
-            p =0
+            p = 0
         create_fake(seeds[p], fake_dir)
         p += 1
         c += 1
@@ -66,4 +66,4 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
 
-    gen(args.i, args.n)
+    gen(args.i, int(args.n))
