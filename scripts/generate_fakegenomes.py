@@ -19,7 +19,7 @@ def create_fake(f, fake_dir):
             # write the new header
             fl.write('>' + seed + record.description + '\n')
             # write the old sequence
-            fl.write(record.sequence + '\n')
+            fl.write(record.seq + '\n')
 
 def gen(directory, n):
     # create a directory for the fakes
