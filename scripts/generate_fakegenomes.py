@@ -10,7 +10,7 @@ def create_fake(f, fake_dir):
 
     # create a filename for this fake
     fake_name = os.path.basename(f)
-    fake_name = seed + f
+    fake_name = seed + fake_name
 
     # open a new file for the fake
     with open(os.path.join(fake_dir,fake_name), 'w') as fl:
