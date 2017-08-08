@@ -9,13 +9,17 @@ Example:
 import logging
 import os
 
+from modules.phylotyper.exceptions import ValuesError, DatabaseError
 from modules.turtleGrapher.turtle_utils import generate_uri as gu
+from rdflib import Graph, Literal, XSD
 from modules.decorators import submit, prefix
 from modules.blazeUploader import upload_turtle, upload_graph
 
 log = logging.getLogger(__name__)
 typing_ontology_version = '<https://www.github.com/superphy/typing/1.0.0>'
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
+
+
 
 @submit
 def version_query(version):
@@ -39,7 +43,7 @@ def version_query(version):
 
 @submit
 @prefix
-def subtype_query(subtype):
+def subtype_query(subtype, rdftype='subt:Phylotyper'):
     """
     Queries for a phylotyper subtype definition
 
@@ -50,10 +54,10 @@ def subtype_query(subtype):
     query = '''
         SELECT ?subtype
         WHERE {
-            ?subtype rdf:type subt:Phylotyper .
-            VALUES ?subtype { subt:{subtype} }
+            ?subtype rdf:type  {rdftype}.
+            VALUES ?subtype { {subtype} }
         }
-        '''.format(subtype)
+        '''.format(rdftype, subtype)
 
     return query
 
@@ -75,30 +79,84 @@ def match_version(version):
         return False
 
 
-def match_subtype(subtype_uri):
+def find_object(uri, rdftype):
     """
-    Returns true if subtype URI is already in database
+    Returns true if URI is already in database
 
     Args:
-        subtype(str): subtype URI (adds typing ontology prefix for you)
+        uri(str): URI with prefix defined in config.py
+        rdftype(str): the URI linked by a rdf:type relationship to URI
 
     """
    
-    result = subtype_query(subtype_uri)
+    result = subtype_query(uri, rdftype)
 
     if 'subtype' in result['results']['bindings']:
         return True
     else:
         return False
 
+def generate_graph(uri, loci, values):
+    """
+    Returns graph object that defines phylotyper subtype schema
+
+    """
+
+    # Check for existance of schema Marker components
+    for l in loci:
+        if not find_object(l, ':Marker'):
+            raise DatabaseError(uri, l)
+
+    # Proceed with creating subtype schema
+    graph = Graph()
+
+    # Create instance of phylotyper subtype
+    phylotyper = gu(uri)
+    a = gu('rdf:type')
+    label = gu('rdfs:label')
+    graph.add(phylotyper, a, gu('subt:Phylotyper'))
+
+    # Define Schema
+    schema_uri = uri + 'Schema'
+    schema = gu(schema_uri)
+    graph.add(schema, a, gu('typon:Schema'))
+    graph.add(schema, label, Literal('{} schema'.format(uri), lang='en'))
+
+    part = 1
+    for l in loci:
+        schemapart = gu(schema_uri+'_part_{}'.format(part))
+        graph.add(schemapart, a, gu('typon:SchemaPart'))
+        graph.add(schemapart, label, Literal('{} schema part {}'.format(schema_uri, part), lang='en'))
+        graph.add(schemapart, gu('typon:index'), Literal(part, datatype=XSD.integer))
+        graph.add(schemapart, gu('typon:hasLocus'), gu(l))
+        graph.add(schema, gu('typon:hasSchemaPart'), schemapart)
+
+        part += 1
+
+    # Define Subtype Values
+    set_uri = uri + 'SubtypeSet'
+    subtype_set = gu(set_uri)
+    graph.add(subtype_set, a, gu('subt:SubtypeSet'))
+    graph.add(subtype_set, label, Literal('{} subtype set'.format(uri), lang='en'))
+
+    for v in values:
+        setpart = gu(set_uri+'_class_{}'.format(v))
+        graph.add(setpart, a, gu('subt:SubtypeClass'))
+        graph.add(setpart, label, Literal('{} subtype class {}'.format(set_uri, v), lang='en'))
+        graph.add(subtype_set, gu('subt:subtypeValue'), Literal(v, datatype=XSD.string))
+
+
+    return graph
+
 
 def stx1_graph():
     """
-    Returns graph object that defines stx1 phylotyper subtype schema
+    Returns graph object that defines stx2 phylotyper subtype schema
 
     """
 
-    pass
+    return generate_graph('subt:stx1', ['stx1a','stx1b'], ['a','c','d'])
+
 
 
 def stx2_graph():
@@ -107,7 +165,7 @@ def stx2_graph():
 
     """
 
-    pass
+    return generate_graph('subt:stx2', ['stx2a','stx2b'], ['a','b','c','d','e','f','g'])
 
 
 def eae_graph():
@@ -116,7 +174,10 @@ def eae_graph():
 
     """
 
-    pass
+    return generate_graph('subt:eae', ['eae'], 
+        ["alpha-1","alpha-2","beta-1","beta-2","epsilon-1","epsilon-2","eta-1","eta-2",
+        "gamma-1","iota-1","iota-2","kappa-1","lambda-1","mu-1","nu-1","omicron-1","pi-1",
+        "rho-1","sigma-1","theta-2","xi-1","zeta-1"])
 
 
 def load(subtype):
@@ -132,9 +193,10 @@ def load(subtype):
     """
 
     func_name = subtype+'_graph'
+    uri = 'subt:'+subtype
 
     if not func_name in globals():
-        raise ValueError("Undefined subtype: {}".format(subtype))
+        raise ValuesError(subtype)
     graph_func = globals()[func_name]
    
     ontology_turtle_file = os.path.join(__location__, 'superphy_subtyping.ttl')
@@ -144,11 +206,13 @@ def load(subtype):
         response = upload_turtle(ontology_turtle_file)
         log.info('Upload returned response: {}'.format(response))
 
-    if not match_subtype(subtype):
+    if not find_object(uri, 'subt:Phylotyper'):
         log.info('Uploading subtype definition: {}'.format(subtype))
         graph = graph_func()
         response = upload_graph(graph)
         log.info('Upload returned response: {}'.format(response))
+
+
 
     # Database ready to recieve phylotyper data for this subtype
 
