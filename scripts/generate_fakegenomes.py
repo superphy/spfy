@@ -19,7 +19,8 @@ def create_fake(f, fake_dir):
             # write the new header
             fl.write('>' + seed + record.description + '\n')
             # write the old sequence
-            fl.write(record.seq + '\n')
+            # note: we have to conv to str as SeqIO uses a custom seq class
+            fl.write(str(record.seq) + '\n')
 
 def gen(directory, n):
     # create a directory for the fakes
