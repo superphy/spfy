@@ -168,6 +168,8 @@ put the ontology in ``app/``
 CLI: Enqueue Subtyping Tasks w/o Reactapp:
 ------------------------------------------
 
+.. note:: currently setup for just .fna files
+
 You can bypass the front-end website and still enqueue subtyping jobs by:
 
 1. First, mount the host directory with all your genome files to ``/datastore`` in the containers.

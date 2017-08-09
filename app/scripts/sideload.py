@@ -31,7 +31,8 @@ def load(directory='/datastore'):
     # walk the directory and grab all the files
     for root, dirs, files in os.walk(os.path.abspath(directory)):
         for file in files:
-            list_files.append(os.path.join(root, file))
+            if os.path.splitext(file)[1] == '.fna':
+                list_files.append(os.path.join(root, file))
     len_files = len(list_files)
     p = 0
     while p < len_files-1:
