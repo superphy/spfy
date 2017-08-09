@@ -173,7 +173,7 @@ You can bypass the front-end website and still enqueue subtyping jobs by:
 1. First, mount the host directory with all your genome files to ``/datastore`` in the containers.
 
   For example, if you keep your files at ``/home/bob/ecoli-genomes/``, you'd
-  edit the ``docker-compose.yml`` file and replace **all** instances of:
+  edit the ``docker-compose.yml`` file and replace:
 
   .. code-block:: yaml
 
@@ -201,6 +201,8 @@ You can bypass the front-end website and still enqueue subtyping jobs by:
     docker exec -it backend_webserver_1 sh
     python -m scripts/sideload
     exit
+
+Note that reisdues may be created in your genome folder.
 
 Contributing:
 -------------

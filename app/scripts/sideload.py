@@ -37,6 +37,7 @@ def load(directory='/datastore'):
     while p < len_files-1:
         d = create_request(list_files[p])
         spfy(d)
+        p += 1
         print str(p) + '/' + str(len_files) + ' enqueued'
 
 if __name__ == "__main__":
