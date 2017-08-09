@@ -7,6 +7,7 @@ from modules.loggingFunctions import initialize_logging
 # logging
 log_file = initialize_logging()
 log = logging.getLogger(__name__)
+log.setLevel(logging.DEBUG)
 
 blazegraph_url = config.database['blazegraph_url']
 #blazegraph_url = 'http://localhost:8080/bigdata/sparql'

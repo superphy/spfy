@@ -13,14 +13,14 @@ class PhylotyperError(Exception):
 
 class ValuesError(PhylotyperError):
     """Unknown subtype"""
-    def __init__(self, subtype):
+    def __init__(self, subtype, msg=None):
         super(PhylotyperError, self).__init__(
             subtype, msg="Unrecognized subtype {}".format(subtype))
  
  
 class DatabaseError(PhylotyperError):
     """Missing data in Database"""
-    def __init__(self, subtype, data):
-        super(PhylotyperError, self).__init__(
-            subtype, msg="Database is missing data {} for subtype {}".format(subtype, data))
+    def __init__(self, subtype, data, msg=None):
+        m = "Database is missing data {} for {}".format(data, subtype)
+        super(PhylotyperError, self).__init__(subtype, m)
         self.data = data

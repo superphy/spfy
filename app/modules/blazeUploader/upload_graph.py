@@ -53,17 +53,14 @@ def upload_turtle(turtlefile):
 
     """
     blazegraph_url = config.database['blazegraph_url']
-    
+
     response = None
-    with open('data.txt', 'r') as fh:
-        data=fh.read().replace('\n', ' ')
+    with open(turtlefile, 'r') as fh:
+        data=fh.read()
 
         headers = {'Content-Type': 'application/x-turtle'}
         request = requests.post(
-            os.getenv(
-                'SUPERPHY_RDF_URL',
-                blazegraph_url
-            ),
+            blazegraph_url,
             data=data,
             headers=headers
         )
