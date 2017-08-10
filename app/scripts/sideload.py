@@ -39,7 +39,7 @@ def load(directory='/datastore'):
         d = create_request(list_files[p])
         spfy(d)
         p += 1
-        print str(c) + '/' + str(len_files) + ' enqueued'
+        print str(p) + '/' + str(len_files) + ' enqueued'
 
 if __name__ == "__main__":
     import argparse
