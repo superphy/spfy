@@ -24,7 +24,7 @@ def actual_filename(filename):
         except ValueError:
             # if we hit a ValueError, then couldn't parse it
             # thus, not a timestamp, so return the full string
-            return s
+            return f
     else:
         # if len < 26, we know for certain there is no timestamp
         return f
