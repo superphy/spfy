@@ -7,6 +7,7 @@
 import config
 from modules.turtleGrapher.turtle_utils import generate_hash, generate_uri as gu, link_uris
 from modules.blazeUploader.upload_graph import upload_graph
+from modules.turtleGrapher.turtle_utils import actual_filename
 from rdflib import Namespace, Graph, Literal, plugin
 from Bio import SeqIO
 from os.path import basename
@@ -77,7 +78,7 @@ def generate_turtle_skeleton(query_file):
     # set the object type for uriGenome
     graph.add((uriGenome, gu('rdf:type'), gu('g:Genome')))
     # this is used as the human readable display of Genome
-    graph.add((uriGenome, gu('dc:description'), Literal(basename(query_file)[27:])))
+    graph.add((uriGenome, gu('dc:description'), Literal(actual_filename(query_file))))
     # note that timestamps are not added in base graph generation, they are only added during the check for duplicate files in blazegraph
 
     # uri for bag of contigs
