@@ -15,11 +15,12 @@ def create_request(f):
     pi = 90
     d['pi'] = pi
     options = {
+        'pi': pi,
         'amr': True,
         'vf': True,
         'serotype': True,
         'bulk': True,
-        'pi': pi
+        'groupresults': True
     }
     d['options'] = options
     # add the file
