@@ -18,15 +18,18 @@ from backports import tempfile
 
 import ontology
 import exceptions
+from sequences import MarkerSequences
 
 logger = logging.getLogger(__name__)
+
+
 
 def phylotyper(query, subtype):
     '''
     Wrapper for Phylotyper
 
     Args:
-        query (str): Spfy ID
+        query (str): Genome URI
         subtype (str): Phylotyper recognized subtype (e.g. stx1)
 
     Returns:
@@ -44,19 +47,43 @@ def phylotyper(query, subtype):
         raise err
 
 
-    output_dir = os.path.dirname(query_file)
+    # Get loci to use in subtype prediction
+    uri = 'subt:'+subtype
+    loci_results = ontology.schema_query(uri)
+    loci = [ l['locus'] for l in sorted(loci_results, key=lambda k: k['i'])]
 
-    with tempfile.TemporaryDirectory(dir=output_dir) as temp_dir:
+    # Get list of permissable subtype values
+    subtypes_results = ontology.subtypeset_query(uri)
+    subtypes = {}
+    for r in subtypes_results:
+        subtypes[r['value']] = r['part']
 
-        subprocess.call(['phylotyper', 'genome', '--noplots',
-                         subtype,
-                         temp_dir,
-                         query_file])
+    # Get alleles for this genome
+    markerseqs = MarkerSequences(loci)
+    fasta = markerseqs.fasta(query)
 
+    if fasta:
+        # Run phylotyper
 
-    # rename and move the tsv to the original directory, if applicable
-    pt_file = os.path.join(outputdir)
-    shutil.move(outputname+'.txt', amr_file)
+        with tempfile.TemporaryDirectory(dir=temporary_dir) as temp_dir:
+
+            query_file = os.path.join(temp_dir, 'query.fasta')
+            with open(query_file, 'w') as fh:
+                fh.write(fasta)
+
+            subprocess.call(['phylotyper', 'genome', '--noplots',
+                             subtype,
+                             temp_dir,
+                             query_file])
+
+            # Match assignment with accepted ontology object
+            
+            # rename and move the tsv to the original directory, if applicable
+            pt_file = os.path.join(outputdir)
+            shutil.move(outputname+'.txt', amr_file)
+
+    else:
+        # No loci, nothing to do
 
     return amr_file
 

@@ -12,7 +12,7 @@ from rdflib import Graph, Literal, XSD
 
 from modules.phylotyper.exceptions import ValuesError, DatabaseError
 from modules.turtleGrapher.turtle_utils import generate_uri as gu
-from modules.decorators import submit, prefix
+from modules.decorators import submit, prefix, tojson
 from modules.blazeUploader.upload_graph import upload_turtle, upload_graph
 
 log = logging.getLogger(__name__)
@@ -41,14 +41,62 @@ def version_query(v):
 
     return query
 
+@submit
+@prefix
+@tojson
+def schema_query(subtype):
+    """
+    Queries for a phylotyper subtype definition
+
+    Returns:
+        dictionary
+
+    """
+    query = '''
+        SELECT ?i ?locus
+        WHERE {{
+            VALUES ?subtype {{ {} }}
+            ?subtype rdf:type subt:Phylotyper ;
+                typon:hasSchema ?schema ;
+            ?schema typon:hasSchemaPart ?schemaPart .
+            ?schemaPart typon:index ?i ;
+                typon:hasLocus ?locus
+        }}
+        '''.format(subtype)
+
+    return query
+
+@submit
+@prefix
+@tojson
+def subtypeset_query(subtype):
+    """
+    Queries for a phylotyper subtype values
+
+    Returns:
+        dictionary
+
+    """
+    query = '''
+        SELECT ?part ?value
+        WHERE {{
+            VALUES ?subtype {{ {} }}
+            ?subtype rdf:type subt:Phylotyper ;
+                typon:hasSubtypeSet ?sset ;
+            ?sset typon:hasDefinedClass ?part .
+            ?part subt:subtypeValue ?value
+        }}
+        '''.format(subtype)
+
+    return query
 
 @submit
 @prefix
 def subtype_query(subtype, rdftype='subt:Phylotyper'):
     """
-    Queries for a phylotyper subtype definition
+    Queries for a specific URI of given type
 
-    returns:
+    Returns:
         dictionary
 
     """
@@ -61,6 +109,7 @@ def subtype_query(subtype, rdftype='subt:Phylotyper'):
         '''.format(rdftype, subtype)
 
     return query
+
 
 
 def match_version(version):
@@ -137,6 +186,8 @@ def generate_graph(uri, loci, values):
 
         part += 1
 
+    graph.add((phylotyper, gu('typon:hasSchema'), schema))
+
     # Define Subtype Values
     set_uri = uri + 'SubtypeSet'
     subtype_set = gu(set_uri)
@@ -150,6 +201,7 @@ def generate_graph(uri, loci, values):
         graph.add((setpart, gu('subt:subtypeValue'), Literal(v, datatype=XSD.string)))
         graph.add((subtype_set, gu('subt:hasDefinedClass'), setpart))
 
+    graph.add((phylotyper, gu('subt:hasSubtypeSet'), subtype_set))
 
     return graph
 
@@ -193,7 +245,7 @@ def load(subtype):
         subtype(str): A subtype name that matches one of the defined subtype initialization methods in this module
 
     Returns:
-        None
+        list with marker URIs that make up schema for subtype
 
     """
 
@@ -218,7 +270,6 @@ def load(subtype):
         log.info('Upload returned response: {}'.format(response))
 
     # Database ready to recieve phylotyper data for this subtype
-
 
 
 if __name__=='__main__':

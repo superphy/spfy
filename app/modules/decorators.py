@@ -95,7 +95,10 @@ def tojson(func):
             # Note: though this is writeen as a loop, we expect only 1 key in keys
             for k in keys:
                 # get the value at that key
-                d[k] = result[k]['value']
+                if 'datatype' in result[k] and result[k]['datatype'].endswith('XMLSchema#integer'):
+                    d[k] = int(result[k]['value'])
+                else:
+                   d[k] = str(result[k]['value'])
             l.append(d)
         log.debug(l)
         return l
