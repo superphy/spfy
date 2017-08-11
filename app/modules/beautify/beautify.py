@@ -4,6 +4,7 @@ import cPickle as pickle
 from os.path import basename
 from modules.loggingFunctions import initialize_logging
 from modules.beautify.find_widest import check_alleles
+from modules.turtleGrapher.turtle_utils import actual_filename
 
 # logging
 log_file = initialize_logging()
@@ -37,7 +38,7 @@ def json_return(args_dict, gene_dict):
     for analysis in gene_dict:
         if analysis == 'Serotype':
             instance_dict = {}
-            instance_dict['filename'] = basename(args_dict['i'])[27:]
+            instance_dict['filename'] = actual_filename(args_dict['i'])
             instance_dict['hitname'] = str(gene_dict[analysis].values()).replace(',', ' ').replace("'","").strip("[").strip("]")
             if not "No prediction" in instance_dict['hitname']:
                 instance_dict['hitname'] = instance_dict['hitname'].replace(" ",":",1).replace(" ","")
@@ -56,7 +57,7 @@ def json_return(args_dict, gene_dict):
                     # TODO: bug fix^
                     if type(item) is dict:
                         instance_dict = {}
-                        instance_dict['filename'] = basename(args_dict['i'])[27:]
+                        instance_dict['filename'] = actual_filename(args_dict['i'])
                         instance_dict['contigid'] = contig_id
                         instance_dict['analysis'] = analysis
                         instance_dict['hitname'] = item['GENE_NAME']
@@ -84,7 +85,7 @@ def has_failed(json_r):
 def handle_failed(json_r, args_dict):
     ret = []
     instance_dict = {}
-    instance_dict['filename'] = basename(args_dict['i'])[27:]
+    instance_dict['filename'] = actual_filename(args_dict['i'])
     instance_dict['contigid'] = 'n/a'
     #instance_dict['analysis'] = analysis
     instance_dict['hitname'] = 'No Results Found.'

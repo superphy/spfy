@@ -1,6 +1,33 @@
 import urlparse
 import config  # this is the config.py
+from datetime import datetime
 from rdflib import Namespace, URIRef, Literal
+
+def actual_filename(filename):
+    from os.path import basename
+    '''
+    Used to determine the filename.
+    Mainly to account for the case that a timestamp was prefixed.
+    This should be obsolete in rc-5.0.0. See Issue #197.
+    '''
+    f = basename(filename)
+    # the len of our timestamp is 26
+    if len(f) > 26:
+        s = f[:26]
+        try:
+            # try to parse this into a timestamp
+            datetime.strptime(s, "%Y-%m-%d-%H-%M-%S-%f")
+            # if we pass, return everything after that timestamp
+            # note that we return 27: instead of 26: becuase
+            # the filename is prefixed: now + '-' + filename
+            return f[27:]
+        except ValueError:
+            # if we hit a ValueError, then couldn't parse it
+            # thus, not a timestamp, so return the full string
+            return f
+    else:
+        # if len < 26, we know for certain there is no timestamp
+        return f
 
 def generate_hash(filename):
     from hashlib import sha1

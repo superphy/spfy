@@ -3,6 +3,7 @@ import os
 import logging
 import subprocess
 import cPickle as pickle
+import tempfile
 from ast import literal_eval
 from os.path import basename
 from modules.loggingFunctions import initialize_logging
@@ -21,12 +22,12 @@ def call_ectyper(args_dict):
         filepath=(args_dict['i'])
         wrapper_dir = os.path.dirname(os.path.abspath(__file__))
         # this temp file path is req for ectyper
-        temp_file_path = os.path.join(wrapper_dir, 'temp.fna')
-        shutil.copyfile(args_dict['i'], temp_file_path)
+        temp = tempfile.NamedTemporaryFile()
+        shutil.copyfile(args_dict['i'], temp.name)
         # create a copy of args_dict so we don't modify it from calling functions
         args_dict = dict(args_dict)
-        args_dict['i']= temp_file_path
-        log.debug(temp_file_path)
+        args_dict['i']= temp.name
+        log.debug(temp.name)
 
         ectyper_path = os.path.join(wrapper_dir, 'ecoli_serotyping/src/Tools_Controller/tools_controller.py')
         log.debug(ectyper_path)
@@ -39,7 +40,7 @@ def call_ectyper(args_dict):
                                                 '-pi', str(args_dict['pi'])
                                                 ])
         # removing that temp file we created
-        os.remove(temp_file_path)
+        temp.close()
 
         # because we are using check_output, this catches any print messages from tools_controller
         # TODO: switch to pipes
