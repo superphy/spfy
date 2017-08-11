@@ -79,6 +79,18 @@ genome files in total a .zip of which is available within the NML.
 
 .. _`old github/semantic repo`: https://raw.githubusercontent.com/superphy/semantic/master/superphy/src/upload/python/data/download_files.txt
 
+Generating More Genomes for Testing
+-----------------------------------
+
+The main points to keep in mind is that Spfy runs quality control checks to ensure submissions are E.coli and that hash checking is employed to avoid duplicate entries in the datbase.
+The way we generate fakes are using a seed folder of actual genomes (to pass QC) and renmaing the contig headers (to pass hash checking).
+
+Usage:
+
+1. Activate the conda env described in `Installing Miniconda`_.
+2. cd in ``backend/scripts/`` (not: ```backend/app/scripts``)
+3. Run: ``python generate_fakegenomes.py -i ~/ecoli-genomes/ -n 50000`` where ``-i`` gives the seed folder and ``-n`` gives the number of genomes to generate. This will put all the fakes in ``~/ecoli-genomes/fakes/``.
+
 Docker Caveats
 --------------
 
@@ -1333,7 +1345,7 @@ In this case, there is an folder called ``amr`` with module ``amr`` and main met
 A simple definition for ``phylotyper`` might start like so:
 
 .. code-block:: python
-  
+
   def blob_savvy_enqueue(single_dict):
     # ...
     # PHYLOTYPER PIPEINE
