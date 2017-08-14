@@ -55,9 +55,7 @@ def parse_gene_dict(graph, gene_dict, uriGenome, geneType):
 
             # after this point we switch perspective to the gene and build down to
             # relink the gene with the contig
-            bnode_region = BNode()
-            bnode_start = BNode()
-            bnode_end = BNode()
+            
 
             # some gene names, esp those which are effectively a description,
             # have spaces
@@ -68,12 +66,19 @@ def parse_gene_dict(graph, gene_dict, uriGenome, geneType):
             # human-readable
             graph.add((uriGene, gu('dc:description'), Literal(gene_name)))
 
-            # define the object type of bnode_region
-            graph.add((bnode_region, gu('rdf:type'), gu('faldo:Region')))
+            # define the object type of Region
+            start_position = gene_record['START']
+            stop_position = gene_record['STOP']
+            allele_uri = '/'.join((str(gene_name), str(start_position)+'-'+str(stop_position)))
+            region = gu(uriContig, '/'+allele_uri)
+
+            graph.add((region, gu('rdf:type'), gu('faldo:Region')))
             # link the region (eg. the occurance of the gene in a contig)
-            graph = link_uris(graph, bnode_region, uriGene)
+            graph = link_uris(graph, region, uriGene)
             
             # define the start & end bnodes
+            bnode_start = BNode()
+            bnode_end = BNode()
            
             # this is a special case for amr results
             if 'CUT_OFF' in gene_dict.keys():
@@ -103,13 +108,13 @@ def parse_gene_dict(graph, gene_dict, uriGenome, geneType):
             graph.add((bnode_end, gu('faldo:position'),
                        Literal(gene_record['STOP'])))
 
-            graph.add((bnode_region, gu('faldo:begin'), bnode_start))
-            graph.add((bnode_region, gu('faldo:end'), bnode_end))
+            graph.add((region, gu('faldo:begin'), bnode_start))
+            graph.add((region, gu('faldo:end'), bnode_end))
 
-            graph.add((bnode_region, gu('faldo:reference'), uriContig))
+            graph.add((region, gu('faldo:reference'), uriContig))
 
             # link up the start/end bnodes to the contig
-            graph = link_uris(graph, uriContig, bnode_region)
+            graph = link_uris(graph, uriContig, region)
             
             
     #### end of nested for

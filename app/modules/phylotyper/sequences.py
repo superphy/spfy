@@ -28,7 +28,7 @@ def marker_query(marker_uris):
 @tojson
 def sequence_query(marker_uri, genome_uri):
 	query = '''
-	SELECT ?contig ?start ?len ?seq
+	SELECT ?contig ?region ?start ?len ?seq
 	WHERE {{
       ?g a g:Genome .
       VALUES ?g {{ {} }}
@@ -36,7 +36,7 @@ def sequence_query(marker_uri, genome_uri):
       ?m a :VirulenceFactor .
       ?contig g:DNASequence ?dna .
       VALUES ?m {{ {} }} .
-      ?r a faldo:Region ;
+      ?region a faldo:Region ;
            :hasPart ?m ;
            :isFoundIn ?contig ;
            :isFoundIn ?g ;
@@ -83,7 +83,7 @@ class MarkerSequences(object):
     	query_result = sequence_query(self.marker_uris, genome_uri)
 
     	# Unroll result into dictionary with fasta-like keys
-    	seqdict = { "{}:{}..{}".format(r['contig'], r['start'], r['start']+r['len']-1): r['seq'] for r in query_result }
+    	seqdict = { "spfy|{}| {}:{}..{}".format(r['region'], r['contig'], r['start'], r['start']+r['len']-1): r['seq'] for r in query_result }
 
        	return seqdict
 

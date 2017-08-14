@@ -14,11 +14,11 @@ import os
 import shutil
 import logging
 
-from backports import tempfile
+#from backports import tempfile
 
-import ontology
-import exceptions
-from sequences import MarkerSequences
+import config
+from modules.phylotyper import ontology, exceptions
+from modules.phylotyper.sequences import MarkerSequences
 
 logger = logging.getLogger(__name__)
 
@@ -40,7 +40,7 @@ def phylotyper(query, subtype):
     # Validate subtype ontology
     try:
         ontology.load(subtype)
-    except exceptions.DatabaseException as err:
+    except exceptions.DatabaseError as err:
         logger.error('Please run VF detection before calling Phylotyper. Error message: {}'.format(err))
     except Exception as err:
         logger.error('Unexpected error from phylotyper ontology loading. Error message: {}'.format(err))
@@ -62,38 +62,40 @@ def phylotyper(query, subtype):
     markerseqs = MarkerSequences(loci)
     fasta = markerseqs.fasta(query)
 
+    print fasta
+
     if fasta:
         # Run phylotyper
+        pass
 
-        with tempfile.TemporaryDirectory(dir=temporary_dir) as temp_dir:
+        # with tempfile.TemporaryDirectory(dir=config['DATASTORE']) as temp_dir:
 
-            query_file = os.path.join(temp_dir, 'query.fasta')
-            with open(query_file, 'w') as fh:
-                fh.write(fasta)
+        #     query_file = os.path.join(temp_dir, 'query.fasta')
+        #     with open(query_file, 'w') as fh:
+        #         fh.write(fasta)
 
-            subprocess.call(['phylotyper', 'genome', '--noplots',
-                             subtype,
-                             temp_dir,
-                             query_file])
+        #     subprocess.call(['phylotyper', 'genome', '--noplots',
+        #                      subtype,
+        #                      temp_dir,
+        #                      query_file])
 
-            # Match assignment with accepted ontology object
+        #     # Match assignment with accepted ontology object
             
-            # rename and move the tsv to the original directory, if applicable
-            pt_file = os.path.join(outputdir)
-            shutil.move(outputname+'.txt', amr_file)
+            
 
     else:
         # No loci, nothing to do
+        pass
 
-    return amr_file
+    return None
 
 if __name__=='__main__':
     import argparse
 
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "-i",
-        help="FASTA file",
+        "-g",
+        help="Genome URI",
         required=True
     )
     parser.add_argument(
@@ -102,4 +104,4 @@ if __name__=='__main__':
         required=True
     )
     args = parser.parse_args()
-    print amr(args.i)
+    phylotyper(args.g, args.s)

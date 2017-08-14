@@ -41,9 +41,9 @@ def version_query(v):
 
     return query
 
+@tojson
 @submit
 @prefix
-@tojson
 def schema_query(subtype):
     """
     Queries for a phylotyper subtype definition
@@ -66,9 +66,9 @@ def schema_query(subtype):
 
     return query
 
+@tojson
 @submit
 @prefix
-@tojson
 def subtypeset_query(subtype):
     """
     Queries for a phylotyper subtype values
