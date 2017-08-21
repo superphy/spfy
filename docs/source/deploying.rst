@@ -39,7 +39,7 @@ This command is run using ``screen`` allowing us to detach it from our shell.
 .. code-block:: sh
 
 	screen
-	CTRL+A, D
+	CTRL+a, d
 
 and to resume:
 
@@ -77,5 +77,6 @@ Our root filesystem for the Corefacility VM is really small (45G) and we instead
 	cd /var/lib/
 	sudo cp -rf docker/ /docker/backups/
 	sudo rm -rf docker/
+	sudo mkdir /docker/docker
 	sudo ln -s /docker/docker /var/lib/docker
 	sudo systemctl start docker
