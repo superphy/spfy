@@ -28,4 +28,21 @@ Looking at the filesystem:
 	tmpfs                      2.4G     0  2.4G   0% /run/user/40151
 	tmpfs                      2.4G     0  2.4G   0% /run/user/40290
 
-``/Warehouse`` is used for long-term data storage and shared across the NML. 
+``/Warehouse`` is used for long-term data storage and shared across the NML. In order to write to ``/Warehouse``, you need the permissions of either ``claing`` or ``superphy``; there are some problems with passing these permissions into Docker environments, so we run Blazegraph, inside of folder ``/Warehouse/Users/claing/superphy/spfy/docker-blazegraph/2.1.4-inferencing`` and as ``claing``, outside of Docker using:
+
+.. code-block:: sh
+
+	java -server -Xmx4g -Dbigdata.propertyFile=/Warehouse/Users/claing/superphy/spfy/docker-blazegraph/2.1.4-inferencing/RWStore.properties -jar blazegraph.jar
+
+This command is run using ``screen`` allowing us to detach it from our shell.
+
+.. code-block:: sh
+
+	screen
+	CTRL+A, D
+
+and to resume:
+
+.. code-block:: sh
+
+	screen -r
