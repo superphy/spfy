@@ -69,7 +69,7 @@ Docker Service
 	warehouse:/ifs/Warehouse	/Warehouse	nfs	defaults	0 0
 	/dev/mapper/docker-docker /docker xfs defaults 1 2
 
-Our root filesystem for the Corefacility VM is really small (45G) and we instead have a virtual drive at ``/dev/mapper/docker-docker `` which is mounted on ``/docker`` which has our Docker images / unmapped volumes. This is setup using symlinks:
+Our root filesystem for the Corefacility VM is really small (45G) and we instead have a virtual drive at ``/dev/mapper/docker-docker`` which is mounted on ``/docker`` which has our Docker images / unmapped volumes. This is setup using symlinks:
 
 .. code-block:: sh
 
