@@ -8,8 +8,8 @@ Deplyoment Guide
 Deploying to Corefacility
 =========================
 
-Things to Note: Filesystem
---------------------------
+Blazegraph
+----------
 
 Looking at the filesystem:
 
@@ -48,3 +48,34 @@ and to resume:
 	screen -r
 
 See https://github.com/superphy/backend/issues/159
+
+Docker Service
+--------------
+
+.. code-block:: sh
+
+	[claing@superphy docker]$ sudo cat /etc/fstab
+
+	#
+	# /etc/fstab
+	# Created by anaconda on Thu Dec 24 17:40:08 2015
+	#
+	# Accessible filesystems, by reference, are maintained under '/dev/disk'
+	# See man pages fstab(5), findfs(8), mount(8) and/or blkid(8) for more info
+	#
+	/dev/mapper/superphy-root /                       xfs     defaults        1 1
+	UUID=6c62e5cf-fd55-41e8-8122-e5e78643e3cd /boot                   xfs     defaults        1 2
+	/dev/mapper/superphy-swap swap                    swap    defaults        0 0
+	warehouse:/ifs/Warehouse	/Warehouse	nfs	defaults	0 0
+	/dev/mapper/docker-docker /docker xfs defaults 1 2
+
+Our root filesystem for the Corefacility VM is really small (45G) and we instead have a virtual drive at ``/dev/mapper/docker-docker `` which is mounted on ``/docker`` which has our Docker images / unmapped volumes. This is setup using symlinks:
+
+.. code-block:: sh
+
+	sudo systemctl stop docker
+	cd /var/lib/
+	sudo cp -rf docker/ /docker/backups/
+	sudo rm -rf docker/
+	sudo ln -s /docker/docker /var/lib/docker
+	sudo systemctl start docker
