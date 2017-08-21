@@ -54,3 +54,4 @@ database['blazegraph_url'] = 'http://blazegraph:8080/bigdata/sparql'
 # to configure RQ for it in a single step
 # NOTE!!!: There is a bug with Raven that needs to be accounted for in RQ config. You must prefix your sentry dsn with sync+ eg 'sync+https://...' see https://github.com/nvie/rq/issues/350 . As of Mar.'17 this hasn't been fixed.
 
+SENTRY_DSN = 'sync+https://8065818d37f44a4ab89134eed85b584c:a7e9769b030e4178847f4e87fb7e6ebd@sentry.io/197061'
