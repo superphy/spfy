@@ -12,6 +12,7 @@ Welcome to the Superphy documentation!
 
    intro
    contributing
+   deploying
 
 
 Indices and tables
