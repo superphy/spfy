@@ -39,7 +39,7 @@ This command is run using ``screen`` allowing us to detach it from our shell.
 .. code-block:: sh
 
 	screen
-	CTRL+A, D
+	CTRL+a, d
 
 and to resume:
 
@@ -69,7 +69,7 @@ Docker Service
 	warehouse:/ifs/Warehouse	/Warehouse	nfs	defaults	0 0
 	/dev/mapper/docker-docker /docker xfs defaults 1 2
 
-Our root filesystem for the Corefacility VM is really small (45G) and we instead have a virtual drive at ``/dev/mapper/docker-docker `` which is mounted on ``/docker`` which has our Docker images / unmapped volumes. This is setup using symlinks:
+Our root filesystem for the Corefacility VM is really small (45G) and we instead have a virtual drive at ``/dev/mapper/docker-docker`` which is mounted on ``/docker`` which has our Docker images / unmapped volumes. This is setup using symlinks:
 
 .. code-block:: sh
 
@@ -77,5 +77,34 @@ Our root filesystem for the Corefacility VM is really small (45G) and we instead
 	cd /var/lib/
 	sudo cp -rf docker/ /docker/backups/
 	sudo rm -rf docker/
+	sudo mkdir /docker/docker
 	sudo ln -s /docker/docker /var/lib/docker
 	sudo systemctl start docker
+
+Docker Hub
+----------
+
+Docker Hub is used to host pre-built images; for us, this mostly consisting of our base ``docker-flask-conda`` image. The org. page is publically available at https://hub.docker.com/u/superphy/ and you can pull without any permission issues. To push a new image, first register an account at https://hub.docker.com/
+
+The owner for the org. has the username ``superphyinfo`` and uses the same password as ``superphy.info@gmail.com``. You can use it to add yourself to the org.
+
+You can then build and tag docker images to be pushed onto Docker Hub.
+
+.. code-block:: sh
+
+	docker build -f Dockerfile-reactapp -t superphy/reactapp:4.3.3-corefacility .
+
+or tag an existing image:
+
+.. code-block:: sh
+
+	docker images
+	docker tag 245d7e4bb63e superphy/reactapp:4.3.3-corefacility
+
+Either way, you can then push using the same command:
+
+.. code-block:: sh
+
+	docker push superphy/reactapp:4.3.3-corefacility
+
+.. note:: We occasionally use Docker Hub as a work-around in case a computer can't build an image. There is some bug where Corefacility VMs aren't connecting to NPM and thus we build the reactapp image on Cybera and pull it down on Corefacility.
