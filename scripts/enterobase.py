@@ -46,5 +46,6 @@ def enterobase():
             with open(fn, 'w') as fl:
                 fl.write(f.text)
                 print 'wrote ' + fn
+                
 if __name__ == '__main__':
     enterobase()
