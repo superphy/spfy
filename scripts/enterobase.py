@@ -44,3 +44,5 @@ def enterobase():
             f = requests.get('http://enterobase.warwick.ac.uk/upload/download?assembly_id=' + str(identifier) + '&database=ecoli')
             with open(dl_folder + '/' + str(barcode) + '.fasta', 'w') as fl:
                 fl.write(f.text)
+if __name__ == '__main__':
+    enterobase()
