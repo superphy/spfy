@@ -33,12 +33,14 @@ def enterobase():
     #        u'extra_row_info', u'id', u'low_qualities', u'n50', u'pipeline_version',
     #        u'status', u'top_species', u'total_length'],
     #       dtype='object')
-    dl_folder = 'enterobase_db/'
+    dl_folder = 'enterobase_db'
+    if not os.path.exists(dl_folder):
+        os.makedirs(dl_folder)
     for row in df.itertuples():
         identifier = row[6]
         barcode = row[1]
         assembled = row[10]
         if assembled == 'Assembled':
             f = requests.get('http://enterobase.warwick.ac.uk/upload/download?assembly_id=' + str(identifier) + '&database=ecoli')
-            with open(dl_folder + str(barcode) + '.fasta', 'w') as fl:
+            with open(dl_folder + '/' + str(barcode) + '.fasta', 'w') as fl:
                 fl.write(f.text)
