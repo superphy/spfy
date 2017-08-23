@@ -54,7 +54,7 @@ def enterobase():
             while i < 10:
                 try:
                     get(identifier, barcode, dl_folder)
-                    i = 4
+                    i = 10
                 except:
                     print 'sleeping ' + str(i) + ' min'
                     sleep(60 * i)
