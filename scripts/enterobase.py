@@ -2,6 +2,13 @@ import os
 import requests
 import pandas as pd
 
+def get(identifier, barcode, dl_folder):
+    f = requests.get('http://enterobase.warwick.ac.uk/upload/download?assembly_id=' + str(identifier) + '&database=ecoli')
+    fn = dl_folder + '/' + str(barcode) + '.fasta'
+    with open(fn, 'w') as fl:
+        fl.write(f.text)
+        print 'wrote ' + fn
+
 def enterobase():
     '''
     Downloads all the E.coli genomes from Enterobase.
@@ -41,11 +48,15 @@ def enterobase():
         barcode = row[1]
         assembled = row[10]
         if assembled == 'Assembled':
-            f = requests.get('http://enterobase.warwick.ac.uk/upload/download?assembly_id=' + str(identifier) + '&database=ecoli')
-            fn = dl_folder + '/' + str(barcode) + '.fasta'
-            with open(fn, 'w') as fl:
-                fl.write(f.text)
-                print 'wrote ' + fn
+            i = 1
+            while i < 4:
+                try:
+                    get(identifier, barcode, dl_folder)
+                    i = 4
+                except:
+                    sleep(60 * i)
+                    i += 1
+                    continue
 
 if __name__ == '__main__':
     enterobase()
