@@ -1,6 +1,15 @@
 import os
 import requests
 import pandas as pd
+from time import sleep
+
+def get(identifier, barcode, dl_folder):
+    f = requests.get('http://enterobase.warwick.ac.uk/upload/download?assembly_id=' + str(identifier) + '&database=ecoli')
+    fn = dl_folder + '/' + str(barcode) + '.fasta'
+    if not f.text == 'No Assembly or strain record found':
+        with open(fn, 'w') as fl:
+            fl.write(f.text)
+            print 'wrote ' + fn
 
 def enterobase():
     '''
@@ -41,11 +50,16 @@ def enterobase():
         barcode = row[1]
         assembled = row[10]
         if assembled == 'Assembled':
-            f = requests.get('http://enterobase.warwick.ac.uk/upload/download?assembly_id=' + str(identifier) + '&database=ecoli')
-            fn = dl_folder + '/' + str(barcode) + '.fasta'
-            with open(fn, 'w') as fl:
-                fl.write(f.text)
-                print 'wrote ' + fn
+            i = 1
+            while i < 10:
+                try:
+                    get(identifier, barcode, dl_folder)
+                    i = 10
+                except:
+                    print 'sleeping ' + str(i) + ' min'
+                    sleep(60 * i)
+                    i += 1
+                    continue
 
 if __name__ == '__main__':
     enterobase()
