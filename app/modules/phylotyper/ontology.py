@@ -57,7 +57,7 @@ def schema_query(subtype):
         WHERE {{
             VALUES ?subtype {{ {} }}
             ?subtype rdf:type subt:Phylotyper ;
-                typon:hasSchema ?schema ;
+                typon:hasSchema ?schema .
             ?schema typon:hasSchemaPart ?schemaPart .
             ?schemaPart typon:index ?i ;
                 typon:hasLocus ?locus
@@ -82,7 +82,7 @@ def subtypeset_query(subtype):
         WHERE {{
             VALUES ?subtype {{ {} }}
             ?subtype rdf:type subt:Phylotyper ;
-                typon:hasSubtypeSet ?sset ;
+                typon:hasSubtypeSet ?sset .
             ?sset typon:hasDefinedClass ?part .
             ?part subt:subtypeValue ?value
         }}

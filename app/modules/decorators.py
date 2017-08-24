@@ -87,6 +87,7 @@ def tojson(func):
     @wraps(func)
     def func_wrapper(*args, **kwargs):
         results = func(*args, **kwargs)
+      
         l = []
         for result in results['results']['bindings']:
             # create a blank dictionary per result
