@@ -43,22 +43,29 @@ def parse_gene_dict(graph, gene_dict, uriGenome, geneType):
         uriGenome(rdflib.URIRef): the base uri of the genome
             ex. :4eb02f5676bc808f86c0f014bbce15775adf06ba
 
+
     TODO: merge common components with generate_amr()
     '''
 
     for contig_id in gene_dict:
         #makes sure that the contigs are named correctly
-        contig_name = contig_name_parse(contig_id)
+        #contig_name = contig_name_parse(contig_id)
+        '''
         if contig_name != contig_id:
             gene_dict[contig_name] = gene_dict[contig_id]
             del gene_dict[contig_id]
-
-        for gene_record in gene_dict[contig_name]:
+        '''
+        for gene_record in gene_dict[contig_id]:
             # uri for bag of contigs
             # ex. :4eb02f5676bc808f86c0f014bbce15775adf06ba/contigs/
-            uriContigs = gu(uriGenome, "/contigs")
+            #make sure that uriGenome is a genome and not a string
+            uriGenomes = gu(uriGenome)
+            uriContigs = gu(uriGenomes, "/contigs")
             # recreating the contig uri
-            uriContig = gu(uriContigs, '/' + contig_name)
+            
+            uriContig = gu(uriContigs, '/' + contig_id)
+            
+          
 
             # after this point we switch perspective to the gene and build down to
             # relink the gene with the contig
@@ -114,7 +121,9 @@ def parse_gene_dict(graph, gene_dict, uriGenome, geneType):
                         'faldo:ReverseStrandPosition')))
                     graph.add((bnode_end, gu('rdf:type'), gu(
                         'faldo:ReverseStrandPosition')))
-            if 'DNASequence' in gene_record:
+
+            if geneType == 'PanGenomeRegion':
+                graph = link_uris(graph, uriGenomes, uriGene)
                 graph.add((uriGene, gu('g:DNASequence'),
                            Literal(gene_record['DNASequence'])))
 

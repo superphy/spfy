@@ -71,22 +71,20 @@ def pan_bundle(panpickle, job_pan):
         
         for genomeURI in pan_results[region]:
             
-            print('JAMES DEBUG YO james_debug: ' + str(genomeURI))
+
             #checks if genome URI already has a pangenome associated, if so we don't need to process it further
-            
+
+            if not get_single_region(genome);
 
 
-                                
-            job_pan_datastruct = multiples_q.enqueue(graph_upload, graph, pan_results[region][genomeURI], genomeURI, 'PanGenomeRegion', depends_on=job_pan)
-            job_dict[job_pan_datastruct.get_id()] = {'file' : genomeURI, 'analysis' : 'Panseq'}
-            #clears graph
-            graph = generate_graph()
-            
+                job_pan_datastruct = multiples_q.enqueue(graph_upload, graph, pan_results[region][genomeURI], genomeURI, 'PanGenomeRegion', depends_on=job_pan)
+                job_dict[job_pan_datastruct.get_id()] = {'file' : genomeURI, 'analysis' : 'Panseq'}
+                #clears graph
+                graph = generate_graph()
 
-
-            #job_pan_beautify = singles_q.enqueue(beautify, single_dict, panpickle, depends_on=job_pan, result_ttl=-1)
-    
+        
     return job_dict
+
 
                       
 
@@ -142,7 +140,7 @@ def blob_savvy_enqueue(single_dict):
                 
         job_dict[job_pan_bundle.get_id()] = {'file' : now + '_panseq_results', 'analysis' : 'Panseq'}
         job_dict[job_pan.get_id()] = {'file' : now + 'pan_run', 'analysis' : 'Panseq'}
-        print('james_debug : returning from pan_pipeline')
+
         return job_dict
         
 
@@ -156,12 +154,6 @@ def blob_savvy_enqueue(single_dict):
         
 
     #### PANPREDICT PIPELINE
-
-
-    # ECTYPER PIPELINE
-
-    # END ECTYPER PIPELINE
-
 
 
 

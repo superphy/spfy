@@ -82,6 +82,7 @@ def generate_uri(uri, s=''):
         return URIRef(config.namespaces[prefix] + postfix)
 
 
+
 def uri_to_basename(uri):
     '''
     This does the reverse of generate_uri(). Converts a rdflib.term.URIRef back to is base.
