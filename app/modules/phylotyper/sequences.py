@@ -29,11 +29,12 @@ def marker_query(marker_uris):
 def sequence_query(marker_rdf, genome_rdf):
 
     query = '''
-        SELECT ?contig ?region ?start ?len ?seq
+        SELECT ?contig ?contigid ?region ?start ?len ?seq
         WHERE {{
             ?g a g:Genome .
             VALUES ?g {{ {} }}
-            ?contig a g:Contig .
+            ?contig a g:Contig ;
+                g:Identifier ?contigid .
             ?m a :VirulenceFactor .
             ?contig g:DNASequence ?dna .
             VALUES ?m {{ {} }} .
@@ -89,7 +90,7 @@ class MarkerSequences(object):
         # Unroll result into dictionary with fasta-like keys
         seqdict = { "spfy|{}| {}:{}..{}".format(
             turtle_utils.fulluri_to_basename(r['region']), 
-            turtle_utils.fulluri_to_basename(r['contig']), r['start'], r['start']+r['len']-1): r['seq'] for r in query_result }
+            r['contigid'], r['start'], r['start']+r['len']-1): r['seq'] for r in query_result }
 
         return seqdict
 
