@@ -16,11 +16,17 @@ import logging
 from tempfile import mkdtemp
 import pandas as pd
 import cPickle as pickle
+from rdflib import Graph, BNode
+
 
 import config
-from modules.turtleGrapher import turtle_utils
+from modules.turtleGrapher.turtle_utils import generate_uri as gu, fulluri_to_basename as u2b 
+from modules.blazeUploader.upload_graph import upload_turtle, upload_graph
 from modules.phylotyper import ontology, exceptions
 from modules.phylotyper.sequences import MarkerSequences
+
+from modules.turtleGrapher import turtle_utils
+
 
 logger = logging.getLogger(__name__)
 
@@ -53,7 +59,7 @@ def phylotyper(query, subtype, result_file):
     # Get loci to use in subtype prediction
     uri = 'subt:'+subtype
     loci_results = ontology.schema_query(uri)
-    loci = [ turtle_utils.generate_uri(l['locus']) for l in sorted(loci_results, key=lambda k: k['i'])]
+    loci = [ gu(l['locus']) for l in sorted(loci_results, key=lambda k: k['i'])]
 
     # Get alleles for this genome
     markerseqs = MarkerSequences(loci)
@@ -114,8 +120,12 @@ def to_dict(pt_file, subtype, pickle_file):
             datasections = l.split(" ")
             locsections = datasections[2].split(":")
             contigs.append(locsections[-3])
-            starts.append(int(locsections[-2].split('..')[0]) - int(locsections[-1].split('-')[0]) - 1)
-            stops.append(int(locsections[-2].split('..')[1]) - int(locsections[-1].split('-')[1]) - 1)
+            contigpos = map(lambda i: int(i), locsections[-2].split('..'))
+            hitpos = map(lambda i: int(i), locsections[-1].split('-'))
+            contigpos.sort()
+            hitpos.sort()
+            starts.append(contigpos[0] - hitpos[0]  + 1)
+            stops.append(contigpos[0] + hitpos[1] - hitpos[0])
             locis.append(datasections[1])
 
         pt_results['loci'][k] = locis
@@ -136,7 +146,7 @@ def beautify(p_file):
 
     pt_dict = pickle.load(open(p_file, 'rb'))
 
-    print(pt_dict)
+    #print(pt_dict)
 
     # Expand into table rows - one per loci
     table_rows = []
@@ -145,19 +155,16 @@ def beautify(p_file):
         # Location info
         for i in range(len(pt_dict['loci'][k])):
             instance_dict = {}
-            instance_dict['start'] = pt_dict[k]['start'][i]
-            instance_dict['stop'] = pt_dict[k]['stop'][i]
-            instance_dict['contig'] = pt_dict[k]['contig'][i]
+            instance_dict['start'] = pt_dict['start'][k][i]
+            instance_dict['stop'] = pt_dict['stop'][k][i]
+            instance_dict['contig'] = pt_dict['contig'][k][i]
             
-
             # Genome
             # Subtype info
-            instance_dict['subtype'] = pt_dict[k]['subtype']
-            instance_dict['probability'] = pt_dict[k]['probability']
+            instance_dict['subtype'] = pt_dict['subtype'][k]
+            instance_dict['probability'] = pt_dict['probability'][k]
         
-
             table_rows.append(instance_dict)
-            
 
     return table_rows
         
@@ -171,15 +178,53 @@ def savvy(p_file, subtype):
 
     """
 
-    uri = 'subt:'+subtype
-
+    # Phylotyper scheme
+    phylotyper_uri = gu('subt:'+subtype)
+    
     # Get list of permissable subtype values
-    subtypes_results = ontology.subtypeset_query(uri)
+    subtypes_results = ontology.subtypeset_query(phylotyper_uri)
     subtypes = {}
     for r in subtypes_results:
-        subtypes[ r['value'] ] = turtle_utils.generate_uri(r['part'])
+        subtypes[ r['value'] ] = r['part']
 
+    # Load data
     pt_dict = pickle.load(open(p_file, 'rb'))
+
+    print(pt_dict)
+
+    # Graph to pin new values too
+    graph = Graph()
+
+    # Iterate through loci sets
+    for k in pt_dict['subtype']:
+
+        # Check assigned type is recognized subtype in scheme
+        if pt_dict['subtype'][k] in subtypes:
+            # New subtype assignment
+            subtype_instance = BNode()
+            graph.add(subtype_instance, gu('rdf:type'), gu('subt:PTST'))
+            graph.add(subtype_instance, gu('subt:isOfPhylotyper'), phylotyper_uri)
+            graph.add(subtype_instance, gu('subt:hasIdentifiedClass'), gu(subtypes[pt_dict['subtype'][k]]))
+
+            # Link subtype to alleles
+            for a in pt_dict['loci'][k]
+
+                schema_uri = uri + 'Schema'
+    schema = gu(schema_uri)
+    graph.add((schema, a, gu('typon:Schema')))
+    graph.add((schema, label, Literal('{} schema'.format(subtype), lang='en')))
+)
+
+
+        else:
+            raise exceptions.ValuesError(pt_dict['subtype'][k])
+
+
+
+
+
+
+    
     
 
 def ignorant(p_file, subtype):
@@ -207,11 +252,11 @@ if __name__=='__main__':
     input_g = args.g
     if input_g.startswith('<'):
         input_g = input_g[1:-1]
-    g = turtle_utils.fulluri_to_basename(turtle_utils.generate_uri(input_g))
+    g = u2b(gu(input_g))
     pt_file = os.path.join(config.DATASTORE, g+'_pt.tsv')
     pickle_file = os.path.join(config.DATASTORE, g+'_pt.p')
     
     # phylotyper(args.g, args.s, pt_file)
-    #to_dict(pt_file, args.s, pickle_file)
-    beautify(pickle_file)
-    #savvy(pickle_file, args.s)
+    # to_dict(pt_file, args.s, pickle_file)
+    # beautify(pickle_file)
+    savvy(pickle_file, args.s)

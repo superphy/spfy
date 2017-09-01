@@ -82,8 +82,8 @@ def subtypeset_query(subtype):
         WHERE {{
             VALUES ?subtype {{ {} }}
             ?subtype rdf:type subt:Phylotyper ;
-                typon:hasSubtypeSet ?sset .
-            ?sset typon:hasDefinedClass ?part .
+                subt:hasSubtypeSet ?sset .
+            ?sset subt:hasDefinedClass ?part .
             ?part subt:subtypeValue ?value
         }}
         '''.format(subtype)
