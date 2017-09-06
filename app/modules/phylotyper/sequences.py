@@ -55,6 +55,36 @@ def sequence_query(marker_rdf, genome_rdf):
     return query
 
 
+@tojson
+@submit
+@prefix
+def phylotyper_query(subtypescheme_rdf, genome_rdf):
+
+    query = '''
+    
+        SELECT DISTINCT ?pt ?typeLabel ?score ?region ?contigid ?beginPos ?endPos
+        WHERE {{
+            ?pt a subt:PTST ;
+                subt:isOfPhylotyper {} ;
+                subt:hasIdentifiedClass ?type ;
+                subt:score ?score ;
+                typon:hasIdentifiedAllele ?a .
+            ?type subt:subtypeValue ?typeLabel .
+            ?a faldo:location ?region .
+            ?region :isFoundIn {} ;
+                :isFoundIn ?contig ;
+                faldo:begin ?b ;
+                faldo:end ?e .
+            ?contig a g:Contig ;
+                g:Identifier ?contigid .
+            ?b faldo:position ?beginPos .
+            ?e faldo:position ?endPos
+        }}
+    '''.format(subtypescheme_rdf, genome_rdf)
+
+    return query
+
+
 
 class MarkerSequences(object):
     """Retrieve DNA region sequences for one or more Markers

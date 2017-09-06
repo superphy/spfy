@@ -65,6 +65,13 @@
               rdfs:comment "Defines the text name for a given Subtype Class" ;
               rdfs:label "subtype value" .
 
+###  https://www.github.com/superphy/typing#score
+:score rdf:type owl:DatatypeProperty ;
+       rdfs:domain :PTST ;
+       rdfs:range xsd:decimal ;
+       rdfs:comment "Defines the likelihood for a given subtype assignment" ;
+       rdfs:label "subtype assignment likelihood" .
+
 
 #################################################################
 #    Classes

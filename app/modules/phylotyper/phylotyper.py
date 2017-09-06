@@ -16,25 +16,23 @@ import logging
 from tempfile import mkdtemp
 import pandas as pd
 import cPickle as pickle
-from rdflib import Graph, BNode
+from rdflib import Graph, BNode, Literal, XSD
+import re
+from collections import OrderedDict
 
 
 import config
-from modules.turtleGrapher.turtle_utils import generate_uri as gu, fulluri_to_basename as u2b 
-from modules.blazeUploader.upload_graph import upload_turtle, upload_graph
+from modules.turtleGrapher.turtle_utils import generate_uri as gu, fulluri_to_basename as u2b, normalize_rdfterm as normalize 
+from modules.blazeUploader.upload_graph import upload_graph
 from modules.phylotyper import ontology, exceptions
-from modules.phylotyper.sequences import MarkerSequences
-
-from modules.turtleGrapher import turtle_utils
-
+from modules.phylotyper.sequences import MarkerSequences, phylotyper_query
 
 logger = logging.getLogger(__name__)
 
 
 
 def phylotyper(query, subtype, result_file):
-    '''
-    Wrapper for Phylotyper
+    """ Wrapper for Phylotyper
 
     Args:
         query (str): Genome URI
@@ -44,7 +42,7 @@ def phylotyper(query, subtype, result_file):
     Returns:
         file to tab-delimited text results
     
-    '''
+    """
 
     # Validate subtype ontology
     try:
@@ -121,11 +119,9 @@ def to_dict(pt_file, subtype, pickle_file):
             locsections = datasections[2].split(":")
             contigs.append(locsections[-3])
             contigpos = map(lambda i: int(i), locsections[-2].split('..'))
-            hitpos = map(lambda i: int(i), locsections[-1].split('-'))
             contigpos.sort()
-            hitpos.sort()
-            starts.append(contigpos[0] - hitpos[0]  + 1)
-            stops.append(contigpos[0] + hitpos[1] - hitpos[0])
+            starts.append(contigpos[0])
+            stops.append(contigpos[1])
             locis.append(datasections[1])
 
         pt_results['loci'][k] = locis
@@ -175,14 +171,13 @@ def savvy(p_file, subtype):
     """ Load phylotyper results into DB
 
 
-
     """
 
     # Phylotyper scheme
     phylotyper_uri = gu('subt:'+subtype)
     
     # Get list of permissable subtype values
-    subtypes_results = ontology.subtypeset_query(phylotyper_uri)
+    subtypes_results = ontology.subtypeset_query(normalize(phylotyper_uri))
     subtypes = {}
     for r in subtypes_results:
         subtypes[ r['value'] ] = r['part']
@@ -192,8 +187,9 @@ def savvy(p_file, subtype):
 
     print(pt_dict)
 
-    # Graph to pin new values too
+    # Graph to attach new values too
     graph = Graph()
+    is_a = gu('rdf:type')
 
     # Iterate through loci sets
     for k in pt_dict['subtype']:
@@ -202,34 +198,80 @@ def savvy(p_file, subtype):
         if pt_dict['subtype'][k] in subtypes:
             # New subtype assignment
             subtype_instance = BNode()
-            graph.add(subtype_instance, gu('rdf:type'), gu('subt:PTST'))
-            graph.add(subtype_instance, gu('subt:isOfPhylotyper'), phylotyper_uri)
-            graph.add(subtype_instance, gu('subt:hasIdentifiedClass'), gu(subtypes[pt_dict['subtype'][k]]))
+            graph.add((subtype_instance, is_a, gu('subt:PTST')))
+            graph.add((subtype_instance, gu('subt:isOfPhylotyper'), phylotyper_uri))
+            graph.add((subtype_instance, gu('subt:hasIdentifiedClass'), gu(subtypes[pt_dict['subtype'][k]])))
+            graph.add((subtype_instance, gu('subt:score'), Literal(pt_dict['probability'][k], datatype=XSD.decimal)))
 
             # Link subtype to alleles
-            for a in pt_dict['loci'][k]
+            for a in pt_dict['loci'][k]:
+                allele_instance = BNode()
+                graph.add((allele_instance, is_a, gu('subt:PTAllele')))
+                a = re.sub(r'^spfy\|(.+)\|$',r':\g<1>',a)
+                graph.add((allele_instance, gu('faldo:location'), gu(a)))
+                graph.add((subtype_instance, gu('typon:hasIdentifiedAllele'), allele_instance))
 
-                schema_uri = uri + 'Schema'
-    schema = gu(schema_uri)
-    graph.add((schema, a, gu('typon:Schema')))
-    graph.add((schema, label, Literal('{} schema'.format(subtype), lang='en')))
-)
-
+            # Add link to add linkages for group comparisons
 
         else:
             raise exceptions.ValuesError(pt_dict['subtype'][k])
 
+    print(graph.serialize(format='turtle'))
+    upload_graph(graph)
 
 
 
+def ignorant(genome_uri, subtype, pickle_file):
+    """ Retrieve phylotyper results from DB
 
 
-    
-    
 
-def ignorant(p_file, subtype):
-    pass
+    """
 
+    phylotyper_rdf = normalize(gu('subt:'+subtype))
+    genome_rdf = normalize(genome_uri)
+
+    results = phylotyper_query(phylotyper_rdf, genome_rdf)
+    subtype_assignments = {}
+    set_i = 0
+
+    pt_dict = {
+        'probability': {},
+        'subtype': {},
+        'loci': {},
+        'contig': {},
+        'start': {},
+        'stop': {}
+    }
+    for row in results:
+        
+        if row['pt'] in subtype_assignments:
+            k = subtype_assignments[row['pt']]
+        else:
+            k = set_i
+            set_i = set_i + 1
+            subtype_assignments[row['pt']] = k
+            for f in pt_dict:
+                pt_dict[f][k] = {}
+
+
+        pt_dict['probability'][k] = float(row['score'])
+        pt_dict['subtype'][k] = row['typeLabel']
+        if not pt_dict['contig'][k]:
+            pt_dict['contig'][k] = []
+            pt_dict['loci'][k] = []
+            pt_dict['start'][k] = []
+            pt_dict['stop'][k] = []
+        pt_dict['contig'][k].append(row['contigid'])
+        pt_dict['loci'][k].append(row['region'])
+        pt_dict['start'][k].append(row['beginPos'])
+        pt_dict['stop'][k].append(row['endPos'])
+
+    print(pt_dict)
+
+    pickle.dump(pt_dict, open(pickle_file, 'wb'))
+
+    return pickle_file
 
 
 
@@ -256,7 +298,8 @@ if __name__=='__main__':
     pt_file = os.path.join(config.DATASTORE, g+'_pt.tsv')
     pickle_file = os.path.join(config.DATASTORE, g+'_pt.p')
     
-    # phylotyper(args.g, args.s, pt_file)
-    # to_dict(pt_file, args.s, pickle_file)
-    # beautify(pickle_file)
-    savvy(pickle_file, args.s)
+    #phylotyper(args.g, args.s, pt_file)
+    #to_dict(pt_file, args.s, pickle_file)
+    #beautify(pickle_file)
+    #savvy(pickle_file, args.s)
+    ignorant(input_g, args.s, pickle_file+'2')
