@@ -12,6 +12,7 @@ MAX_TIME_TO_WAIT = 10
 # enqueued function to complete before terminating it with and ERROR
 # If note specified, jobs must execute within 3 mins
 DEFAULT_TIMEOUT = 600 # in seconds (ie. 10 mins)
+PAN_TIMEOUT = 100000
 # if BACKLOG_ENABLED = True, then all analyses modules will be run in the
 # in the background for every submitted file
 BACKLOG_ENABLED = True
@@ -52,4 +53,5 @@ database['blazegraph_url'] = 'http://blazegraph:8080/bigdata/sparql'
 # If you're using Sentry to collect your runtime exceptions, you can use this
 # to configure RQ for it in a single step
 # NOTE!!!: There is a bug with Raven that needs to be accounted for in RQ config. You must prefix your sentry dsn with sync+ eg 'sync+https://...' see https://github.com/nvie/rq/issues/350 . As of Mar.'17 this hasn't been fixed.
-#SENTRY_DSN = 'sync+https://public:secret@example.com/1'
+
+SENTRY_DSN = 'sync+https://8065818d37f44a4ab89134eed85b584c:a7e9769b030e4178847f4e87fb7e6ebd@sentry.io/197061'
