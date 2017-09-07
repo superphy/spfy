@@ -43,10 +43,7 @@ def create_app():
     app.register_blueprint(bp_ra_posts)
     app.register_blueprint(bp_ra_statuses)
     app.register_blueprint(bp_ra_db)
-<<<<<<< HEAD
     app.register_blueprint(bp_ra_meta)
-=======
     app.register_blueprint(bp_ra_pan)
->>>>>>> 97c94a6225056e81f70e320d858d8020e2a53fb1
 
     return app
