@@ -5,6 +5,6 @@
 [submodule "reactapp"]
 	path = reactapp
 	url = https://github.com/superphy/reactapp.git
-[submodule "app/modules/--force"]
-	path = app/modules/--force
+[submodule "app/modules/PanPredic"]
+	path = app/modules/PanPredic
 	url = https://github.com/superphy/PanPredic.git
