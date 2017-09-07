@@ -6,7 +6,7 @@ services:
       dockerfile: Dockerfile-spfy
     image: backend
     ports:
-    - "8000:80"
+    - "8000:8000"
     depends_on:
     - redis
     - blazegraph

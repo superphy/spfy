@@ -44,37 +44,37 @@ multiples_q = Queue('multiples', connection=redis_conn,
 blazegraph_q = Queue('blazegraph', connection=redis_conn)
 
 
-                           
+
 def graph_upload(graph, dict, genomeURI, region):
     '''
-    :param graph: 
-    :param dict: 
+    :param graph:
+    :param dict:
     :param genomeURI: amr_dict
-    :param region: 
-    :return: 
+    :param region:
+    :return:
     '''
 
     graph = parse_gene_dict(graph, dict, genomeURI, region)
     upload_graph.upload_graph(graph)
- 
-    
+
+
 def pan_bundle(panpickle, job_pan):
     '''
     queue the queueing dependent on panseq to finish, now we don't have to wait for panseq before queueing other tasks
     '''
-    
+
     pan_results = pickle.load(open(panpickle, 'rb'))
     job_dict = {}
     graph = generate_graph()
     for region in pan_results:
         region_s = str(region)
-        
+
         for genomeURI in pan_results[region]:
-            
+
 
             #checks if genome URI already has a pangenome associated, if so we don't need to process it further
 
-            if not get_single_region(genome);
+            if not get_single_region(genome):
 
 
                 job_pan_datastruct = multiples_q.enqueue(graph_upload, graph, pan_results[region][genomeURI], genomeURI, 'PanGenomeRegion', depends_on=job_pan)
@@ -82,11 +82,11 @@ def pan_bundle(panpickle, job_pan):
                 #clears graph
                 graph = generate_graph()
 
-        
+
     return job_dict
 
 
-                      
+
 
 def blob_savvy_enqueue(single_dict):
     '''
@@ -103,12 +103,12 @@ def blob_savvy_enqueue(single_dict):
     '''
 
 
-    
+
     jobs = {}
     job_list = []
     query_list = single_dict['i']
     pan_jobs = {}
-    
+
     if single_dict['options']['pan']:
         query_file = single_dict['i'][0]
         for file in query_list:
@@ -116,16 +116,16 @@ def blob_savvy_enqueue(single_dict):
             job_id = blazegraph_q.enqueue(write_reserve_id, file, depends_on=job_qc, result_ttl=-1)
             pan_jobs[job_qc.get_id()] = {'file': file, 'analysis': 'Quality Control'}
             pan_jobs[job_id.get_id()] = {'file': file, 'analysis': 'ID Reservation'}
-                    
 
-            
-    else: 
+
+
+    else:
         query_file = single_dict['i']
 
 
 
     def pan_pipeline(singles, multiples):
-        
+
 
         job_dict = {}
         now = datetime.now()
@@ -133,25 +133,25 @@ def blob_savvy_enqueue(single_dict):
         pickle_file = os.path.join(current_app.config['DATASTORE'], now + '_panpickle.p')
         job_pan = singles_q.enqueue(pan, single_dict, pickle_file, depends_on=job_id)
 
-        
+
         job_pan_id = job_pan.get_id()
-        
+
         job_pan_bundle = singles_q.enqueue(pan_bundle, pickle_file, job_pan_id, depends_on=job_pan)
-                
+
         job_dict[job_pan_bundle.get_id()] = {'file' : now + '_panseq_results', 'analysis' : 'Panseq'}
         job_dict[job_pan.get_id()] = {'file' : now + 'pan_run', 'analysis' : 'Panseq'}
 
         return job_dict
-        
+
 
 
     if single_dict['options']['pan']:
-        
+
         pan_job_dict = pan_pipeline(singles_q, multiples_q)
         jobs.update(pan_job_dict)
         jobs.update(pan_jobs)
-        
-        
+
+
 
     #### PANPREDICT PIPELINE
 
@@ -167,7 +167,7 @@ def blob_savvy_enqueue(single_dict):
     # these two ifs handle the case where amr (or vf or serotype) might not
     # be selected but bulk is
 
-    
+
     return jobs
 
 
@@ -178,7 +178,7 @@ def blob_savvy(args_dict):
     d = {}
 
     d.update(blob_savvy_enqueue(args_dict))
-    
+
     return d
 
 
@@ -187,7 +187,7 @@ def spfy(args_dict):
     '''
     # abs path resolution should be handled in spfy.py
     #args_dict['i'] = os.path.abspath(args_dict['i'])
-    
+
     jobs_dict = blob_savvy(args_dict)
 
     return jobs_dict
