@@ -41,14 +41,15 @@ def slugify(value):
     """
     from Django
     Normalizes string, converts to lowercase, removes non-alpha characters,
-    and converts spaces to hyphens.
+    and converts spaces to underscores and hyphens to underscores, this is because Panseq doesn't return hyphens.
     """
     import unicodedata
     import re
     value = unicode(value)
     value = unicodedata.normalize('NFKD', value).encode('ascii', 'ignore')
     value = unicode(re.sub('[^\w\s\/\./:-]', '', value).strip())
-    value = unicode(re.sub('[-\s]+', '-', value))
+    value = unicode(re.sub('[-\s]+', '_', value))
+    value = unicode(re.sub('[-\-]+', '_', value))
     return value
 
 def generate_uri(uri, s=''):
@@ -79,6 +80,7 @@ def generate_uri(uri, s=''):
         return URIRef(config.namespaces['root'] + postfix)
     else:
         return URIRef(config.namespaces[prefix] + postfix)
+
 
 
 def uri_to_basename(uri):

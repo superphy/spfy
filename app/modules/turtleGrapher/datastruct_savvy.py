@@ -3,6 +3,7 @@ from rdflib import BNode, Literal, Graph
 from modules.turtleGrapher.turtle_utils import generate_uri as gu, generate_hash, link_uris
 from modules.turtleGrapher.turtle_grapher import generate_graph
 from modules.blazeUploader.upload_graph import upload_graph
+from modules.PanPredic.pan_utils import contig_name_parse
 # working with Serotype, Antimicrobial Resistance, & Virulence Factor data
 # structures
 
@@ -42,16 +43,29 @@ def parse_gene_dict(graph, gene_dict, uriGenome, geneType):
         uriGenome(rdflib.URIRef): the base uri of the genome
             ex. :4eb02f5676bc808f86c0f014bbce15775adf06ba
 
+
     TODO: merge common components with generate_amr()
     '''
 
-    for contig_id in gene_dict.keys():
+    for contig_id in gene_dict:
+        #makes sure that the contigs are named correctly
+        #contig_name = contig_name_parse(contig_id)
+        '''
+        if contig_name != contig_id:
+            gene_dict[contig_name] = gene_dict[contig_id]
+            del gene_dict[contig_id]
+        '''
         for gene_record in gene_dict[contig_id]:
             # uri for bag of contigs
             # ex. :4eb02f5676bc808f86c0f014bbce15775adf06ba/contigs/
-            uriContigs = gu(uriGenome, "/contigs")
+            #make sure that uriGenome is a genome and not a string
+            uriGenomes = gu(uriGenome)
+            uriContigs = gu(uriGenomes, "/contigs")
             # recreating the contig uri
+            
             uriContig = gu(uriContigs, '/' + contig_id)
+            
+          
 
             # after this point we switch perspective to the gene and build down to
             # relink the gene with the contig
@@ -84,7 +98,7 @@ def parse_gene_dict(graph, gene_dict, uriGenome, geneType):
             #graph.add((bnode_region, gu(':hasPart'), bnode_end))
 
             # this is a special case for amr results
-            if 'CUT_OFF' in gene_dict.keys():
+            if 'CUT_OFF' in gene_dict:
                 graph.add((bnode_start, gu('dc:Description'),
                            Literal(gene_dict['CUT_OFF'])))
                 graph.add((bnode_end, gu('dc:Description'),
@@ -95,16 +109,23 @@ def parse_gene_dict(graph, gene_dict, uriGenome, geneType):
             graph.add((bnode_start, gu('rdf:type'), gu('faldo:ExactPosition')))
             graph.add((bnode_end, gu('rdf:type'), gu('faldo:Position')))
             graph.add((bnode_end, gu('rdf:type'), gu('faldo:ExactPosition')))
-            if gene_record['ORIENTATION'] is '+':
-                graph.add((bnode_start, gu('rdf:type'), gu(
-                    'faldo:ForwardStrandPosition')))
-                graph.add((bnode_end, gu('rdf:type'), gu(
-                    'faldo:ForwardStrandPosition')))
-            else:
-                graph.add((bnode_start, gu('rdf:type'), gu(
-                    'faldo:ReverseStrandPosition')))
-                graph.add((bnode_end, gu('rdf:type'), gu(
-                    'faldo:ReverseStrandPosition')))
+
+            if 'ORIENTATION' in gene_record:
+                if gene_record['ORIENTATION'] is '+':
+                    graph.add((bnode_start, gu('rdf:type'), gu(
+                        'faldo:ForwardStrandPosition')))
+                    graph.add((bnode_end, gu('rdf:type'), gu(
+                        'faldo:ForwardStrandPosition')))
+                else:
+                    graph.add((bnode_start, gu('rdf:type'), gu(
+                        'faldo:ReverseStrandPosition')))
+                    graph.add((bnode_end, gu('rdf:type'), gu(
+                        'faldo:ReverseStrandPosition')))
+
+            if geneType == 'PanGenomeRegion':
+                graph = link_uris(graph, uriGenomes, uriGene)
+                graph.add((uriGene, gu('g:DNASequence'),
+                           Literal(gene_record['DNASequence'])))
 
             graph.add((bnode_start, gu('faldo:Position'),
                        Literal(gene_record['START'])))
@@ -118,7 +139,9 @@ def parse_gene_dict(graph, gene_dict, uriGenome, geneType):
             graph = link_uris(graph, uriContig, bnode_end)
             #graph.add((bnode_start, gu(':hasPart'), uriContig))
             #graph.add((bnode_end, gu(':hasPart'), uriContig))
+
     #### end of nested for
+
     return graph
 
 def generate_datastruct(query_file, id_file, pickled_dictionary):
@@ -153,7 +176,11 @@ def generate_datastruct(query_file, id_file, pickled_dictionary):
         elif key == 'Virulence Factors':
             graph = parse_gene_dict(graph, results_dict['Virulence Factors'], uriGenome, 'VirulenceFactor')
         elif key == 'Antimicrobial Resistance':
-            graph = parse_gene_dict(graph, results_dict['Antimicrobial Resistance'], uriGenome, 'AntimicrobialResistanceGene')
+            graph = parse_gene_dict(graph, results_dict['Antimicrobial Resistance'], uriGenome,
+                                    'AntimicrobialResistanceGene')
+        #elif key == 'PanGenomeRegion':
+         #   graph = parse_gene_dict(graph, results_dict[key], uriGenome, key)
+
     return graph
 
 def datastruct_savvy(query_file, id_file, pickled_dictionary):
