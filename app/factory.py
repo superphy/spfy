@@ -31,7 +31,6 @@ def create_app():
     recaptcha = ReCaptcha()
     recaptcha.init_app(app)
     cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
-    print('james_debug : cors ' + str(cors))
     # sentry
     if hasattr(config, 'SENTRY_DSN'):
         sentry = Sentry(dsn=config.SENTRY_DSN)
