@@ -1,6 +1,5 @@
 import os
 import requests
-import pandas as pd
 from time import sleep
 
 def get(identifier, barcode, dl_folder):
