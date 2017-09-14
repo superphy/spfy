@@ -26,12 +26,12 @@ def marker_query(marker_uris):
 @tojson
 @submit
 @prefix
-def sequence_query(marker_rdf, genome_rdf):
+def sequence_query(marker_rdf, isolate_rdf):
 
     query = '''
         SELECT ?contig ?contigid ?region ?start ?len ?seq
         WHERE {{
-            ?g a g:Genome .
+            ?g a :spfyId .
             VALUES ?g {{ {} }}
             ?contig a g:Contig ;
                 g:Identifier ?contigid .
@@ -50,7 +50,7 @@ def sequence_query(marker_rdf, genome_rdf):
             BIND( IF(?beginPos < ?endPos,?endPos-?beginPos+1,?beginPos-?endPos+1) as ?len) 
             BIND( SUBSTR( ?dna, ?start, ?len ) as ?seq )
         }}
-    '''.format(genome_rdf, ' '.join(marker_rdf))
+    '''.format(isolate_rdf, ' '.join(marker_rdf))
 
     return query
 
@@ -58,7 +58,7 @@ def sequence_query(marker_rdf, genome_rdf):
 @tojson
 @submit
 @prefix
-def phylotyper_query(subtypescheme_rdf, genome_rdf):
+def phylotyper_query(subtypescheme_rdf, isolate_rdf):
 
     query = '''
     
@@ -80,7 +80,7 @@ def phylotyper_query(subtypescheme_rdf, genome_rdf):
             ?b faldo:position ?beginPos .
             ?e faldo:position ?endPos
         }}
-    '''.format(subtypescheme_rdf, genome_rdf)
+    '''.format(subtypescheme_rdf, isolate_rdf)
 
     return query
 

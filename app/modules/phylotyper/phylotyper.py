@@ -31,18 +31,26 @@ logger = logging.getLogger(__name__)
 
 
 
-def phylotyper(query, subtype, result_file):
+def phylotyper(uriIsolate, subtype, result_file, id_file=None):
     """ Wrapper for Phylotyper
 
     Args:
-        query (str): Genome URI
+        uriIsolate (str): Isolate URI (spfyID)
         subtype (str): Phylotyper recognized subtype (e.g. stx1)
         result_file (str): File location to write phylotyper tab-delim result to
+        id_file (str)[OPTIONAL]: Read uriIsolate from file
 
     Returns:
         file to tab-delimited text results
     
     """
+
+    # uriIsolate retrieval
+    if id_file:
+        with open(id_file) as f:
+            ln = f.readline()
+            spfyid = int(ln)
+        uriIsolate = gu(':'+spfyid)
 
     # Validate subtype ontology
     try:
@@ -61,7 +69,7 @@ def phylotyper(query, subtype, result_file):
 
     # Get alleles for this genome
     markerseqs = MarkerSequences(loci)
-    fasta = markerseqs.fasta(query)
+    fasta = markerseqs.fasta(uriIsolate)
 
     temp_dir = mkdtemp(prefix='pt', dir=config.DATASTORE)
     query_file = os.path.join(temp_dir, 'query.fasta')
@@ -212,6 +220,7 @@ def savvy(p_file, subtype):
                 graph.add((subtype_instance, gu('typon:hasIdentifiedAllele'), allele_instance))
 
             # Add link to add linkages for group comparisons
+            ##TODO
 
         else:
             raise exceptions.ValuesError(pt_dict['subtype'][k])
@@ -281,7 +290,7 @@ if __name__=='__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "-g",
-        help="Genome URI",
+        help="SpfyId URI",
         required=True
     )
     parser.add_argument(

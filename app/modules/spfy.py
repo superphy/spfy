@@ -23,6 +23,7 @@ from modules.amr.amr_to_dict import amr_to_dict
 from modules.beautify.beautify import beautify
 from modules.turtleGrapher.datastruct_savvy import datastruct_savvy
 from modules.turtleGrapher.turtle_grapher import turtle_grapher
+from modules import phylotyper
 
 
 # the only ONE time for global variables
@@ -113,6 +114,36 @@ def blob_savvy_enqueue(single_dict):
             job_amr_beautify = multiples.enqueue(
                 beautify, single_dict, query_file + '_rgi.tsv_rgi.p', depends_on=job_amr_dict, result_ttl=-1)
             d.update({'job_amr_beautify': job_amr_beautify})
+        return d
+
+    # Phylotyper Pipeline
+    def phylotyper_pipeline(multiples, subtype):
+        
+        tsvfile = query_file + '_pt.tsv'
+        picklefile = query_file + '_pt.p'
+
+        job_pt = multiples.enqueue(
+            phylotyper.phylotyper, None, subtype, tsvfile, id_file=query_file + '_id.txt', 
+            depends_on=job_ectyper_datastruct)
+        job_pt_dict = multiples.enqueue(
+            phylotyper.to_dict, tsvfile, subtype, picklefile,
+            depends_on=job_pt)
+        job_pt_datastruct = multiples.enqueue(
+            phylotyper.savvy, picklefile, subtype,
+            depends_on=job_pt_dict)
+
+        d = {'job_pt': job_pt, 'job_pt_dict': job_pt_dict,
+             'job_pt_datastruct': job_pt_datastruct}
+        # we still check for the user-selected amr option again because
+        # if it was not selected but BACKLOG_ENABLED=True, we dont have to
+        # enqueue it to backlog_multiples_q since beautify doesnt upload
+        # blazegraph
+        if single_dict['options'][subtype]:
+            job_pt_beautify = multiples.enqueue(
+                phylotyper.beautify, picklefile, 
+                depends_on=job_pt_dict, result_ttl=-1)
+            d.update({'job_pt_beautify': job_pt_beautify})
+            
         return d
 
     if single_dict['options']['amr']:
