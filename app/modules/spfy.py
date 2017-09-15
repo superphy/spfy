@@ -23,7 +23,14 @@ from modules.amr.amr_to_dict import amr_to_dict
 from modules.beautify.beautify import beautify
 from modules.turtleGrapher.datastruct_savvy import datastruct_savvy
 from modules.turtleGrapher.turtle_grapher import turtle_grapher
-from modules import phylotyper
+from modules.phylotyper import phylotyper
+
+from modules.loggingFunctions import initialize_logging
+import logging
+
+# logging
+initialize_logging()
+logger = logging.getLogger(__name__)
 
 
 # the only ONE time for global variables
@@ -93,7 +100,8 @@ def blob_savvy_enqueue(single_dict):
         # we need to create a dict with these options enabled:
 
         # just enqueue the jobs, we don't care about returning them
-        ectyper_pipeline(backlog_singles_q, backlog_multiples_q)
+        ectyper_jobs = ectyper_pipeline(backlog_singles_q, backlog_multiples_q)
+        job_ectyper_datastruct = ectyper_jobs['job_ectyper_datastruct']
     # END ECTYPER PIPELINE
 
     # AMR PIPELINE
@@ -115,6 +123,16 @@ def blob_savvy_enqueue(single_dict):
                 beautify, single_dict, query_file + '_rgi.tsv_rgi.p', depends_on=job_amr_dict, result_ttl=-1)
             d.update({'job_amr_beautify': job_amr_beautify})
         return d
+
+    if single_dict['options']['amr']:
+        amr_jobs = amr_pipeline(multiples_q)
+        job_amr = amr_jobs['job_amr']
+        job_amr_dict = amr_jobs['job_amr_dict']
+        job_amr_datastruct = amr_jobs['job_amr_datastruct']
+        job_amr_beautify = amr_jobs['job_amr_beautify']
+    elif config.BACKLOG_ENABLED:
+        amr_pipeline(backlog_multiples_q)
+    # END AMR PIPELINE
 
     # Phylotyper Pipeline
     def phylotyper_pipeline(multiples, subtype):
@@ -146,15 +164,24 @@ def blob_savvy_enqueue(single_dict):
             
         return d
 
-    if single_dict['options']['amr']:
-        amr_jobs = amr_pipeline(multiples_q)
-        job_amr = amr_jobs['job_amr']
-        job_amr_dict = amr_jobs['job_amr_dict']
-        job_amr_datastruct = amr_jobs['job_amr_datastruct']
-        job_amr_beautify = amr_jobs['job_amr_beautify']
+    if single_dict['options']['stx1']:
+        pt_jobs = phylotyper_pipeline(multiples_q, 'stx1')
+        job_stx1_beautify = pt_jobs['job_pt_beautify']
     elif config.BACKLOG_ENABLED:
-        amr_pipeline(backlog_multiples_q)
-    # END AMR PIPELINE
+        phylotyper_pipeline(backlog_multiples_q, 'stx1')
+
+    if single_dict['options']['stx2']:
+        pt_jobs = phylotyper_pipeline(multiples_q, 'stx2')
+        job_stx2_beautify = pt_jobs['job_pt_beautify']
+    elif config.BACKLOG_ENABLED:
+        phylotyper_pipeline(backlog_multiples_q, 'stx2')
+
+    if single_dict['options']['eae']:
+        pt_jobs = phylotyper_pipeline(multiples_q, 'eae')
+        job_eae_beautify = pt_jobs['job_pt_beautify']
+    elif config.BACKLOG_ENABLED:
+        phylotyper_pipeline(backlog_multiples_q, 'eae')
+    # END Phylotyper pipeline
 
     # the base file data for blazegraph
     job_turtle = multiples_q.enqueue(
@@ -170,6 +197,15 @@ def blob_savvy_enqueue(single_dict):
     if single_dict['options']['amr']:
         jobs[job_amr_beautify.get_id()] = {'file': single_dict[
             'i'], 'analysis': 'Antimicrobial Resistance'}
+    if single_dict['options']['stx1']:
+        jobs[job_stx1_beautify.get_id()] = {'file': single_dict[
+            'i'], 'analysis': 'Shiga-toxin 1 Subtype'}
+    if single_dict['options']['stx2']:
+        jobs[job_stx2_beautify.get_id()] = {'file': single_dict[
+            'i'], 'analysis': 'Shiga-toxin 2 Subtype'}
+    if single_dict['options']['eae']:
+        jobs[job_eae_beautify.get_id()] = {'file': single_dict[
+            'i'], 'analysis': 'Intimin Subtype'}
 
     return jobs
 
@@ -197,6 +233,7 @@ def spfy(args_dict):
     #args_dict['i'] = os.path.abspath(args_dict['i'])
 
     #print 'Starting blob_savvy call'
+    logger.info('args_dict: ' + str(args_dict))
     jobs_dict = blob_savvy(args_dict)
 
     return jobs_dict

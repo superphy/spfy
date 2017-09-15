@@ -50,7 +50,7 @@ def phylotyper(uriIsolate, subtype, result_file, id_file=None):
         with open(id_file) as f:
             ln = f.readline()
             spfyid = int(ln)
-        uriIsolate = gu(':'+spfyid)
+        uriIsolate = gu(':spfy' + str(spfyid))
 
     # Validate subtype ontology
     try:
