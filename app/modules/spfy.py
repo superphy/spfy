@@ -136,9 +136,10 @@ def blob_savvy_enqueue(single_dict):
 
     # Phylotyper Pipeline
     def phylotyper_pipeline(multiples, subtype):
-        
-        tsvfile = query_file + '_pt.tsv'
-        picklefile = query_file + '_pt.p'
+
+        jobname = '_pt' +subtype
+        tsvfile = query_file + jobname + '.tsv'
+        picklefile = query_file + jobname + '.p'
 
         job_pt = multiples.enqueue(
             phylotyper.phylotyper, None, subtype, tsvfile, id_file=query_file + '_id.txt', 
@@ -150,8 +151,8 @@ def blob_savvy_enqueue(single_dict):
             phylotyper.savvy, picklefile, subtype,
             depends_on=job_pt_dict)
 
-        d = {'job_pt': job_pt, 'job_pt_dict': job_pt_dict,
-             'job_pt_datastruct': job_pt_datastruct}
+        d = {'job'+jobname: job_pt, 'job'+jobname+'_dict': job_pt_dict,
+             'job'+jobname+'_datastruct': job_pt_datastruct}
         # we still check for the user-selected amr option again because
         # if it was not selected but BACKLOG_ENABLED=True, we dont have to
         # enqueue it to backlog_multiples_q since beautify doesnt upload
@@ -160,25 +161,25 @@ def blob_savvy_enqueue(single_dict):
             job_pt_beautify = multiples.enqueue(
                 phylotyper.beautify, picklefile, 
                 depends_on=job_pt_dict, result_ttl=-1)
-            d.update({'job_pt_beautify': job_pt_beautify})
+            d.update({'job'+jobname+'_beautify': job_pt_beautify})
             
         return d
 
     if single_dict['options']['stx1']:
         pt_jobs = phylotyper_pipeline(multiples_q, 'stx1')
-        job_stx1_beautify = pt_jobs['job_pt_beautify']
+        job_stx1_beautify = pt_jobs['job_ptstx1_beautify']
     elif config.BACKLOG_ENABLED:
         phylotyper_pipeline(backlog_multiples_q, 'stx1')
 
     if single_dict['options']['stx2']:
         pt_jobs = phylotyper_pipeline(multiples_q, 'stx2')
-        job_stx2_beautify = pt_jobs['job_pt_beautify']
+        job_stx2_beautify = pt_jobs['job_ptstx2_beautify']
     elif config.BACKLOG_ENABLED:
         phylotyper_pipeline(backlog_multiples_q, 'stx2')
 
     if single_dict['options']['eae']:
         pt_jobs = phylotyper_pipeline(multiples_q, 'eae')
-        job_eae_beautify = pt_jobs['job_pt_beautify']
+        job_eae_beautify = pt_jobs['job_pteae_beautify']
     elif config.BACKLOG_ENABLED:
         phylotyper_pipeline(backlog_multiples_q, 'eae')
     # END Phylotyper pipeline
@@ -233,7 +234,7 @@ def spfy(args_dict):
     #args_dict['i'] = os.path.abspath(args_dict['i'])
 
     #print 'Starting blob_savvy call'
-    logger.info('args_dict: ' + str(args_dict))
+    #logger.info('args_dict: ' + str(args_dict))
     jobs_dict = blob_savvy(args_dict)
 
     return jobs_dict
