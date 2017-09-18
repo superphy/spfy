@@ -24,7 +24,6 @@ from modules.beautify.beautify import beautify
 from modules.turtleGrapher.datastruct_savvy import generate_datastruct
 from modules.turtleGrapher.turtle_grapher import generate_turtle_skeleton
 from modules.loggingFunctions import initialize_logging
-from modules.blazeUploader.upload_graph import upload_graph
 
 log_file = initialize_logging()
 log = logging.getLogger(__name__)

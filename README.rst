@@ -21,7 +21,7 @@ Use:
 ----
 
 1. Install Docker (& Docker-Compose separately if you're on Linux,
-   `link <https://docs.docker.com/compose/install/>`__). mac/linux
+   `link <https://docs.docker.com/compose/install/>`__). mac/windows
    users have Compose bundled with Docker Engine.
 2. ``git clone --recursive https://github.com/superphy/backend.git``
 3. ``cd backend/``

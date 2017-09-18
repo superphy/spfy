@@ -8,8 +8,8 @@ from modules.loggingFunctions import initialize_logging
 log_file = initialize_logging()
 log = logging.getLogger(__name__)
 
-#blazegraph_url = config.database['blazegraph_url']
-blazegraph_url = 'http://blazegraph:8080/bigdata/sparql'
+blazegraph_url = config.database['blazegraph_url']
+#blazegraph_url = 'http://blazegraph:8080/bigdata/sparql'
 
 def tofromHumanReadable(func):
     '''
@@ -193,7 +193,7 @@ def submit(func):
 def todict(func):
     '''
     :param : a query result in json that includes genome and assoc genes
-    
+
     A decorator to convert json format to dict in format of {genome: [genelist]}
     when given results that are in format genome gene
     '''
@@ -213,7 +213,3 @@ def todict(func):
                 genome_dict[genome] = [pan_region]
         return genome_dict
     return func_wrapper
-
-
-
-

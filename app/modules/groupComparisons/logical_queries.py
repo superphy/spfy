@@ -54,7 +54,7 @@ def query_spfyids_negated(relation, attribute):
     '''
     query = """
     SELECT ?s WHERE {{
-        ?s <{relation}> ?o ; (:hasPart|:isFoundIn) ?s .
+        ?s2 <{relation}> ?o ; (:hasPart|:isFoundIn) ?s .
         ?s a <{spfyIdUri}> .
         MINUS {{?s2 <{relation}> '{attribute}'}}
     }}

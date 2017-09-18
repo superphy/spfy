@@ -17,7 +17,7 @@ bp_ra_posts = Blueprint('reactapp_posts', __name__)
 def handle_groupresults(jobs_dict):
     '''
     if we're grouping results for the Front-End
-    take all jobs in jobs_dict -and store it in Redis (not RQ)
+    take all jobs in jobs_dict and store it in Redis (not RQ)
     respond with a key to fetch this jobs_dict from Redis
     relies on a new check in /results/<job_id> which is able to poll RQ
     tasks on behalf of the front-end
@@ -62,7 +62,7 @@ def create_blob_id(f, analysis, blob_dict):
     Return:
         (dict) : a blob id that mimicks the dict form of a regular RQ id
         ex.
-        {blob-2017-06-14-16-11-46-159226-5517466316371560478:-*/
+        {blob-2017-06-14-16-11-46-159226-5517466316371560478:
             {
              "analysis": "Virulence Factors and Serotype",
              "file": "/datastore/2017-06-14-21-26-43-375215-GCA_001891695.1_ASM189169v1_genomic.fna"
@@ -86,7 +86,7 @@ def create_blob_id(f, analysis, blob_dict):
     d[blob_id]['file'] = f
     return d
 
-# for Subtyping moduleo
+# for Subtyping module
 def handle_singleton(jobs_dict):
     '''
     Takes the jobs_dict dict and creates "blob" jobs which have the QC/ID
