@@ -60,9 +60,13 @@ def check_largest_spfyid():
     sparql.setQuery(query)
     sparql.setReturnFormat(JSON)
     # run the query against the db
-    results = sparql.query()
-    # try to convert the results
-    reuslts = results.convert()
+    results = sparql.query().convert()
+    # print 'query'
+    # print results
+    # # try to convert the results
+    # reuslts = results.convert()
+    # print 'results'
+    # print results
     log.debug('check_largest_spfyid():')
     log.debug(query)
     log.debug(results)
