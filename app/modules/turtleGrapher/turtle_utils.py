@@ -88,11 +88,13 @@ def fulluri_to_basename(uri):
         (str): just the basestring (ie. everything after the ontology ID)
     '''
 
+    uri = str(uri)
+
     for value in config.namespaces.values():
-        if value in uri:
-            return str(uri).strip(value)
-    
-    raise Exception('Unknown ontology in URI'.format(str(uri)))
+        if uri.startswith(value):
+            return uri[len(value):]
+            
+    raise Exception('Unknown ontology in URI'.format(uri))
 
 
 def link_uris(graph, uri_towards_spfyid, uri_towards_marker):

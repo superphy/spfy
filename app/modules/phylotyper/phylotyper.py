@@ -71,7 +71,7 @@ def phylotyper(uriIsolate, subtype, result_file, id_file=None):
     markerseqs = MarkerSequences(loci)
     fasta = markerseqs.fasta(uriIsolate)
 
-    temp_dir = mkdtemp(prefix='pt', dir=config.DATASTORE)
+    temp_dir = mkdtemp(prefix='pt'+subtype, dir=config.DATASTORE)
     query_file = os.path.join(temp_dir, 'query.fasta')
     output_file = os.path.join(temp_dir, 'subtype_predictions.tsv')
 
@@ -89,8 +89,8 @@ def phylotyper(uriIsolate, subtype, result_file, id_file=None):
         # No loci
         # Report no loci status in output
         with open(output_file, 'w') as fh:
-            fh.write("#Empty Header")
-            fh.write("Required alleles not found")
+            fh.write('\t'.join(['genome','tree_label','subtype','probability','phylotyper_assignment','loci']))
+            fh.write('\t'.join(['lcl|query|','not applicable','not applicable','not applicable','Subtype loci not found in genome','not applicable']))
 
     shutil.move(output_file, result_file)
     shutil.rmtree(temp_dir)
@@ -104,38 +104,47 @@ def to_dict(pt_file, subtype, pickle_file):
       Returns pickled dictionary indexed by subtype predictions
 
     """
-      
+
+     
     pt_results = pd.read_table(pt_file)
+
+    if pt_results['phylotyper_assignment'].empty or pt_results['phylotyper_assignment'].values[0] == 'Subtype loci not found in genome':
+        pt_results = {
+            'subtype': 'No loci'
+        }
+
+    else:
     
-    pt_results = pt_results[['subtype','probability','loci']]
+        pt_results = pt_results[['subtype','probability','loci']]
 
-    pt_results = pt_results.to_dict()
-    pt_results['contig'] = {}
-    pt_results['start'] = {}
-    pt_results['stop'] = {}
+        pt_results = pt_results.to_dict()
+        pt_results['contig'] = {}
+        pt_results['start'] = {}
+        pt_results['stop'] = {}
 
-    # Parse marker URIs, starts, stops, etc from loci field
-    # Discard rest
-    for k, v in pt_results['loci'].iteritems():
-        loci = eval(v)
-        contigs = []
-        starts = []
-        stops = []
-        locis = []
-        for l in loci:
-            datasections = l.split(" ")
-            locsections = datasections[2].split(":")
-            contigs.append(locsections[-3])
-            contigpos = map(lambda i: int(i), locsections[-2].split('..'))
-            contigpos.sort()
-            starts.append(contigpos[0])
-            stops.append(contigpos[1])
-            locis.append(datasections[1])
+        # Parse marker URIs, starts, stops, etc from loci field
+        # Discard rest
+        for k, v in pt_results['loci'].iteritems():
+            print(v)
+            loci = eval(v)
+            contigs = []
+            starts = []
+            stops = []
+            locis = []
+            for l in loci:
+                datasections = l.split(" ")
+                locsections = datasections[2].split(":")
+                contigs.append(locsections[-3])
+                contigpos = map(lambda i: int(i), locsections[-2].split('..'))
+                contigpos.sort()
+                starts.append(contigpos[0])
+                stops.append(contigpos[1])
+                locis.append(datasections[1])
 
-        pt_results['loci'][k] = locis
-        pt_results['contig'][k] = contigs
-        pt_results['start'][k] = starts
-        pt_results['stop'][k] = stops
+            pt_results['loci'][k] = locis
+            pt_results['contig'][k] = contigs
+            pt_results['start'][k] = starts
+            pt_results['stop'][k] = stops
     
     pickle.dump(pt_results, open(pickle_file, 'wb'))
 
@@ -152,23 +161,37 @@ def beautify(p_file):
 
     #print(pt_dict)
 
-    # Expand into table rows - one per loci
-    table_rows = []
-    for k in pt_dict['loci']:
-        
-        # Location info
-        for i in range(len(pt_dict['loci'][k])):
-            instance_dict = {}
-            instance_dict['start'] = pt_dict['start'][k][i]
-            instance_dict['stop'] = pt_dict['stop'][k][i]
-            instance_dict['contig'] = pt_dict['contig'][k][i]
+    if pt_dict['subtype'] == 'No loci':
+        table_rows = [
+            {
+                'start': 'N/A',
+                'stop': 'N/A',
+                'contig': 'N/A',
+                'probability': 'N/A',
+                'subtype': 'Subtype loci not found in genome'
+
+            }
+        ]
+
+    else:
+
+        # Expand into table rows - one per loci
+        table_rows = []
+        for k in pt_dict['loci']:
             
-            # Genome
-            # Subtype info
-            instance_dict['subtype'] = pt_dict['subtype'][k]
-            instance_dict['probability'] = pt_dict['probability'][k]
-        
-            table_rows.append(instance_dict)
+            # Location info
+            for i in range(len(pt_dict['loci'][k])):
+                instance_dict = {}
+                instance_dict['start'] = pt_dict['start'][k][i]
+                instance_dict['stop'] = pt_dict['stop'][k][i]
+                instance_dict['contig'] = pt_dict['contig'][k][i]
+                
+                # Genome
+                # Subtype info
+                instance_dict['subtype'] = pt_dict['subtype'][k]
+                instance_dict['probability'] = pt_dict['probability'][k]
+            
+                table_rows.append(instance_dict)
 
     return table_rows
         
@@ -181,52 +204,54 @@ def savvy(p_file, subtype):
 
     """
 
-    # Phylotyper scheme
-    phylotyper_uri = gu('subt:'+subtype)
-    
-    # Get list of permissable subtype values
-    subtypes_results = ontology.subtypeset_query(normalize(phylotyper_uri))
-    subtypes = {}
-    for r in subtypes_results:
-        subtypes[ r['value'] ] = r['part']
-
     # Load data
     pt_dict = pickle.load(open(p_file, 'rb'))
 
-    print(pt_dict)
+    if pt_dict['subtype'] != 'No loci':
 
-    # Graph to attach new values too
-    graph = Graph()
-    is_a = gu('rdf:type')
+        # Phylotyper scheme
+        phylotyper_uri = gu('subt:'+subtype)
+        
+        # Get list of permissable subtype values
+        subtypes_results = ontology.subtypeset_query(normalize(phylotyper_uri))
+        subtypes = {}
+        for r in subtypes_results:
+            subtypes[ r['value'] ] = r['part']
 
-    # Iterate through loci sets
-    for k in pt_dict['subtype']:
+        #print(pt_dict)
 
-        # Check assigned type is recognized subtype in scheme
-        if pt_dict['subtype'][k] in subtypes:
-            # New subtype assignment
-            subtype_instance = BNode()
-            graph.add((subtype_instance, is_a, gu('subt:PTST')))
-            graph.add((subtype_instance, gu('subt:isOfPhylotyper'), phylotyper_uri))
-            graph.add((subtype_instance, gu('subt:hasIdentifiedClass'), gu(subtypes[pt_dict['subtype'][k]])))
-            graph.add((subtype_instance, gu('subt:score'), Literal(pt_dict['probability'][k], datatype=XSD.decimal)))
+        # Graph to attach new values too
+        graph = Graph()
+        is_a = gu('rdf:type')
 
-            # Link subtype to alleles
-            for a in pt_dict['loci'][k]:
-                allele_instance = BNode()
-                graph.add((allele_instance, is_a, gu('subt:PTAllele')))
-                a = re.sub(r'^spfy\|(.+)\|$',r':\g<1>',a)
-                graph.add((allele_instance, gu('faldo:location'), gu(a)))
-                graph.add((subtype_instance, gu('typon:hasIdentifiedAllele'), allele_instance))
+        # Iterate through loci sets
+        for k in pt_dict['subtype']:
 
-            # Add link to add linkages for group comparisons
-            ##TODO
+            # Check assigned type is recognized subtype in scheme
+            if pt_dict['subtype'][k] in subtypes:
+                # New subtype assignment
+                subtype_instance = BNode()
+                graph.add((subtype_instance, is_a, gu('subt:PTST')))
+                graph.add((subtype_instance, gu('subt:isOfPhylotyper'), phylotyper_uri))
+                graph.add((subtype_instance, gu('subt:hasIdentifiedClass'), gu(subtypes[pt_dict['subtype'][k]])))
+                graph.add((subtype_instance, gu('subt:score'), Literal(pt_dict['probability'][k], datatype=XSD.decimal)))
 
-        else:
-            raise exceptions.ValuesError(pt_dict['subtype'][k])
+                # Link subtype to alleles
+                for a in pt_dict['loci'][k]:
+                    allele_instance = BNode()
+                    graph.add((allele_instance, is_a, gu('subt:PTAllele')))
+                    a = re.sub(r'^spfy\|(.+)\|$',r':\g<1>',a)
+                    graph.add((allele_instance, gu('faldo:location'), gu(a)))
+                    graph.add((subtype_instance, gu('typon:hasIdentifiedAllele'), allele_instance))
 
-    print(graph.serialize(format='turtle'))
-    upload_graph(graph)
+                # Add link to add linkages for group comparisons
+                ##TODO
+
+            else:
+                raise exceptions.ValuesError(pt_dict['subtype'][k])
+
+        #print(graph.serialize(format='turtle'))
+        upload_graph(graph)
 
 
 
@@ -276,7 +301,10 @@ def ignorant(genome_uri, subtype, pickle_file):
         pt_dict['start'][k].append(row['beginPos'])
         pt_dict['stop'][k].append(row['endPos'])
 
-    print(pt_dict)
+    if not results:
+        pt_dict = {
+            'subtype': 'No loci'
+        }
 
     pickle.dump(pt_dict, open(pickle_file, 'wb'))
 
@@ -307,8 +335,8 @@ if __name__=='__main__':
     pt_file = os.path.join(config.DATASTORE, g+'_pt.tsv')
     pickle_file = os.path.join(config.DATASTORE, g+'_pt.p')
     
-    #phylotyper(args.g, args.s, pt_file)
-    #to_dict(pt_file, args.s, pickle_file)
-    #beautify(pickle_file)
-    #savvy(pickle_file, args.s)
-    ignorant(input_g, args.s, pickle_file+'2')
+    phylotyper(args.g, args.s, pt_file)
+    to_dict(pt_file, args.s, pickle_file)
+    print(beautify(pickle_file))
+    savvy(pickle_file, args.s)
+    #ignorant(input_g, args.s, pickle_file+'2')
