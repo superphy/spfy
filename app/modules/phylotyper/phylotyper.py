@@ -25,7 +25,7 @@ import config
 from modules.turtleGrapher.turtle_utils import generate_uri as gu, fulluri_to_basename as u2b, normalize_rdfterm as normalize 
 from modules.blazeUploader.upload_graph import upload_graph
 from modules.phylotyper import ontology, exceptions
-from modules.phylotyper.sequences import MarkerSequences, phylotyper_query
+from modules.phylotyper.sequences import MarkerSequences, phylotyper_query, genename_query
 
 logger = logging.getLogger(__name__)
 
@@ -110,7 +110,7 @@ def to_dict(pt_file, subtype, pickle_file):
 
     if pt_results['phylotyper_assignment'].empty or pt_results['phylotyper_assignment'].values[0] == 'Subtype loci not found in genome':
         pt_results = {
-            'subtype': 'No loci'
+            'subtype': 'No loci',
         }
 
     else:
@@ -125,7 +125,6 @@ def to_dict(pt_file, subtype, pickle_file):
         # Parse marker URIs, starts, stops, etc from loci field
         # Discard rest
         for k, v in pt_results['loci'].iteritems():
-            print(v)
             loci = eval(v)
             contigs = []
             starts = []
@@ -145,13 +144,13 @@ def to_dict(pt_file, subtype, pickle_file):
             pt_results['contig'][k] = contigs
             pt_results['start'][k] = starts
             pt_results['stop'][k] = stops
-    
+           
     pickle.dump(pt_results, open(pickle_file, 'wb'))
 
     return pickle_file
 
 
-def beautify(p_file):
+def beautify(p_file, genome):
     """ Convert phylotyper data into json format used by front end
 
 
@@ -164,6 +163,8 @@ def beautify(p_file):
     if pt_dict['subtype'] == 'No loci':
         table_rows = [
             {
+                'genome': genome,
+                'subtype_gene': 'N/A',
                 'start': 'N/A',
                 'stop': 'N/A',
                 'contig': 'N/A',
@@ -185,8 +186,18 @@ def beautify(p_file):
                 instance_dict['start'] = pt_dict['start'][k][i]
                 instance_dict['stop'] = pt_dict['stop'][k][i]
                 instance_dict['contig'] = pt_dict['contig'][k][i]
+
+                # Marker name
+                allele = pt_dict['loci'][k][i]
+                allele = re.sub(r'^spfy\|(.+)\|$',r':\g<1>',allele)
+                allele_uri = gu(allele)
+                allele_rdf = normalize(allele_uri)
+                gene_result = genename_query(allele_rdf)
+                instance_dict['subtype_gene'] = gene_result[0]['markerLabel']
                 
                 # Genome
+                instance_dict['genome'] = genome
+
                 # Subtype info
                 instance_dict['subtype'] = pt_dict['subtype'][k]
                 instance_dict['probability'] = pt_dict['probability'][k]
@@ -337,6 +348,6 @@ if __name__=='__main__':
     
     phylotyper(args.g, args.s, pt_file)
     to_dict(pt_file, args.s, pickle_file)
-    print(beautify(pickle_file))
-    savvy(pickle_file, args.s)
+    print(beautify(pickle_file, args.g))
+    #savvy(pickle_file, args.s)
     #ignorant(input_g, args.s, pickle_file+'2')

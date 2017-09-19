@@ -159,7 +159,7 @@ def blob_savvy_enqueue(single_dict):
         # blazegraph
         if single_dict['options'][subtype]:
             job_pt_beautify = multiples.enqueue(
-                phylotyper.beautify, picklefile, 
+                phylotyper.beautify, picklefile, query_file[27:],
                 depends_on=job_pt_dict, result_ttl=-1)
             d.update({'job'+jobname+'_beautify': job_pt_beautify})
             
@@ -200,13 +200,13 @@ def blob_savvy_enqueue(single_dict):
             'i'], 'analysis': 'Antimicrobial Resistance'}
     if single_dict['options']['stx1']:
         jobs[job_stx1_beautify.get_id()] = {'file': single_dict[
-            'i'], 'analysis': 'Shiga-toxin 1 Subtype'}
+            'i'], 'analysis': 'Phylotyper'}
     if single_dict['options']['stx2']:
         jobs[job_stx2_beautify.get_id()] = {'file': single_dict[
-            'i'], 'analysis': 'Shiga-toxin 2 Subtype'}
+            'i'], 'analysis': 'Phylotyper'}
     if single_dict['options']['eae']:
         jobs[job_eae_beautify.get_id()] = {'file': single_dict[
-            'i'], 'analysis': 'Intimin Subtype'}
+            'i'], 'analysis': 'Phylotyper'}
 
     return jobs
 

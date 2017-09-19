@@ -85,6 +85,24 @@ def phylotyper_query(subtypescheme_rdf, isolate_rdf):
     return query
 
 
+@tojson
+@submit
+@prefix
+def genename_query(locus_rdf):
+
+    query = '''
+        SELECT ?markerURI ?markerLabel
+        WHERE {{
+            VALUES ?l {{ {} }} .
+            ?markerURI :isFoundIn ?l ;
+                a :Marker ;
+                dc:description ?markerLabel
+        }}
+    '''.format(locus_rdf)
+
+    return query
+
+
 
 class MarkerSequences(object):
     """Retrieve DNA region sequences for one or more Markers
