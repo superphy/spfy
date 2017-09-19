@@ -3,8 +3,8 @@ import os
 import tempfile
 import subprocess
 import argparse
-
 import pandas as pd
+from modules.turtleGrapher.turtle_grapher import generate_turtle_skeleton
 
 def create_blast_db(query_file):
     '''
@@ -72,6 +72,16 @@ def parse_blast_records(blast_output_file):
     print unique_hits
     return unique_hits
 
+def check_header_parsing(query_file):
+    '''
+    Checks that SeqIO can parse the file okay before continuing.
+    '''
+    try:
+        graph = generate_turtle_skeleton(query_file)
+        return True
+    except:
+        return False
+
 def qc(query_file):
     '''
     Compares the query_file against a reference db of ecoli-specific gene sequences.
@@ -79,6 +89,12 @@ def qc(query_file):
 
     Returns True for pass, False for failed qc check (not ecoli.)
     '''
+    if check_header_parsing(query_file):
+        return True
+    else:
+        return False
+
+    # run blast for ecoli specific sequences
     blast_db = create_blast_db(query_file)
     blast_output_file = run_blast(blast_db)
     unique_hits = parse_blast_records(blast_output_file)
