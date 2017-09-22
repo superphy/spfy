@@ -70,6 +70,8 @@ def generate_uri(uri, s=''):
     elif type(uri) is str and 'http' in uri:
         # if you called with a string in the form of a url
         return URIRef(uri)
+    elif ':' not in uri:
+        return URIRef(uri)
 
     prefix = uri.split(':')[0]
     postfix = uri.split(':')[1]
