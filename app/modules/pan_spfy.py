@@ -30,7 +30,6 @@ from datetime import datetime
 import ast
 import cPickle as pickle
 from modules.blazeUploader import upload_graph
-import pdb
 
 # the only ONE time for global variables
 # when naming queues, make sure you actually set a worker to listen to that queue
