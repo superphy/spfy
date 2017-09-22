@@ -73,7 +73,7 @@ def pan_bundle(panpickle, job_pan):
 
             #checks if genome URI already has a pangenome associated, if so we don't need to process it further
 
-            if not get_single_region(genome):
+            if not get_single_region(genomeURI):
 
 
                 job_pan_datastruct = multiples_q.enqueue(graph_upload, graph, pan_results[region][genomeURI], genomeURI, 'PanGenomeRegion', depends_on=job_pan)
