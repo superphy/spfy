@@ -4,7 +4,7 @@
 
 **Spfy**: speedy `superphy <https://github.com/superphy/semantic>`__
 
-Live: https://lfz.corefacility.ca/superphy/spfy/
+Live: https://lfz.corefacility.ca/superphy/grouch/
 
 Platform for predicting Serotype & Virulence Factors (via
 `ECTyper <https://github.com/phac-nml/ecoli_serotyping>`__) and
@@ -141,8 +141,8 @@ Blazegraph:
    Alternatively, modify the endpoint accordingly under
    ``database['blazegraph_url']`` in ``/app/config.py``
 
-CLI-Only:
----------
+CLI: Generate Graph Files:
+--------------------------
 
 -  If you wish to only create rdf graphs (serialized as turtle files):
 
@@ -154,13 +154,64 @@ CLI-Only:
    ``python -m modules/savvy -i tests/ecoli/GCA_001894495.1_ASM189449v1_genomic.fna``
    where the argument after the ``-i`` is your genome (FASTA) file.
 
-# Ontology The ontology for Spfy is available at:
+CLI: Generate Ontology:
+-----------------------
+
+The ontology for Spfy is available at:
 https://raw.githubusercontent.com/superphy/backend/master/app/scripts/spfy\_ontology.ttl
 It was generated using
 https://raw.githubusercontent.com/superphy/backend/master/app/scripts/generate\_ontology.py
 with shared functions from Spfy's backend code. If you wish to run it,
 do: 1. ``cd app/`` 2. ``python -m scripts/generate_ontology`` which will
 put the ontology in ``app/``
+
+CLI: Enqueue Subtyping Tasks w/o Reactapp:
+------------------------------------------
+
+.. note:: currently setup for just .fna files
+
+You can bypass the front-end website and still enqueue subtyping jobs by:
+
+1. First, mount the host directory with all your genome files to ``/datastore`` in the containers.
+
+  For example, if you keep your files at ``/home/bob/ecoli-genomes/``, you'd
+  edit the ``docker-compose.yml`` file and replace:
+
+  .. code-block:: yaml
+
+    volumes:
+    - /datastore
+
+  with:
+
+  .. code-block:: yaml
+
+    volumes:
+    - /home/bob/ecoli-genomes:/datastore
+
+2. Then take down your docker composition (if it's up) and restart it
+
+  .. code-block:: shell
+
+    docker-compose down
+    docker-compose up -d
+
+3. Drop and shell into your webserver container (though the worker containers would work too) and run the script.
+
+  .. code-block:: shell
+
+    docker exec -it backend_webserver_1 sh
+    python -m scripts/sideload
+    exit
+
+Note that reisdues may be created in your genome folder.
+
+Contributing:
+-------------
+
+Steps required to add new modules are documented in the `Developer Guide`_.
+
+.. _`Developer Guide`: http://superphy.readthedocs.io/en/latest/contributing.html
 
 .. |Build Status| image:: https://travis-ci.org/superphy/backend.svg?branch=master
    :target: https://travis-ci.org/superphy/backend
@@ -169,12 +220,5 @@ put the ontology in ``app/``
 .. |Docs| image:: https://readthedocs.org/projects/superphy/badge/?version=latest
    :target: http://superphy.readthedocs.io/en/latest/?badge=latest
    :alt: Documentation Status
-
-Contributing:
--------------
-
-Steps required to add new modules are documented in the `Developer Guide`_.
-
-.. _`Developer Guide`: http://superphy.readthedocs.io/en/latest/contributing.html
 
 .. tag:intro-end

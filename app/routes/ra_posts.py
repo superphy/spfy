@@ -47,6 +47,7 @@ def handle_groupresults(jobs_dict):
     for key in jobs_dict:
         st.add(jobs_dict[key]['file'])
     s = ''
+
     for f in st:
         s += f + ' '
     d[job_id]['file'] = s
@@ -171,10 +172,15 @@ def upload():
         options['vf']=True
         options['serotype']=True
         options['pi']=90
+        options['pan'] = True
         # new to 4.2.0
         # we consider False as default as the front-end should override this
         # to use the new feature
         groupresults = False
+        # new to 4.3.3
+        # allows bulk uploading where results are not returned to user
+        # only the blobid to check statuses is returned (ie. don't run beautify)
+        options['bulk'] = False
 
         # processing form data
         for key, value in form.items():
@@ -201,6 +207,8 @@ def upload():
                     options['stx2'] = value
                 if key == 'options.eae':
                     options['eae'] = value
+                if key == 'options.bulk':
+                    options['bulk'] = value
             else:
                 if key =='options.pi':
                     options['pi']=int(value)
@@ -233,7 +241,7 @@ def upload():
 
                 # for enqueing task
                 jobs_enqueued = spfy(
-                    {'i': filename, 'disable_serotype': False, 'disable_amr': False, 'disable_vf': False, 'pi':options['pi'], 'options':options})
+                    {'i': filename, 'pi':options['pi'], 'options':options})
                 jobs_dict.update(jobs_enqueued)
         # new in 4.2.0
         print 'upload(): all files enqueued, returning...'
