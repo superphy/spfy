@@ -87,8 +87,8 @@ def generate_uri(uri, s=''):
 
 def uri_to_basename(uri):
     '''
-    This does the reverse of generate_uri(). Converts a rdflib.term.URIRef back to is base.
-        ex. rdflib.term.URIRef(u'https://www.github.com/superphy#4eb02f5676bc808f86c0f014bbce15775adf06ba)
+    Converts a prefix formatted rdflib.term.URIRef back to is base.
+        ex. rdflib.term.URIRef(u':4eb02f5676bc808f86c0f014bbce15775adf06ba)
                 gives 4eb02f5676bc808f86c0f014bbce15775adf06ba
     Args:
         uri(rdflib.term.URIRef): a URIRef object
@@ -103,6 +103,31 @@ def uri_to_basename(uri):
     # this will fail if a path-style uri is used
     return str(uri).split('/')[-1]
 
+
+def fulluri_to_basename(uri):
+    '''
+    This does the reverse of generate_uri(). Converts a rdflib.term.URIRef back to is base.
+        ex. rdflib.term.URIRef(u'https://www.github.com/superphy#4eb02f5676bc808f86c0f014bbce15775adf06ba)
+                gives 4eb02f5676bc808f86c0f014bbce15775adf06ba
+
+    Note: uri_to_basename strips shorthand prefixes from URI e.g. 'dc:'. This one strips the full address prefix
+    e.g. 'https://www.github.com/superphy#'
+
+    Args:
+        uri(rdflib.term.URIRef): a URIRef object
+    Returns:
+        (str): just the basestring (ie. everything after the ontology ID)
+    '''
+
+    uri = str(uri)
+
+    for value in config.namespaces.values():
+        if uri.startswith(value):
+            return uri[len(value):]
+            
+    raise Exception('Unknown ontology in URI'.format(uri))
+
+
 def link_uris(graph, uri_towards_spfyid, uri_towards_marker):
     '''
     Links two vertices in a graph as required for inferencing/queries in blazegraph.
@@ -113,3 +138,35 @@ def link_uris(graph, uri_towards_spfyid, uri_towards_marker):
     graph.add((uri_towards_spfyid, generate_uri(':hasPart'), uri_towards_marker))
     graph.add((uri_towards_marker, generate_uri(':isFoundIn'), uri_towards_spfyid))
     return graph
+
+
+def normalize_rdfterm(rdf_term):
+    '''
+      Converts string or URIRef object into string with valid
+      RDF term syntax (e.g. Adds angle brackets when needed for URIs of RDF terms)
+
+    '''
+
+    if not isinstance(rdf_term, URIRef):
+        # Long form after conversion
+        uri = generate_uri(rdf_term)
+    else:
+        uri = rdf_term
+
+    normy = str(uri)
+    if 'http' in normy:
+        # Long form
+        if normy.startswith('<') and normy.endswith('>'):
+            return normy
+        else:
+            return "<%s>" % normy
+
+    elif ':' in normy:
+        # Short form
+        return normy
+
+    else:
+        # Some random string
+        return None
+
+   

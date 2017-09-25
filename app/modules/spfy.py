@@ -23,6 +23,14 @@ from modules.amr.amr_to_dict import amr_to_dict
 from modules.beautify.beautify import beautify
 from modules.turtleGrapher.datastruct_savvy import datastruct_savvy
 from modules.turtleGrapher.turtle_grapher import turtle_grapher
+from modules.phylotyper import phylotyper
+
+from modules.loggingFunctions import initialize_logging
+import logging
+
+# logging
+initialize_logging()
+logger = logging.getLogger(__name__)
 
 
 # the only ONE time for global variables
@@ -100,7 +108,8 @@ def blob_savvy_enqueue(single_dict):
         # we need to create a dict with these options enabled:
 
         # just enqueue the jobs, we don't care about returning them
-        ectyper_pipeline(backlog_singles_q, backlog_multiples_q)
+        ectyper_jobs = ectyper_pipeline(backlog_singles_q, backlog_multiples_q)
+        job_ectyper_datastruct = ectyper_jobs['job_ectyper_datastruct']
     # END ECTYPER PIPELINE
 
     # AMR PIPELINE
@@ -138,6 +147,56 @@ def blob_savvy_enqueue(single_dict):
         amr_pipeline(backlog_multiples_q)
     # END AMR PIPELINE
 
+    # Phylotyper Pipeline
+    def phylotyper_pipeline(multiples, subtype):
+
+        jobname = '_pt' +subtype
+        tsvfile = query_file + jobname + '.tsv'
+        picklefile = query_file + jobname + '.p'
+
+        job_pt = multiples.enqueue(
+            phylotyper.phylotyper, None, subtype, tsvfile, id_file=query_file + '_id.txt',
+            depends_on=job_ectyper_datastruct)
+        job_pt_dict = multiples.enqueue(
+            phylotyper.to_dict, tsvfile, subtype, picklefile,
+            depends_on=job_pt)
+        job_pt_datastruct = multiples.enqueue(
+            phylotyper.savvy, picklefile, subtype,
+            depends_on=job_pt_dict)
+
+        d = {'job'+jobname: job_pt, 'job'+jobname+'_dict': job_pt_dict,
+             'job'+jobname+'_datastruct': job_pt_datastruct}
+        # we still check for the user-selected amr option again because
+        # if it was not selected but BACKLOG_ENABLED=True, we dont have to
+        # enqueue it to backlog_multiples_q since beautify doesnt upload
+        # blazegraph
+        if single_dict['options'][subtype]:
+            job_pt_beautify = multiples.enqueue(
+                phylotyper.beautify, picklefile, query_file[27:],
+                depends_on=job_pt_dict, result_ttl=-1)
+            d.update({'job'+jobname+'_beautify': job_pt_beautify})
+
+        return d
+
+    if single_dict['options']['stx1']:
+        pt_jobs = phylotyper_pipeline(multiples_q, 'stx1')
+        job_stx1_beautify = pt_jobs['job_ptstx1_beautify']
+    elif config.BACKLOG_ENABLED:
+        phylotyper_pipeline(backlog_multiples_q, 'stx1')
+
+    if single_dict['options']['stx2']:
+        pt_jobs = phylotyper_pipeline(multiples_q, 'stx2')
+        job_stx2_beautify = pt_jobs['job_ptstx2_beautify']
+    elif config.BACKLOG_ENABLED:
+        phylotyper_pipeline(backlog_multiples_q, 'stx2')
+
+    if single_dict['options']['eae']:
+        pt_jobs = phylotyper_pipeline(multiples_q, 'eae')
+        job_eae_beautify = pt_jobs['job_pteae_beautify']
+    elif config.BACKLOG_ENABLED:
+        phylotyper_pipeline(backlog_multiples_q, 'eae')
+    # END Phylotyper pipeline
+
     # the base file data for blazegraph
     job_turtle = multiples_q.enqueue(
         turtle_grapher, query_file, depends_on=job_qc)
@@ -168,6 +227,15 @@ def blob_savvy_enqueue(single_dict):
     if single_dict['options']['amr']:
         jobs[ret_job_amr.get_id()] = {'file': single_dict[
             'i'], 'analysis': 'Antimicrobial Resistance'}
+    if single_dict['options']['stx1']:
+        jobs[job_stx1_beautify.get_id()] = {'file': single_dict[
+            'i'], 'analysis': 'Phylotyper'}
+    if single_dict['options']['stx2']:
+        jobs[job_stx2_beautify.get_id()] = {'file': single_dict[
+            'i'], 'analysis': 'Phylotyper'}
+    if single_dict['options']['eae']:
+        jobs[job_eae_beautify.get_id()] = {'file': single_dict[
+            'i'], 'analysis': 'Phylotyper'}
 
     return jobs
 
@@ -194,7 +262,8 @@ def spfy(args_dict):
     # abs path resolution should be handled in spfy.py
     #args_dict['i'] = os.path.abspath(args_dict['i'])
 
-    # print 'Starting blob_savvy call'
+    #print 'Starting blob_savvy call'
+    #logger.info('args_dict: ' + str(args_dict))
     jobs_dict = blob_savvy(args_dict)
 
     return jobs_dict

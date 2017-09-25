@@ -7,6 +7,7 @@ from modules.loggingFunctions import initialize_logging
 # logging
 log_file = initialize_logging()
 log = logging.getLogger(__name__)
+log.setLevel(logging.DEBUG)
 
 blazegraph_url = config.database['blazegraph_url']
 #blazegraph_url = 'http://blazegraph:8080/bigdata/sparql'
@@ -86,6 +87,7 @@ def tojson(func):
     @wraps(func)
     def func_wrapper(*args, **kwargs):
         results = func(*args, **kwargs)
+      
         l = []
         for result in results['results']['bindings']:
             # create a blank dictionary per result
@@ -94,7 +96,10 @@ def tojson(func):
             # Note: though this is writeen as a loop, we expect only 1 key in keys
             for k in keys:
                 # get the value at that key
-                d[k] = result[k]['value']
+                if 'datatype' in result[k] and result[k]['datatype'].endswith('XMLSchema#integer'):
+                    d[k] = int(result[k]['value'])
+                else:
+                   d[k] = str(result[k]['value'])
             l.append(d)
         log.debug(l)
         return l

@@ -1,3 +1,5 @@
+import os
+
 #for secret key, do a os.urandom(24).encode('hex')
 SECRET_KEY = 'is-that-daisy'
 REDIS_URL = 'redis://redis:6379/0'
@@ -18,6 +20,8 @@ PAN_TIMEOUT = 100000
 BACKLOG_ENABLED = True
 
 DATASTORE = '/datastore'
+if not os.path.isdir(DATASTORE):
+    DATASTORE = '/tmp'
 RECAPTCHA_ENABLED = False
 RECAPTCHA_SITE_KEY = "6LeVYhgUAAAAAKbedEJoCcRaeFaxPh-2hZfzXfFP"
 RECAPTCHA_SECRET_KEY = "PUTYOSECRETKEYHERE"
@@ -38,14 +42,20 @@ namespaces = {
     'dc' : 'http://purl.org/dc/elements/1.1/',
     'rdf' : 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
     'owl' : 'http://www.w3.org/2002/07/owl#',
-    'rdfs' : 'http://www.w3.org/2000/01/rdf-schema#'
+    'rdfs' : 'http://www.w3.org/2000/01/rdf-schema#',
+    'subt' : 'https://www.github.com/superphy/typing#',
+    'typon' : 'http://purl.phyloviz.net/ontology/typon#'
 }
 
 #database defaults
 DATABASE_ENABLED = True
 database = {}
-database['blazegraph_url'] = 'http://blazegraph:8080/bigdata/sparql'
+#database['blazegraph_url'] = 'http://blazegraph:8080/bigdata/sparql'
 #database['blazegraph_url'] = 'http://localhost:9000/blazegraph/namespace/superphy/sparql'
+database['blazegraph_url'] = os.getenv(
+    'SUPERPHY_RDF_URL',
+    'http://blazegraph:8080/bigdata/sparql'
+)
 #### end of savvy.py stuff
 
 

@@ -62,16 +62,14 @@ def parse_gene_dict(graph, gene_dict, uriGenome, geneType):
             uriGenomes = gu(uriGenome)
             uriContigs = gu(uriGenomes, "/contigs")
             # recreating the contig uri
-            
+
             uriContig = gu(uriContigs, '/' + contig_id)
-            
-          
+
+
 
             # after this point we switch perspective to the gene and build down to
             # relink the gene with the contig
-            bnode_region = BNode()
-            bnode_start = BNode()
-            bnode_end = BNode()
+
 
             # some gene names, esp those which are effectively a description,
             # have spaces
@@ -82,20 +80,19 @@ def parse_gene_dict(graph, gene_dict, uriGenome, geneType):
             # human-readable
             graph.add((uriGene, gu('dc:description'), Literal(gene_name)))
 
-            # define the object type of bnode_region
-            graph.add((bnode_region, gu('rdf:type'), gu('faldo:Region')))
-            # link the region (eg. the occurance of the gene in a contig)
-            graph = link_uris(graph, bnode_region, uriGene)
-            #graph.add((uriGene, gu(':hasPart'), bnode_region))
+            # define the object type of Region
+            start_position = gene_record['START']
+            stop_position = gene_record['STOP']
+            allele_uri = '/'.join((str(gene_name), str(start_position)+'-'+str(stop_position)))
+            region = gu(uriContig, '/'+allele_uri)
 
-            # define the object type of the start & end bnodes
-            graph.add((bnode_start, gu('rdf:type'), gu('faldo:Begin')))
-            graph.add((bnode_end, gu('rdf:type'), gu('faldo:End')))
-            # link the start and end bnodes to the region
-            graph = link_uris(graph, bnode_start, bnode_region)
-            graph = link_uris(graph, bnode_end, bnode_region)
-            #graph.add((bnode_region, gu(':hasPart'), bnode_start))
-            #graph.add((bnode_region, gu(':hasPart'), bnode_end))
+            graph.add((region, gu('rdf:type'), gu('faldo:Region')))
+            # link the region (eg. the occurance of the gene in a contig)
+            graph = link_uris(graph, region, uriGene)
+
+            # define the start & end bnodes
+            bnode_start = BNode()
+            bnode_end = BNode()
 
             # this is a special case for amr results
             if 'CUT_OFF' in gene_dict:
@@ -127,14 +124,19 @@ def parse_gene_dict(graph, gene_dict, uriGenome, geneType):
                 graph.add((uriGene, gu('g:DNASequence'),
                            Literal(gene_record['DNASequence'])))
 
-            graph.add((bnode_start, gu('faldo:Position'),
+            graph.add((bnode_start, gu('faldo:position'),
                        Literal(gene_record['START'])))
-            graph.add((bnode_end, gu('faldo:Position'),
+            graph.add((bnode_end, gu('faldo:position'),
                        Literal(gene_record['STOP'])))
-            # because we've identified a gene, that uriContig is now also a faldo:Reference (note: this isn't how FALDO intended the linkage to be, but we do this to accomadate inferencing in Blazegraph)
-            # this also means that if you find (or are querying) a uriContig and it isn't not a faldo:Reference (& only a g:Contig) then there are no genes assoc w it
-            graph.add((uriContig, gu('rdf:type'), gu('faldo:Reference')))
+
+            graph.add((region, gu('faldo:begin'), bnode_start))
+            graph.add((region, gu('faldo:end'), bnode_end))
+
+            graph.add((region, gu('faldo:reference'), uriContig))
+
             # link up the start/end bnodes to the contig
+            graph = link_uris(graph, uriContig, region)
+
             graph = link_uris(graph, uriContig, bnode_start)
             graph = link_uris(graph, uriContig, bnode_end)
             #graph.add((bnode_start, gu(':hasPart'), uriContig))

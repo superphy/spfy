@@ -199,11 +199,21 @@ def upload():
                     options['serotype']=value
                 if key == 'options.groupresults':
                     groupresults = value
+                if key == 'options.groupresults':
+                    groupresults = value
+                if key == 'options.stx1':
+                    options['stx1'] = value
+                if key == 'options.stx2':
+                    options['stx2'] = value
+                if key == 'options.eae':
+                    options['eae'] = value
                 if key == 'options.bulk':
                     options['bulk'] = value
             else:
                 if key =='options.pi':
                     options['pi']=int(value)
+                if key =='options.prob':
+                    options['prob']=float(value)
 
         # get a list of files submitted
         uploaded_files = request.files.getlist("file")
@@ -221,7 +231,7 @@ def upload():
                 filename = os.path.join(current_app.config[
                                         'DATASTORE'], now + '-' + secure_filename(file.filename))
                 file.save(filename)
-                #print 'Uploaded File Saved at', str(filename)
+                print 'Uploaded File Saved at', str(filename)
 
                 if tarfile.is_tarfile(filename):
                     # set filename to dir for spfy call
