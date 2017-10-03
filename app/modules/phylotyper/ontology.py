@@ -120,7 +120,7 @@ def match_version(version):
         version(str): ontology version string e.g. <https://www.github.com/superphy/typing/1.0.0>
 
     """
-   
+
     result = version_query(version)
 
     if result['results']['bindings']:
@@ -138,7 +138,7 @@ def find_object(uri, rdftype):
         rdftype(str): the URI linked by a rdf:type relationship to URI
 
     """
-   
+
     result = subtype_query(uri, rdftype)
 
     if result['results']['bindings']:
@@ -231,7 +231,7 @@ def eae_graph():
 
     """
 
-    return generate_graph('subt:eae', [':eae'], 
+    return generate_graph('subt:eae', [':eae'],
         ["alpha-1","alpha-2","beta-1","beta-2","epsilon-1","epsilon-2","eta-1","eta-2",
         "gamma-1","iota-1","iota-2","kappa-1","lambda-1","mu-1","nu-1","omicron-1","pi-1",
         "rho-1","sigma-1","theta-2","xi-1","zeta-1","untypeable"])
@@ -255,9 +255,9 @@ def load(subtype):
     if not func_name in globals():
         raise ValuesError(subtype)
     graph_func = globals()[func_name]
-   
+
     ontology_turtle_file = os.path.join(__location__, 'superphy_subtyping.ttl')
-    
+
     if not match_version(typing_ontology_version):
         log.info('Uploading subtyping ontolog version: {}'.format(typing_ontology_version))
         response = upload_turtle(ontology_turtle_file)
@@ -267,6 +267,7 @@ def load(subtype):
         log.info('Uploading subtype definition: {}'.format(subtype))
         graph = graph_func()
         response = upload_graph(graph)
+        # add reference graph of ecoli_vf
         log.info('Upload returned response: {}'.format(response))
 
     # Database ready to recieve phylotyper data for this subtype
@@ -284,5 +285,3 @@ if __name__=='__main__':
     args = parser.parse_args()
 
     load(args.s)
-
-    
