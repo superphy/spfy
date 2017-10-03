@@ -10,6 +10,9 @@ services:
     depends_on:
     - redis
     - blazegraph
+    - worker
+    - worker-priority
+    - worker-blazegraph-ids
     volumes:
     - /datastore
 
