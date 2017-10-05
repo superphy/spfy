@@ -15,6 +15,8 @@ from modules.turtleGrapher.turtle_utils import generate_uri as gu
 from modules.decorators import submit, prefix, tojson
 from modules.blazeUploader.upload_graph import upload_turtle, upload_graph
 
+from modules.phylotyper.graph_refs import graph_refs
+
 log = logging.getLogger(__name__)
 typing_ontology_version = '<https://www.github.com/superphy/typing/1.0.0>'
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
@@ -267,8 +269,13 @@ def load(subtype):
         log.info('Uploading subtype definition: {}'.format(subtype))
         graph = graph_func()
         response = upload_graph(graph)
-        # add reference graph of ecoli_vf
         log.info('Upload returned response: {}'.format(response))
+        # add reference graph of ecoli_vf
+        log.info('Uploading VF reference genes')
+        vf_graph = graph_refs()
+        vf_response = upload_graph(vf_graph)
+        # add reference graph of ecoli_vf
+        log.info('Upload returned response: {}'.format(vf_response))
 
     # Database ready to recieve phylotyper data for this subtype
 

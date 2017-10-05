@@ -3,10 +3,12 @@ import os
 import shutil
 import requests
 from tempfile import TemporaryFile
-from shutil i
+from rdflib import Literal
 from modules.turtleGrapher.turtle_grapher import generate_graph
+from modules.turtleGrapher.turtle_utils import generate_uri as gu
 
 def get_ref_vfs():
+    # we use a tempfile.TemporaryFile to store the ref
     tf = TemporaryFile()
     # try to get the VF ref file from github
     try:
@@ -15,7 +17,7 @@ def get_ref_vfs():
         # github return Unicdoe, we want the str
         tf.write(str(f.text))
     except:
-        # if fails, use the backup copy in superphy/backend 's ECTyper submodule
+        # if fails, use the backup copy in superphy/backend's ECTyper submodule
         print 'Could not retrieve ecoli_vf from GitHub. Using backup...'
         f = 'modules/ectyper/ecoli_serotyping/Data/repaired_ecoli_vfs_shortnames.ffn'
         with open(f,'r+b') as fl:
@@ -34,7 +36,7 @@ def identify_name(line):
             sub = line[line.find("(")+1:line.find(")")]
     return sub
 
-def load_refs():
+def graph_refs():
     # get the reference VF file as a tempfile.TemporaryFile
     f = get_ref_vfs()
 
@@ -49,3 +51,12 @@ def load_refs():
     # iterate using i for the header's position
     for i in range(0,len(lines),2):
         sub = identify_name(lines[i])
+        # create a uri from this VF
+        # ex. :mexN
+        uriGene = gu(':' + sub)
+        # label it a VF, this will also label it a :Marker
+        g.add((uriGene, gu('rdf:type'), gu(':VirulenceFactor')))
+        # add the gene seq
+        g.add((uriGene, gu('g:DNASequence'), Literal(lines[i+1])))
+
+    return graph
