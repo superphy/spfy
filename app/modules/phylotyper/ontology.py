@@ -160,8 +160,6 @@ def generate_graph(uri, loci, values):
     # Check for existance of schema Marker components
     for l in loci:
         if not find_object(l, ':Marker'):
-            try:
-
             raise DatabaseError(uri, l)
 
     # Proceed with creating subtype schema
@@ -276,7 +274,7 @@ def load(subtype):
         log.info('Uploading subtype definition: {}'.format(subtype))
         graph = graph_func()
         response = upload_graph(graph)
-        log.info('Upload returned response: {}'.format(response))        
+        log.info('Upload returned response: {}'.format(response))
 
     # Database ready to recieve phylotyper data for this subtype
 
