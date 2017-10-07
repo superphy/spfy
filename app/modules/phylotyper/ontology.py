@@ -161,12 +161,8 @@ def generate_graph(uri, loci, values):
     for l in loci:
         if not find_object(l, ':Marker'):
             try:
-                # add reference graph of ecoli_vf
-                log.info('Uploading VF reference genes')
-                vf_graph = graph_refs()
-                vf_response = upload_graph(vf_graph)
-            except:
-                raise DatabaseError(uri, l)
+
+            raise DatabaseError(uri, l)
 
     # Proceed with creating subtype schema
     graph = Graph()
@@ -270,14 +266,17 @@ def load(subtype):
         log.info('Uploading subtyping ontolog version: {}'.format(typing_ontology_version))
         response = upload_turtle(ontology_turtle_file)
         log.info('Upload returned response: {}'.format(response))
+        # add reference graph of ecoli_vf
+        log.info('Uploading VF reference genes')
+        vf_graph = graph_refs()
+        vf_response = upload_graph(vf_graph)
+        log.info('Upload returned response: {}'.format(vf_response))
 
     if not find_object(uri, 'subt:Phylotyper'):
         log.info('Uploading subtype definition: {}'.format(subtype))
         graph = graph_func()
         response = upload_graph(graph)
-        log.info('Upload returned response: {}'.format(response))
-        # add reference graph of ecoli_vf
-        log.info('Upload returned response: {}'.format(vf_response))
+        log.info('Upload returned response: {}'.format(response))        
 
     # Database ready to recieve phylotyper data for this subtype
 
