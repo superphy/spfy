@@ -160,7 +160,13 @@ def generate_graph(uri, loci, values):
     # Check for existance of schema Marker components
     for l in loci:
         if not find_object(l, ':Marker'):
-            raise DatabaseError(uri, l)
+            try:
+                # add reference graph of ecoli_vf
+                log.info('Uploading VF reference genes')
+                vf_graph = graph_refs()
+                vf_response = upload_graph(vf_graph)
+            except:
+                raise DatabaseError(uri, l)
 
     # Proceed with creating subtype schema
     graph = Graph()
@@ -270,10 +276,6 @@ def load(subtype):
         graph = graph_func()
         response = upload_graph(graph)
         log.info('Upload returned response: {}'.format(response))
-        # add reference graph of ecoli_vf
-        log.info('Uploading VF reference genes')
-        vf_graph = graph_refs()
-        vf_response = upload_graph(vf_graph)
         # add reference graph of ecoli_vf
         log.info('Upload returned response: {}'.format(vf_response))
 
