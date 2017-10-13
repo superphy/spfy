@@ -107,6 +107,20 @@ Volume Mapping in Production
 
 In production, at minimum we recommend you map Blazegraph's volume to a backup directory. ``/datastore`` also stores all the uploaded genome files and related temporary files generated during analysis. ``/data`` is used to store both the parsed responses to the front-end, and the task queue managing them. If you want the analysis tasks to continue, or existing results shown to the front-end, to persist after running ``docker-compose down`` you'll have to map both volumes - server failures or just running ``docker-compose stop`` will still persist the data without requiring you to map to host.
 
+Ports
+-----
+
+``reactapp`` is the front-end user interface for Spfy whereas ``webserver`` serves the backend Flask APIs. Without modification, when you run ``docker-compose up`` port 8090 is used to access the app. The front-end then calls port 8000 to submit requests to the backend. This approach is fine for individual users on their own computer, but this setup should not be used for production as it would, at minimum, require opening one additional port.
+
+Instead, we recommend you change the port for ``reactapp`` to the standard port 80, and also map the ``webserver`` to a subdomain.
+
+Setting the host port mapping can be done by modifying the ``webserver`` config with the below:
+
+.. code-block:: yaml
+
+	ports:
+	- "80:80"
+
 Deploying to Corefacility
 =========================
 
