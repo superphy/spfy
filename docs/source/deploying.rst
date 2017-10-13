@@ -4,6 +4,108 @@ Deplyoment Guide
 
 .. contents:: Table of Contents
    :local:
+   
+The way we recommend you deploy Spfy is to simply use the Docker composition for everything; this approach is documented in `Deploying in General`_. Specifics related to the NML's deployment is given in `Deploying to Corefacility`_.
+   
+Deploying in General
+====================
+
+Let's take a look at the ``docker-compose.yml`` file.
+
+.. code-block:: yaml
+
+	version: '2'
+	services:
+	  webserver:
+	    build:
+	      context: .
+	      dockerfile: Dockerfile-spfy
+	    image: backend
+	    ports:
+	    - "8000:80"
+	    depends_on:
+	    - redis
+	    - blazegraph
+	    volumes:
+	    - /datastore
+
+	  reactapp:
+	    build:
+	      context: .
+	      dockerfile: Dockerfile-reactapp
+	    image: reactapp
+	    ports:
+	    - "8090:5000"
+	    depends_on:
+	    - webserver
+
+	  worker:
+	    build:
+	      context: .
+	      dockerfile: Dockerfile-rq
+	    image: backend-rq
+	    ports:
+	    - "9181:9181" #this is for debugging, drop a shell and run rq-dashboard if you need to see jobs
+	    volumes_from:
+	    - webserver
+	    depends_on:
+	    - webserver
+
+	  worker-blazegraph-ids:
+	    build:
+	      context: .
+	      dockerfile: Dockerfile-rq-blazegraph
+	    image: backend-rq-blazegraph
+	    volumes_from:
+	    - webserver
+	    depends_on:
+	    - webserver
+
+	  worker-priority:
+	    build:
+	      context: .
+	      dockerfile: Dockerfile-rq-priority
+	    image: backend-rq-priority
+	    volumes_from:
+	    - webserver
+	    depends_on:
+	    - webserver
+
+	  redis:
+	    image: redis:3.2
+	    command: redis-server --appendonly yes # for persistance
+	    volumes:
+	    - /data
+
+	  blazegraph:
+	    image: superphy/blazegraph:2.1.4-inferencing
+	    ports:
+	    - "8080:8080"
+	    volumes:
+	    - /var/lib/jetty/
+	    
+Host to Container Mapping
+-------------------------
+	    
+There are a few key points to note:
+
+.. code-block:: yaml
+
+	ports:
+	- "8000:80"
+	
+The configuration maps ``host:container``; so port 8000 on the host (your computer) is linked to port 80 of the container. Fields like volumes typically have only one value: ``/var/lib/jetty/``; this is done to instruct Docker to map the folder ``/var/lib/jetty`` within the container itself to a generic volume managed by Docker, thereby enabling the data to persist across start/stop cycles.
+
+You can also add a host path to volume mappings such as ``/dbbackup/:/var/lib/jetty/`` so that Docker uses an actual path on your host, instead of a generic Docker-managed volume. As before, the first term, ``/dbbackup/`` would reside on the host.
+
+.. warning::
+
+	A caveat to note is that if you do not specify a host folder on volume mappings, running a ``docker-compose down`` will still **wipe** the generic volume. Either run ``docker-compose stop`` instead, or specify a host mapping to persist the data.
+
+Volume Mapping in Production
+----------------------------
+
+In production, at minimum we recommend you map Blazegraph's volume to a backup directory. ``/datastore`` also stores all the uploaded genome files and related temporary files generated during analysis. ``/data`` is used to store both the parsed responses to the front-end, and the task queue managing them. If you want the analysis tasks to continue, or existing results shown to the front-end, to persist after running ``docker-compose down`` you'll have to map both volumes - server failures or just running ``docker-compose stop`` will still persist the data without requiring you to map to host.
 
 Deploying to Corefacility
 =========================
