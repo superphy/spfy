@@ -42,7 +42,7 @@ def graph_refs():
 
     # read this reference file write in into a list
     lines = []
-    with open(fname) as f:
+    with open(f) as fl:
         lines = [line.rstrip('\n') for line in f]
 
     # create a blank graph object
