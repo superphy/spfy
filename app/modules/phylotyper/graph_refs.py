@@ -61,4 +61,4 @@ def graph_refs():
         # add the gene seq
         g.add((uriGene, gu('g:DNASequence'), Literal(lines[i+1])))
 
-    return graph
+    return g
