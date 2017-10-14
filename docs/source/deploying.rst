@@ -121,6 +121,20 @@ Setting the host port mapping can be done by modifying the ``webserver`` config 
 	ports:
 	- "80:80"
 
+For networking the backend APIs, you can keep the webserver running on port 8000 and use a reverse-proxy such as NGINX to map the subdomain to port 8000 on your server. In other words, we'll set it up so requests made by reactapp to the API are sent to ``api.mydomain.com``, for example, which maps to the IP address of your server (ideally via HTTPS). Your reverse-proxy will then redirect the request to port 8000 locally, while serving the reactapp interface on the main domain (``mydomain.com``, in this case).
+
+Setting a Subdomain
+-------------------
+
+This has to be done through the interface of your domain registrar. You'll have to add an Address Record (A Record), which is typically under the heading "Manage Advanced DNS Records" or similar.
+
+Setting up a Reverse Proxy
+--------------------------
+
+We recommend you use NGINX as the reverse proxy. You can find their Getting Started guide at https://www.nginx.com/resources/wiki/start/
+
+In addition, we recommend you use Certbot (part of the EFF's Let's Encrypt) project to get the required certificates and setup HTTPS on your server. You can find their interactive guide at https://certbot.eff.org/ which allow's you to specify the webserver (NGINX) and operating system you are using. Certbot comes with a nice script to automatically modify your NGINX configuration as required.
+
 Deploying to Corefacility
 =========================
 
