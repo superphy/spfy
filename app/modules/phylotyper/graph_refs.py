@@ -2,14 +2,14 @@
 import os
 import shutil
 import requests
-from tempfile import TemporaryFile
+from tempfile import NamedTemporaryFile
 from rdflib import Literal
 from modules.turtleGrapher.turtle_grapher import generate_graph
 from modules.turtleGrapher.turtle_utils import generate_uri as gu
 
 def get_ref_vfs():
     # we use a tempfile.TemporaryFile to store the ref
-    tf = TemporaryFile()
+    tf = NamedTemporaryFile()
     # try to get the VF ref file from github
     try:
         f = requests.get('https://raw.githubusercontent.com/phac-nml/ecoli_vf/master/data/repaired_ecoli_vfs_shortnames.ffn')
@@ -22,6 +22,8 @@ def get_ref_vfs():
         f = 'modules/ectyper/ecoli_serotyping/Data/repaired_ecoli_vfs_shortnames.ffn'
         with open(f,'r+b') as fl:
             shutil.copyfileobj(fl,tf)
+    # we need to set read position back to beginning
+    tf.seek(0)
     return tf
 
 def identify_name(line):
@@ -42,8 +44,8 @@ def graph_refs():
 
     # read this reference file write in into a list
     lines = []
-    with open(f) as fl:
-        lines = [line.rstrip('\n') for line in f]
+    lines = [line.rstrip('\n') for line in f.readlines()]
+    f.close()
 
     # create a blank graph object
     g = generate_graph()
@@ -58,7 +60,5 @@ def graph_refs():
         g.add((uriGene, gu('rdf:type'), gu(':VirulenceFactor')))
         # add the gene seq
         g.add((uriGene, gu('g:DNASequence'), Literal(lines[i+1])))
-
-    f.close()
 
     return graph
