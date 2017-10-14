@@ -135,6 +135,34 @@ We recommend you use NGINX as the reverse proxy. You can find their Getting Star
 
 In addition, we recommend you use Certbot (part of the EFF's Let's Encrypt) project to get the required certificates and setup HTTPS on your server. You can find their interactive guide at https://certbot.eff.org/ which allow's you to specify the webserver (NGINX) and operating system you are using. Certbot comes with a nice script to automatically modify your NGINX configuration as required.
 
+Point Reactapp to Your Subdomain
+--------------------------------
+
+To tell reactapp to point to your subdomain, you'll have to modify the ``api.js`` settings located at ``reactapp/src/middleware/api.js``.
+
+The current ``ROOT`` of the target domain is:
+
+.. code-block:: js
+
+	const ROOT = window.location.protocol + '//' + window.location.hostname + ':8000/'
+	
+change this to:
+
+.. code-block:: js
+
+	const ROOT = 'https' + '//' + 'api.mydomain.com' + '/'
+	
+and then rebuild and redeploy reactapp.
+
+.. code-block:: sh
+
+	docker-compose build --no-cache reactapp
+	docker-compose up -d
+
+.. note::
+
+	The Flask webserver has Cross-Origin Requests (CORS) enabled, so you can deploy reactapp to another server (that is only running reactapp, and not the webserver, databases, workers). The domain can be ``mydomain.com`` or any domain name you own - you'll just have to setup the A records as appropriate.
+
 Deploying to Corefacility
 =========================
 
