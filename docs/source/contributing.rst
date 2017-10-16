@@ -10,7 +10,9 @@ Getting Started
 
 Don't worry, genome files are just like Excel spreadsheets.
 
-.. image:: https://imgs.xkcd.com/comics/algorithms.png
+.. image:: algorithms.png
+
+(from the excellent https://xkcd.com/)
 
 We use Docker and Docker-Compose for managing the databases: Blazegraph and Redis, the webserver: Nginx/Flask/Conda, and Redis-Queue (RQ) workers: mostly in Conda. The official `Install Docker Compose guide`_ lists steps for installing both the base Docker Engine, and for installing Docker-Compose separately if you're on Linux. For Mac and Windows users, Docker-Compose comes bundled with Docker Engine.
 
