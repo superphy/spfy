@@ -11,6 +11,8 @@ Getting Started
 Don't worry, genome files are just like Excel spreadsheets.
 
 .. image:: algorithms.png
+    :align: center
+    :alt: excel is complicated
 
 (from the excellent https://xkcd.com/)
 
