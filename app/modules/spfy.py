@@ -23,6 +23,7 @@ from modules.amr.amr_to_dict import amr_to_dict
 from modules.beautify.beautify import beautify
 from modules.turtleGrapher.datastruct_savvy import datastruct_savvy
 from modules.turtleGrapher.turtle_grapher import turtle_grapher
+from modules.turtleGrapher.turtle_utils import actual_filename
 from modules.phylotyper import phylotyper
 
 from modules.loggingFunctions import initialize_logging
@@ -172,7 +173,7 @@ def blob_savvy_enqueue(single_dict):
         # blazegraph
         if single_dict['options'][subtype]:
             job_pt_beautify = multiples.enqueue(
-                phylotyper.beautify, picklefile, query_file[27:],
+                phylotyper.beautify, picklefile, actual_filename(query_file),
                 depends_on=job_pt_dict, result_ttl=-1)
             d.update({'job'+jobname+'_beautify': job_pt_beautify})
 
