@@ -1,6 +1,7 @@
 from hashlib import sha1
 from rdflib import URIRef
 from modules.turtleGrapher.turtle_utils import generate_uri as gu
+from modules.turtleGrapher.turtle_utils import actual_filename
 
 def test_generate_uri():
     # test generate usage:
@@ -30,4 +31,23 @@ def test_generate_uri():
     # test with a url in the form of a string
     e = URIRef('https://www.github.com/superphy#')
     r = gu('https://www.github.com/superphy#')
+    assert r == e
+
+def test_actual_filename():
+    # test filenames with timestamps
+    s = '/datastore/2017-08-10-14-57-59-722994-GCA_900096815.1_Ecoli_AG100_Sample2_M9_Assembly_genomic.fna'
+    e = 'GCA_900096815.1_Ecoli_AG100_Sample2_M9_Assembly_genomic.fna'
+    r = actual_filename(s)
+    assert r == e
+
+    # test filenames without timestamps
+    s = '/datastore/GCA_900096815.1_Ecoli_AG100_Sample2_M9_Assembly_genomic.fna'
+    e = 'GCA_900096815.1_Ecoli_AG100_Sample2_M9_Assembly_genomic.fna'
+    r = actual_filename(s)
+    assert r == e
+
+    # test filenames without timestamps or paths
+    s = 'GCA_900096815.1_Ecoli_AG100_Sample2_M9_Assembly_genomic.fna'
+    e = 'GCA_900096815.1_Ecoli_AG100_Sample2_M9_Assembly_genomic.fna'
+    r = actual_filename(s)
     assert r == e

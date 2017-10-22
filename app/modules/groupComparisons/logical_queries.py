@@ -1,3 +1,4 @@
+# this is used to build the actual groups, based on user-selected options, for Fisher's
 import config
 import logging
 import time

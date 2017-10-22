@@ -54,6 +54,7 @@ def handle_groupresults(jobs_dict):
     for key in jobs_dict:
         st.add(jobs_dict[key]['file'])
     s = ''
+
     for f in st:
         s += f + ' '
     d[job_id]['file'] = s
@@ -196,7 +197,6 @@ def measure_spent_time():
 # this is a modification of the old upload() methods in views.py
 @bp_ra_posts.route('/api/v0/upload', methods=['POST'])
 def upload():
-    print 'upload(): received req. at ' + str(datetime.now().strftime("%Y-%m-%d-%H-%M"))
     recaptcha = ReCaptcha(app=current_app)
     if recaptcha.verify():
         # new file saving
@@ -224,6 +224,7 @@ def upload():
         options['vf']=True
         options['serotype']=True
         options['pi']=90
+        options['pan'] = True
         # new to 4.2.0
         # we consider False as default as the front-end should override this
         # to use the new feature
@@ -250,11 +251,21 @@ def upload():
                     options['serotype']=value
                 if key == 'options.groupresults':
                     groupresults = value
+                if key == 'options.groupresults':
+                    groupresults = value
+                if key == 'options.stx1':
+                    options['stx1'] = value
+                if key == 'options.stx2':
+                    options['stx2'] = value
+                if key == 'options.eae':
+                    options['eae'] = value
                 if key == 'options.bulk':
                     options['bulk'] = value
             else:
                 if key =='options.pi':
                     options['pi']=int(value)
+                if key =='options.prob':
+                    options['prob']=float(value)
 
         # get a list of files submitted
         uploaded_files = request.files.getlist("file")
@@ -272,7 +283,7 @@ def upload():
                 filename = os.path.join(current_app.config[
                                         'DATASTORE'], now + '-' + secure_filename(file.filename))
                 file.save(filename)
-                #print 'Uploaded File Saved at', str(filename)
+                print 'Uploaded File Saved at', str(filename)
 
                 if tarfile.is_tarfile(filename):
                     # set filename to dir for spfy call

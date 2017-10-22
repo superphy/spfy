@@ -7,9 +7,10 @@ from modules.loggingFunctions import initialize_logging
 # logging
 log_file = initialize_logging()
 log = logging.getLogger(__name__)
+log.setLevel(logging.DEBUG)
 
 blazegraph_url = config.database['blazegraph_url']
-#blazegraph_url = 'http://localhost:8080/bigdata/sparql'
+#blazegraph_url = 'http://blazegraph:8080/bigdata/sparql'
 
 def tofromHumanReadable(func):
     '''
@@ -86,6 +87,7 @@ def tojson(func):
     @wraps(func)
     def func_wrapper(*args, **kwargs):
         results = func(*args, **kwargs)
+      
         l = []
         for result in results['results']['bindings']:
             # create a blank dictionary per result
@@ -94,7 +96,10 @@ def tojson(func):
             # Note: though this is writeen as a loop, we expect only 1 key in keys
             for k in keys:
                 # get the value at that key
-                d[k] = result[k]['value']
+                if 'datatype' in result[k] and result[k]['datatype'].endswith('XMLSchema#integer'):
+                    d[k] = int(result[k]['value'])
+                else:
+                   d[k] = str(result[k]['value'])
             l.append(d)
         log.debug(l)
         return l
@@ -188,4 +193,28 @@ def submit(func):
         results = sparql.query().convert()
         log.debug(results)
         return results
+    return func_wrapper
+
+def todict(func):
+    '''
+    :param : a query result in json that includes genome and assoc genes
+
+    A decorator to convert json format to dict in format of {genome: [genelist]}
+    when given results that are in format genome gene
+    '''
+    @wraps(func)
+    def func_wrapper(*args, **kwargs):
+        results = func(*args, **kwargs)
+        genome_dict = {}
+        for result in results['results']['bindings']:
+            genome = result['g']['value']
+            pan_region = result['p']['value']
+
+            if genome in genome_dict:
+                genome_dict[genome].append(pan_region)
+
+            else:
+                genome_dict[genome] = []
+                genome_dict[genome] = [pan_region]
+        return genome_dict
     return func_wrapper

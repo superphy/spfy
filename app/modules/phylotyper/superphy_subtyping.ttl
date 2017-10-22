@@ -1,0 +1,173 @@
+@prefix : <https://www.github.com/superphy/typing#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@base <https://www.github.com/superphy/typing> .
+
+<https://www.github.com/superphy/typing> rdf:type owl:Ontology ;
+                                          owl:versionIRI <https://www.github.com/superphy/typing/1.0.0> ;
+                                          owl:imports <http://purl.phyloviz.net/ontology/typon> ,
+                                                      <https://www.github.com/superphy>,
+                                                      <http://biohackathon.org/resource/faldo> .
+
+#################################################################
+#    Object Properties
+#################################################################
+
+###  http://purl.phyloviz.net/ontology/typon#hasSchema
+<http://purl.phyloviz.net/ontology/typon#hasSchema> rdfs:domain [ rdf:type owl:Class ;
+                                                                  owl:unionOf ( <http://purl.phyloviz.net/ontology/typon#MLST>
+                                                                                <http://purl.phyloviz.net/ontology/typon#MLVA>
+                                                                                :Phylotyper
+                                                                              )
+                                                                ] .
+
+
+###  https://www.github.com/superphy/typing#hasDefinedClass
+:hasDefinedClass rdf:type owl:ObjectProperty ;
+                 rdfs:domain :SubtypeSet ;
+                 rdfs:range :SubtypeClass ;
+                 rdfs:label "has defined class" .
+
+
+###  https://www.github.com/superphy/typing#hasIdentifiedClass
+:hasIdentifiedClass rdf:type owl:ObjectProperty ;
+                    rdfs:domain :PTST ;
+                    rdfs:range :SubtypeClass ;
+                    rdfs:label "has identified class" .
+
+
+###  https://www.github.com/superphy/typing#hasSubtypeSet
+:hasSubtypeSet rdf:type owl:ObjectProperty ;
+               rdfs:domain :Phylotyper ;
+               rdfs:range :SubtypeSet ;
+               rdfs:label "has subtype set" .
+
+
+###  https://www.github.com/superphy/typing#isOfPhylotyper
+:isOfPhylotyper rdf:type owl:ObjectProperty ;
+                rdfs:domain :PTST ;
+                rdfs:range :Phylotyper ;
+                rdfs:comment "Links a phylotyper assignment to a defined phylotyper scheme" ;
+                rdfs:label "is of phylotyper" .
+
+
+#################################################################
+#    Data properties
+#################################################################
+
+###  https://www.github.com/superphy/typing#subtypeValue
+:subtypeValue rdf:type owl:DatatypeProperty ;
+              rdfs:domain :SubtypeClass ;
+              rdfs:range xsd:string ;
+              rdfs:comment "Defines the text name for a given Subtype Class" ;
+              rdfs:label "subtype value" .
+
+###  https://www.github.com/superphy/typing#score
+:score rdf:type owl:DatatypeProperty ;
+       rdfs:domain :PTST ;
+       rdfs:range xsd:decimal ;
+       rdfs:comment "Defines the likelihood for a given subtype assignment" ;
+       rdfs:label "subtype assignment likelihood" .
+
+
+#################################################################
+#    Classes
+#################################################################
+
+###  http://purl.phyloviz.net/ontology/typon#Genotypic
+<http://purl.phyloviz.net/ontology/typon#Genotypic> owl:disjointWith :Insilico .
+
+
+###  http://purl.phyloviz.net/ontology/typon#Locus
+<http://purl.phyloviz.net/ontology/typon#Locus> owl:equivalentClass <https://www.github.com/superphy#Marker> .
+
+
+###  http://purl.phyloviz.net/ontology/typon#STAllele
+<http://purl.phyloviz.net/ontology/typon#STAllele> owl:disjointWith :PTAllele .
+
+
+###  http://purl.phyloviz.net/ontology/typon#SpaAllele
+<http://purl.phyloviz.net/ontology/typon#SpaAllele> owl:disjointWith :PTAllele .
+
+
+###  http://purl.phyloviz.net/ontology/typon#VNTRAllele
+<http://purl.phyloviz.net/ontology/typon#VNTRAllele> owl:disjointWith :PTAllele .
+
+
+###  https://www.github.com/superphy#Marker
+
+###  https://www.github.com/superphy/typing#Insilico
+:Insilico rdf:type owl:Class ;
+          rdfs:subClassOf <http://purl.phyloviz.net/ontology/typon#SequenceBasedTypingInformation> ;
+          rdfs:comment "Computational method that predicts subtype from sequence data" ;
+          rdfs:label "In silico" .
+
+
+###  https://www.github.com/superphy/typing#PTAllele
+:PTAllele rdf:type owl:Class ;
+          rdfs:subClassOf <http://purl.phyloviz.net/ontology/typon#Allele> ,
+                          [ rdf:type owl:Restriction ;
+                            owl:onProperty <http://biohackathon.org/resource/faldo#location> ;
+                            owl:someValuesFrom <http://biohackathon.org/resource/faldo#Region>
+                          ] .
+
+
+###  https://www.github.com/superphy/typing#PTST
+:PTST rdf:type owl:Class ;
+      rdfs:subClassOf <http://purl.phyloviz.net/ontology/typon#MultiLocus> ,
+                      :Insilico ,
+                      [ rdf:type owl:Restriction ;
+                        owl:onProperty <http://purl.phyloviz.net/ontology/typon#hasIdentifiedAllele> ;
+                        owl:someValuesFrom :PTAllele
+                      ] ,
+                      [ rdf:type owl:Restriction ;
+                        owl:onProperty :hasIdentifiedClass ;
+                        owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                        owl:onClass :SubtypeClass
+                      ] ,
+                      [ rdf:type owl:Restriction ;
+                        owl:onProperty :isOfPhylotyper ;
+                        owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                        owl:onClass :Phylotyper
+                      ] ;
+      rdfs:comment "A single instance of an assigned Phylotyper type" .
+
+
+###  https://www.github.com/superphy/typing#Phylotyper
+:Phylotyper rdf:type owl:Class ;
+            rdfs:subClassOf :Insilico ,
+                            [ rdf:type owl:Restriction ;
+                              owl:onProperty <http://purl.phyloviz.net/ontology/typon#hasSchema> ;
+                              owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                              owl:onClass <http://purl.phyloviz.net/ontology/typon#Schema>
+                            ] ,
+                            [ rdf:type owl:Restriction ;
+                              owl:onProperty :hasSubtypeSet ;
+                              owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                              owl:onClass :SubtypeSet
+                            ] .
+
+
+###  https://www.github.com/superphy/typing#SubtypeClass
+:SubtypeClass rdf:type owl:Class ;
+              rdfs:subClassOf <http://purl.obolibrary.org/obo/BFO_0000019> ,
+                              [ rdf:type owl:Restriction ;
+                                owl:onProperty :subtypeValue ;
+                                owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                                owl:onDataRange xsd:string
+                              ] ;
+              rdfs:comment "A predefined subtype value for a given Subtype Set" ;
+              rdfs:label "Subtype Class" .
+
+
+###  https://www.github.com/superphy/typing#SubtypeSet
+:SubtypeSet rdf:type owl:Class ;
+            rdfs:subClassOf <http://purl.obolibrary.org/obo/BFO_0000019> ;
+            rdfs:comment "A pre-defined array of possible subtype values for a given subtype scheme" ;
+            rdfs:label "Subtype Set" .
+
+
+###  Generated by the OWL API (version 4.2.8.20170104-2310) https://github.com/owlcs/owlapi
