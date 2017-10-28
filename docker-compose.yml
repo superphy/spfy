@@ -20,7 +20,7 @@ services:
       dockerfile: Dockerfile-reactapp
     image: reactapp
     ports:
-    - "8090:5000"
+    - "8091:5000"
     depends_on:
     - webserver
     networks:
