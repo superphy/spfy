@@ -106,6 +106,9 @@ def savvy(args_dict):
     shutil.copy(get_spfyid_file(), id_file)
     log.debug("id_file:" + id_file)
 
+    #Call PanPredic
+    #panpredic_p = pan(args_dict)
+
     # (3) ECTyper Step:
     ectyper_p = call_ectyper(args_dict)
     log.debug("Pickled ECTyper File: " + ectyper_p)
@@ -117,6 +120,7 @@ def savvy(args_dict):
 
     # (5) Graphing ECTyper Result:
     ectyper_graph = generate_datastruct(query_file, query_file + '_id.txt', query_file + '_ectyper.p')
+
     ectyper_ttl = write_graph(ectyper_graph, 'ectyper')
     log.debug('Graph Result for ECtyper: ' + ectyper_ttl)
 

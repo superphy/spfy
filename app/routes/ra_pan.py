@@ -9,84 +9,12 @@ from werkzeug.utils import secure_filename
 from routes.file_utils import fix_uri, handle_tar, handle_zip
 from routes.ra_api import subtyping_dependencies
 from modules.gc import blob_gc_enqueue
-from modules.spfy import spfy
+from modules.pan_spfy import spfy
+from routes.ra_posts import handle_groupresults, handle_singleton
 
-bp_ra_posts = Blueprint('reactapp_posts', __name__)
+bp_ra_pan = Blueprint('reactapp_pan', __name__)
 
-# for Subtyping module
-def handle_groupresults(jobs_dict):
-    '''
-    if we're grouping results for the Front-End
-    take all jobs in jobs_dict and store it in Redis (not RQ)
-    respond with a key to fetch this jobs_dict from Redis
-    relies on a new check in /results/<job_id> which is able to poll RQ
-    tasks on behalf of the front-end
-        Args:
-            jobs_dict (dict): a dictionary where job ids are the keys and
-                the values are also dictionaries with keys 'analysis' and 'file'
-        Return:
-            (dict): a dictionary with key as novel jobid of form 'blob' + hash
-                meant to be parsable by same code as for old, non-grouped ver
-    '''
-    print 'handle_groupresults(): started'
-    # generate a novel job id
-    # we prepend 'blob' so the /results path can tell its our custom object
-    # and shouldnt be retrieved from RQ
-    job_id = 'blob' + str(hash(str(jobs_dict)))
-    # start a redis connection
-    redis_url = current_app.config['REDIS_URL']
-    redis_connection = redis.from_url(redis_url)
-    #with redis.from_url(redis_url) as redis_connection:
-    # set the job_id: jobs_dict pair in Redis
-    redis_connection.set(job_id, jobs_dict)
-    # create a similar structure to the old return
-    d = {}
-    d[job_id] = {}
-    d[job_id]['analysis'] = "Subtyping"
-    st = set()
-    for key in jobs_dict:
-        st.add(jobs_dict[key]['file'])
-    s = ''
 
-    for f in st:
-        s += f + ' '
-    d[job_id]['file'] = s
-    print 'handle_groupresults(): finished'
-    return d
-
-# for Subtyping module
-def create_blob_id(f, analysis, blob_dict):
-    '''
-    Connects to Redis and creats a blob id which is the key to a dict of
-    the three params.
-    Return:
-        (dict) : a blob id that mimicks the dict form of a regular RQ id
-        ex.
-        {blob-2017-06-14-16-11-46-159226-5517466316371560478:
-            {
-             "analysis": "Virulence Factors and Serotype",
-             "file": "/datastore/2017-06-14-21-26-43-375215-GCA_001891695.1_ASM189169v1_genomic.fna"
-             }
-        }
-    '''
-    # generate a novel job id
-    # we prepend 'blob' so the /results path can tell its our custom object
-    # and shouldnt be retrieved via RQ
-    blob_id = 'blob-' + datetime.now().strftime("%Y-%m-%d-%H-%M-%S-%f") + '-' + str(hash(str(blob_dict)))
-    # start a redis connection
-    redis_url = current_app.config['REDIS_URL']
-    redis_connection = redis.from_url(redis_url)
-    #with redis.from_url(redis_url) as redis_connection:
-    # set the job_id: jobs_dict pair in Redis
-    redis_connection.set(blob_id, blob_dict)
-    # create a similar structure to the old return
-    d = {}
-    d[blob_id] = {}
-    d[blob_id]['analysis'] = analysis
-    d[blob_id]['file'] = f
-    return d
-
-# for Subtyping module
 def handle_singleton(jobs_dict):
     '''
     Takes the jobs_dict dict and creates "blob" jobs which have the QC/ID
@@ -158,29 +86,21 @@ def handle_singleton(jobs_dict):
                 blob_ids.update(create_blob_id(f,analysis,blob_dict))
     return blob_ids
 
-# for Subtyping module
-# the /api/v0 prefix is set to allow CORS for any postfix
-# this is a modification of the old upload() methods in views.py
-@bp_ra_posts.route('/api/v0/upload', methods=['POST'])
-def upload():
+@bp_ra_pan.route('/api/v0/panseq', methods=['POST'])
+def pan_upload():
+    print('james_`debug : found the correct route')
     recaptcha = ReCaptcha(app=current_app)
     if recaptcha.verify():
         form = request.form
         options = {}
         # defaults
-        options['amr']=True
-        options['vf']=True
-        options['serotype']=True
         options['pi']=90
         options['pan'] = True
-        # new to 4.2.0
-        # we consider False as default as the front-end should override this
-        # to use the new feature
-        groupresults = False
-        # new to 4.3.3
-        # allows bulk uploading where results are not returned to user
-        # only the blobid to check statuses is returned (ie. don't run beautify)
-        options['bulk'] = False
+        options['amr']=False 
+        options['vf']=False
+        options['serotype']=False
+        options['bulk']=False
+        
 
         # processing form data
         for key, value in form.items():
@@ -199,39 +119,32 @@ def upload():
                     options['serotype']=value
                 if key == 'options.groupresults':
                     groupresults = value
-                if key == 'options.groupresults':
-                    groupresults = value
-                if key == 'options.stx1':
-                    options['stx1'] = value
-                if key == 'options.stx2':
-                    options['stx2'] = value
-                if key == 'options.eae':
-                    options['eae'] = value
                 if key == 'options.bulk':
                     options['bulk'] = value
             else:
                 if key =='options.pi':
                     options['pi']=int(value)
-                if key =='options.prob':
-                    options['prob']=float(value)
 
         # get a list of files submitted
         uploaded_files = request.files.getlist("file")
-        print uploaded_files
+        
 
-        print 'upload(): about to enqueue files'
+
         #set up constants for identifying this sessions
         now = datetime.now()
         now = now.strftime("%Y-%m-%d-%H-%M-%S-%f")
         jobs_dict = {}
-
+        print('james_debug : entering for loop')
+        print('james_debug : uploaded files : ' + str(uploaded_files))
+        file_list = []
         for file in uploaded_files:
+            print('james_debug : file: ' + str(file))
             if file:
                 # for saving file
                 filename = os.path.join(current_app.config[
                                         'DATASTORE'], now + '-' + secure_filename(file.filename))
                 file.save(filename)
-                print 'Uploaded File Saved at', str(filename)
+                #print 'Uploaded File Saved at', str(filename)
 
                 if tarfile.is_tarfile(filename):
                     # set filename to dir for spfy call
@@ -239,23 +152,26 @@ def upload():
                 elif zipfile.is_zipfile(filename):
                     filename = handle_zip(filename, now)
 
-                # for enqueing task
-                jobs_enqueued = spfy(
-                    {'i': filename, 'pi':options['pi'], 'options':options})
-                jobs_dict.update(jobs_enqueued)
+                print('james_debug : filename: ' + str(filename))
+                if not options['pan']:
+                    # for enqueing task
+                    jobs_enqueued = spfy(
+                        {'i': filename, 'pi':options['pi'], 'options':options})
+                    jobs_dict.update(jobs_enqueued)
+                else:
+                    file_list.append(filename)
+
+
         # new in 4.2.0
+        if options['pan']:
+            jobs_enqueued = spfy({'i': file_list, 'pi':options['pi'], 'options':options})
+            jobs_dict.update(jobs_enqueued)
+                    
         print 'upload(): all files enqueued, returning...'
-        if groupresults:
-            return jsonify(handle_groupresults(jobs_dict))
-        else:
-            return jsonify(handle_singleton(jobs_dict))
+        #if groupresults:
+        #    return jsonify(handle_groupresults(jobs_dict))
+        #else:
+        print('james_debug: upload return: ' + str(jobs_dict))
+        return jsonify((jobs_dict))
     else:
         return "Captcha Failed Verification", 500
-
-# this is for the Group Comparisons (Fishers) module
-@bp_ra_posts.route('/api/v0/newgroupcomparison', methods=['POST'])
-def handle_group_comparison_submission():
-    query = request.json['groups']
-    target = request.json['target']
-    jobid = blob_gc_enqueue(query, target)
-    return jobid

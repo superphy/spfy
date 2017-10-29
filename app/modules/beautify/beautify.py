@@ -116,6 +116,7 @@ def beautify(args_dict, pickled_dictionary):
     :param gene_dict: optionally, if using this to test via cli, you can supply the actual dictionary object.
     :return: json representation of the results, as required by the front-end.
     '''
+
     gene_dict = pickle.load(open(pickled_dictionary, 'rb'))
     # this converts our dictionary structure into json and adds metadata (filename, etc.)
     json_r =  json_return(args_dict, gene_dict)
