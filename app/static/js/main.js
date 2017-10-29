@@ -96,6 +96,10 @@ app.controller('SpfyController', [
             fd.append('options.serotype', $scope.formData.options.serotype);
             fd.append('options.pi', $scope.pi);
             fd.append('g-recaptcha-response', $scope.response);
+            // fix to maintain legacy compatability
+            fd.append('options.bulk', false);
+            fd.append('options.groupresults', false);
+            // end of fix
             $log.log($scope.response);
             $log.log($scope.formData);
             $scope.loading = true;

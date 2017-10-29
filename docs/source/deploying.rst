@@ -4,6 +4,164 @@ Deplyoment Guide
 
 .. contents:: Table of Contents
    :local:
+   
+The way we recommend you deploy Spfy is to simply use the Docker composition for everything; this approach is documented in `Deploying in General`_. Specifics related to the NML's deployment is given in `Deploying to Corefacility`_.
+   
+Deploying in General
+====================
+
+Let's take a look at the ``docker-compose.yml`` file.
+
+.. code-block:: yaml
+
+	version: '2'
+	services:
+	  webserver:
+	    build:
+	      context: .
+	      dockerfile: Dockerfile-spfy
+	    image: backend
+	    ports:
+	    - "8000:80"
+	    depends_on:
+	    - redis
+	    - blazegraph
+	    volumes:
+	    - /datastore
+
+	  reactapp:
+	    build:
+	      context: .
+	      dockerfile: Dockerfile-reactapp
+	    image: reactapp
+	    ports:
+	    - "8090:5000"
+	    depends_on:
+	    - webserver
+
+	  worker:
+	    build:
+	      context: .
+	      dockerfile: Dockerfile-rq
+	    image: backend-rq
+	    ports:
+	    - "9181:9181" #this is for debugging, drop a shell and run rq-dashboard if you need to see jobs
+	    volumes_from:
+	    - webserver
+	    depends_on:
+	    - webserver
+
+	  worker-blazegraph-ids:
+	    build:
+	      context: .
+	      dockerfile: Dockerfile-rq-blazegraph
+	    image: backend-rq-blazegraph
+	    volumes_from:
+	    - webserver
+	    depends_on:
+	    - webserver
+
+	  worker-priority:
+	    build:
+	      context: .
+	      dockerfile: Dockerfile-rq-priority
+	    image: backend-rq-priority
+	    volumes_from:
+	    - webserver
+	    depends_on:
+	    - webserver
+
+	  redis:
+	    image: redis:3.2
+	    command: redis-server --appendonly yes # for persistance
+	    volumes:
+	    - /data
+
+	  blazegraph:
+	    image: superphy/blazegraph:2.1.4-inferencing
+	    ports:
+	    - "8080:8080"
+	    volumes:
+	    - /var/lib/jetty/
+	    
+Host to Container Mapping
+-------------------------
+	    
+There are a few key points to note:
+
+.. code-block:: yaml
+
+	ports:
+	- "8000:80"
+	
+The configuration maps ``host:container``; so port 8000 on the host (your computer) is linked to port 80 of the container. Fields like volumes typically have only one value: ``/var/lib/jetty/``; this is done to instruct Docker to map the folder ``/var/lib/jetty`` within the container itself to a generic volume managed by Docker, thereby enabling the data to persist across start/stop cycles.
+
+You can also add a host path to volume mappings such as ``/dbbackup/:/var/lib/jetty/`` so that Docker uses an actual path on your host, instead of a generic Docker-managed volume. As before, the first term, ``/dbbackup/`` would reside on the host.
+
+.. warning::
+
+	A caveat to note is that if you do not specify a host folder on volume mappings, running a ``docker-compose down`` will still **wipe** the generic volume. Either run ``docker-compose stop`` instead, or specify a host mapping to persist the data.
+
+Volume Mapping in Production
+----------------------------
+
+In production, at minimum we recommend you map Blazegraph's volume to a backup directory. ``/datastore`` also stores all the uploaded genome files and related temporary files generated during analysis. ``/data`` is used to store both the parsed responses to the front-end, and the task queue managing them. If you want the analysis tasks to continue, or existing results shown to the front-end, to persist after running ``docker-compose down`` you'll have to map both volumes - server failures or just running ``docker-compose stop`` will still persist the data without requiring you to map to host.
+
+Ports
+-----
+
+``reactapp`` is the front-end user interface for Spfy whereas ``webserver`` serves the backend Flask APIs. Without modification, when you run ``docker-compose up`` port 8090 is used to access the app. The front-end then calls port 8000 to submit requests to the backend. This approach is fine for individual users on their own computer, but this setup should not be used for production as it would, at minimum, require opening one additional port.
+
+Instead, we recommend you change the port for ``reactapp`` to the standard port 80, and also map the ``webserver`` to a subdomain.
+
+Setting the host port mapping can be done by modifying the ``webserver`` config with the below:
+
+.. code-block:: yaml
+
+	ports:
+	- "80:80"
+
+For networking the backend APIs, you can keep the webserver running on port 8000 and use a reverse-proxy such as NGINX to map the subdomain to port 8000 on your server. In other words, we'll set it up so requests made by reactapp to the API are sent to ``api.mydomain.com``, for example, which maps to the IP address of your server (ideally via HTTPS). Your reverse-proxy will then redirect the request to port 8000 locally, while serving the reactapp interface on the main domain (``mydomain.com``, in this case).
+
+Setting a Subdomain
+-------------------
+
+This has to be done through the interface of your domain registrar. You'll have to add an Address Record (A Record), which is typically under the heading "Manage Advanced DNS Records" or similar.
+
+Setting up a Reverse Proxy
+--------------------------
+
+We recommend you use NGINX as the reverse proxy. You can find their Getting Started guide at https://www.nginx.com/resources/wiki/start/
+
+In addition, we recommend you use Certbot (part of the EFF's Let's Encrypt) project to get the required certificates and setup HTTPS on your server. You can find their interactive guide at https://certbot.eff.org/ which allow's you to specify the webserver (NGINX) and operating system you are using. Certbot comes with a nice script to automatically modify your NGINX configuration as required.
+
+Point Reactapp to Your Subdomain
+--------------------------------
+
+To tell reactapp to point to your subdomain, you'll have to modify the ``api.js`` settings located at ``reactapp/src/middleware/api.js``.
+
+The current ``ROOT`` of the target domain is:
+
+.. code-block:: js
+
+	const ROOT = window.location.protocol + '//' + window.location.hostname + ':8000/'
+	
+change this to:
+
+.. code-block:: js
+
+	const ROOT = 'https' + '//' + 'api.mydomain.com' + '/'
+	
+and then rebuild and redeploy reactapp.
+
+.. code-block:: sh
+
+	docker-compose build --no-cache reactapp
+	docker-compose up -d
+
+.. note::
+
+	The Flask webserver has Cross-Origin Requests (CORS) enabled, so you can deploy reactapp to another server (that is only running reactapp, and not the webserver, databases, workers). The domain can be ``mydomain.com`` or any domain name you own - you'll just have to setup the A records as appropriate.
 
 Deploying to Corefacility
 =========================
