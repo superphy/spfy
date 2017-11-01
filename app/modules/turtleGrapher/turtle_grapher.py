@@ -37,6 +37,7 @@ def generate_graph():
     # make AntimicrobialResistanceGene & VirulenceFactor subclasses of :Marker
     graph.add((gu(':AntimicrobialResistanceGene'), gu('rdfs:subClassOf'), gu(':Marker')))
     graph.add((gu(':VirulenceFactor'), gu('rdfs:subClassOf'), gu(':Marker')))
+    graph.add((gu(':PanGenomeRegion'), gu('rdfs:subClassOf'), gu(':Marker')))
 
     # human-readable dc:description for edge types
     graph.add((gu('ge:0001076'), gu('dc:description'), Literal('O-Type')))
