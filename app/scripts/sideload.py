@@ -20,7 +20,12 @@ def create_request(f):
         'vf': True,
         'serotype': True,
         'bulk': True,
-        'groupresults': True
+        'groupresults': False,
+        'prob': 90,
+        'stx1': True,
+        'stx2': True,
+        'eae': True,
+        'pan': True
     }
     d['options'] = options
     # add the file
