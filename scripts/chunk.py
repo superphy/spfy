@@ -9,3 +9,4 @@ def chunk(chunk_size, lst, f_base='/'):
         f = '{f_base}batch_{p}_{q}.p'.format(f_base=f_base,p=p,q=q)
         l = lst[p:q]
         pickle.dump(l,open(f,'wb'))
+        p = q
