@@ -10,3 +10,10 @@ def chunk(chunk_size, lst, f_base='/'):
         l = lst[p:q]
         pickle.dump(l,open(f,'wb'))
         p = q
+
+def move(p, dst):
+    import shutil
+    import cPickle as pickle
+    l = pickle.load(open(p, 'rb'))
+    for f in l:
+        shutil.copy(f,dst)

@@ -59,5 +59,6 @@ if __name__ == "__main__":
         default='/datastore'
     )
     args = parser.parse_args()
-
+    print 'about to load...'
     load(args.i)
+    print 'load completed sucessfully.'
