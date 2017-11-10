@@ -31,6 +31,24 @@ Use:
 
 .. warning:: There is a option to run all subtyping methods in the background even if the user doesn't select them. This is enabled by DEFAULT. You can disable the option by setting ``BACKLOG_ENABLED = False`` in app/config.py
 
+Submodule Build Statuses:
+-------------------------
+
+ECTyper:
+
+.. image:: https://travis-ci.org/phac-nml/ecoli_serotyping.svg?branch=superphy
+    :target: https://travis-ci.org/phac-nml/ecoli_serotyping
+
+PanPredic:
+
+.. image:: https://travis-ci.org/superphy/PanPredic.svg?branch=master
+    :target: https://travis-ci.org/superphy/PanPredic
+
+Docker Image for Conda:
+
+.. image:: https://travis-ci.org/superphy/docker-flask-conda.svg?branch=master
+    :target: https://travis-ci.org/superphy/docker-flask-conda
+
 Architecture:
 -------------
 
