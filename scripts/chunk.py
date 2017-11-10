@@ -14,6 +14,14 @@ def chunk(chunk_size, lst, f_base='/'):
 def move(p, dst):
     import shutil
     import cPickle as pickle
+    from os.path import basename, join
     l = pickle.load(open(p, 'rb'))
     for f in l:
-        shutil.copy(f,dst)
+        # check for blank spaces in filename
+        if ' ' in f:
+            b = basename(f)
+            dst_f = join(dst, f.replace(' ','_'))
+            print('blank space detected, copying: ' + f + ' as ' + dst_f)
+            shutil.copy2(src, dst_f)
+        else:
+            shutil.copy(f,dst)
