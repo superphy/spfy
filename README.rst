@@ -52,6 +52,10 @@ Docker Image for Conda:
 Architecture:
 -------------
 
+.. image:: screenshots/docker.svg
+    :align: center
+    :alt: screenshot of the results page
+
 +------+------+------+------+
 | Dock | Port | Name | Des  |
 | er   | s    | s    | crip |
