@@ -51,7 +51,6 @@ Docker Image for Conda:
 
 Architecture:
 -------------
-
 .. image:: screenshots/docker.svg
     :align: center
     :alt: screenshot of the results page
@@ -126,9 +125,6 @@ Architecture:
 |      | 00/t | p\_1 | spfy |
 |      | cp   |      |      |
 +------+------+------+------+
-
-Note: an earlier version of the front-end (written in AngularJS with
-limited features) is still available at http://localhost:8000
 
 Further Details:
 ----------------
