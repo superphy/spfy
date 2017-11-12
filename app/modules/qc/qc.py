@@ -82,17 +82,8 @@ def check_header_parsing(query_file):
     except:
         return False
 
-def qc(query_file):
-    '''
-    Compares the query_file against a reference db of ecoli-specific gene sequences.
-    We consider a "pass" if the query_file has >=3 of the sequences.
-
-    Returns True for pass, False for failed qc check (not ecoli.)
-    '''
-    if check_header_parsing(query_file):
-        return True
-    else:
-        return False
+def check_ecoli(query_file):
+    # Checks if the query_file is an E.Coli genome.
 
     # run blast for ecoli specific sequences
     blast_db = create_blast_db(query_file)
@@ -103,6 +94,15 @@ def qc(query_file):
         return True
     else:
         return False
+
+def qc(query_file):
+    '''
+    Compares the query_file against a reference db of ecoli-specific gene sequences.
+    We consider a "pass" if the query_file has >=3 of the sequences.
+
+    Returns True for pass, False for failed qc check (not ecoli.)
+    '''
+    return check_header_parsing(query_file) and check_ecoli(query_file)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
