@@ -11,6 +11,8 @@
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix so: <http://purl.obolibrary.org/obo/SO_> .
+@prefix subt: <https://www.github.com/superphy/typing#> .
+@prefix typon: <http://purl.phyloviz.net/ontology/typon#> .
 @prefix xml: <http://www.w3.org/XML/1998/namespace> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -22,6 +24,8 @@
 
 <http://purl.obolibrary.org/obo/SO_0001462> dc:description "Bag_of_Contigs" .
 
+:PanGenomeRegion rdfs:subClassOf :Marker .
+
 :VirulenceFactor dc:description "Virulence_Factor" ;
     rdfs:subClassOf :Marker .
 
@@ -31,2078 +35,1973 @@
 
 :spfyId dc:description "SpfyId" .
 
-:ACT-7 a :AntimicrobialResistanceGene ;
+:ACT_7 a :AntimicrobialResistanceGene ;
     dc:description "ACT-7" ;
-    :isFoundIn _:Nf32e917eb65045649fde166d82da0157 .
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000006.1/ACT_7/65936_67069> .
 
-:APH3-Ia a :AntimicrobialResistanceGene ;
+:APH3_Ia a :AntimicrobialResistanceGene ;
     dc:description "APH(3')-Ia" ;
-    :isFoundIn _:N0ff9d43898c54bf8a335cb079d006ca6 .
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000105.1/APH3_Ia/105_920> .
 
-:APH3-Ib a :AntimicrobialResistanceGene ;
+:APH3_Ib a :AntimicrobialResistanceGene ;
     dc:description "APH(3'')-Ib" ;
-    :isFoundIn _:Nda02c134b35a4c3493ed412d42258b40 .
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000079.1/APH3_Ib/4354_5157> .
 
-:APH6-Id a :AntimicrobialResistanceGene ;
+:APH6_Id a :AntimicrobialResistanceGene ;
     dc:description "APH(6)-Id" ;
-    :isFoundIn _:Nbb1a01b199e04e1fae3024e5d872260e .
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000079.1/APH6_Id/5157_5993> .
 
 :CRP a :AntimicrobialResistanceGene ;
     dc:description "CRP" ;
-    :isFoundIn _:N2414edf11ba4497e9d5eca16d0e9fca6 .
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000007.1/CRP/170856_171488> .
 
-:CTX-M-65 a :AntimicrobialResistanceGene ;
+:CTX_M_65 a :AntimicrobialResistanceGene ;
     dc:description "CTX-M-65" ;
-    :isFoundIn _:N09d768e4e9f24499999c069f17622b2e .
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000083.1/CTX_M_65/466_1341> .
 
 :Escherichia_coli_gyrA_conferring_resistance_to_fluoroquinolones a :AntimicrobialResistanceGene ;
     dc:description "Escherichia_coli_gyrA_conferring_resistance_to_fluoroquinolones" ;
-    :isFoundIn _:N857b2ffbe551428f8d1a5e230618e419 .
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000026.1/Escherichia_coli_gyrA_conferring_resistance_to_fluoroquinolones/131208_133835> .
 
 :Escherichia_coli_marR_mutant_resulting_in_antibiotic_resistance a :AntimicrobialResistanceGene ;
     dc:description "Escherichia_coli_marR_mutant_resulting_in_antibiotic_resistance" ;
-    :isFoundIn _:N0514333a8bf14122b4087473b8bec9a3 .
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000078.1/Escherichia_coli_marR_mutant_resulting_in_antibiotic_resistance/36086_36520> .
 
 :Escherichia_coli_parC_conferring_resistance_to_fluoroquinolone a :AntimicrobialResistanceGene ;
     dc:description "Escherichia_coli_parC_conferring_resistance_to_fluoroquinolone" ;
-    :isFoundIn _:N74dc043281454730a65bd9664c5c1a9e .
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000052.1/Escherichia_coli_parC_conferring_resistance_to_fluoroquinolone/13035_15293> .
 
 :FosA3 a :AntimicrobialResistanceGene ;
     dc:description "FosA3" ;
-    :isFoundIn _:N4c72bf13b5c74227b079c1e001a0e103 .
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000080.1/FosA3/555_971> .
 
-:H-NS a :AntimicrobialResistanceGene ;
+:H_NS a :AntimicrobialResistanceGene ;
     dc:description "H-NS" ;
-    :isFoundIn _:Nb7c9ae9c0ab645ef91c4fd2bffaad437 .
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000032.1/H_NS/5355_5768> .
 
 :Klebsiella_pneumoniae_acrR_mutant_resulting_in_high_level_antibiotic_resistance a :AntimicrobialResistanceGene ;
     dc:description "Klebsiella_pneumoniae_acrR_mutant_resulting_in_high_level_antibiotic_resistance" ;
-    :isFoundIn _:N140503e72bd24d14a72111c837ee53d2 .
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000004.1/Klebsiella_pneumoniae_acrR_mutant_resulting_in_high_level_antibiotic_resistance/107824_108471> .
 
 :Mycobacterium_tuberculosis_katG_mutations_conferring_resistance_to_isoniazid a :AntimicrobialResistanceGene ;
     dc:description "Mycobacterium_tuberculosis_katG_mutations_conferring_resistance_to_isoniazid" ;
-    :isFoundIn _:N03fef405ac0e48b9aeb7a0e3b9a61f66 .
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000037.1/Mycobacterium_tuberculosis_katG_mutations_conferring_resistance_to_isoniazid/8338_10518> .
 
 :Mycobacterium_tuberculosis_rpoB_mutants_conferring_resistance_to_rifampicin a :AntimicrobialResistanceGene ;
     dc:description "Mycobacterium_tuberculosis_rpoB_mutants_conferring_resistance_to_rifampicin" ;
-    :isFoundIn _:N407196964cdc43559c0ef7d8b9d0815a .
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000041.1/Mycobacterium_tuberculosis_rpoB_mutants_conferring_resistance_to_rifampicin/4368_8396> .
 
-:NDM-5 a :AntimicrobialResistanceGene ;
+:NDM_5 a :AntimicrobialResistanceGene ;
     dc:description "NDM-5" ;
-    :isFoundIn _:Nd0ae75693a524a228cb32e883db9ba17 .
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000092.1/NDM_5/182_994> .
 
 :PmrA a :AntimicrobialResistanceGene ;
     dc:description "PmrA" ;
-    :isFoundIn _:N1c95a8556a5d4d2fa87c5124dfac270a .
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000023.1/PmrA/114744_115412> .
 
 :PmrB a :AntimicrobialResistanceGene ;
     dc:description "PmrB" ;
-    :isFoundIn _:Ncdcbe05c555045bf91434c3d340e90dc .
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000023.1/PmrB/113643_114743> .
 
 :PmrC a :AntimicrobialResistanceGene ;
     dc:description "PmrC" ;
-    :isFoundIn _:N97712ea4352d47e2a540f18973d06a04 .
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000023.1/PmrC/115409_117052> .
 
 :PmrE a :AntimicrobialResistanceGene ;
     dc:description "PmrE" ;
-    :isFoundIn _:N3d7d1d8fd0ff47d082046685e4a8926d .
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000012.1/PmrE/48536_49702> .
 
 :PmrF a :AntimicrobialResistanceGene ;
     dc:description "PmrF" ;
-    :isFoundIn _:Nac2ba49167784f0da8d5b1e82e61f3b8 .
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000026.1/PmrF/167267_168235> .
 
 :Staphylococcus_aureus_gyrB_conferring_resistance_to_aminocoumarin a :AntimicrobialResistanceGene ;
     dc:description "Staphylococcus_aureus_gyrB_conferring_resistance_to_aminocoumarin" ;
-    :isFoundIn _:Nac10c24dcd8c4de39942eecea55c9d4a .
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000005.1/Staphylococcus_aureus_gyrB_conferring_resistance_to_aminocoumarin/66473_68887> .
 
-:TEM-1 a :AntimicrobialResistanceGene ;
+:TEM_1 a :AntimicrobialResistanceGene ;
     dc:description "TEM-1" ;
-    :isFoundIn _:Ncd20e4d3e00b4ed09df0183c6286fc44 .
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000051.1/TEM_1/1910_2770> .
 
 :acrS a :AntimicrobialResistanceGene ;
     dc:description "acrS" ;
-    :isFoundIn _:N40a5edeefd8f476b8034bc56638d0e40 .
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000033.1/acrS/114043_114705> .
 
 :arnA a :AntimicrobialResistanceGene ;
     dc:description "arnA" ;
-    :isFoundIn _:Nba717487fd99476cbbb26d61c997e71b .
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000026.1/arnA/168235_170217> .
 
 :bacA a :AntimicrobialResistanceGene ;
     dc:description "bacA" ;
-    :isFoundIn _:N15c7da9abacb4cb795a945b2a738519a .
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000052.1/bacA/49043_49864> .
 
 :baeR a :AntimicrobialResistanceGene ;
     dc:description "baeR" ;
-    :isFoundIn _:N393db4f9acd24d95838680361a020991 .
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000012.1/baeR/116224_116946> .
 
 :baeS a :AntimicrobialResistanceGene ;
     dc:description "baeS" ;
-    :isFoundIn _:Ned8968b389ce4f90ac552eddb088d0f9 .
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000012.1/baeS/114824_116227> .
 
 :catI a :AntimicrobialResistanceGene ;
     dc:description "catI" ;
-    :isFoundIn _:N99183c801d65411aa32e15df636c2b3b .
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000091.1/catI/11194_11853> .
 
 :cpxA a :AntimicrobialResistanceGene ;
     dc:description "cpxA" ;
-    :isFoundIn _:Nd759d9f398484effb28dad495734bbed .
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000059.1/cpxA/97_1470> .
 
 :cpxR a :AntimicrobialResistanceGene ;
     dc:description "cpxR" ;
-    :isFoundIn _:N2cac794b6116420e8334c1700ca600dd .
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000059.1/cpxR/1467_2165> .
 
 :dfrA14 a :AntimicrobialResistanceGene ;
     dc:description "dfrA14" ;
-    :isFoundIn _:N2c516906f662432c98bd7a8598e0b14b .
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000091.1/dfrA14/4699_5172> .
 
 :emrA a :AntimicrobialResistanceGene ;
     dc:description "emrA" ;
-    :isFoundIn _:Nf9bbd138463e4816bbd378fbbed7e4d0 .
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000011.1/emrA/56888_58060> .
 
 :emrB a :AntimicrobialResistanceGene ;
     dc:description "emrB" ;
-    :isFoundIn _:Nfaa31709b8ee4184b8a84c9293cee4d9 .
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000011.1/emrB/58077_59615> .
 
 :emrD a :AntimicrobialResistanceGene ;
     dc:description "emrD" ;
-    :isFoundIn _:N2f882b2e3d7b462cbdef9b3778bb83da .
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000005.1/emrD/91483_92667> .
 
 :emrK a :AntimicrobialResistanceGene ;
     dc:description "emrK" ;
-    :isFoundIn _:N359375e3f50042399d96ce2a70e0cc8d .
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000026.1/emrK/283814_284977> .
 
 :emrR a :AntimicrobialResistanceGene ;
     dc:description "emrR" ;
-    :isFoundIn _:Nda9b690e71e645cd9cabf984dffe388b .
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000011.1/emrR/56231_56761> .
 
 :emrY a :AntimicrobialResistanceGene ;
     dc:description "emrY" ;
-    :isFoundIn _:Nebf2289fdd794d809e443dc2db866130 .
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000026.1/emrY/282276_283814> .
 
 :evgA a :AntimicrobialResistanceGene ;
     dc:description "evgA" ;
-    :isFoundIn _:N5d7bf84ed5f049c984e05f331dad5275 .
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000026.1/evgA/285393_286007> .
 
 :evgS a :AntimicrobialResistanceGene ;
     dc:description "evgS" ;
-    :isFoundIn _:N0dca64de60854e83966f621fcfa0ce03 .
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000026.1/evgS/286012_289605> .
 
 :floR a :AntimicrobialResistanceGene ;
     dc:description "floR" ;
-    :isFoundIn _:Na4f085efce174c03a4182f93f885f183 .
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000046.1/floR/4392_5606> .
 
 :gadX a :AntimicrobialResistanceGene ;
     dc:description "gadX" ;
-    :isFoundIn _:Nddb5d1026a194a2685560d064d2f4a20 .
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000007.1/gadX/468_1292> .
 
 :macA a :AntimicrobialResistanceGene ;
     dc:description "macA" ;
-    :isFoundIn _:Ncd34523090d146cca7e3f8e5c11994d4 .
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000008.1/macA/61687_62802> .
 
 :macB a :AntimicrobialResistanceGene ;
     dc:description "macB" ;
-    :isFoundIn _:N40d4194bd5474164b97b195e13de95bb .
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000008.1/macB/62799_64745> .
 
 :marA a :AntimicrobialResistanceGene ;
     dc:description "marA" ;
-    :isFoundIn _:N36877679f4bf46f481b5fbe0c2d3dc4a .
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000078.1/marA/36540_36923> .
 
 :mdfA a :AntimicrobialResistanceGene ;
     dc:description "mdfA" ;
-    :isFoundIn _:N0650b7dc6e7c4e899d67c828764e614a .
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000008.1/mdfA/26186_27418> .
 
 :mdtA a :AntimicrobialResistanceGene ;
     dc:description "mdtA" ;
-    :isFoundIn _:N0d580f845ba0466ea032b401a75bfe6a .
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000012.1/mdtA/105844_107211> .
 
 :mdtD a :AntimicrobialResistanceGene ;
     dc:description "mdtD" ;
-    :isFoundIn _:N73b5d8d57bb54d888d34ada110058467 .
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000012.1/mdtD/113412_114827> .
 
 :mdtE a :AntimicrobialResistanceGene ;
     dc:description "mdtE" ;
-    :isFoundIn _:Nea9076fddb254c859f950d2786d4e290 .
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000007.1/mdtE/5889_7046> .
 
 :mdtG a :AntimicrobialResistanceGene ;
     dc:description "mdtG" ;
-    :isFoundIn _:Nbc6e200a4c354539a290841e3156e7bd .
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000034.1/mdtG/18602_19828> .
 
 :mdtH a :AntimicrobialResistanceGene ;
     dc:description "mdtH" ;
-    :isFoundIn _:N863ffba8654040dc8e69fdf437d421a5 .
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000034.1/mdtH/28459_29667> .
 
 :mdtK a :AntimicrobialResistanceGene ;
     dc:description "mdtK" ;
-    :isFoundIn _:N03f70370045e44609da47885426b321a .
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000027.1/mdtK/111438_112811> .
 
 :mdtL a :AntimicrobialResistanceGene ;
     dc:description "mdtL" ;
-    :isFoundIn _:N975a1ff33fd64c03bf5abe69f7c71540 .
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000005.1/mdtL/53802_54977> .
 
 :mdtM a :AntimicrobialResistanceGene ;
     dc:description "mdtM" ;
-    :isFoundIn _:Na043c025a0cf473d8f8666eaf0d3acea .
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000043.1/mdtM/2827_4059> .
 
 :mdtN a :AntimicrobialResistanceGene ;
     dc:description "mdtN" ;
-    :isFoundIn _:Nee3e0bf45a0a464390b1d2989ad8a1b3 .
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000023.1/mdtN/91677_92708> .
 
 :mdtO a :AntimicrobialResistanceGene ;
     dc:description "mdtO" ;
-    :isFoundIn _:N61685c6aed464fd997094ced57202384 .
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000023.1/mdtO/89626_91677> .
 
 :mdtP a :AntimicrobialResistanceGene ;
     dc:description "mdtP" ;
-    :isFoundIn _:N571570212cb84f19a3eda76fdc4f4fb2 .
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000023.1/mdtP/88163_89629> .
 
 :mphA a :AntimicrobialResistanceGene ;
     dc:description "mphA" ;
-    :isFoundIn _:Nd84f5aea81ac49e78308567d80b2cb3e .
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000091.1/mphA/88_993> .
 
 :phoP a :AntimicrobialResistanceGene ;
     dc:description "phoP" ;
-    :isFoundIn _:Nb8eacbd1b59446b2808683f6809b8b10 .
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000034.1/phoP/94109_94780> .
 
 :phoQ a :AntimicrobialResistanceGene ;
     dc:description "phoQ" ;
-    :isFoundIn _:N9fa736ddf9324e3f92d5eb767873e04e .
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000034.1/phoQ/92649_94109> .
 
 :rmtB a :AntimicrobialResistanceGene ;
     dc:description "rmtB" ;
-    :isFoundIn _:Ne52ed0f910854cf68e73163e519aa25d .
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000051.1/rmtB/985_1740> .
 
 :robA a :AntimicrobialResistanceGene ;
     dc:description "robA" ;
-    :isFoundIn _:Nf52c02f71cf14997b3125b943f2cd00c .
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000045.1/robA/11938_12807> .
 
 :rosA a :AntimicrobialResistanceGene ;
     dc:description "rosA" ;
-    :isFoundIn _:N92becdad53fa4ba29b6ab131b38b7f11 .
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000004.1/rosA/125539_126759> .
 
 :rosB a :AntimicrobialResistanceGene ;
     dc:description "rosB" ;
-    :isFoundIn _:N20dea1cd3d6c40ebb004d9909f21e0ad .
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000004.1/rosB/123625_125301> .
 
 :sul2 a :AntimicrobialResistanceGene ;
     dc:description "sul2" ;
-    :isFoundIn _:N99eee43245e447f5a40693ba928f1d94 .
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000079.1/sul2/3478_4293> .
 
 :tetG a :AntimicrobialResistanceGene ;
     dc:description "tetG" ;
-    :isFoundIn _:N2122059cbf44475f81fcefcbf62f9322 .
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000057.1/tetG/1229_2428> .
 
 :tolC a :AntimicrobialResistanceGene ;
     dc:description "tolC" ;
-    :isFoundIn _:N8260e330cf3147e1ad9d3ffa445776c3 .
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000052.1/tolC/25205_26686> .
 
 :vanG a :AntimicrobialResistanceGene ;
     dc:description "vanG" ;
-    :isFoundIn _:N812fec5c08a0453ba3c044b605c5bf21 .
-
-:Marker dc:description "Any_Marker" .
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000004.1/vanG/19861_20955> .
 
 :acrE a :AntimicrobialResistanceGene ;
     dc:description "acrE" ;
-    :isFoundIn _:N37d72b6ad8e242acb3e83a247ae643f3,
-        _:Nf4dd003337c24d5495368ce9235f7b1d .
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000004.1/acrE/106489_107682>,
+        <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000033.1/acrE/115104_116261> .
 
-<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000006.1> a faldo:Reference ;
-    :hasPart _:Nb9e51f7b40c9433487867dfe1334cfc0,
-        _:Nc11d0ed15eb74cfdb91aac64c1ab721a .
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000004.1/Klebsiella_pneumoniae_acrR_mutant_resulting_in_high_level_antibiotic_resistance/107824_108471> a faldo:Region ;
+    faldo:begin _:N940b8a7aea464266bc92611aa846fb52 ;
+    faldo:end _:Nb086bc1b53964ddc897051fa8a7fc5d7 ;
+    faldo:reference <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000004.1> ;
+    :hasPart :Klebsiella_pneumoniae_acrR_mutant_resulting_in_high_level_antibiotic_resistance ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000004.1> .
 
-<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000015.1> a faldo:Reference ;
-    :hasPart _:N8bb4b95d06ce4d9cbab7b7fcb6bb913d,
-        _:Nfc6285b694dc4e69921d5b49aa6ebeb2 .
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000004.1/acrE/106489_107682> a faldo:Region ;
+    faldo:begin _:N5b0a11895b4a4c51bb776620a937b3f0 ;
+    faldo:end _:N58bad362d2e24d65bf7793dba2e76ae2 ;
+    faldo:reference <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000004.1> ;
+    :hasPart :acrE ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000004.1> .
 
-<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000027.1> a faldo:Reference ;
-    :hasPart _:N2470a9979124495e8dcad8afaf1dbf11,
-        _:N5a559f860d8741fe8cf90c9a38dc4f22 .
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000004.1/mexD/103317_106466> a faldo:Region ;
+    faldo:begin _:Nccbd11cb8fbe42c78d135a8340e8e2bc ;
+    faldo:end _:N6afff6d184314c45b7a4fa2905241519 ;
+    faldo:reference <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000004.1> ;
+    :hasPart :mexD ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000004.1> .
 
-<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000032.1> a faldo:Reference ;
-    :hasPart _:Nb287822c93a945158dbcbaf907956215,
-        _:Nfb7042e6b80047139e5507168dc4eecf .
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000004.1/rosA/125539_126759> a faldo:Region ;
+    faldo:begin _:N7f51626e0bd44758a832fec0c5dae66c ;
+    faldo:end _:Ndbada6846fa54a96a4fc75108536856a ;
+    faldo:reference <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000004.1> ;
+    :hasPart :rosA ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000004.1> .
 
-<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000037.1> a faldo:Reference ;
-    :hasPart _:N3a04052dc3494bca9ceb24c15ad308cb,
-        _:Nd4e678ed39264cb598761dfd2d975d92 .
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000004.1/rosB/123625_125301> a faldo:Region ;
+    faldo:begin _:Nfa24d8a7bfe84e5e8badc3c0edcb6998 ;
+    faldo:end _:N00a868235e924fb09e7f6ecfc52afe1d ;
+    faldo:reference <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000004.1> ;
+    :hasPart :rosB ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000004.1> .
 
-<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000041.1> a faldo:Reference ;
-    :hasPart _:N1780237d50b7448eaca43dab253d5d37,
-        _:Nc423004321b74f599097b2bad50ac871 .
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000004.1/vanG/19861_20955> a faldo:Region ;
+    faldo:begin _:N754020711a2e4374ac00baabaa590c92 ;
+    faldo:end _:N21ecf354cad9457195f20373a4e235fd ;
+    faldo:reference <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000004.1> ;
+    :hasPart :vanG ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000004.1> .
 
-<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000043.1> a faldo:Reference ;
-    :hasPart _:N398f2b81f02d4a038fc4024148d22516,
-        _:Nd5195396e2964c91a5338c837eb9c32a .
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000005.1/Staphylococcus_aureus_gyrB_conferring_resistance_to_aminocoumarin/66473_68887> a faldo:Region ;
+    faldo:begin _:Neef8b788f5704d0e90e4a4ebd1e0fa76 ;
+    faldo:end _:N52045009484c49f59dc3408082f09284 ;
+    faldo:reference <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000005.1> ;
+    :hasPart :Staphylococcus_aureus_gyrB_conferring_resistance_to_aminocoumarin ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000005.1> .
 
-<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000045.1> a faldo:Reference ;
-    :hasPart _:N93559fc9d928478fb719377d341caf15,
-        _:Nc9b52397dab84917b9c24bbcebe56e73 .
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000005.1/emrD/91483_92667> a faldo:Region ;
+    faldo:begin _:N6bb84f525d58476097d5f991e76fbe79 ;
+    faldo:end _:N2898917dec3143478d712dafd47494d0 ;
+    faldo:reference <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000005.1> ;
+    :hasPart :emrD ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000005.1> .
 
-<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000046.1> a faldo:Reference ;
-    :hasPart _:N023f44b12eee439190ff73ece800a753,
-        _:Nc4a1f2e7f06d4c8f91160d524b9eb282 .
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000005.1/mdtL/53802_54977> a faldo:Region ;
+    faldo:begin _:Nbc5c9647f22a45aca36074bfcb30e23b ;
+    faldo:end _:Nc504f35016254cfbb1f1c7255a2199a8 ;
+    faldo:reference <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000005.1> ;
+    :hasPart :mdtL ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000005.1> .
 
-<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000057.1> a faldo:Reference ;
-    :hasPart _:Nb82a27a2055742598ac6b41db1811140,
-        _:Nd77f6ad61c314768821dd1a34d50c183 .
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000006.1/ACT_7/65936_67069> a faldo:Region ;
+    faldo:begin _:N2a18a633bfb64f4aaab69030100be9e8 ;
+    faldo:end _:Nbfd4eb974e4042298e68e017034bdddd ;
+    faldo:reference <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000006.1> ;
+    :hasPart :ACT_7 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000006.1> .
 
-<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000080.1> a faldo:Reference ;
-    :hasPart _:Nd57f1000d11145a4b7f46b44b532724e,
-        _:Nfc277fc6597b411c86076ad3782995b1 .
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000007.1/CRP/170856_171488> a faldo:Region ;
+    faldo:begin _:N12c4ec76c5f5435ea1d7e6df81c909ef ;
+    faldo:end _:N05e1ed62e4f6494db9774afae1b6b69c ;
+    faldo:reference <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000007.1> ;
+    :hasPart :CRP ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000007.1> .
 
-<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000083.1> a faldo:Reference ;
-    :hasPart _:N3f44fa27ae97487b95b220d6b1d8cc99,
-        _:N89b4155c9d9248948f8d76b9e1f422c4 .
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000007.1/gadX/468_1292> a faldo:Region ;
+    faldo:begin _:Ndd22e4e8830240b8af5ab8d82908bb7f ;
+    faldo:end _:Nd4ce1a9622eb4856ab3f6b06ee116d53 ;
+    faldo:reference <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000007.1> ;
+    :hasPart :gadX ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000007.1> .
 
-<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000092.1> a faldo:Reference ;
-    :hasPart _:N725e8ad7a3be4c32a50bbe9d39294dbe,
-        _:N7f6cb61364e348ce9a73b10f4fd8fac7 .
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000007.1/mdtE/5889_7046> a faldo:Region ;
+    faldo:begin _:N7f4ab70a270c4d03bc4ac7abe2e59a97 ;
+    faldo:end _:Ne051808a240e4858b345313cd3e88185 ;
+    faldo:reference <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000007.1> ;
+    :hasPart :mdtE ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000007.1> .
 
-<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000105.1> a faldo:Reference ;
-    :hasPart _:Na426e7b672e645ac922ca88c5df2e5e6,
-        _:Nb7ecdb8f54f3402baa277355f7a36081 .
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000007.1/mexD/2751_5864> a faldo:Region ;
+    faldo:begin _:N4136cc24fc30454dbfd9bed740a6b1a6 ;
+    faldo:end _:N09e8f4bdb6af4ab38fba796f248407cf ;
+    faldo:reference <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000007.1> ;
+    :hasPart :mexD ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000007.1> .
+
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000008.1/macA/61687_62802> a faldo:Region ;
+    faldo:begin _:Nad4b64ac89524392891c2a1c641ae072 ;
+    faldo:end _:Nc68d56a7f9d84736a8fce7138a04efe6 ;
+    faldo:reference <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000008.1> ;
+    :hasPart :macA ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000008.1> .
+
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000008.1/macB/62799_64745> a faldo:Region ;
+    faldo:begin _:N69f7ac248f914241b7ccc7fed3b66768 ;
+    faldo:end _:N940ab995ca504ee590ab563012e86abb ;
+    faldo:reference <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000008.1> ;
+    :hasPart :macB ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000008.1> .
+
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000008.1/mdfA/26186_27418> a faldo:Region ;
+    faldo:begin _:N2f04f9440979456b9c1e4a60dbc7f720 ;
+    faldo:end _:N65b7a47b06c34560bb0465dac2025242 ;
+    faldo:reference <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000008.1> ;
+    :hasPart :mdfA ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000008.1> .
+
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000011.1/emrA/56888_58060> a faldo:Region ;
+    faldo:begin _:Neab43c956a6b40c18f72270c238dbd8c ;
+    faldo:end _:N279465fa088141fcbcc0b6587e962594 ;
+    faldo:reference <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000011.1> ;
+    :hasPart :emrA ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000011.1> .
+
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000011.1/emrB/58077_59615> a faldo:Region ;
+    faldo:begin _:N3f8ad5df8b354008a67b4597f111f0d4 ;
+    faldo:end _:Ne7eaa3bff34642c6936df399a349e7d1 ;
+    faldo:reference <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000011.1> ;
+    :hasPart :emrB ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000011.1> .
+
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000011.1/emrR/56231_56761> a faldo:Region ;
+    faldo:begin _:N886dace7269d42c4aca47fe3a9602e35 ;
+    faldo:end _:Nf6231cb68826483086511d398c0bc4ee ;
+    faldo:reference <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000011.1> ;
+    :hasPart :emrR ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000011.1> .
+
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000012.1/PmrE/48536_49702> a faldo:Region ;
+    faldo:begin _:N3a1515c3d0f741c7882a85da05fc4561 ;
+    faldo:end _:N920cfead4dac4e2e83027e146ee6109d ;
+    faldo:reference <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000012.1> ;
+    :hasPart :PmrE ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000012.1> .
+
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000012.1/baeR/116224_116946> a faldo:Region ;
+    faldo:begin _:N89e94f2d98834d2fb165b8cd72fdae10 ;
+    faldo:end _:N3dcc053678874b2bbb538b37b1b5789f ;
+    faldo:reference <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000012.1> ;
+    :hasPart :baeR ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000012.1> .
+
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000012.1/baeS/114824_116227> a faldo:Region ;
+    faldo:begin _:Nf09273501a8d42b18d7349a055653800 ;
+    faldo:end _:N1ee8e0ab85414e1e8ed50febe57086af ;
+    faldo:reference <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000012.1> ;
+    :hasPart :baeS ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000012.1> .
+
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000012.1/mdtA/105844_107211> a faldo:Region ;
+    faldo:begin _:N75d8b7df88b849589ad1422bc6800cad ;
+    faldo:end _:N40965a75a3fb40be8cf2910686892af6 ;
+    faldo:reference <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000012.1> ;
+    :hasPart :mdtA ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000012.1> .
+
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000012.1/mdtD/113412_114827> a faldo:Region ;
+    faldo:begin _:N902979a5012d4070936564aee658e560 ;
+    faldo:end _:N81a2205d5ce34a56b70e9d626755140f ;
+    faldo:reference <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000012.1> ;
+    :hasPart :mdtD ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000012.1> .
+
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000012.1/mexN/107211_110333> a faldo:Region ;
+    faldo:begin _:Nb4ca70868ad34d3eafbeffc9ffedd1ed ;
+    faldo:end _:N1bae815846714f57ac9821ac8643301a ;
+    faldo:reference <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000012.1> ;
+    :hasPart :mexN ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000012.1> .
+
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000012.1/mexN/110334_113411> a faldo:Region ;
+    faldo:begin _:Nc83a176ea328473fa3aeb10787485c72 ;
+    faldo:end _:N6351e0ad75f44625870c661e2def9e18 ;
+    faldo:reference <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000012.1> ;
+    :hasPart :mexN ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000012.1> .
+
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000015.1/mexD/60115_63228> a faldo:Region ;
+    faldo:begin _:N5e9e64b32b414bbf9a9410bbb478873b ;
+    faldo:end _:Na142adcd90fc4fdb9d3a7ec3b133fd74 ;
+    faldo:reference <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000015.1> ;
+    :hasPart :mexD ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000015.1> .
+
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000023.1/PmrA/114744_115412> a faldo:Region ;
+    faldo:begin _:Ne25a58104d2546a9afe6a3316095bf8c ;
+    faldo:end _:N70d373e72a9d4838a9e42a2eee86cb1e ;
+    faldo:reference <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000023.1> ;
+    :hasPart :PmrA ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000023.1> .
+
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000023.1/PmrB/113643_114743> a faldo:Region ;
+    faldo:begin _:Nedf8ac3693a3420ab9de8ce8bfa3d354 ;
+    faldo:end _:N32af4cd540254e21af7e05c227f49ce8 ;
+    faldo:reference <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000023.1> ;
+    :hasPart :PmrB ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000023.1> .
+
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000023.1/PmrC/115409_117052> a faldo:Region ;
+    faldo:begin _:N0a9b08bcef43409198a7d4d6b497fc0c ;
+    faldo:end _:N4c08ad91b9b744b7be9d2593b21a501b ;
+    faldo:reference <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000023.1> ;
+    :hasPart :PmrC ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000023.1> .
+
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000023.1/mdtN/91677_92708> a faldo:Region ;
+    faldo:begin _:Nf0607fc690634043a1bf37761337ef42 ;
+    faldo:end _:N19aaaa1c26cc46d496819cfa8a5e09bf ;
+    faldo:reference <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000023.1> ;
+    :hasPart :mdtN ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000023.1> .
+
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000023.1/mdtO/89626_91677> a faldo:Region ;
+    faldo:begin _:Nadee9c134a454e6286b6abfdaf62e282 ;
+    faldo:end _:Nc5bf2807e90540838439a2c2d9aee997 ;
+    faldo:reference <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000023.1> ;
+    :hasPart :mdtO ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000023.1> .
+
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000023.1/mdtP/88163_89629> a faldo:Region ;
+    faldo:begin _:Ne661783dbb62444cae656bcc3daba874 ;
+    faldo:end _:N2e0c7f6819d64211bd215c530efd7cf1 ;
+    faldo:reference <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000023.1> ;
+    :hasPart :mdtP ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000023.1> .
+
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000026.1/Escherichia_coli_gyrA_conferring_resistance_to_fluoroquinolones/131208_133835> a faldo:Region ;
+    faldo:begin _:N419c4f5c67bf4cfa92442ffc226cf9db ;
+    faldo:end _:N7fe256985399499ca5d22cda510a10c1 ;
+    faldo:reference <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000026.1> ;
+    :hasPart :Escherichia_coli_gyrA_conferring_resistance_to_fluoroquinolones ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000026.1> .
+
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000026.1/PmrF/167267_168235> a faldo:Region ;
+    faldo:begin _:N602487377a5f433ab1f3b12114ee180a ;
+    faldo:end _:Nb7b6d349a3cd453aabfbd4e1ade2d76b ;
+    faldo:reference <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000026.1> ;
+    :hasPart :PmrF ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000026.1> .
+
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000026.1/arnA/168235_170217> a faldo:Region ;
+    faldo:begin _:N4e35ffdbadde45b091f9e31055af054d ;
+    faldo:end _:N5c505e14484947f691f853d1007dff7d ;
+    faldo:reference <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000026.1> ;
+    :hasPart :arnA ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000026.1> .
+
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000026.1/emrK/283814_284977> a faldo:Region ;
+    faldo:begin _:N30282ea1bfdb40f18b02fb1eb5a5975f ;
+    faldo:end _:N206ad7ceedac4121b0c682e61ece727c ;
+    faldo:reference <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000026.1> ;
+    :hasPart :emrK ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000026.1> .
+
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000026.1/emrY/282276_283814> a faldo:Region ;
+    faldo:begin _:N4d6d04f28ac0444f9df93645f154df9b ;
+    faldo:end _:N0c2862130b544ce597500e589a4ab934 ;
+    faldo:reference <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000026.1> ;
+    :hasPart :emrY ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000026.1> .
+
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000026.1/evgA/285393_286007> a faldo:Region ;
+    faldo:begin _:N131c4848d85b4d2aad8d0d8868098303 ;
+    faldo:end _:N3a3dcf5376d64f7fac46bfc7cb952829 ;
+    faldo:reference <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000026.1> ;
+    :hasPart :evgA ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000026.1> .
+
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000026.1/evgS/286012_289605> a faldo:Region ;
+    faldo:begin _:N4e9dfd829c9542d499e76b394475cd78 ;
+    faldo:end _:N580c64d5064244049a9e4c003911fe46 ;
+    faldo:reference <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000026.1> ;
+    :hasPart :evgS ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000026.1> .
+
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000027.1/mdtK/111438_112811> a faldo:Region ;
+    faldo:begin _:N7085eb426c7c456c91f686959b4f248e ;
+    faldo:end _:N9a543433e48845dfb9b5323f526c47a7 ;
+    faldo:reference <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000027.1> ;
+    :hasPart :mdtK ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000027.1> .
+
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000032.1/H_NS/5355_5768> a faldo:Region ;
+    faldo:begin _:N82af8f10626a48c4a1be91916f541762 ;
+    faldo:end _:N14b2d1a1edb14c87b936964d0b21f1ef ;
+    faldo:reference <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000032.1> ;
+    :hasPart :H_NS ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000032.1> .
+
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000033.1/acrE/115104_116261> a faldo:Region ;
+    faldo:begin _:N8c49548a803644b8bef3546bf6c37e01 ;
+    faldo:end _:Na5a5da4d9a37406e9fff5f7a61e6e270 ;
+    faldo:reference <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000033.1> ;
+    :hasPart :acrE ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000033.1> .
+
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000033.1/acrS/114043_114705> a faldo:Region ;
+    faldo:begin _:N1dfce78814b745ba9bafa95815fed048 ;
+    faldo:end _:Nd96148c69d16421eba9d7bb32abb7a0f ;
+    faldo:reference <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000033.1> ;
+    :hasPart :acrS ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000033.1> .
+
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000033.1/mexD/116273_119377> a faldo:Region ;
+    faldo:begin _:N0777713181b143ec959148d2bc6a7e29 ;
+    faldo:end _:Nea1ccc357ac8417c95eae010a2cb11b2 ;
+    faldo:reference <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000033.1> ;
+    :hasPart :mexD ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000033.1> .
+
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000034.1/mdtG/18602_19828> a faldo:Region ;
+    faldo:begin _:Nb08c17ce169f4c22b5b47880fe5049ba ;
+    faldo:end _:N87e54ae1a0584db994f64f4b0cda0201 ;
+    faldo:reference <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000034.1> ;
+    :hasPart :mdtG ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000034.1> .
+
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000034.1/mdtH/28459_29667> a faldo:Region ;
+    faldo:begin _:N13e58bd99670462f892cf3a029a25d9f ;
+    faldo:end _:N1adb63efa05343a48e2da87a4de07195 ;
+    faldo:reference <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000034.1> ;
+    :hasPart :mdtH ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000034.1> .
+
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000034.1/phoP/94109_94780> a faldo:Region ;
+    faldo:begin _:N8b0f69bece9645669a05cc855eee7a0c ;
+    faldo:end _:N8d28fb098f0a43f4b2a58081fb52ea04 ;
+    faldo:reference <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000034.1> ;
+    :hasPart :phoP ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000034.1> .
+
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000034.1/phoQ/92649_94109> a faldo:Region ;
+    faldo:begin _:N9fb13b554dde4e02878ff1de46741935 ;
+    faldo:end _:N50a628f37e8b4017abd09b57d219a2a1 ;
+    faldo:reference <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000034.1> ;
+    :hasPart :phoQ ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000034.1> .
+
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000037.1/Mycobacterium_tuberculosis_katG_mutations_conferring_resistance_to_isoniazid/8338_10518> a faldo:Region ;
+    faldo:begin _:Nb5590c2efed948a4b0ab7ec225053dfb ;
+    faldo:end _:Nea3682bdfdd647d1994b5a4fc9864278 ;
+    faldo:reference <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000037.1> ;
+    :hasPart :Mycobacterium_tuberculosis_katG_mutations_conferring_resistance_to_isoniazid ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000037.1> .
+
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000041.1/Mycobacterium_tuberculosis_rpoB_mutants_conferring_resistance_to_rifampicin/4368_8396> a faldo:Region ;
+    faldo:begin _:N7dea1a38c0bb454aa5313e193be7c9c7 ;
+    faldo:end _:N4ed403f6be7a4f0585443978745500c9 ;
+    faldo:reference <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000041.1> ;
+    :hasPart :Mycobacterium_tuberculosis_rpoB_mutants_conferring_resistance_to_rifampicin ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000041.1> .
+
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000043.1/mdtM/2827_4059> a faldo:Region ;
+    faldo:begin _:N9a42fe062e8847628b3733006f773e64 ;
+    faldo:end _:N238718ef16614b60aa0fa0dfd36f30bb ;
+    faldo:reference <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000043.1> ;
+    :hasPart :mdtM ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000043.1> .
+
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000045.1/robA/11938_12807> a faldo:Region ;
+    faldo:begin _:Nb8dc076d8cd34792949c73603251cec3 ;
+    faldo:end _:N8502ee37cab449a2b9e29062191321da ;
+    faldo:reference <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000045.1> ;
+    :hasPart :robA ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000045.1> .
+
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000046.1/floR/4392_5606> a faldo:Region ;
+    faldo:begin _:Na98cd111da68428cb8731f0f0a3ce3de ;
+    faldo:end _:N3111a8cf9bad44fca169be1925ff8cf9 ;
+    faldo:reference <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000046.1> ;
+    :hasPart :floR ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000046.1> .
+
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000051.1/TEM_1/1910_2770> a faldo:Region ;
+    faldo:begin _:Nee743f147106499ea13303cc17db525f ;
+    faldo:end _:Ne698163c049840f79c06f90732a8a3b7 ;
+    faldo:reference <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000051.1> ;
+    :hasPart :TEM_1 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000051.1> .
+
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000051.1/rmtB/985_1740> a faldo:Region ;
+    faldo:begin _:Nacc39505c35b41d0a45489ebe3562c68 ;
+    faldo:end _:N4fdc14aa139345c0aea2893457081100 ;
+    faldo:reference <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000051.1> ;
+    :hasPart :rmtB ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000051.1> .
+
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000052.1/Escherichia_coli_parC_conferring_resistance_to_fluoroquinolone/13035_15293> a faldo:Region ;
+    faldo:begin _:N0aa2c00014844409945773226a2c1f30 ;
+    faldo:end _:N78d8a0c527df46669836f1adbeaaa174 ;
+    faldo:reference <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000052.1> ;
+    :hasPart :Escherichia_coli_parC_conferring_resistance_to_fluoroquinolone ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000052.1> .
+
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000052.1/bacA/49043_49864> a faldo:Region ;
+    faldo:begin _:N70147d54d51f44c98c2b7843d12d94ed ;
+    faldo:end _:N49f5e31e8f9244ffb9bda40a85f3e64d ;
+    faldo:reference <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000052.1> ;
+    :hasPart :bacA ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000052.1> .
+
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000052.1/tolC/25205_26686> a faldo:Region ;
+    faldo:begin _:N664e3b9348cd4febac9faf6d5321b01a ;
+    faldo:end _:N6559cd865035485c8e86faa76ce590af ;
+    faldo:reference <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000052.1> ;
+    :hasPart :tolC ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000052.1> .
+
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000057.1/tetG/1229_2428> a faldo:Region ;
+    faldo:begin _:Nae7061571dc54e0583d5fd31763e82db ;
+    faldo:end _:Nde2712bb0ade48baa784eddd2f23dcae ;
+    faldo:reference <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000057.1> ;
+    :hasPart :tetG ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000057.1> .
+
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000059.1/cpxA/97_1470> a faldo:Region ;
+    faldo:begin _:N075b0a8ae90a4cc39c4b3ab56f9d9d6e ;
+    faldo:end _:Nda99eac4c5d141a78192d185a9bff29d ;
+    faldo:reference <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000059.1> ;
+    :hasPart :cpxA ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000059.1> .
+
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000059.1/cpxR/1467_2165> a faldo:Region ;
+    faldo:begin _:N642c381fd66f460abbf9b425637e1259 ;
+    faldo:end _:Nad69a766ce99445b8a218dae6e5b868a ;
+    faldo:reference <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000059.1> ;
+    :hasPart :cpxR ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000059.1> .
+
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000078.1/Escherichia_coli_marR_mutant_resulting_in_antibiotic_resistance/36086_36520> a faldo:Region ;
+    faldo:begin _:N3fd6a4a8089b4ad6bad4225100394018 ;
+    faldo:end _:N8f8d6dc5efd2441885da92861805c78c ;
+    faldo:reference <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000078.1> ;
+    :hasPart :Escherichia_coli_marR_mutant_resulting_in_antibiotic_resistance ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000078.1> .
+
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000078.1/marA/36540_36923> a faldo:Region ;
+    faldo:begin _:Na63dc424ebcf49808a2644a8a2ee2e6d ;
+    faldo:end _:N80d33815b9ba4740a84ee3a181c99c80 ;
+    faldo:reference <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000078.1> ;
+    :hasPart :marA ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000078.1> .
+
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000079.1/APH3_Ib/4354_5157> a faldo:Region ;
+    faldo:begin _:Na12705558ddd431c958d4da3c7eb4589 ;
+    faldo:end _:N3379125bf051401684404ff5e1c01f30 ;
+    faldo:reference <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000079.1> ;
+    :hasPart :APH3_Ib ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000079.1> .
+
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000079.1/APH6_Id/5157_5993> a faldo:Region ;
+    faldo:begin _:N6a014645eb764ebd80df5703910e208e ;
+    faldo:end _:N00123a44cf5d4fe9b5daceaf580d61b1 ;
+    faldo:reference <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000079.1> ;
+    :hasPart :APH6_Id ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000079.1> .
+
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000079.1/sul2/3478_4293> a faldo:Region ;
+    faldo:begin _:Nf56779b31be34550bc7e37d760059031 ;
+    faldo:end _:N60dedc9158ca4e3aa55cad8408015765 ;
+    faldo:reference <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000079.1> ;
+    :hasPart :sul2 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000079.1> .
+
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000080.1/FosA3/555_971> a faldo:Region ;
+    faldo:begin _:N21156d35a9ab42f9b89bd32a152b9c12 ;
+    faldo:end _:N1fc2e94ef90246b0af86b9d48d9a5adb ;
+    faldo:reference <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000080.1> ;
+    :hasPart :FosA3 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000080.1> .
+
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000083.1/CTX_M_65/466_1341> a faldo:Region ;
+    faldo:begin _:N4b1d58b76db84a56b3c40d863fc3c8cd ;
+    faldo:end _:N7af3590f9afe4b5d92b7c708e1ba749d ;
+    faldo:reference <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000083.1> ;
+    :hasPart :CTX_M_65 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000083.1> .
+
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000091.1/catI/11194_11853> a faldo:Region ;
+    faldo:begin _:N834c516bcf1940c2ac7d87e3efc7038b ;
+    faldo:end _:Nb0992b0574e94050bc1f83e42becb7e3 ;
+    faldo:reference <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000091.1> ;
+    :hasPart :catI ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000091.1> .
+
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000091.1/dfrA14/4699_5172> a faldo:Region ;
+    faldo:begin _:N30add3c010534f01ba34a4cda8083df9 ;
+    faldo:end _:N5d0c520511d949228dbf9df256e024b2 ;
+    faldo:reference <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000091.1> ;
+    :hasPart :dfrA14 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000091.1> .
+
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000091.1/mphA/88_993> a faldo:Region ;
+    faldo:begin _:N8763120d4a54440ea49c8496e4f40a8f ;
+    faldo:end _:Ne185ceb9ae8b47aca815b113da5655f9 ;
+    faldo:reference <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000091.1> ;
+    :hasPart :mphA ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000091.1> .
+
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000092.1/NDM_5/182_994> a faldo:Region ;
+    faldo:begin _:N68e386332d5541c5b4cb76336558f9c3 ;
+    faldo:end _:N0765c98bce35441a9dcce28ad0fbf215 ;
+    faldo:reference <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000092.1> ;
+    :hasPart :NDM_5 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000092.1> .
+
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000105.1/APH3_Ia/105_920> a faldo:Region ;
+    faldo:begin _:Nb37f0eaf51fa4ce9a96feee75fefbc68 ;
+    faldo:end _:Ne7c31d91d1214f62972d957c63fbce24 ;
+    faldo:reference <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000105.1> ;
+    :hasPart :APH3_Ia ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000105.1> .
 
 :mexN a :AntimicrobialResistanceGene ;
     dc:description "mexN" ;
-    :isFoundIn _:N56031ddb79f34639a5b9c7d34861fc75,
-        _:N68f321d494f04d6c9a15499720dc787f .
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000012.1/mexN/107211_110333>,
+        <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000012.1/mexN/110334_113411> .
 
-<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000051.1> a faldo:Reference ;
-    :hasPart _:N4c92ff026f23411c8c4397f2666096bf,
-        _:Nc508869f5c054fd6bab37e9086e2db4e,
-        _:Ncb8976fc71a64925b06c4ef46ed1b470,
-        _:Neb575e3c28cd48b085d4dfa363cd3114 .
+:Marker dc:description "Any_Marker" .
 
-<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000059.1> a faldo:Reference ;
-    :hasPart _:N050a1efad3534465a790440544d6490e,
-        _:N5617d14d0e95430e924659184e683783,
-        _:N7857d60e190648efb67a64439f7e0d84,
-        _:Nbd8e86302e41427bbbbcc8cb9a7bdb37 .
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000006.1> :hasPart _:N2a18a633bfb64f4aaab69030100be9e8,
+        _:Nbfd4eb974e4042298e68e017034bdddd,
+        <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000006.1/ACT_7/65936_67069> .
 
-<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000078.1> a faldo:Reference ;
-    :hasPart _:N0ceaa340451b44828de019e426ac3774,
-        _:Nb1d4c380d2e34e839118a1b8d0911fa3,
-        _:Nd280d45e77ca46aabc5149a22dc7dc95,
-        _:Nde8c7d3355d848e8b1754dd1badac635 .
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000015.1> :hasPart _:N5e9e64b32b414bbf9a9410bbb478873b,
+        _:Na142adcd90fc4fdb9d3a7ec3b133fd74,
+        <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000015.1/mexD/60115_63228> .
+
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000027.1> :hasPart _:N7085eb426c7c456c91f686959b4f248e,
+        _:N9a543433e48845dfb9b5323f526c47a7,
+        <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000027.1/mdtK/111438_112811> .
+
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000032.1> :hasPart _:N14b2d1a1edb14c87b936964d0b21f1ef,
+        _:N82af8f10626a48c4a1be91916f541762,
+        <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000032.1/H_NS/5355_5768> .
+
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000037.1> :hasPart _:Nb5590c2efed948a4b0ab7ec225053dfb,
+        _:Nea3682bdfdd647d1994b5a4fc9864278,
+        <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000037.1/Mycobacterium_tuberculosis_katG_mutations_conferring_resistance_to_isoniazid/8338_10518> .
+
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000041.1> :hasPart _:N4ed403f6be7a4f0585443978745500c9,
+        _:N7dea1a38c0bb454aa5313e193be7c9c7,
+        <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000041.1/Mycobacterium_tuberculosis_rpoB_mutants_conferring_resistance_to_rifampicin/4368_8396> .
+
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000043.1> :hasPart _:N238718ef16614b60aa0fa0dfd36f30bb,
+        _:N9a42fe062e8847628b3733006f773e64,
+        <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000043.1/mdtM/2827_4059> .
+
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000045.1> :hasPart _:N8502ee37cab449a2b9e29062191321da,
+        _:Nb8dc076d8cd34792949c73603251cec3,
+        <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000045.1/robA/11938_12807> .
+
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000046.1> :hasPart _:N3111a8cf9bad44fca169be1925ff8cf9,
+        _:Na98cd111da68428cb8731f0f0a3ce3de,
+        <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000046.1/floR/4392_5606> .
+
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000057.1> :hasPart _:Nae7061571dc54e0583d5fd31763e82db,
+        _:Nde2712bb0ade48baa784eddd2f23dcae,
+        <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000057.1/tetG/1229_2428> .
+
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000080.1> :hasPart _:N1fc2e94ef90246b0af86b9d48d9a5adb,
+        _:N21156d35a9ab42f9b89bd32a152b9c12,
+        <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000080.1/FosA3/555_971> .
+
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000083.1> :hasPart _:N4b1d58b76db84a56b3c40d863fc3c8cd,
+        _:N7af3590f9afe4b5d92b7c708e1ba749d,
+        <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000083.1/CTX_M_65/466_1341> .
+
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000092.1> :hasPart _:N0765c98bce35441a9dcce28ad0fbf215,
+        _:N68e386332d5541c5b4cb76336558f9c3,
+        <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000092.1/NDM_5/182_994> .
+
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000105.1> :hasPart _:Nb37f0eaf51fa4ce9a96feee75fefbc68,
+        _:Ne7c31d91d1214f62972d957c63fbce24,
+        <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000105.1/APH3_Ia/105_920> .
 
 :mexD a :AntimicrobialResistanceGene ;
     dc:description "mexD" ;
-    :isFoundIn _:N049c44039bfa4528ba83e8d66e4eb292,
-        _:N0a28f035e46e454b86a9b03283d03b9a,
-        _:N7a8c501fc69f474dba614881d6624c0b,
-        _:Nbda2e802f5f249d4b78927c69960d8c0 .
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000004.1/mexD/103317_106466>,
+        <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000007.1/mexD/2751_5864>,
+        <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000015.1/mexD/60115_63228>,
+        <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000033.1/mexD/116273_119377> .
 
-<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000005.1> a faldo:Reference ;
-    :hasPart _:N2074896d11db4bb0a21ccd2dace83713,
-        _:N26c43c79a3f645f6b0c796d2b51a81f1,
-        _:N35ef07ad361a4376b43ad7606d1adf9c,
-        _:N786f5c0e6fb04222aa74887b47875f2b,
-        _:Nd416ff393e094e24b6abd1e5d1bf8bc5,
-        _:Nf613584afe9f4410ade63d0413363c31 .
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000051.1> :hasPart _:N4fdc14aa139345c0aea2893457081100,
+        _:Nacc39505c35b41d0a45489ebe3562c68,
+        _:Ne698163c049840f79c06f90732a8a3b7,
+        _:Nee743f147106499ea13303cc17db525f,
+        <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000051.1/TEM_1/1910_2770>,
+        <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000051.1/rmtB/985_1740> .
 
-<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000008.1> a faldo:Reference ;
-    :hasPart _:N0834bc4de9214fc5aaad8c6defeae61c,
-        _:N5ad195be40ca4aa59bde559679cd996e,
-        _:N7c3b4884cb204274ad99e49a1b384497,
-        _:N8fece0d4528041a5b866ec42a18842fd,
-        _:Na673be53b5f34bfd8c6548014b729ca3,
-        _:Nac0980a7ac4a4ef28620c29eac730112 .
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000059.1> :hasPart _:N075b0a8ae90a4cc39c4b3ab56f9d9d6e,
+        _:N642c381fd66f460abbf9b425637e1259,
+        _:Nad69a766ce99445b8a218dae6e5b868a,
+        _:Nda99eac4c5d141a78192d185a9bff29d,
+        <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000059.1/cpxA/97_1470>,
+        <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000059.1/cpxR/1467_2165> .
 
-<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000011.1> a faldo:Reference ;
-    :hasPart _:N02ba395fecaf4046ae694f32c657b78e,
-        _:N2705e48020604ea2b56d3c7f3ff7bd4b,
-        _:N5066ab9fa38e411c82818e5445816e78,
-        _:Ne368423085b64380b00cbdcf6d328e98,
-        _:Nea288d7546844cd19c17c47dd3aa1639,
-        _:Nf29a763f868f4c12ad9c47da2f1bcc1b .
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000078.1> :hasPart _:N3fd6a4a8089b4ad6bad4225100394018,
+        _:N80d33815b9ba4740a84ee3a181c99c80,
+        _:N8f8d6dc5efd2441885da92861805c78c,
+        _:Na63dc424ebcf49808a2644a8a2ee2e6d,
+        <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000078.1/Escherichia_coli_marR_mutant_resulting_in_antibiotic_resistance/36086_36520>,
+        <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000078.1/marA/36540_36923> .
 
-<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000033.1> a faldo:Reference ;
-    :hasPart _:N0f7b4d5b41644a24a35d1a1c85328c6a,
-        _:N99c892300c2b48529d7de1072afb7524,
-        _:Nc238a76078d043eea1ff2667a9d36d84,
-        _:Nca80a1abc36141718cd6e9c500c03ca8,
-        _:Nd7eced5d3970409b99992f4aa2bf9680,
-        _:Ndf50a5713f2940ee8d476458bea9b6d8 .
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000005.1> :hasPart _:N2898917dec3143478d712dafd47494d0,
+        _:N52045009484c49f59dc3408082f09284,
+        _:N6bb84f525d58476097d5f991e76fbe79,
+        _:Nbc5c9647f22a45aca36074bfcb30e23b,
+        _:Nc504f35016254cfbb1f1c7255a2199a8,
+        _:Neef8b788f5704d0e90e4a4ebd1e0fa76,
+        <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000005.1/Staphylococcus_aureus_gyrB_conferring_resistance_to_aminocoumarin/66473_68887>,
+        <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000005.1/emrD/91483_92667>,
+        <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000005.1/mdtL/53802_54977> .
 
-<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000052.1> a faldo:Reference ;
-    :hasPart _:N28fd4e7f05f4480aa4a19a3568408f6a,
-        _:N2e3f0b91cee142bdb693acfe8687c7c5,
-        _:N56580b6d7b2a4bebb5f853e145e06e88,
-        _:N885ce6c5cfc1421783af3ce52f124f0e,
-        _:Nf6ce96ac88544bee9033b2b4426ef512,
-        _:Nfd5a167a0a18442480d473b047dc6b61 .
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000008.1> :hasPart _:N2f04f9440979456b9c1e4a60dbc7f720,
+        _:N65b7a47b06c34560bb0465dac2025242,
+        _:N69f7ac248f914241b7ccc7fed3b66768,
+        _:N940ab995ca504ee590ab563012e86abb,
+        _:Nad4b64ac89524392891c2a1c641ae072,
+        _:Nc68d56a7f9d84736a8fce7138a04efe6,
+        <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000008.1/macA/61687_62802>,
+        <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000008.1/macB/62799_64745>,
+        <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000008.1/mdfA/26186_27418> .
 
-<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000079.1> a faldo:Reference ;
-    :hasPart _:N2f36eb04e58c4811aab723b34115aa1b,
-        _:N39bfeea7736248508ad3c9f231a95a0c,
-        _:N440cb140affe4ecd9fea94c231ddeee6,
-        _:N56009fbbc4e043aa9645e0a840f2127c,
-        _:N58ed8a33f0d44c9084d8b7ae08bdefd3,
-        _:N6b8aa5d01e714fd599247ee9a709dffd .
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000011.1> :hasPart _:N279465fa088141fcbcc0b6587e962594,
+        _:N3f8ad5df8b354008a67b4597f111f0d4,
+        _:N886dace7269d42c4aca47fe3a9602e35,
+        _:Ne7eaa3bff34642c6936df399a349e7d1,
+        _:Neab43c956a6b40c18f72270c238dbd8c,
+        _:Nf6231cb68826483086511d398c0bc4ee,
+        <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000011.1/emrA/56888_58060>,
+        <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000011.1/emrB/58077_59615>,
+        <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000011.1/emrR/56231_56761> .
 
-<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000091.1> a faldo:Reference ;
-    :hasPart _:N04ff7bb1c547462ba3cb78241a2171c2,
-        _:N09119402851d4371bdc7cbf37672d60c,
-        _:N4739c0d1ad9c45368b89fe9b46111f69,
-        _:N514c1075fc9e44f4aa40b79dd5d1caf2,
-        _:Nb5a0f3154d9148bfa813ac84d53c550d,
-        _:Ne06925f27305490a9615782f9c706d10 .
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000033.1> :hasPart _:N0777713181b143ec959148d2bc6a7e29,
+        _:N1dfce78814b745ba9bafa95815fed048,
+        _:N8c49548a803644b8bef3546bf6c37e01,
+        _:Na5a5da4d9a37406e9fff5f7a61e6e270,
+        _:Nd96148c69d16421eba9d7bb32abb7a0f,
+        _:Nea1ccc357ac8417c95eae010a2cb11b2,
+        <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000033.1/acrE/115104_116261>,
+        <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000033.1/acrS/114043_114705>,
+        <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000033.1/mexD/116273_119377> .
 
-<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000007.1> a faldo:Reference ;
-    :hasPart _:N54e7490e06014078a8612963be35bddb,
-        _:N88416b6ef60342bb881e971280de9d49,
-        _:Na338b1b8307e4093a29ca45e415f1b89,
-        _:Nb3d29c6e91d240cf8544f9c6d803e584,
-        _:Nbf9fe6e0e42d448c9502d28e9ab1efc1,
-        _:Nc2c7a7e4d1c6423489a57384e4575bba,
-        _:Ncb62d6a014b24e719d8bf49f9fc7c376,
-        _:Nfd3801569db842bfaace3cd82aa48ae6 .
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000052.1> :hasPart _:N0aa2c00014844409945773226a2c1f30,
+        _:N49f5e31e8f9244ffb9bda40a85f3e64d,
+        _:N6559cd865035485c8e86faa76ce590af,
+        _:N664e3b9348cd4febac9faf6d5321b01a,
+        _:N70147d54d51f44c98c2b7843d12d94ed,
+        _:N78d8a0c527df46669836f1adbeaaa174,
+        <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000052.1/Escherichia_coli_parC_conferring_resistance_to_fluoroquinolone/13035_15293>,
+        <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000052.1/bacA/49043_49864>,
+        <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000052.1/tolC/25205_26686> .
 
-<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000034.1> a faldo:Reference ;
-    :hasPart _:N0053d0a2fb1b4bbd80ef185f3e73cfc4,
-        _:N205cbdbea4974c0db0137a1627653192,
-        _:N4915d2a515ad4dd899f159d311a60097,
-        _:N4ac7fb90e0794bd4b197d06c2b4170e9,
-        _:N55af48831ecf4c2191b41f4b0c51b6de,
-        _:N6b840f7b77bf431c947c54dc4d344dfe,
-        _:N72562c13dcee40e9836a5d4403426367,
-        _:Nddaf3f772dce476aa323e0ebddc09437 .
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000079.1> :hasPart _:N00123a44cf5d4fe9b5daceaf580d61b1,
+        _:N3379125bf051401684404ff5e1c01f30,
+        _:N60dedc9158ca4e3aa55cad8408015765,
+        _:N6a014645eb764ebd80df5703910e208e,
+        _:Na12705558ddd431c958d4da3c7eb4589,
+        _:Nf56779b31be34550bc7e37d760059031,
+        <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000079.1/APH3_Ib/4354_5157>,
+        <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000079.1/APH6_Id/5157_5993>,
+        <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000079.1/sul2/3478_4293> .
 
-<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000004.1> a faldo:Reference ;
-    :hasPart _:N006fa915a5654a54ae4a090ed6eb0673,
-        _:N1bb56b2c9cd64c1fa3ff9988613285b9,
-        _:N32236e2697ee46a4acdc42ed37e22b53,
-        _:N3f3f3d30499d401e8f4252f4c26067c7,
-        _:N401b495dd3024556b93b47387ed66161,
-        _:N5c26d7e5a8aa43a0ba405b2c820e7e82,
-        _:N7f051c5d56ee4a27a1a5785ac6830875,
-        _:N8adc60aa32804d9395942e5d93698696,
-        _:Nbb9aa2871ea54715b3be276a0ceedc75,
-        _:Nc593ffeae6ae429aaa427b5beabe3609,
-        _:Nc909d2c265f4468a9382adf7a3384f15,
-        _:Ne96250de620a4e8d97332cd636265147 .
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000091.1> :hasPart _:N30add3c010534f01ba34a4cda8083df9,
+        _:N5d0c520511d949228dbf9df256e024b2,
+        _:N834c516bcf1940c2ac7d87e3efc7038b,
+        _:N8763120d4a54440ea49c8496e4f40a8f,
+        _:Nb0992b0574e94050bc1f83e42becb7e3,
+        _:Ne185ceb9ae8b47aca815b113da5655f9,
+        <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000091.1/catI/11194_11853>,
+        <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000091.1/dfrA14/4699_5172>,
+        <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000091.1/mphA/88_993> .
 
-<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000023.1> a faldo:Reference ;
-    :hasPart _:N0b1530db7e484c92916c2e8585269a03,
-        _:N10476a076fef4b21b444070c773cece8,
-        _:N2cc82f59be654ae6b3f21ce26d0d231b,
-        _:N3a2dbe9660e7401d9bf22dd6064bda3a,
-        _:N3bd8dd7bf8a34d1c86827b969974b3de,
-        _:N4225590460364f81b9b3cb7a9d29247c,
-        _:N43acc2cfc0f544c7950b305e2157456d,
-        _:N47821659dda0437f96a959f86021adb7,
-        _:N4c20faa17a22432797728e4031bc578c,
-        _:N6150e489f8954bdc83c48c632300e932,
-        _:Nb6e9154f7ff74d2fb4961b1acf9216ef,
-        _:Nbf4b8d33f3fd453c9d3ea587e4555373 .
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000007.1> :hasPart _:N05e1ed62e4f6494db9774afae1b6b69c,
+        _:N09e8f4bdb6af4ab38fba796f248407cf,
+        _:N12c4ec76c5f5435ea1d7e6df81c909ef,
+        _:N4136cc24fc30454dbfd9bed740a6b1a6,
+        _:N7f4ab70a270c4d03bc4ac7abe2e59a97,
+        _:Nd4ce1a9622eb4856ab3f6b06ee116d53,
+        _:Ndd22e4e8830240b8af5ab8d82908bb7f,
+        _:Ne051808a240e4858b345313cd3e88185,
+        <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000007.1/CRP/170856_171488>,
+        <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000007.1/gadX/468_1292>,
+        <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000007.1/mdtE/5889_7046>,
+        <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000007.1/mexD/2751_5864> .
 
-<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000012.1> a faldo:Reference ;
-    :hasPart _:N06464bdd4fce41938caec75621376ab8,
-        _:N16a9796701c04cfd9dc92426f8198a50,
-        _:N1977b72bb2eb408d9316b1255bd84316,
-        _:N2cd9e317c8b147ba8c0fd9b25c78998e,
-        _:N3ef16c612590416594c1e1577ffcdbfb,
-        _:N71ac453b1cc44562b7fb385053ecdde6,
-        _:N7eecd5e281924db0b69fa16eeeb2e474,
-        _:N7fb96d8086ee4f50865c71f08f7a49fe,
-        _:N8af1385cc9b647a695862f80e8c383b6,
-        _:N9b8728620b41427f9fd4feac4a0f5c9e,
-        _:Nb56efa1068134d8ba285879b9b3be6a7,
-        _:Nc457f9d43cd342f9987a21296c42b7b5,
-        _:Ne91753695f934f108ca2c588bfd5bcca,
-        _:Nf53bec23f94044cb959a8ab43e8a494a .
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000034.1> :hasPart _:N13e58bd99670462f892cf3a029a25d9f,
+        _:N1adb63efa05343a48e2da87a4de07195,
+        _:N50a628f37e8b4017abd09b57d219a2a1,
+        _:N87e54ae1a0584db994f64f4b0cda0201,
+        _:N8b0f69bece9645669a05cc855eee7a0c,
+        _:N8d28fb098f0a43f4b2a58081fb52ea04,
+        _:N9fb13b554dde4e02878ff1de46741935,
+        _:Nb08c17ce169f4c22b5b47880fe5049ba,
+        <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000034.1/mdtG/18602_19828>,
+        <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000034.1/mdtH/28459_29667>,
+        <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000034.1/phoP/94109_94780>,
+        <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000034.1/phoQ/92649_94109> .
 
-<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000026.1> a faldo:Reference ;
-    :hasPart _:N0221d25434484f2a9d0cecada18bb5a3,
-        _:N1e05a645f62f45048b64ae0c73e34279,
-        _:N29da7375cb654ff3ae34d9585552aaec,
-        _:N556a2ea2ba9c4e429083cd1e3353db82,
-        _:N607afaee7ecd4635b28b6b2bde165c8a,
-        _:N6750848041174eba84e8c933d8de631b,
-        _:N74615d32ff1a4f8bb8f188246d1da7b6,
-        _:N7c4b504d1b2847bba4ef0b712eaca2bc,
-        _:N8e772fefdb8a40b9874bb6e44b09a5f2,
-        _:N9c02f6fd3230415aad98ed5618f92a53,
-        _:Na0a0ac2d1f5e4e269bbb85a955e81fc0,
-        _:Ndb396227df174450ac2b1545c6885e4c,
-        _:Ne0fb9dda9b674423a000495c1a54855f,
-        _:Ne7e9b1096bb946b99f6ee7e4466f911b .
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000004.1> :hasPart _:N00a868235e924fb09e7f6ecfc52afe1d,
+        _:N21ecf354cad9457195f20373a4e235fd,
+        _:N58bad362d2e24d65bf7793dba2e76ae2,
+        _:N5b0a11895b4a4c51bb776620a937b3f0,
+        _:N6afff6d184314c45b7a4fa2905241519,
+        _:N754020711a2e4374ac00baabaa590c92,
+        _:N7f51626e0bd44758a832fec0c5dae66c,
+        _:N940b8a7aea464266bc92611aa846fb52,
+        _:Nb086bc1b53964ddc897051fa8a7fc5d7,
+        _:Nccbd11cb8fbe42c78d135a8340e8e2bc,
+        _:Ndbada6846fa54a96a4fc75108536856a,
+        _:Nfa24d8a7bfe84e5e8badc3c0edcb6998,
+        <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000004.1/Klebsiella_pneumoniae_acrR_mutant_resulting_in_high_level_antibiotic_resistance/107824_108471>,
+        <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000004.1/acrE/106489_107682>,
+        <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000004.1/mexD/103317_106466>,
+        <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000004.1/rosA/125539_126759>,
+        <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000004.1/rosB/123625_125301>,
+        <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000004.1/vanG/19861_20955> .
+
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000023.1> :hasPart _:N0a9b08bcef43409198a7d4d6b497fc0c,
+        _:N19aaaa1c26cc46d496819cfa8a5e09bf,
+        _:N2e0c7f6819d64211bd215c530efd7cf1,
+        _:N32af4cd540254e21af7e05c227f49ce8,
+        _:N4c08ad91b9b744b7be9d2593b21a501b,
+        _:N70d373e72a9d4838a9e42a2eee86cb1e,
+        _:Nadee9c134a454e6286b6abfdaf62e282,
+        _:Nc5bf2807e90540838439a2c2d9aee997,
+        _:Ne25a58104d2546a9afe6a3316095bf8c,
+        _:Ne661783dbb62444cae656bcc3daba874,
+        _:Nedf8ac3693a3420ab9de8ce8bfa3d354,
+        _:Nf0607fc690634043a1bf37761337ef42,
+        <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000023.1/PmrA/114744_115412>,
+        <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000023.1/PmrB/113643_114743>,
+        <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000023.1/PmrC/115409_117052>,
+        <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000023.1/mdtN/91677_92708>,
+        <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000023.1/mdtO/89626_91677>,
+        <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000023.1/mdtP/88163_89629> .
+
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000012.1> :hasPart _:N1bae815846714f57ac9821ac8643301a,
+        _:N1ee8e0ab85414e1e8ed50febe57086af,
+        _:N3a1515c3d0f741c7882a85da05fc4561,
+        _:N3dcc053678874b2bbb538b37b1b5789f,
+        _:N40965a75a3fb40be8cf2910686892af6,
+        _:N6351e0ad75f44625870c661e2def9e18,
+        _:N75d8b7df88b849589ad1422bc6800cad,
+        _:N81a2205d5ce34a56b70e9d626755140f,
+        _:N89e94f2d98834d2fb165b8cd72fdae10,
+        _:N902979a5012d4070936564aee658e560,
+        _:N920cfead4dac4e2e83027e146ee6109d,
+        _:Nb4ca70868ad34d3eafbeffc9ffedd1ed,
+        _:Nc83a176ea328473fa3aeb10787485c72,
+        _:Nf09273501a8d42b18d7349a055653800,
+        <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000012.1/PmrE/48536_49702>,
+        <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000012.1/baeR/116224_116946>,
+        <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000012.1/baeS/114824_116227>,
+        <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000012.1/mdtA/105844_107211>,
+        <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000012.1/mdtD/113412_114827>,
+        <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000012.1/mexN/107211_110333>,
+        <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000012.1/mexN/110334_113411> .
+
+<https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000026.1> :hasPart _:N0c2862130b544ce597500e589a4ab934,
+        _:N131c4848d85b4d2aad8d0d8868098303,
+        _:N206ad7ceedac4121b0c682e61ece727c,
+        _:N30282ea1bfdb40f18b02fb1eb5a5975f,
+        _:N3a3dcf5376d64f7fac46bfc7cb952829,
+        _:N419c4f5c67bf4cfa92442ffc226cf9db,
+        _:N4d6d04f28ac0444f9df93645f154df9b,
+        _:N4e35ffdbadde45b091f9e31055af054d,
+        _:N4e9dfd829c9542d499e76b394475cd78,
+        _:N580c64d5064244049a9e4c003911fe46,
+        _:N5c505e14484947f691f853d1007dff7d,
+        _:N602487377a5f433ab1f3b12114ee180a,
+        _:N7fe256985399499ca5d22cda510a10c1,
+        _:Nb7b6d349a3cd453aabfbd4e1ade2d76b,
+        <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000026.1/Escherichia_coli_gyrA_conferring_resistance_to_fluoroquinolones/131208_133835>,
+        <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000026.1/PmrF/167267_168235>,
+        <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000026.1/arnA/168235_170217>,
+        <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000026.1/emrK/283814_284977>,
+        <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000026.1/emrY/282276_283814>,
+        <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000026.1/evgA/285393_286007>,
+        <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000026.1/evgS/286012_289605> .
 
 :AntimicrobialResistanceGene dc:description "AMR_Gene" ;
     rdfs:subClassOf :Marker .
 
-_:N0053d0a2fb1b4bbd80ef185f3e73cfc4 a faldo:End,
-        faldo:ExactPosition,
+_:N00123a44cf5d4fe9b5daceaf580d61b1 a faldo:ExactPosition,
         faldo:Position,
         faldo:ReverseStrandPosition ;
-    faldo:Position 94109 ;
-    :hasPart _:N9fa736ddf9324e3f92d5eb767873e04e ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000034.1> .
-
-_:N006fa915a5654a54ae4a090ed6eb0673 a faldo:End,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 106466 ;
-    :hasPart _:Nbda2e802f5f249d4b78927c69960d8c0 ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000004.1> .
-
-_:N0221d25434484f2a9d0cecada18bb5a3 a faldo:End,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 170217 ;
-    :hasPart _:Nba717487fd99476cbbb26d61c997e71b ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000026.1> .
-
-_:N023f44b12eee439190ff73ece800a753 a faldo:Begin,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 4392 ;
-    :hasPart _:Na4f085efce174c03a4182f93f885f183 ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000046.1> .
-
-_:N02ba395fecaf4046ae694f32c657b78e a faldo:End,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 59615 ;
-    :hasPart _:Nfaa31709b8ee4184b8a84c9293cee4d9 ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000011.1> .
-
-_:N04ff7bb1c547462ba3cb78241a2171c2 a faldo:Begin,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 4699 ;
-    :hasPart _:N2c516906f662432c98bd7a8598e0b14b ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000091.1> .
-
-_:N050a1efad3534465a790440544d6490e a faldo:Begin,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 97 ;
-    :hasPart _:Nd759d9f398484effb28dad495734bbed ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000059.1> .
-
-_:N06464bdd4fce41938caec75621376ab8 a faldo:End,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 113411 ;
-    :hasPart _:N56031ddb79f34639a5b9c7d34861fc75 ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000012.1> .
-
-_:N0834bc4de9214fc5aaad8c6defeae61c a faldo:Begin,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 26186 ;
-    :hasPart _:N0650b7dc6e7c4e899d67c828764e614a ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000008.1> .
-
-_:N09119402851d4371bdc7cbf37672d60c a faldo:Begin,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 88 ;
-    :hasPart _:Nd84f5aea81ac49e78308567d80b2cb3e ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000091.1> .
-
-_:N0b1530db7e484c92916c2e8585269a03 a faldo:Begin,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 89626 ;
-    :hasPart _:N61685c6aed464fd997094ced57202384 ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000023.1> .
-
-_:N0ceaa340451b44828de019e426ac3774 a faldo:End,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 36923 ;
-    :hasPart _:N36877679f4bf46f481b5fbe0c2d3dc4a ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000078.1> .
-
-_:N0f7b4d5b41644a24a35d1a1c85328c6a a faldo:Begin,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 115104 ;
-    :hasPart _:Nf4dd003337c24d5495368ce9235f7b1d ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000033.1> .
-
-_:N10476a076fef4b21b444070c773cece8 a faldo:Begin,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 88163 ;
-    :hasPart _:N571570212cb84f19a3eda76fdc4f4fb2 ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000023.1> .
-
-_:N16a9796701c04cfd9dc92426f8198a50 a faldo:Begin,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 113412 ;
-    :hasPart _:N73b5d8d57bb54d888d34ada110058467 ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000012.1> .
-
-_:N1780237d50b7448eaca43dab253d5d37 a faldo:End,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 8396 ;
-    :hasPart _:N407196964cdc43559c0ef7d8b9d0815a ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000041.1> .
-
-_:N1977b72bb2eb408d9316b1255bd84316 a faldo:Begin,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 110334 ;
-    :hasPart _:N56031ddb79f34639a5b9c7d34861fc75 ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000012.1> .
-
-_:N1bb56b2c9cd64c1fa3ff9988613285b9 a faldo:End,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 126759 ;
-    :hasPart _:N92becdad53fa4ba29b6ab131b38b7f11 ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000004.1> .
-
-_:N1e05a645f62f45048b64ae0c73e34279 a faldo:Begin,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 286012 ;
-    :hasPart _:N0dca64de60854e83966f621fcfa0ce03 ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000026.1> .
-
-_:N205cbdbea4974c0db0137a1627653192 a faldo:Begin,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 94109 ;
-    :hasPart _:Nb8eacbd1b59446b2808683f6809b8b10 ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000034.1> .
-
-_:N2074896d11db4bb0a21ccd2dace83713 a faldo:End,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 92667 ;
-    :hasPart _:N2f882b2e3d7b462cbdef9b3778bb83da ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000005.1> .
-
-_:N2470a9979124495e8dcad8afaf1dbf11 a faldo:End,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 112811 ;
-    :hasPart _:N03f70370045e44609da47885426b321a ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000027.1> .
-
-_:N26c43c79a3f645f6b0c796d2b51a81f1 a faldo:Begin,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 66473 ;
-    :hasPart _:Nac10c24dcd8c4de39942eecea55c9d4a ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000005.1> .
-
-_:N2705e48020604ea2b56d3c7f3ff7bd4b a faldo:End,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 58060 ;
-    :hasPart _:Nf9bbd138463e4816bbd378fbbed7e4d0 ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000011.1> .
-
-_:N28fd4e7f05f4480aa4a19a3568408f6a a faldo:Begin,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 25205 ;
-    :hasPart _:N8260e330cf3147e1ad9d3ffa445776c3 ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000052.1> .
-
-_:N29da7375cb654ff3ae34d9585552aaec a faldo:Begin,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 285393 ;
-    :hasPart _:N5d7bf84ed5f049c984e05f331dad5275 ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000026.1> .
-
-_:N2cc82f59be654ae6b3f21ce26d0d231b a faldo:Begin,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 114744 ;
-    :hasPart _:N1c95a8556a5d4d2fa87c5124dfac270a ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000023.1> .
-
-_:N2cd9e317c8b147ba8c0fd9b25c78998e a faldo:End,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 116946 ;
-    :hasPart _:N393db4f9acd24d95838680361a020991 ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000012.1> .
-
-_:N2e3f0b91cee142bdb693acfe8687c7c5 a faldo:End,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 15293 ;
-    :hasPart _:N74dc043281454730a65bd9664c5c1a9e ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000052.1> .
-
-_:N2f36eb04e58c4811aab723b34115aa1b a faldo:End,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 4293 ;
-    :hasPart _:N99eee43245e447f5a40693ba928f1d94 ;
+    faldo:position 5993 ;
     :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000079.1> .
 
-_:N32236e2697ee46a4acdc42ed37e22b53 a faldo:Begin,
-        faldo:ExactPosition,
+_:N00a868235e924fb09e7f6ecfc52afe1d a faldo:ExactPosition,
         faldo:Position,
         faldo:ReverseStrandPosition ;
-    faldo:Position 123625 ;
-    :hasPart _:N20dea1cd3d6c40ebb004d9909f21e0ad ;
+    faldo:position 125301 ;
     :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000004.1> .
 
-_:N35ef07ad361a4376b43ad7606d1adf9c a faldo:Begin,
-        faldo:ExactPosition,
+_:N05e1ed62e4f6494db9774afae1b6b69c a faldo:ExactPosition,
         faldo:Position,
         faldo:ReverseStrandPosition ;
-    faldo:Position 53802 ;
-    :hasPart _:N975a1ff33fd64c03bf5abe69f7c71540 ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000005.1> .
-
-_:N398f2b81f02d4a038fc4024148d22516 a faldo:End,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 4059 ;
-    :hasPart _:Na043c025a0cf473d8f8666eaf0d3acea ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000043.1> .
-
-_:N39bfeea7736248508ad3c9f231a95a0c a faldo:End,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 5993 ;
-    :hasPart _:Nbb1a01b199e04e1fae3024e5d872260e ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000079.1> .
-
-_:N3a04052dc3494bca9ceb24c15ad308cb a faldo:Begin,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 8338 ;
-    :hasPart _:N03fef405ac0e48b9aeb7a0e3b9a61f66 ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000037.1> .
-
-_:N3a2dbe9660e7401d9bf22dd6064bda3a a faldo:End,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 115412 ;
-    :hasPart _:N1c95a8556a5d4d2fa87c5124dfac270a ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000023.1> .
-
-_:N3bd8dd7bf8a34d1c86827b969974b3de a faldo:Begin,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 115409 ;
-    :hasPart _:N97712ea4352d47e2a540f18973d06a04 ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000023.1> .
-
-_:N3ef16c612590416594c1e1577ffcdbfb a faldo:End,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 110333 ;
-    :hasPart _:N68f321d494f04d6c9a15499720dc787f ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000012.1> .
-
-_:N3f3f3d30499d401e8f4252f4c26067c7 a faldo:Begin,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 106489 ;
-    :hasPart _:N37d72b6ad8e242acb3e83a247ae643f3 ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000004.1> .
-
-_:N3f44fa27ae97487b95b220d6b1d8cc99 a faldo:Begin,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 466 ;
-    :hasPart _:N09d768e4e9f24499999c069f17622b2e ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000083.1> .
-
-_:N401b495dd3024556b93b47387ed66161 a faldo:Begin,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 103317 ;
-    :hasPart _:Nbda2e802f5f249d4b78927c69960d8c0 ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000004.1> .
-
-_:N4225590460364f81b9b3cb7a9d29247c a faldo:Begin,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 91677 ;
-    :hasPart _:Nee3e0bf45a0a464390b1d2989ad8a1b3 ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000023.1> .
-
-_:N43acc2cfc0f544c7950b305e2157456d a faldo:End,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 92708 ;
-    :hasPart _:Nee3e0bf45a0a464390b1d2989ad8a1b3 ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000023.1> .
-
-_:N440cb140affe4ecd9fea94c231ddeee6 a faldo:Begin,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 5157 ;
-    :hasPart _:Nbb1a01b199e04e1fae3024e5d872260e ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000079.1> .
-
-_:N4739c0d1ad9c45368b89fe9b46111f69 a faldo:End,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 5172 ;
-    :hasPart _:N2c516906f662432c98bd7a8598e0b14b ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000091.1> .
-
-_:N47821659dda0437f96a959f86021adb7 a faldo:End,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 114743 ;
-    :hasPart _:Ncdcbe05c555045bf91434c3d340e90dc ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000023.1> .
-
-_:N4915d2a515ad4dd899f159d311a60097 a faldo:Begin,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 18602 ;
-    :hasPart _:Nbc6e200a4c354539a290841e3156e7bd ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000034.1> .
-
-_:N4ac7fb90e0794bd4b197d06c2b4170e9 a faldo:End,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 94780 ;
-    :hasPart _:Nb8eacbd1b59446b2808683f6809b8b10 ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000034.1> .
-
-_:N4c20faa17a22432797728e4031bc578c a faldo:End,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 91677 ;
-    :hasPart _:N61685c6aed464fd997094ced57202384 ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000023.1> .
-
-_:N4c92ff026f23411c8c4397f2666096bf a faldo:End,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 1740 ;
-    :hasPart _:Ne52ed0f910854cf68e73163e519aa25d ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000051.1> .
-
-_:N5066ab9fa38e411c82818e5445816e78 a faldo:Begin,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 56231 ;
-    :hasPart _:Nda9b690e71e645cd9cabf984dffe388b ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000011.1> .
-
-_:N514c1075fc9e44f4aa40b79dd5d1caf2 a faldo:End,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 993 ;
-    :hasPart _:Nd84f5aea81ac49e78308567d80b2cb3e ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000091.1> .
-
-_:N54e7490e06014078a8612963be35bddb a faldo:End,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 1292 ;
-    :hasPart _:Nddb5d1026a194a2685560d064d2f4a20 ;
+    faldo:position 171488 ;
     :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000007.1> .
 
-_:N556a2ea2ba9c4e429083cd1e3353db82 a faldo:End,
-        faldo:ExactPosition,
+_:N075b0a8ae90a4cc39c4b3ab56f9d9d6e a faldo:ExactPosition,
         faldo:Position,
         faldo:ReverseStrandPosition ;
-    faldo:Position 289605 ;
-    :hasPart _:N0dca64de60854e83966f621fcfa0ce03 ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000026.1> .
-
-_:N55af48831ecf4c2191b41f4b0c51b6de a faldo:End,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 29667 ;
-    :hasPart _:N863ffba8654040dc8e69fdf437d421a5 ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000034.1> .
-
-_:N56009fbbc4e043aa9645e0a840f2127c a faldo:Begin,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 3478 ;
-    :hasPart _:N99eee43245e447f5a40693ba928f1d94 ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000079.1> .
-
-_:N5617d14d0e95430e924659184e683783 a faldo:Begin,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 1467 ;
-    :hasPart _:N2cac794b6116420e8334c1700ca600dd ;
+    faldo:position 97 ;
     :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000059.1> .
 
-_:N56580b6d7b2a4bebb5f853e145e06e88 a faldo:End,
-        faldo:ExactPosition,
+_:N0765c98bce35441a9dcce28ad0fbf215 a faldo:ExactPosition,
         faldo:Position,
         faldo:ReverseStrandPosition ;
-    faldo:Position 49864 ;
-    :hasPart _:N15c7da9abacb4cb795a945b2a738519a ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000052.1> .
-
-_:N58ed8a33f0d44c9084d8b7ae08bdefd3 a faldo:Begin,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 4354 ;
-    :hasPart _:Nda02c134b35a4c3493ed412d42258b40 ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000079.1> .
-
-_:N5a559f860d8741fe8cf90c9a38dc4f22 a faldo:Begin,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 111438 ;
-    :hasPart _:N03f70370045e44609da47885426b321a ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000027.1> .
-
-_:N5ad195be40ca4aa59bde559679cd996e a faldo:End,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 27418 ;
-    :hasPart _:N0650b7dc6e7c4e899d67c828764e614a ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000008.1> .
-
-_:N5c26d7e5a8aa43a0ba405b2c820e7e82 a faldo:End,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 107682 ;
-    :hasPart _:N37d72b6ad8e242acb3e83a247ae643f3 ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000004.1> .
-
-_:N607afaee7ecd4635b28b6b2bde165c8a a faldo:End,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 168235 ;
-    :hasPart _:Nac2ba49167784f0da8d5b1e82e61f3b8 ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000026.1> .
-
-_:N6150e489f8954bdc83c48c632300e932 a faldo:End,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 117052 ;
-    :hasPart _:N97712ea4352d47e2a540f18973d06a04 ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000023.1> .
-
-_:N6750848041174eba84e8c933d8de631b a faldo:End,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 286007 ;
-    :hasPart _:N5d7bf84ed5f049c984e05f331dad5275 ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000026.1> .
-
-_:N6b840f7b77bf431c947c54dc4d344dfe a faldo:Begin,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 28459 ;
-    :hasPart _:N863ffba8654040dc8e69fdf437d421a5 ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000034.1> .
-
-_:N6b8aa5d01e714fd599247ee9a709dffd a faldo:End,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 5157 ;
-    :hasPart _:Nda02c134b35a4c3493ed412d42258b40 ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000079.1> .
-
-_:N71ac453b1cc44562b7fb385053ecdde6 a faldo:End,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 116227 ;
-    :hasPart _:Ned8968b389ce4f90ac552eddb088d0f9 ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000012.1> .
-
-_:N72562c13dcee40e9836a5d4403426367 a faldo:End,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 19828 ;
-    :hasPart _:Nbc6e200a4c354539a290841e3156e7bd ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000034.1> .
-
-_:N725e8ad7a3be4c32a50bbe9d39294dbe a faldo:Begin,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 182 ;
-    :hasPart _:Nd0ae75693a524a228cb32e883db9ba17 ;
+    faldo:position 994 ;
     :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000092.1> .
 
-_:N74615d32ff1a4f8bb8f188246d1da7b6 a faldo:End,
-        faldo:ExactPosition,
+_:N0777713181b143ec959148d2bc6a7e29 a faldo:ExactPosition,
         faldo:Position,
         faldo:ReverseStrandPosition ;
-    faldo:Position 284977 ;
-    :hasPart _:N359375e3f50042399d96ce2a70e0cc8d ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000026.1> .
+    faldo:position 116273 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000033.1> .
 
-_:N7857d60e190648efb67a64439f7e0d84 a faldo:End,
-        faldo:ExactPosition,
+_:N09e8f4bdb6af4ab38fba796f248407cf a faldo:ExactPosition,
         faldo:Position,
         faldo:ReverseStrandPosition ;
-    faldo:Position 1470 ;
-    :hasPart _:Nd759d9f398484effb28dad495734bbed ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000059.1> .
-
-_:N786f5c0e6fb04222aa74887b47875f2b a faldo:End,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 54977 ;
-    :hasPart _:N975a1ff33fd64c03bf5abe69f7c71540 ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000005.1> .
-
-_:N7c3b4884cb204274ad99e49a1b384497 a faldo:Begin,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 62799 ;
-    :hasPart _:N40d4194bd5474164b97b195e13de95bb ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000008.1> .
-
-_:N7c4b504d1b2847bba4ef0b712eaca2bc a faldo:Begin,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 167267 ;
-    :hasPart _:Nac2ba49167784f0da8d5b1e82e61f3b8 ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000026.1> .
-
-_:N7eecd5e281924db0b69fa16eeeb2e474 a faldo:End,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 49702 ;
-    :hasPart _:N3d7d1d8fd0ff47d082046685e4a8926d ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000012.1> .
-
-_:N7f051c5d56ee4a27a1a5785ac6830875 a faldo:End,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 125301 ;
-    :hasPart _:N20dea1cd3d6c40ebb004d9909f21e0ad ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000004.1> .
-
-_:N7f6cb61364e348ce9a73b10f4fd8fac7 a faldo:End,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 994 ;
-    :hasPart _:Nd0ae75693a524a228cb32e883db9ba17 ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000092.1> .
-
-_:N7fb96d8086ee4f50865c71f08f7a49fe a faldo:Begin,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 116224 ;
-    :hasPart _:N393db4f9acd24d95838680361a020991 ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000012.1> .
-
-_:N88416b6ef60342bb881e971280de9d49 a faldo:Begin,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 2751 ;
-    :hasPart _:N7a8c501fc69f474dba614881d6624c0b ;
+    faldo:position 5864 ;
     :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000007.1> .
 
-_:N885ce6c5cfc1421783af3ce52f124f0e a faldo:End,
-        faldo:ExactPosition,
+_:N0a9b08bcef43409198a7d4d6b497fc0c a faldo:ExactPosition,
         faldo:Position,
         faldo:ReverseStrandPosition ;
-    faldo:Position 26686 ;
-    :hasPart _:N8260e330cf3147e1ad9d3ffa445776c3 ;
+    faldo:position 115409 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000023.1> .
+
+_:N0aa2c00014844409945773226a2c1f30 a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 13035 ;
     :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000052.1> .
 
-_:N89b4155c9d9248948f8d76b9e1f422c4 a faldo:End,
-        faldo:ExactPosition,
+_:N0c2862130b544ce597500e589a4ab934 a faldo:ExactPosition,
         faldo:Position,
         faldo:ReverseStrandPosition ;
-    faldo:Position 1341 ;
-    :hasPart _:N09d768e4e9f24499999c069f17622b2e ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000083.1> .
-
-_:N8adc60aa32804d9395942e5d93698696 a faldo:Begin,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 107824 ;
-    :hasPart _:N140503e72bd24d14a72111c837ee53d2 ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000004.1> .
-
-_:N8af1385cc9b647a695862f80e8c383b6 a faldo:Begin,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 105844 ;
-    :hasPart _:N0d580f845ba0466ea032b401a75bfe6a ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000012.1> .
-
-_:N8bb4b95d06ce4d9cbab7b7fcb6bb913d a faldo:End,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 63228 ;
-    :hasPart _:N0a28f035e46e454b86a9b03283d03b9a ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000015.1> .
-
-_:N8e772fefdb8a40b9874bb6e44b09a5f2 a faldo:End,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 133835 ;
-    :hasPart _:N857b2ffbe551428f8d1a5e230618e419 ;
+    faldo:position 283814 ;
     :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000026.1> .
 
-_:N8fece0d4528041a5b866ec42a18842fd a faldo:End,
-        faldo:ExactPosition,
+_:N12c4ec76c5f5435ea1d7e6df81c909ef a faldo:ExactPosition,
         faldo:Position,
         faldo:ReverseStrandPosition ;
-    faldo:Position 62802 ;
-    :hasPart _:Ncd34523090d146cca7e3f8e5c11994d4 ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000008.1> .
+    faldo:position 170856 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000007.1> .
 
-_:N93559fc9d928478fb719377d341caf15 a faldo:Begin,
-        faldo:ExactPosition,
+_:N131c4848d85b4d2aad8d0d8868098303 a faldo:ExactPosition,
         faldo:Position,
         faldo:ReverseStrandPosition ;
-    faldo:Position 11938 ;
-    :hasPart _:Nf52c02f71cf14997b3125b943f2cd00c ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000045.1> .
-
-_:N99c892300c2b48529d7de1072afb7524 a faldo:Begin,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 114043 ;
-    :hasPart _:N40a5edeefd8f476b8034bc56638d0e40 ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000033.1> .
-
-_:N9b8728620b41427f9fd4feac4a0f5c9e a faldo:End,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 114827 ;
-    :hasPart _:N73b5d8d57bb54d888d34ada110058467 ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000012.1> .
-
-_:N9c02f6fd3230415aad98ed5618f92a53 a faldo:Begin,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 282276 ;
-    :hasPart _:Nebf2289fdd794d809e443dc2db866130 ;
+    faldo:position 285393 ;
     :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000026.1> .
 
-_:Na0a0ac2d1f5e4e269bbb85a955e81fc0 a faldo:End,
-        faldo:ExactPosition,
+_:N13e58bd99670462f892cf3a029a25d9f a faldo:ExactPosition,
         faldo:Position,
         faldo:ReverseStrandPosition ;
-    faldo:Position 283814 ;
-    :hasPart _:Nebf2289fdd794d809e443dc2db866130 ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000026.1> .
-
-_:Na338b1b8307e4093a29ca45e415f1b89 a faldo:End,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 5864 ;
-    :hasPart _:N7a8c501fc69f474dba614881d6624c0b ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000007.1> .
-
-_:Na426e7b672e645ac922ca88c5df2e5e6 a faldo:End,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 920 ;
-    :hasPart _:N0ff9d43898c54bf8a335cb079d006ca6 ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000105.1> .
-
-_:Na673be53b5f34bfd8c6548014b729ca3 a faldo:End,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 64745 ;
-    :hasPart _:N40d4194bd5474164b97b195e13de95bb ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000008.1> .
-
-_:Nac0980a7ac4a4ef28620c29eac730112 a faldo:Begin,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 61687 ;
-    :hasPart _:Ncd34523090d146cca7e3f8e5c11994d4 ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000008.1> .
-
-_:Nb1d4c380d2e34e839118a1b8d0911fa3 a faldo:End,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 36520 ;
-    :hasPart _:N0514333a8bf14122b4087473b8bec9a3 ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000078.1> .
-
-_:Nb287822c93a945158dbcbaf907956215 a faldo:Begin,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 5355 ;
-    :hasPart _:Nb7c9ae9c0ab645ef91c4fd2bffaad437 ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000032.1> .
-
-_:Nb3d29c6e91d240cf8544f9c6d803e584 a faldo:Begin,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 170856 ;
-    :hasPart _:N2414edf11ba4497e9d5eca16d0e9fca6 ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000007.1> .
-
-_:Nb56efa1068134d8ba285879b9b3be6a7 a faldo:End,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 107211 ;
-    :hasPart _:N0d580f845ba0466ea032b401a75bfe6a ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000012.1> .
-
-_:Nb5a0f3154d9148bfa813ac84d53c550d a faldo:Begin,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 11194 ;
-    :hasPart _:N99183c801d65411aa32e15df636c2b3b ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000091.1> .
-
-_:Nb6e9154f7ff74d2fb4961b1acf9216ef a faldo:End,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 89629 ;
-    :hasPart _:N571570212cb84f19a3eda76fdc4f4fb2 ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000023.1> .
-
-_:Nb7ecdb8f54f3402baa277355f7a36081 a faldo:Begin,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 105 ;
-    :hasPart _:N0ff9d43898c54bf8a335cb079d006ca6 ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000105.1> .
-
-_:Nb82a27a2055742598ac6b41db1811140 a faldo:Begin,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 1229 ;
-    :hasPart _:N2122059cbf44475f81fcefcbf62f9322 ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000057.1> .
-
-_:Nb9e51f7b40c9433487867dfe1334cfc0 a faldo:End,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 67069 ;
-    :hasPart _:Nf32e917eb65045649fde166d82da0157 ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000006.1> .
-
-_:Nbb9aa2871ea54715b3be276a0ceedc75 a faldo:End,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 20955 ;
-    :hasPart _:N812fec5c08a0453ba3c044b605c5bf21 ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000004.1> .
-
-_:Nbd8e86302e41427bbbbcc8cb9a7bdb37 a faldo:End,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 2165 ;
-    :hasPart _:N2cac794b6116420e8334c1700ca600dd ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000059.1> .
-
-_:Nbf4b8d33f3fd453c9d3ea587e4555373 a faldo:Begin,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 113643 ;
-    :hasPart _:Ncdcbe05c555045bf91434c3d340e90dc ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000023.1> .
-
-_:Nbf9fe6e0e42d448c9502d28e9ab1efc1 a faldo:End,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 171488 ;
-    :hasPart _:N2414edf11ba4497e9d5eca16d0e9fca6 ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000007.1> .
-
-_:Nc11d0ed15eb74cfdb91aac64c1ab721a a faldo:Begin,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 65936 ;
-    :hasPart _:Nf32e917eb65045649fde166d82da0157 ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000006.1> .
-
-_:Nc238a76078d043eea1ff2667a9d36d84 a faldo:Begin,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 116273 ;
-    :hasPart _:N049c44039bfa4528ba83e8d66e4eb292 ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000033.1> .
-
-_:Nc2c7a7e4d1c6423489a57384e4575bba a faldo:Begin,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 5889 ;
-    :hasPart _:Nea9076fddb254c859f950d2786d4e290 ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000007.1> .
-
-_:Nc423004321b74f599097b2bad50ac871 a faldo:Begin,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 4368 ;
-    :hasPart _:N407196964cdc43559c0ef7d8b9d0815a ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000041.1> .
-
-_:Nc457f9d43cd342f9987a21296c42b7b5 a faldo:Begin,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 114824 ;
-    :hasPart _:Ned8968b389ce4f90ac552eddb088d0f9 ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000012.1> .
-
-_:Nc4a1f2e7f06d4c8f91160d524b9eb282 a faldo:End,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 5606 ;
-    :hasPart _:Na4f085efce174c03a4182f93f885f183 ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000046.1> .
-
-_:Nc508869f5c054fd6bab37e9086e2db4e a faldo:Begin,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 1910 ;
-    :hasPart _:Ncd20e4d3e00b4ed09df0183c6286fc44 ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000051.1> .
-
-_:Nc593ffeae6ae429aaa427b5beabe3609 a faldo:End,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 108471 ;
-    :hasPart _:N140503e72bd24d14a72111c837ee53d2 ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000004.1> .
-
-_:Nc909d2c265f4468a9382adf7a3384f15 a faldo:Begin,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 125539 ;
-    :hasPart _:N92becdad53fa4ba29b6ab131b38b7f11 ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000004.1> .
-
-_:Nc9b52397dab84917b9c24bbcebe56e73 a faldo:End,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 12807 ;
-    :hasPart _:Nf52c02f71cf14997b3125b943f2cd00c ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000045.1> .
-
-_:Nca80a1abc36141718cd6e9c500c03ca8 a faldo:End,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 119377 ;
-    :hasPart _:N049c44039bfa4528ba83e8d66e4eb292 ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000033.1> .
-
-_:Ncb62d6a014b24e719d8bf49f9fc7c376 a faldo:End,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 7046 ;
-    :hasPart _:Nea9076fddb254c859f950d2786d4e290 ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000007.1> .
-
-_:Ncb8976fc71a64925b06c4ef46ed1b470 a faldo:End,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 2770 ;
-    :hasPart _:Ncd20e4d3e00b4ed09df0183c6286fc44 ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000051.1> .
-
-_:Nd280d45e77ca46aabc5149a22dc7dc95 a faldo:Begin,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 36540 ;
-    :hasPart _:N36877679f4bf46f481b5fbe0c2d3dc4a ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000078.1> .
-
-_:Nd416ff393e094e24b6abd1e5d1bf8bc5 a faldo:Begin,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 91483 ;
-    :hasPart _:N2f882b2e3d7b462cbdef9b3778bb83da ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000005.1> .
-
-_:Nd4e678ed39264cb598761dfd2d975d92 a faldo:End,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 10518 ;
-    :hasPart _:N03fef405ac0e48b9aeb7a0e3b9a61f66 ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000037.1> .
-
-_:Nd5195396e2964c91a5338c837eb9c32a a faldo:Begin,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 2827 ;
-    :hasPart _:Na043c025a0cf473d8f8666eaf0d3acea ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000043.1> .
-
-_:Nd57f1000d11145a4b7f46b44b532724e a faldo:Begin,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 555 ;
-    :hasPart _:N4c72bf13b5c74227b079c1e001a0e103 ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000080.1> .
-
-_:Nd77f6ad61c314768821dd1a34d50c183 a faldo:End,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 2428 ;
-    :hasPart _:N2122059cbf44475f81fcefcbf62f9322 ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000057.1> .
-
-_:Nd7eced5d3970409b99992f4aa2bf9680 a faldo:End,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 116261 ;
-    :hasPart _:Nf4dd003337c24d5495368ce9235f7b1d ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000033.1> .
-
-_:Ndb396227df174450ac2b1545c6885e4c a faldo:Begin,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 168235 ;
-    :hasPart _:Nba717487fd99476cbbb26d61c997e71b ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000026.1> .
-
-_:Nddaf3f772dce476aa323e0ebddc09437 a faldo:Begin,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 92649 ;
-    :hasPart _:N9fa736ddf9324e3f92d5eb767873e04e ;
+    faldo:position 28459 ;
     :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000034.1> .
 
-_:Nde8c7d3355d848e8b1754dd1badac635 a faldo:Begin,
-        faldo:ExactPosition,
+_:N14b2d1a1edb14c87b936964d0b21f1ef a faldo:ExactPosition,
         faldo:Position,
         faldo:ReverseStrandPosition ;
-    faldo:Position 36086 ;
-    :hasPart _:N0514333a8bf14122b4087473b8bec9a3 ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000078.1> .
-
-_:Ndf50a5713f2940ee8d476458bea9b6d8 a faldo:End,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 114705 ;
-    :hasPart _:N40a5edeefd8f476b8034bc56638d0e40 ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000033.1> .
-
-_:Ne06925f27305490a9615782f9c706d10 a faldo:End,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 11853 ;
-    :hasPart _:N99183c801d65411aa32e15df636c2b3b ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000091.1> .
-
-_:Ne0fb9dda9b674423a000495c1a54855f a faldo:Begin,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 131208 ;
-    :hasPart _:N857b2ffbe551428f8d1a5e230618e419 ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000026.1> .
-
-_:Ne368423085b64380b00cbdcf6d328e98 a faldo:Begin,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 56888 ;
-    :hasPart _:Nf9bbd138463e4816bbd378fbbed7e4d0 ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000011.1> .
-
-_:Ne7e9b1096bb946b99f6ee7e4466f911b a faldo:Begin,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 283814 ;
-    :hasPart _:N359375e3f50042399d96ce2a70e0cc8d ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000026.1> .
-
-_:Ne91753695f934f108ca2c588bfd5bcca a faldo:Begin,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 48536 ;
-    :hasPart _:N3d7d1d8fd0ff47d082046685e4a8926d ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000012.1> .
-
-_:Ne96250de620a4e8d97332cd636265147 a faldo:Begin,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 19861 ;
-    :hasPart _:N812fec5c08a0453ba3c044b605c5bf21 ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000004.1> .
-
-_:Nea288d7546844cd19c17c47dd3aa1639 a faldo:End,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 56761 ;
-    :hasPart _:Nda9b690e71e645cd9cabf984dffe388b ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000011.1> .
-
-_:Neb575e3c28cd48b085d4dfa363cd3114 a faldo:Begin,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 985 ;
-    :hasPart _:Ne52ed0f910854cf68e73163e519aa25d ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000051.1> .
-
-_:Nf29a763f868f4c12ad9c47da2f1bcc1b a faldo:Begin,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 58077 ;
-    :hasPart _:Nfaa31709b8ee4184b8a84c9293cee4d9 ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000011.1> .
-
-_:Nf53bec23f94044cb959a8ab43e8a494a a faldo:Begin,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 107211 ;
-    :hasPart _:N68f321d494f04d6c9a15499720dc787f ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000012.1> .
-
-_:Nf613584afe9f4410ade63d0413363c31 a faldo:End,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 68887 ;
-    :hasPart _:Nac10c24dcd8c4de39942eecea55c9d4a ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000005.1> .
-
-_:Nf6ce96ac88544bee9033b2b4426ef512 a faldo:Begin,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 13035 ;
-    :hasPart _:N74dc043281454730a65bd9664c5c1a9e ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000052.1> .
-
-_:Nfb7042e6b80047139e5507168dc4eecf a faldo:End,
-        faldo:ExactPosition,
-        faldo:Position,
-        faldo:ReverseStrandPosition ;
-    faldo:Position 5768 ;
-    :hasPart _:Nb7c9ae9c0ab645ef91c4fd2bffaad437 ;
+    faldo:position 5768 ;
     :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000032.1> .
 
-_:Nfc277fc6597b411c86076ad3782995b1 a faldo:End,
-        faldo:ExactPosition,
+_:N19aaaa1c26cc46d496819cfa8a5e09bf a faldo:ExactPosition,
         faldo:Position,
         faldo:ReverseStrandPosition ;
-    faldo:Position 971 ;
-    :hasPart _:N4c72bf13b5c74227b079c1e001a0e103 ;
+    faldo:position 92708 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000023.1> .
+
+_:N1adb63efa05343a48e2da87a4de07195 a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 29667 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000034.1> .
+
+_:N1bae815846714f57ac9821ac8643301a a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 110333 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000012.1> .
+
+_:N1dfce78814b745ba9bafa95815fed048 a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 114043 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000033.1> .
+
+_:N1ee8e0ab85414e1e8ed50febe57086af a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 116227 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000012.1> .
+
+_:N1fc2e94ef90246b0af86b9d48d9a5adb a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 971 ;
     :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000080.1> .
 
-_:Nfc6285b694dc4e69921d5b49aa6ebeb2 a faldo:Begin,
-        faldo:ExactPosition,
+_:N206ad7ceedac4121b0c682e61ece727c a faldo:ExactPosition,
         faldo:Position,
         faldo:ReverseStrandPosition ;
-    faldo:Position 60115 ;
-    :hasPart _:N0a28f035e46e454b86a9b03283d03b9a ;
-    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000015.1> .
+    faldo:position 284977 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000026.1> .
 
-_:Nfd3801569db842bfaace3cd82aa48ae6 a faldo:Begin,
-        faldo:ExactPosition,
+_:N21156d35a9ab42f9b89bd32a152b9c12 a faldo:ExactPosition,
         faldo:Position,
         faldo:ReverseStrandPosition ;
-    faldo:Position 468 ;
-    :hasPart _:Nddb5d1026a194a2685560d064d2f4a20 ;
+    faldo:position 555 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000080.1> .
+
+_:N21ecf354cad9457195f20373a4e235fd a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 20955 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000004.1> .
+
+_:N238718ef16614b60aa0fa0dfd36f30bb a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 4059 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000043.1> .
+
+_:N279465fa088141fcbcc0b6587e962594 a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 58060 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000011.1> .
+
+_:N2898917dec3143478d712dafd47494d0 a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 92667 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000005.1> .
+
+_:N2a18a633bfb64f4aaab69030100be9e8 a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 65936 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000006.1> .
+
+_:N2e0c7f6819d64211bd215c530efd7cf1 a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 89629 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000023.1> .
+
+_:N2f04f9440979456b9c1e4a60dbc7f720 a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 26186 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000008.1> .
+
+_:N30282ea1bfdb40f18b02fb1eb5a5975f a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 283814 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000026.1> .
+
+_:N30add3c010534f01ba34a4cda8083df9 a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 4699 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000091.1> .
+
+_:N3111a8cf9bad44fca169be1925ff8cf9 a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 5606 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000046.1> .
+
+_:N32af4cd540254e21af7e05c227f49ce8 a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 114743 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000023.1> .
+
+_:N3379125bf051401684404ff5e1c01f30 a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 5157 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000079.1> .
+
+_:N3a1515c3d0f741c7882a85da05fc4561 a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 48536 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000012.1> .
+
+_:N3a3dcf5376d64f7fac46bfc7cb952829 a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 286007 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000026.1> .
+
+_:N3dcc053678874b2bbb538b37b1b5789f a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 116946 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000012.1> .
+
+_:N3f8ad5df8b354008a67b4597f111f0d4 a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 58077 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000011.1> .
+
+_:N3fd6a4a8089b4ad6bad4225100394018 a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 36086 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000078.1> .
+
+_:N40965a75a3fb40be8cf2910686892af6 a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 107211 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000012.1> .
+
+_:N4136cc24fc30454dbfd9bed740a6b1a6 a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 2751 ;
     :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000007.1> .
 
-_:Nfd5a167a0a18442480d473b047dc6b61 a faldo:Begin,
-        faldo:ExactPosition,
+_:N419c4f5c67bf4cfa92442ffc226cf9db a faldo:ExactPosition,
         faldo:Position,
         faldo:ReverseStrandPosition ;
-    faldo:Position 49043 ;
-    :hasPart _:N15c7da9abacb4cb795a945b2a738519a ;
+    faldo:position 131208 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000026.1> .
+
+_:N49f5e31e8f9244ffb9bda40a85f3e64d a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 49864 ;
     :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000052.1> .
 
-_:N03f70370045e44609da47885426b321a a faldo:Region ;
-    :hasPart :mdtK ;
-    :isFoundIn _:N2470a9979124495e8dcad8afaf1dbf11,
-        _:N5a559f860d8741fe8cf90c9a38dc4f22 .
-
-_:N03fef405ac0e48b9aeb7a0e3b9a61f66 a faldo:Region ;
-    :hasPart :Mycobacterium_tuberculosis_katG_mutations_conferring_resistance_to_isoniazid ;
-    :isFoundIn _:N3a04052dc3494bca9ceb24c15ad308cb,
-        _:Nd4e678ed39264cb598761dfd2d975d92 .
-
-_:N049c44039bfa4528ba83e8d66e4eb292 a faldo:Region ;
-    :hasPart :mexD ;
-    :isFoundIn _:Nc238a76078d043eea1ff2667a9d36d84,
-        _:Nca80a1abc36141718cd6e9c500c03ca8 .
-
-_:N0514333a8bf14122b4087473b8bec9a3 a faldo:Region ;
-    :hasPart :Escherichia_coli_marR_mutant_resulting_in_antibiotic_resistance ;
-    :isFoundIn _:Nb1d4c380d2e34e839118a1b8d0911fa3,
-        _:Nde8c7d3355d848e8b1754dd1badac635 .
-
-_:N0650b7dc6e7c4e899d67c828764e614a a faldo:Region ;
-    :hasPart :mdfA ;
-    :isFoundIn _:N0834bc4de9214fc5aaad8c6defeae61c,
-        _:N5ad195be40ca4aa59bde559679cd996e .
-
-_:N09d768e4e9f24499999c069f17622b2e a faldo:Region ;
-    :hasPart :CTX-M-65 ;
-    :isFoundIn _:N3f44fa27ae97487b95b220d6b1d8cc99,
-        _:N89b4155c9d9248948f8d76b9e1f422c4 .
-
-_:N0a28f035e46e454b86a9b03283d03b9a a faldo:Region ;
-    :hasPart :mexD ;
-    :isFoundIn _:N8bb4b95d06ce4d9cbab7b7fcb6bb913d,
-        _:Nfc6285b694dc4e69921d5b49aa6ebeb2 .
-
-_:N0d580f845ba0466ea032b401a75bfe6a a faldo:Region ;
-    :hasPart :mdtA ;
-    :isFoundIn _:N8af1385cc9b647a695862f80e8c383b6,
-        _:Nb56efa1068134d8ba285879b9b3be6a7 .
-
-_:N0dca64de60854e83966f621fcfa0ce03 a faldo:Region ;
-    :hasPart :evgS ;
-    :isFoundIn _:N1e05a645f62f45048b64ae0c73e34279,
-        _:N556a2ea2ba9c4e429083cd1e3353db82 .
-
-_:N0ff9d43898c54bf8a335cb079d006ca6 a faldo:Region ;
-    :hasPart :APH3-Ia ;
-    :isFoundIn _:Na426e7b672e645ac922ca88c5df2e5e6,
-        _:Nb7ecdb8f54f3402baa277355f7a36081 .
-
-_:N140503e72bd24d14a72111c837ee53d2 a faldo:Region ;
-    :hasPart :Klebsiella_pneumoniae_acrR_mutant_resulting_in_high_level_antibiotic_resistance ;
-    :isFoundIn _:N8adc60aa32804d9395942e5d93698696,
-        _:Nc593ffeae6ae429aaa427b5beabe3609 .
-
-_:N15c7da9abacb4cb795a945b2a738519a a faldo:Region ;
-    :hasPart :bacA ;
-    :isFoundIn _:N56580b6d7b2a4bebb5f853e145e06e88,
-        _:Nfd5a167a0a18442480d473b047dc6b61 .
-
-_:N1c95a8556a5d4d2fa87c5124dfac270a a faldo:Region ;
-    :hasPart :PmrA ;
-    :isFoundIn _:N2cc82f59be654ae6b3f21ce26d0d231b,
-        _:N3a2dbe9660e7401d9bf22dd6064bda3a .
-
-_:N20dea1cd3d6c40ebb004d9909f21e0ad a faldo:Region ;
-    :hasPart :rosB ;
-    :isFoundIn _:N32236e2697ee46a4acdc42ed37e22b53,
-        _:N7f051c5d56ee4a27a1a5785ac6830875 .
-
-_:N2122059cbf44475f81fcefcbf62f9322 a faldo:Region ;
-    :hasPart :tetG ;
-    :isFoundIn _:Nb82a27a2055742598ac6b41db1811140,
-        _:Nd77f6ad61c314768821dd1a34d50c183 .
-
-_:N2414edf11ba4497e9d5eca16d0e9fca6 a faldo:Region ;
-    :hasPart :CRP ;
-    :isFoundIn _:Nb3d29c6e91d240cf8544f9c6d803e584,
-        _:Nbf9fe6e0e42d448c9502d28e9ab1efc1 .
-
-_:N2c516906f662432c98bd7a8598e0b14b a faldo:Region ;
-    :hasPart :dfrA14 ;
-    :isFoundIn _:N04ff7bb1c547462ba3cb78241a2171c2,
-        _:N4739c0d1ad9c45368b89fe9b46111f69 .
-
-_:N2cac794b6116420e8334c1700ca600dd a faldo:Region ;
-    :hasPart :cpxR ;
-    :isFoundIn _:N5617d14d0e95430e924659184e683783,
-        _:Nbd8e86302e41427bbbbcc8cb9a7bdb37 .
-
-_:N2f882b2e3d7b462cbdef9b3778bb83da a faldo:Region ;
-    :hasPart :emrD ;
-    :isFoundIn _:N2074896d11db4bb0a21ccd2dace83713,
-        _:Nd416ff393e094e24b6abd1e5d1bf8bc5 .
-
-_:N359375e3f50042399d96ce2a70e0cc8d a faldo:Region ;
-    :hasPart :emrK ;
-    :isFoundIn _:N74615d32ff1a4f8bb8f188246d1da7b6,
-        _:Ne7e9b1096bb946b99f6ee7e4466f911b .
-
-_:N36877679f4bf46f481b5fbe0c2d3dc4a a faldo:Region ;
-    :hasPart :marA ;
-    :isFoundIn _:N0ceaa340451b44828de019e426ac3774,
-        _:Nd280d45e77ca46aabc5149a22dc7dc95 .
-
-_:N37d72b6ad8e242acb3e83a247ae643f3 a faldo:Region ;
-    :hasPart :acrE ;
-    :isFoundIn _:N3f3f3d30499d401e8f4252f4c26067c7,
-        _:N5c26d7e5a8aa43a0ba405b2c820e7e82 .
-
-_:N393db4f9acd24d95838680361a020991 a faldo:Region ;
-    :hasPart :baeR ;
-    :isFoundIn _:N2cd9e317c8b147ba8c0fd9b25c78998e,
-        _:N7fb96d8086ee4f50865c71f08f7a49fe .
-
-_:N3d7d1d8fd0ff47d082046685e4a8926d a faldo:Region ;
-    :hasPart :PmrE ;
-    :isFoundIn _:N7eecd5e281924db0b69fa16eeeb2e474,
-        _:Ne91753695f934f108ca2c588bfd5bcca .
-
-_:N407196964cdc43559c0ef7d8b9d0815a a faldo:Region ;
-    :hasPart :Mycobacterium_tuberculosis_rpoB_mutants_conferring_resistance_to_rifampicin ;
-    :isFoundIn _:N1780237d50b7448eaca43dab253d5d37,
-        _:Nc423004321b74f599097b2bad50ac871 .
-
-_:N40a5edeefd8f476b8034bc56638d0e40 a faldo:Region ;
-    :hasPart :acrS ;
-    :isFoundIn _:N99c892300c2b48529d7de1072afb7524,
-        _:Ndf50a5713f2940ee8d476458bea9b6d8 .
-
-_:N40d4194bd5474164b97b195e13de95bb a faldo:Region ;
-    :hasPart :macB ;
-    :isFoundIn _:N7c3b4884cb204274ad99e49a1b384497,
-        _:Na673be53b5f34bfd8c6548014b729ca3 .
-
-_:N4c72bf13b5c74227b079c1e001a0e103 a faldo:Region ;
-    :hasPart :FosA3 ;
-    :isFoundIn _:Nd57f1000d11145a4b7f46b44b532724e,
-        _:Nfc277fc6597b411c86076ad3782995b1 .
-
-_:N56031ddb79f34639a5b9c7d34861fc75 a faldo:Region ;
-    :hasPart :mexN ;
-    :isFoundIn _:N06464bdd4fce41938caec75621376ab8,
-        _:N1977b72bb2eb408d9316b1255bd84316 .
-
-_:N571570212cb84f19a3eda76fdc4f4fb2 a faldo:Region ;
-    :hasPart :mdtP ;
-    :isFoundIn _:N10476a076fef4b21b444070c773cece8,
-        _:Nb6e9154f7ff74d2fb4961b1acf9216ef .
-
-_:N5d7bf84ed5f049c984e05f331dad5275 a faldo:Region ;
-    :hasPart :evgA ;
-    :isFoundIn _:N29da7375cb654ff3ae34d9585552aaec,
-        _:N6750848041174eba84e8c933d8de631b .
-
-_:N61685c6aed464fd997094ced57202384 a faldo:Region ;
-    :hasPart :mdtO ;
-    :isFoundIn _:N0b1530db7e484c92916c2e8585269a03,
-        _:N4c20faa17a22432797728e4031bc578c .
-
-_:N68f321d494f04d6c9a15499720dc787f a faldo:Region ;
-    :hasPart :mexN ;
-    :isFoundIn _:N3ef16c612590416594c1e1577ffcdbfb,
-        _:Nf53bec23f94044cb959a8ab43e8a494a .
-
-_:N73b5d8d57bb54d888d34ada110058467 a faldo:Region ;
-    :hasPart :mdtD ;
-    :isFoundIn _:N16a9796701c04cfd9dc92426f8198a50,
-        _:N9b8728620b41427f9fd4feac4a0f5c9e .
-
-_:N74dc043281454730a65bd9664c5c1a9e a faldo:Region ;
-    :hasPart :Escherichia_coli_parC_conferring_resistance_to_fluoroquinolone ;
-    :isFoundIn _:N2e3f0b91cee142bdb693acfe8687c7c5,
-        _:Nf6ce96ac88544bee9033b2b4426ef512 .
-
-_:N7a8c501fc69f474dba614881d6624c0b a faldo:Region ;
-    :hasPart :mexD ;
-    :isFoundIn _:N88416b6ef60342bb881e971280de9d49,
-        _:Na338b1b8307e4093a29ca45e415f1b89 .
-
-_:N812fec5c08a0453ba3c044b605c5bf21 a faldo:Region ;
-    :hasPart :vanG ;
-    :isFoundIn _:Nbb9aa2871ea54715b3be276a0ceedc75,
-        _:Ne96250de620a4e8d97332cd636265147 .
-
-_:N8260e330cf3147e1ad9d3ffa445776c3 a faldo:Region ;
-    :hasPart :tolC ;
-    :isFoundIn _:N28fd4e7f05f4480aa4a19a3568408f6a,
-        _:N885ce6c5cfc1421783af3ce52f124f0e .
-
-_:N857b2ffbe551428f8d1a5e230618e419 a faldo:Region ;
-    :hasPart :Escherichia_coli_gyrA_conferring_resistance_to_fluoroquinolones ;
-    :isFoundIn _:N8e772fefdb8a40b9874bb6e44b09a5f2,
-        _:Ne0fb9dda9b674423a000495c1a54855f .
-
-_:N863ffba8654040dc8e69fdf437d421a5 a faldo:Region ;
-    :hasPart :mdtH ;
-    :isFoundIn _:N55af48831ecf4c2191b41f4b0c51b6de,
-        _:N6b840f7b77bf431c947c54dc4d344dfe .
-
-_:N92becdad53fa4ba29b6ab131b38b7f11 a faldo:Region ;
-    :hasPart :rosA ;
-    :isFoundIn _:N1bb56b2c9cd64c1fa3ff9988613285b9,
-        _:Nc909d2c265f4468a9382adf7a3384f15 .
-
-_:N975a1ff33fd64c03bf5abe69f7c71540 a faldo:Region ;
-    :hasPart :mdtL ;
-    :isFoundIn _:N35ef07ad361a4376b43ad7606d1adf9c,
-        _:N786f5c0e6fb04222aa74887b47875f2b .
-
-_:N97712ea4352d47e2a540f18973d06a04 a faldo:Region ;
-    :hasPart :PmrC ;
-    :isFoundIn _:N3bd8dd7bf8a34d1c86827b969974b3de,
-        _:N6150e489f8954bdc83c48c632300e932 .
-
-_:N99183c801d65411aa32e15df636c2b3b a faldo:Region ;
-    :hasPart :catI ;
-    :isFoundIn _:Nb5a0f3154d9148bfa813ac84d53c550d,
-        _:Ne06925f27305490a9615782f9c706d10 .
-
-_:N99eee43245e447f5a40693ba928f1d94 a faldo:Region ;
-    :hasPart :sul2 ;
-    :isFoundIn _:N2f36eb04e58c4811aab723b34115aa1b,
-        _:N56009fbbc4e043aa9645e0a840f2127c .
-
-_:N9fa736ddf9324e3f92d5eb767873e04e a faldo:Region ;
-    :hasPart :phoQ ;
-    :isFoundIn _:N0053d0a2fb1b4bbd80ef185f3e73cfc4,
-        _:Nddaf3f772dce476aa323e0ebddc09437 .
-
-_:Na043c025a0cf473d8f8666eaf0d3acea a faldo:Region ;
-    :hasPart :mdtM ;
-    :isFoundIn _:N398f2b81f02d4a038fc4024148d22516,
-        _:Nd5195396e2964c91a5338c837eb9c32a .
-
-_:Na4f085efce174c03a4182f93f885f183 a faldo:Region ;
-    :hasPart :floR ;
-    :isFoundIn _:N023f44b12eee439190ff73ece800a753,
-        _:Nc4a1f2e7f06d4c8f91160d524b9eb282 .
-
-_:Nac10c24dcd8c4de39942eecea55c9d4a a faldo:Region ;
-    :hasPart :Staphylococcus_aureus_gyrB_conferring_resistance_to_aminocoumarin ;
-    :isFoundIn _:N26c43c79a3f645f6b0c796d2b51a81f1,
-        _:Nf613584afe9f4410ade63d0413363c31 .
-
-_:Nac2ba49167784f0da8d5b1e82e61f3b8 a faldo:Region ;
-    :hasPart :PmrF ;
-    :isFoundIn _:N607afaee7ecd4635b28b6b2bde165c8a,
-        _:N7c4b504d1b2847bba4ef0b712eaca2bc .
-
-_:Nb7c9ae9c0ab645ef91c4fd2bffaad437 a faldo:Region ;
-    :hasPart :H-NS ;
-    :isFoundIn _:Nb287822c93a945158dbcbaf907956215,
-        _:Nfb7042e6b80047139e5507168dc4eecf .
-
-_:Nb8eacbd1b59446b2808683f6809b8b10 a faldo:Region ;
-    :hasPart :phoP ;
-    :isFoundIn _:N205cbdbea4974c0db0137a1627653192,
-        _:N4ac7fb90e0794bd4b197d06c2b4170e9 .
-
-_:Nba717487fd99476cbbb26d61c997e71b a faldo:Region ;
-    :hasPart :arnA ;
-    :isFoundIn _:N0221d25434484f2a9d0cecada18bb5a3,
-        _:Ndb396227df174450ac2b1545c6885e4c .
-
-_:Nbb1a01b199e04e1fae3024e5d872260e a faldo:Region ;
-    :hasPart :APH6-Id ;
-    :isFoundIn _:N39bfeea7736248508ad3c9f231a95a0c,
-        _:N440cb140affe4ecd9fea94c231ddeee6 .
-
-_:Nbc6e200a4c354539a290841e3156e7bd a faldo:Region ;
-    :hasPart :mdtG ;
-    :isFoundIn _:N4915d2a515ad4dd899f159d311a60097,
-        _:N72562c13dcee40e9836a5d4403426367 .
-
-_:Nbda2e802f5f249d4b78927c69960d8c0 a faldo:Region ;
-    :hasPart :mexD ;
-    :isFoundIn _:N006fa915a5654a54ae4a090ed6eb0673,
-        _:N401b495dd3024556b93b47387ed66161 .
-
-_:Ncd20e4d3e00b4ed09df0183c6286fc44 a faldo:Region ;
-    :hasPart :TEM-1 ;
-    :isFoundIn _:Nc508869f5c054fd6bab37e9086e2db4e,
-        _:Ncb8976fc71a64925b06c4ef46ed1b470 .
-
-_:Ncd34523090d146cca7e3f8e5c11994d4 a faldo:Region ;
-    :hasPart :macA ;
-    :isFoundIn _:N8fece0d4528041a5b866ec42a18842fd,
-        _:Nac0980a7ac4a4ef28620c29eac730112 .
-
-_:Ncdcbe05c555045bf91434c3d340e90dc a faldo:Region ;
-    :hasPart :PmrB ;
-    :isFoundIn _:N47821659dda0437f96a959f86021adb7,
-        _:Nbf4b8d33f3fd453c9d3ea587e4555373 .
-
-_:Nd0ae75693a524a228cb32e883db9ba17 a faldo:Region ;
-    :hasPart :NDM-5 ;
-    :isFoundIn _:N725e8ad7a3be4c32a50bbe9d39294dbe,
-        _:N7f6cb61364e348ce9a73b10f4fd8fac7 .
-
-_:Nd759d9f398484effb28dad495734bbed a faldo:Region ;
-    :hasPart :cpxA ;
-    :isFoundIn _:N050a1efad3534465a790440544d6490e,
-        _:N7857d60e190648efb67a64439f7e0d84 .
-
-_:Nd84f5aea81ac49e78308567d80b2cb3e a faldo:Region ;
-    :hasPart :mphA ;
-    :isFoundIn _:N09119402851d4371bdc7cbf37672d60c,
-        _:N514c1075fc9e44f4aa40b79dd5d1caf2 .
-
-_:Nda02c134b35a4c3493ed412d42258b40 a faldo:Region ;
-    :hasPart :APH3-Ib ;
-    :isFoundIn _:N58ed8a33f0d44c9084d8b7ae08bdefd3,
-        _:N6b8aa5d01e714fd599247ee9a709dffd .
-
-_:Nda9b690e71e645cd9cabf984dffe388b a faldo:Region ;
-    :hasPart :emrR ;
-    :isFoundIn _:N5066ab9fa38e411c82818e5445816e78,
-        _:Nea288d7546844cd19c17c47dd3aa1639 .
-
-_:Nddb5d1026a194a2685560d064d2f4a20 a faldo:Region ;
-    :hasPart :gadX ;
-    :isFoundIn _:N54e7490e06014078a8612963be35bddb,
-        _:Nfd3801569db842bfaace3cd82aa48ae6 .
-
-_:Ne52ed0f910854cf68e73163e519aa25d a faldo:Region ;
-    :hasPart :rmtB ;
-    :isFoundIn _:N4c92ff026f23411c8c4397f2666096bf,
-        _:Neb575e3c28cd48b085d4dfa363cd3114 .
-
-_:Nea9076fddb254c859f950d2786d4e290 a faldo:Region ;
-    :hasPart :mdtE ;
-    :isFoundIn _:Nc2c7a7e4d1c6423489a57384e4575bba,
-        _:Ncb62d6a014b24e719d8bf49f9fc7c376 .
-
-_:Nebf2289fdd794d809e443dc2db866130 a faldo:Region ;
-    :hasPart :emrY ;
-    :isFoundIn _:N9c02f6fd3230415aad98ed5618f92a53,
-        _:Na0a0ac2d1f5e4e269bbb85a955e81fc0 .
-
-_:Ned8968b389ce4f90ac552eddb088d0f9 a faldo:Region ;
-    :hasPart :baeS ;
-    :isFoundIn _:N71ac453b1cc44562b7fb385053ecdde6,
-        _:Nc457f9d43cd342f9987a21296c42b7b5 .
-
-_:Nee3e0bf45a0a464390b1d2989ad8a1b3 a faldo:Region ;
-    :hasPart :mdtN ;
-    :isFoundIn _:N4225590460364f81b9b3cb7a9d29247c,
-        _:N43acc2cfc0f544c7950b305e2157456d .
-
-_:Nf32e917eb65045649fde166d82da0157 a faldo:Region ;
-    :hasPart :ACT-7 ;
-    :isFoundIn _:Nb9e51f7b40c9433487867dfe1334cfc0,
-        _:Nc11d0ed15eb74cfdb91aac64c1ab721a .
-
-_:Nf4dd003337c24d5495368ce9235f7b1d a faldo:Region ;
-    :hasPart :acrE ;
-    :isFoundIn _:N0f7b4d5b41644a24a35d1a1c85328c6a,
-        _:Nd7eced5d3970409b99992f4aa2bf9680 .
-
-_:Nf52c02f71cf14997b3125b943f2cd00c a faldo:Region ;
-    :hasPart :robA ;
-    :isFoundIn _:N93559fc9d928478fb719377d341caf15,
-        _:Nc9b52397dab84917b9c24bbcebe56e73 .
-
-_:Nf9bbd138463e4816bbd378fbbed7e4d0 a faldo:Region ;
-    :hasPart :emrA ;
-    :isFoundIn _:N2705e48020604ea2b56d3c7f3ff7bd4b,
-        _:Ne368423085b64380b00cbdcf6d328e98 .
-
-_:Nfaa31709b8ee4184b8a84c9293cee4d9 a faldo:Region ;
-    :hasPart :emrB ;
-    :isFoundIn _:N02ba395fecaf4046ae694f32c657b78e,
-        _:Nf29a763f868f4c12ad9c47da2f1bcc1b .
+_:N4b1d58b76db84a56b3c40d863fc3c8cd a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 466 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000083.1> .
+
+_:N4c08ad91b9b744b7be9d2593b21a501b a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 117052 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000023.1> .
+
+_:N4d6d04f28ac0444f9df93645f154df9b a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 282276 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000026.1> .
+
+_:N4e35ffdbadde45b091f9e31055af054d a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 168235 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000026.1> .
+
+_:N4e9dfd829c9542d499e76b394475cd78 a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 286012 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000026.1> .
+
+_:N4ed403f6be7a4f0585443978745500c9 a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 8396 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000041.1> .
+
+_:N4fdc14aa139345c0aea2893457081100 a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 1740 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000051.1> .
+
+_:N50a628f37e8b4017abd09b57d219a2a1 a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 94109 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000034.1> .
+
+_:N52045009484c49f59dc3408082f09284 a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 68887 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000005.1> .
+
+_:N580c64d5064244049a9e4c003911fe46 a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 289605 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000026.1> .
+
+_:N58bad362d2e24d65bf7793dba2e76ae2 a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 107682 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000004.1> .
+
+_:N5b0a11895b4a4c51bb776620a937b3f0 a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 106489 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000004.1> .
+
+_:N5c505e14484947f691f853d1007dff7d a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 170217 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000026.1> .
+
+_:N5d0c520511d949228dbf9df256e024b2 a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 5172 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000091.1> .
+
+_:N5e9e64b32b414bbf9a9410bbb478873b a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 60115 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000015.1> .
+
+_:N602487377a5f433ab1f3b12114ee180a a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 167267 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000026.1> .
+
+_:N60dedc9158ca4e3aa55cad8408015765 a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 4293 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000079.1> .
+
+_:N6351e0ad75f44625870c661e2def9e18 a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 113411 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000012.1> .
+
+_:N642c381fd66f460abbf9b425637e1259 a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 1467 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000059.1> .
+
+_:N6559cd865035485c8e86faa76ce590af a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 26686 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000052.1> .
+
+_:N65b7a47b06c34560bb0465dac2025242 a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 27418 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000008.1> .
+
+_:N664e3b9348cd4febac9faf6d5321b01a a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 25205 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000052.1> .
+
+_:N68e386332d5541c5b4cb76336558f9c3 a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 182 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000092.1> .
+
+_:N69f7ac248f914241b7ccc7fed3b66768 a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 62799 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000008.1> .
+
+_:N6a014645eb764ebd80df5703910e208e a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 5157 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000079.1> .
+
+_:N6afff6d184314c45b7a4fa2905241519 a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 106466 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000004.1> .
+
+_:N6bb84f525d58476097d5f991e76fbe79 a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 91483 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000005.1> .
+
+_:N70147d54d51f44c98c2b7843d12d94ed a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 49043 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000052.1> .
+
+_:N7085eb426c7c456c91f686959b4f248e a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 111438 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000027.1> .
+
+_:N70d373e72a9d4838a9e42a2eee86cb1e a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 115412 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000023.1> .
+
+_:N754020711a2e4374ac00baabaa590c92 a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 19861 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000004.1> .
+
+_:N75d8b7df88b849589ad1422bc6800cad a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 105844 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000012.1> .
+
+_:N78d8a0c527df46669836f1adbeaaa174 a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 15293 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000052.1> .
+
+_:N7af3590f9afe4b5d92b7c708e1ba749d a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 1341 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000083.1> .
+
+_:N7dea1a38c0bb454aa5313e193be7c9c7 a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 4368 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000041.1> .
+
+_:N7f4ab70a270c4d03bc4ac7abe2e59a97 a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 5889 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000007.1> .
+
+_:N7f51626e0bd44758a832fec0c5dae66c a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 125539 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000004.1> .
+
+_:N7fe256985399499ca5d22cda510a10c1 a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 133835 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000026.1> .
+
+_:N80d33815b9ba4740a84ee3a181c99c80 a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 36923 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000078.1> .
+
+_:N81a2205d5ce34a56b70e9d626755140f a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 114827 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000012.1> .
+
+_:N82af8f10626a48c4a1be91916f541762 a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 5355 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000032.1> .
+
+_:N834c516bcf1940c2ac7d87e3efc7038b a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 11194 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000091.1> .
+
+_:N8502ee37cab449a2b9e29062191321da a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 12807 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000045.1> .
+
+_:N8763120d4a54440ea49c8496e4f40a8f a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 88 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000091.1> .
+
+_:N87e54ae1a0584db994f64f4b0cda0201 a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 19828 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000034.1> .
+
+_:N886dace7269d42c4aca47fe3a9602e35 a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 56231 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000011.1> .
+
+_:N89e94f2d98834d2fb165b8cd72fdae10 a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 116224 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000012.1> .
+
+_:N8b0f69bece9645669a05cc855eee7a0c a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 94109 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000034.1> .
+
+_:N8c49548a803644b8bef3546bf6c37e01 a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 115104 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000033.1> .
+
+_:N8d28fb098f0a43f4b2a58081fb52ea04 a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 94780 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000034.1> .
+
+_:N8f8d6dc5efd2441885da92861805c78c a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 36520 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000078.1> .
+
+_:N902979a5012d4070936564aee658e560 a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 113412 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000012.1> .
+
+_:N920cfead4dac4e2e83027e146ee6109d a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 49702 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000012.1> .
+
+_:N940ab995ca504ee590ab563012e86abb a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 64745 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000008.1> .
+
+_:N940b8a7aea464266bc92611aa846fb52 a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 107824 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000004.1> .
+
+_:N9a42fe062e8847628b3733006f773e64 a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 2827 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000043.1> .
+
+_:N9a543433e48845dfb9b5323f526c47a7 a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 112811 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000027.1> .
+
+_:N9fb13b554dde4e02878ff1de46741935 a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 92649 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000034.1> .
+
+_:Na12705558ddd431c958d4da3c7eb4589 a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 4354 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000079.1> .
+
+_:Na142adcd90fc4fdb9d3a7ec3b133fd74 a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 63228 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000015.1> .
+
+_:Na5a5da4d9a37406e9fff5f7a61e6e270 a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 116261 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000033.1> .
+
+_:Na63dc424ebcf49808a2644a8a2ee2e6d a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 36540 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000078.1> .
+
+_:Na98cd111da68428cb8731f0f0a3ce3de a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 4392 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000046.1> .
+
+_:Nacc39505c35b41d0a45489ebe3562c68 a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 985 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000051.1> .
+
+_:Nad4b64ac89524392891c2a1c641ae072 a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 61687 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000008.1> .
+
+_:Nad69a766ce99445b8a218dae6e5b868a a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 2165 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000059.1> .
+
+_:Nadee9c134a454e6286b6abfdaf62e282 a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 89626 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000023.1> .
+
+_:Nae7061571dc54e0583d5fd31763e82db a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 1229 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000057.1> .
+
+_:Nb086bc1b53964ddc897051fa8a7fc5d7 a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 108471 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000004.1> .
+
+_:Nb08c17ce169f4c22b5b47880fe5049ba a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 18602 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000034.1> .
+
+_:Nb0992b0574e94050bc1f83e42becb7e3 a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 11853 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000091.1> .
+
+_:Nb37f0eaf51fa4ce9a96feee75fefbc68 a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 105 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000105.1> .
+
+_:Nb4ca70868ad34d3eafbeffc9ffedd1ed a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 107211 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000012.1> .
+
+_:Nb5590c2efed948a4b0ab7ec225053dfb a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 8338 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000037.1> .
+
+_:Nb7b6d349a3cd453aabfbd4e1ade2d76b a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 168235 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000026.1> .
+
+_:Nb8dc076d8cd34792949c73603251cec3 a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 11938 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000045.1> .
+
+_:Nbc5c9647f22a45aca36074bfcb30e23b a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 53802 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000005.1> .
+
+_:Nbfd4eb974e4042298e68e017034bdddd a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 67069 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000006.1> .
+
+_:Nc504f35016254cfbb1f1c7255a2199a8 a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 54977 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000005.1> .
+
+_:Nc5bf2807e90540838439a2c2d9aee997 a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 91677 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000023.1> .
+
+_:Nc68d56a7f9d84736a8fce7138a04efe6 a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 62802 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000008.1> .
+
+_:Nc83a176ea328473fa3aeb10787485c72 a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 110334 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000012.1> .
+
+_:Nccbd11cb8fbe42c78d135a8340e8e2bc a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 103317 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000004.1> .
+
+_:Nd4ce1a9622eb4856ab3f6b06ee116d53 a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 1292 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000007.1> .
+
+_:Nd96148c69d16421eba9d7bb32abb7a0f a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 114705 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000033.1> .
+
+_:Nda99eac4c5d141a78192d185a9bff29d a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 1470 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000059.1> .
+
+_:Ndbada6846fa54a96a4fc75108536856a a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 126759 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000004.1> .
+
+_:Ndd22e4e8830240b8af5ab8d82908bb7f a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 468 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000007.1> .
+
+_:Nde2712bb0ade48baa784eddd2f23dcae a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 2428 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000057.1> .
+
+_:Ne051808a240e4858b345313cd3e88185 a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 7046 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000007.1> .
+
+_:Ne185ceb9ae8b47aca815b113da5655f9 a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 993 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000091.1> .
+
+_:Ne25a58104d2546a9afe6a3316095bf8c a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 114744 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000023.1> .
+
+_:Ne661783dbb62444cae656bcc3daba874 a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 88163 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000023.1> .
+
+_:Ne698163c049840f79c06f90732a8a3b7 a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 2770 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000051.1> .
+
+_:Ne7c31d91d1214f62972d957c63fbce24 a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 920 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000105.1> .
+
+_:Ne7eaa3bff34642c6936df399a349e7d1 a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 59615 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000011.1> .
+
+_:Nea1ccc357ac8417c95eae010a2cb11b2 a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 119377 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000033.1> .
+
+_:Nea3682bdfdd647d1994b5a4fc9864278 a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 10518 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000037.1> .
+
+_:Neab43c956a6b40c18f72270c238dbd8c a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 56888 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000011.1> .
+
+_:Nedf8ac3693a3420ab9de8ce8bfa3d354 a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 113643 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000023.1> .
+
+_:Nee743f147106499ea13303cc17db525f a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 1910 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000051.1> .
+
+_:Neef8b788f5704d0e90e4a4ebd1e0fa76 a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 66473 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000005.1> .
+
+_:Nf0607fc690634043a1bf37761337ef42 a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 91677 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000023.1> .
+
+_:Nf09273501a8d42b18d7349a055653800 a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 114824 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000012.1> .
+
+_:Nf56779b31be34550bc7e37d760059031 a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 3478 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000079.1> .
+
+_:Nf6231cb68826483086511d398c0bc4ee a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 56761 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000011.1> .
+
+_:Nfa24d8a7bfe84e5e8badc3c0edcb6998 a faldo:ExactPosition,
+        faldo:Position,
+        faldo:ReverseStrandPosition ;
+    faldo:position 123625 ;
+    :isFoundIn <https://www.github.com/superphy#d92398fcfa08a8f3d7b3846bc01498cc90a35406/contigs/MOKN01000004.1> .
 
