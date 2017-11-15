@@ -1,7 +1,9 @@
 import requests
 import os
 import config
+import redis
 from functools import wraps
+from rq import Queue
 
 def queue_upload(func):
     '''
