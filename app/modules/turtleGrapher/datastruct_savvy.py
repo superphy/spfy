@@ -185,7 +185,6 @@ def generate_datastruct(query_file, id_file, pickled_dictionary):
 
     return graph
 
-@queue_upload
 def datastruct_savvy(query_file, id_file, pickled_dictionary):
     """
     Note: we work we base graphs (those generated solely from the fasta file) and result graphs (those generated from analysis modules (RGI/ECtyper) separately - they are only linked once uploaded to blazegraph
@@ -193,4 +192,4 @@ def datastruct_savvy(query_file, id_file, pickled_dictionary):
     :return:
     """
     graph = generate_datastruct(query_file, id_file, pickled_dictionary)
-    return graph
+    return queue_upload(graph)
