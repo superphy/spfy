@@ -85,7 +85,3 @@ def upload():
         return jsonify(jobs_dict)
     else:
         return "Captcha Failed Verification", 500
-
-@bp.route('/', methods=['GET', 'POST'])
-def index():
-    return render_template("index.html")
