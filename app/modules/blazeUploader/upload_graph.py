@@ -12,7 +12,7 @@ def queue_upload(graph):
     redis_conn = redis.from_url(redis_url)
     upload_q = Queue('blazegraph_uploads', connection=redis_conn,
                         default_timeout=config.DEFAULT_TIMEOUT)
-    job_upload = upload_q.enqueue(upload_graph(graph))
+    job_upload = upload_q.enqueue(upload_graph, graph)
     # While we return the job id as a good practice, this isn't used atm.
     return job_upload.get_id()
 
