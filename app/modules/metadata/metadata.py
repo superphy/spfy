@@ -38,8 +38,7 @@ def read(filename):
     else:
         return pd.read_csv(filename)
 
-def upload_metadata(filename):
-    df = read(filename)
+def generate_metadata_graph(df):
     graph = Graph()
     for f in df.filename:
         # resolve the spfyid for that file
@@ -57,18 +56,25 @@ def upload_metadata(filename):
             for column_header in row:
                 # Grab the value at that cell.
                 cell_value = row[column_header][0]
-                # There's a unique case for the serotype.
-                if column_header == 'serotype':
-                    # Split the serotype value in O- and H- type.
-                    for st in cell_value.upper().split(':'):
-                        if 'O' in st:
-                            # We pass the O-Type instead of using the
-                            # column header
-                            graph = parse('O-Type', st, sid, graph)
-                        elif 'H' in st:
-                            graph = parse('H-Type', st, sid, graph)
-                else:
-                    # Otherise, the normal.
-                    graph = parse(column_header, cell_value, sid, graph)
+                # Check that the cell doesn't just say 'undefined'
+                if cell_value not in ('undefined', 'n/a'):
+                    # There's a unique case for the serotype.
+                    if column_header == 'serotype':
+                        # Split the serotype value in O- and H- type.
+                        for st in cell_value.upper().split(':'):
+                            if 'O' in st:
+                                # We pass the O-Type instead of using the
+                                # column header
+                                graph = parse('O-Type', st, sid, graph)
+                            elif 'H' in st:
+                                graph = parse('H-Type', st, sid, graph)
+                    else:
+                        # Otherise, the normal.
+                        graph = parse(column_header, cell_value, sid, graph)
+    return graph
+
+def upload_metadata(filename):
+    df = read(filename)
+    graph = generate_metadata_graph(df)
     upload_graph(graph)
     return graph.serialize(format='json-ld')
