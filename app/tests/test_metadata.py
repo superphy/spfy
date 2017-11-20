@@ -1,4 +1,5 @@
 import pandas
+import rdflib
 from modules.metadata.metadata import generate_metadata_graph, read
 
 metadata_sheet = 'tests/example_metadata.xlsx'
