@@ -38,13 +38,15 @@ def read(filename):
     else:
         return pd.read_csv(filename)
 
-def generate_metadata_graph(df):
+def generate_metadata_graph(df, spfyid = None):
     graph = Graph()
     for f in df.filename:
-        # resolve the spfyid for that file
-        # note: we have to run secure_filename to replicate the same saved
-        # name in the db
-        spfyid = resolve_spfyids(gu('dc:description'), secure_filename(f))
+        # Resolve the spfyid for that file.
+        # Note: we have to run secure_filename to replicate the same saved
+        # name in the db.
+        # Spfyid is accepted as a parameter for testing purposes.
+        if not spfyid:
+            spfyid = resolve_spfyids(gu('dc:description'), secure_filename(f))
         # check if a spfyid was found
         # Note: spfyid should be a Set
         if spfyid:

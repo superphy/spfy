@@ -8,5 +8,5 @@ def test_read_excel():
 
 def test_metadata():
     df = read(metadata_sheet)
-    graph = generate_metadata_graph(df)
+    graph = generate_metadata_graph(df,':spfy1')
     assert type(graph) is rdflib.graph.Graph
