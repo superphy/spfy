@@ -29,11 +29,11 @@ def read(filename):
     Args:
         filename(Str): an absolute path to the file
     '''
-    extension = os.path.splitext(file)[1]
+    extension = filename.split('.')[-1]
     # Check we support the filetype.
-    assert extension in ('.xls', '.xlsx', '.csv')
+    assert extension in ('xls', 'xlsx', 'csv')
 
-    if extension in ('.xls', '.xlsx'):
+    if extension in ('xls', 'xlsx'):
         return pd.read_excel(filename)
     else:
         return pd.read_csv(filename)
