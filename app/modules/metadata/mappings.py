@@ -9,7 +9,7 @@ def pair(relation, human_readable = None):
     '''
     d = {
         'relation': relation,
-        'human_readable' = human_readable
+        'human_readable': human_readable
     }
     return d
 
