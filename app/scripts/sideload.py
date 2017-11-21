@@ -20,7 +20,12 @@ def create_request(f):
         'vf': True,
         'serotype': True,
         'bulk': True,
-        'groupresults': True
+        'groupresults': False,
+        'prob': 90,
+        'stx1': True,
+        'stx2': True,
+        'eae': True,
+        'pan': True
     }
     d['options'] = options
     # add the file
@@ -32,7 +37,7 @@ def load(directory='/datastore'):
     # walk the directory and grab all the files
     for root, dirs, files in os.walk(os.path.abspath(directory)):
         for file in files:
-            if os.path.splitext(file)[1] == '.fna':
+            if os.path.splitext(file)[1] in ('.fna', '.fasta'):
                 list_files.append(os.path.join(root, file))
     len_files = len(list_files)
     p = 0
@@ -54,5 +59,6 @@ if __name__ == "__main__":
         default='/datastore'
     )
     args = parser.parse_args()
-
+    print 'about to load...'
     load(args.i)
+    print 'load completed sucessfully.'
