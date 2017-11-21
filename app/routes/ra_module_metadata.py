@@ -27,7 +27,7 @@ def uploadmetadata():
             return jobid
     return 'Couldnt enqueue job', 500
 
-@bp_ra_meta.route('/api/v0/get_metadata_example', methods=['GET'])
+@bp_ra_meta.route('/api/v0/get_metadata_example.xlsx', methods=['GET'])
 def get_example():
     filename = 'example_metadata.xlsx'
     return send_file('static/' + filename, attachment_filename=filename)
