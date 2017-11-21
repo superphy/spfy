@@ -6,7 +6,7 @@
 
 import config
 from modules.turtleGrapher.turtle_utils import generate_hash, generate_uri as gu, link_uris
-from modules.blazeUploader.upload_graph import upload_graph
+from modules.blazeUploader.upload_graph import queue_upload
 from modules.turtleGrapher.turtle_utils import actual_filename
 from rdflib import Namespace, Graph, Literal, plugin
 from Bio import SeqIO
@@ -114,4 +114,4 @@ def generate_turtle_skeleton(query_file):
 
 def turtle_grapher(query_file):
     graph = generate_turtle_skeleton(query_file)
-    return upload_graph(graph)
+    return queue_upload(graph)
