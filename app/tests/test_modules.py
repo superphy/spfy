@@ -5,7 +5,7 @@ import pytest
 import os
 import cPickle as pickle
 
-from modules.qc.qc import qc
+from modules.qc.qc import qc, check_header_parsing, check_ecoli
 from modules.blazeUploader.reserve_id import write_reserve_id
 from modules.ectyper.call_ectyper import call_ectyper
 from modules.amr.amr import amr
@@ -29,9 +29,28 @@ def listdir_fullpath(d):
 # globals for testing
 GENOMES_LIST_NOT_ECOLI = listdir_fullpath('tests/notEcoli')
 GENOMES_LIST_ECOLI = listdir_fullpath('tests/ecoli')
+GENOMES_LIST_HEADERS = listdir_fullpath('tests/headers')
 
 #### Non-Blazegraph/RQ Tests
 
+# QC-related test.
+def test_ecoli_checking():
+    for ecoli_genome in GENOMES_LIST_ECOLI:
+        assert check_ecoli(ecoli_genome) == True
+    for non_ecoli_genome in GENOMES_LIST_NOT_ECOLI:
+        assert check_ecoli(non_ecoli_genome) == False
+
+# QC-related test.
+def test_header_parsing():
+    # Test header parsing for general E.Coli genomes.
+    for ecoli_genome in GENOMES_LIST_ECOLI:
+        assert check_header_parsing(ecoli_genome) == True
+
+    # Test header parsing for genomes we're having problems with.
+    for ecoli_genome in GENOMES_LIST_HEADERS:
+        assert check_header_parsing(ecoli_genome) == True
+
+# QC-related test.
 def test_qc():
     for ecoli_genome in GENOMES_LIST_ECOLI:
         assert qc(ecoli_genome) == True

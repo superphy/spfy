@@ -59,7 +59,14 @@ def check_largest_spfyid():
     """.format(spfyIdType=gu(':spfyId'), hasPart=gu(':hasPart'), genomeIdType=gu('g:Genome'), dateIdType=gu('ge:0000024'))
     sparql.setQuery(query)
     sparql.setReturnFormat(JSON)
+    # run the query against the db
     results = sparql.query().convert()
+    # print 'query'
+    # print results
+    # # try to convert the results
+    # reuslts = results.convert()
+    # print 'results'
+    # print results
     log.debug('check_largest_spfyid():')
     log.debug(query)
     log.debug(results)

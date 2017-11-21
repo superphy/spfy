@@ -1,5 +1,5 @@
 import os
-from flask import Blueprint, request, current_app
+from flask import Blueprint, request, current_app, send_file
 from werkzeug.utils import secure_filename
 from datetime import datetime
 from modules.meta import blob_meta_enqueue
@@ -26,3 +26,8 @@ def uploadmetadata():
             jobid = blob_meta_enqueue(filename)
             return jobid
     return 'Couldnt enqueue job', 500
+
+@bp_ra_meta.route('/api/v0/get_metadata_example.xlsx', methods=['GET'])
+def get_example():
+    filename = 'example_metadata.xlsx'
+    return send_file('static/' + filename, attachment_filename=filename)

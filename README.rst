@@ -4,7 +4,7 @@
 
 **Spfy**: speedy `superphy <https://github.com/superphy/semantic>`__
 
-Live: https://lfz.corefacility.ca/superphy/grouch/
+Live: https://lfz.corefacility.ca/superphy/spfy/
 
 Platform for predicting Serotype & Virulence Factors (via
 `ECTyper <https://github.com/phac-nml/ecoli_serotyping>`__) and
@@ -31,8 +31,29 @@ Use:
 
 .. warning:: There is a option to run all subtyping methods in the background even if the user doesn't select them. This is enabled by DEFAULT. You can disable the option by setting ``BACKLOG_ENABLED = False`` in app/config.py
 
+Submodule Build Statuses:
+-------------------------
+
+ECTyper:
+
+.. image:: https://travis-ci.org/phac-nml/ecoli_serotyping.svg?branch=superphy
+    :target: https://travis-ci.org/phac-nml/ecoli_serotyping
+
+PanPredic:
+
+.. image:: https://travis-ci.org/superphy/PanPredic.svg?branch=master
+    :target: https://travis-ci.org/superphy/PanPredic
+
+Docker Image for Conda:
+
+.. image:: https://travis-ci.org/superphy/docker-flask-conda.svg?branch=master
+    :target: https://travis-ci.org/superphy/docker-flask-conda
+
 Architecture:
 -------------
+.. image:: screenshots/docker.svg
+    :align: center
+    :alt: screenshot of the results page
 
 +------+------+------+------+
 | Dock | Port | Name | Des  |
@@ -104,9 +125,6 @@ Architecture:
 |      | 00/t | p\_1 | spfy |
 |      | cp   |      |      |
 +------+------+------+------+
-
-Note: an earlier version of the front-end (written in AngularJS with
-limited features) is still available at http://localhost:8000
 
 Further Details:
 ----------------
