@@ -1,5 +1,5 @@
 import os
-from flask import Blueprint, request, current_app, url_for, send_file
+from flask import Blueprint, request, current_app, send_file
 from werkzeug.utils import secure_filename
 from datetime import datetime
 from modules.meta import blob_meta_enqueue
@@ -30,5 +30,4 @@ def uploadmetadata():
 @bp_ra_meta.route('/api/v0/get_metadata_example', methods=['GET'])
 def get_example():
     filename = 'example_metadata.xlsx'
-    # f = url_for('static', filename=filename)
     return send_file('static/' + filename, attachment_filename=filename)
