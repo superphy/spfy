@@ -59,7 +59,7 @@ def generate_metadata_graph(df, spfyid = None):
                 # Grab the value at that cell.
                 cell_value = row[column_header][0]
                 # Check that the cell doesn't just say 'undefined'
-                if cell_value not in ('undefined', 'n/a'):
+                if cell_value not in ('undefined', 'n/a', 'NaN'):
                     # There's a unique case for the serotype.
                     if column_header == 'serotype':
                         # Split the serotype value in O- and H- type.
