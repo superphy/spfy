@@ -30,5 +30,5 @@ def uploadmetadata():
 @bp_ra_meta.route('/api/v0/get_metadata_example', methods=['GET'])
 def get_example():
     filename = 'example_metadata.xlsx'
-    f = url_for('static', filename=filename)
-    return send_file(f, attachment_filename=filename)
+    # f = url_for('static', filename=filename)
+    return send_file('static/' + filename, attachment_filename=filename)
