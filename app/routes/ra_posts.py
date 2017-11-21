@@ -2,6 +2,13 @@ import os
 import tarfile
 import zipfile
 import redis
+
+import tempfile
+import time
+
+import flask
+import werkzeug
+
 from datetime import datetime
 from flask import Blueprint, request, jsonify, current_app
 from flask_recaptcha import ReCaptcha
@@ -158,6 +165,33 @@ def handle_singleton(jobs_dict):
                 blob_ids.update(create_blob_id(f,analysis,blob_dict))
     return blob_ids
 
+def current_milli_time():
+    return int(round(time.time() * 1000))
+
+def intWithCommas(x):
+    if type(x) not in [type(0), type(0L)]:
+        raise TypeError("Parameter must be an integer.")
+    if x < 0:
+        return '-' + intWithCommas(-x)
+    result = ''
+    while x >= 1000:
+        x, r = divmod(x, 1000)
+        result = ",%03d%s" % (r, result)
+    return "%d%s" % (x, result)
+
+def measure_spent_time():
+    start = current_milli_time()
+    diff = { 'res' : None }
+    def get_spent_time(raw=False):
+        if diff['res'] == None:
+            diff['res'] = current_milli_time() - start
+        if raw:
+            return diff['res']
+        else:
+            return intWithCommas(diff['res'])
+    return get_spent_time
+
+
 # for Subtyping module
 # the /api/v0 prefix is set to allow CORS for any postfix
 # this is a modification of the old upload() methods in views.py
@@ -165,6 +199,9 @@ def handle_singleton(jobs_dict):
 def upload():
     recaptcha = ReCaptcha(app=current_app)
     if recaptcha.verify():
+        form = request.form
+
+        # old file saving
         form = request.form
         options = {}
         # defaults

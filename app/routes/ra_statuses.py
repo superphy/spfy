@@ -41,7 +41,7 @@ def job_status_reactapp_grouped(job_id, redis_connection):
     # we cast this using ast.literal_eval()
     # the alt. is to set a response callback via redis_connection.set_response_callback()
     jobs_dict = literal_eval(jobs_dict)
-    print jobs_dict
+    # print jobs_dict
     # if any job in a grouped job fails, immediately return
     # otherwise, check that all jobs are finished (pending = False)
     # before merging the job results
