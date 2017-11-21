@@ -2,7 +2,7 @@ import cPickle as pickle
 from rdflib import BNode, Literal, Graph
 from modules.turtleGrapher.turtle_utils import generate_uri as gu, generate_hash, link_uris
 from modules.turtleGrapher.turtle_grapher import generate_graph
-from modules.blazeUploader.upload_graph import upload_graph
+from modules.blazeUploader.upload_graph import queue_upload
 from modules.PanPredic.pan_utils import contig_name_parse
 # working with Serotype, Antimicrobial Resistance, & Virulence Factor data
 # structures
@@ -192,4 +192,4 @@ def datastruct_savvy(query_file, id_file, pickled_dictionary):
     :return:
     """
     graph = generate_datastruct(query_file, id_file, pickled_dictionary)
-    return upload_graph(graph)
+    return queue_upload(graph)
