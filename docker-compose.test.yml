@@ -1,0 +1,84 @@
+version: '2'
+services:
+  sut:
+    build: .
+    dockerfile: Dockerfile.test
+    networks:
+      - dockernet
+      
+  webserver:
+    build:
+      context: .
+      dockerfile: Dockerfile-spfy
+    image: backend
+    ports:
+    - "8090:80"
+    depends_on:
+    - redis
+    volumes:
+    - /datastore
+    networks:
+      - dockernet
+
+  reactapp:
+    build:
+      context: .
+      dockerfile: Dockerfile-reactapp
+    image: reactapp
+    ports:
+    - "8091:5000"
+    depends_on:
+    - webserver
+    networks:
+      - dockernet
+
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile-rq
+    image: backend-rq
+    ports:
+    - "9181:9181" #this is for debugging, drop a shell and run rq-dashboard if you need to see jobs
+    volumes_from:
+    - webserver
+    depends_on:
+    - webserver
+    networks:
+      - dockernet
+
+  worker-blazegraph-ids:
+    build:
+      context: .
+      dockerfile: Dockerfile-rq-blazegraph
+    image: backend-rq-blazegraph
+    volumes_from:
+    - webserver
+    depends_on:
+    - webserver
+    networks:
+      - dockernet
+
+  worker-priority:
+    build:
+      context: .
+      dockerfile: Dockerfile-rq-priority
+    image: backend-rq-priority
+    volumes_from:
+    - webserver
+    depends_on:
+    - webserver
+    networks:
+      - dockernet
+
+  redis:
+    image: redis:3.2
+    networks:
+      - dockernet
+
+networks:
+  dockernet:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.0.0/24
+          gateway: 192.168.0.1
