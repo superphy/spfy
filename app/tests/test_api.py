@@ -16,5 +16,6 @@ import subprocess
 WEBSERVER = 'backend_webserver_1'
 
 def test_api_internal():
-    o = subprocess.check_output('docker exec -ti {webserver} sh -c "echo a"'.format(webserver=WEBSERVER))
+    exc = 'docker exec -ti {webserver} sh -c'.format(webserver=WEBSERVER)
+    o = subprocess.check_output(' "{cmd}"'.format(cmd='echo a'), shell=True, stderr=subprocess.STDOUT)
     assert o == 'a'
