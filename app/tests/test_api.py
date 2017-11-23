@@ -1,6 +1,6 @@
 import requests
 
-WEBSERVER_PORT = '8090'
+WEBSERVER_PORT = '8000'
 API_ROOT = 'api/v0/'
 
 def test_api():
