@@ -12,11 +12,19 @@ def test_api():
     assert r.text == 'true'
 
 import subprocess
+import config
 
 WEBSERVER = 'backend_webserver_1'
+blazegraph_url = config.database['blazegraph_url']
 
 def test_api_internal():
+    # Check that the subprocess setup works before running other tests.
     exc = """docker exec -i {webserver} sh -c""".format(webserver=WEBSERVER)
     o = subprocess.check_output("""{exc} {cmd}""".format(exc=exc,cmd='"echo a"'), shell=True, stderr=subprocess.STDOUT)
-    # o = subprocess.check_output(['docker', 'exec -ti backend_webserver_1 sh -c "echo a"'])
+    o = o.replace('\n', '')
     assert o == 'a'
+
+    # Check that 'webserver' can connect to 'blazegraph'
+    cmd = "curl {blazegraph}".format(blazegraph=blazegraph_url)
+    o = subprocess.check_output("""{exc} {cmd}""".format(exc=exc,cmd=cmd), shell=True, stderr=subprocess.STDOUT)
+    assert 'Welcome to Blazegraph Database!' in o
