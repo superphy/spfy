@@ -1,4 +1,4 @@
-from flask import Blueprint
+from flask import Blueprint, jsonify
 
 bp_alive = Blueprint('alive', __name__)
 
@@ -9,4 +9,4 @@ def alive():
     This route is queryed by PyTest.
     '''
     # Lowercase true to distinguish from Python's True.
-    return 'true'
+    return jsonify('true')
