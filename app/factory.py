@@ -1,5 +1,5 @@
 '''
-this is the app factory
+This is the app factory used to geenrate an instance of the Flask app.
 '''
 
 from flask import Flask
@@ -15,6 +15,7 @@ from flask_recaptcha import ReCaptcha
 from flask_cors import CORS, cross_origin
 from raven.contrib.flask import Sentry
 from routes.ra_pan import bp_ra_pan
+from routes.alive import bp_alive
 
 def create_app():
     app = Flask(__name__)
@@ -44,5 +45,6 @@ def create_app():
     app.register_blueprint(bp_ra_db)
     app.register_blueprint(bp_ra_meta)
     app.register_blueprint(bp_ra_pan)
+    app.register_blueprint(bp_alive)
 
     return app
