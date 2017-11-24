@@ -17,14 +17,16 @@ import config
 WEBSERVER = 'backend_webserver_1'
 blazegraph_url = config.database['blazegraph_url']
 
+exc = """docker exec -i {webserver} sh -c""".format(webserver=WEBSERVER)
+
 def test_api_internal():
     # Check that the subprocess setup works before running other tests.
-    exc = """docker exec -i {webserver} sh -c""".format(webserver=WEBSERVER)
     o = subprocess.check_output("""{exc} {cmd}""".format(exc=exc,cmd='"echo a"'), shell=True, stderr=subprocess.STDOUT)
     o = o.replace('\n', '')
     assert o == 'a'
 
-    # Check that 'webserver' can connect to 'blazegraph'
+def test_api_internal_blazegraph():
+    # Check that 'webserver' can connect to the 'blazegraph' database.
     cmd = '"curl {blazegraph}"'.format(blazegraph=blazegraph_url)
     o = subprocess.check_output("""{exc} {cmd}""".format(exc=exc,cmd=cmd), shell=True, stderr=subprocess.STDOUT)
-    assert 'Welcome to Blazegraph Database!' in o
+    assert '</rdf:RDF>' in o
