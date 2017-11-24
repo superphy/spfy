@@ -25,6 +25,6 @@ def test_api_internal():
     assert o == 'a'
 
     # Check that 'webserver' can connect to 'blazegraph'
-    cmd = "curl {blazegraph}".format(blazegraph=blazegraph_url)
+    cmd = '"curl {blazegraph}"'.format(blazegraph=blazegraph_url)
     o = subprocess.check_output("""{exc} {cmd}""".format(exc=exc,cmd=cmd), shell=True, stderr=subprocess.STDOUT)
     assert 'Welcome to Blazegraph Database!' in o
