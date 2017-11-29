@@ -40,6 +40,7 @@ def move(p, dst):
             print('problem character detected, copying: ' + f + ' as ' + dst_f)
             shutil.copy2(f, dst_f)
         else:
+            print 'moving {0} to {1}'.format(f,dst)
             shutil.copy(f,dst)
 
 if __name__ == '__main__':
@@ -48,8 +49,8 @@ if __name__ == '__main__':
     # parsing cli-input
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "-d",
-        help="Directory of genome files",
+        "-s",
+        help="Source of genome files",
         required=False,
         default='/Warehouse/Users/claing/enterobase_db-fixed'
     )
@@ -64,10 +65,16 @@ if __name__ == '__main__':
         help="Location of a pickled chunk file",
         required=False
     )
+    parser.add_argument(
+        "-d",
+        help="Destination for files",
+        required=False
+    )
     args = parser.parse_args()
     if args.c:
         print 'chunk file {0} provided, only moving...'.format(args.c)
+        move(args.c,args.d)
     else:
         print 'no chunk file provided, only creating chunks...'
-        lst = gather(args.d)
+        lst = gather(args.s)
         chunk(args.n, lst)
