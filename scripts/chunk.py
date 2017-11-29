@@ -25,7 +25,7 @@ def chunk(chunk_size, lst, f_base=''):
         pickle.dump(l,open(f,'wb'))
         p = q
 
-def move(p, dst):
+def copy(p, dst):
     import shutil
     import cPickle as pickle
     from os.path import basename, join
@@ -73,7 +73,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
     if args.c:
         print 'chunk file {0} provided, only moving...'.format(args.c)
-        move(args.c,args.d)
+        copy(args.c,args.d)
     else:
         print 'no chunk file provided, only creating chunks...'
         lst = gather(args.s)
