@@ -54,8 +54,12 @@ database = {}
 #database['blazegraph_url'] = 'http://localhost:9000/blazegraph/namespace/superphy/sparql'
 database['blazegraph_url'] = os.getenv(
     'SUPERPHY_RDF_URL',
-    'http://192.168.0.1:9999/blazegraph/sparql'
+    'http://blazegraph:8080/bigdata/sparql'
 )
+# database['blazegraph_url'] = os.getenv(
+#     'SUPERPHY_RDF_URL',
+#     'http://192.168.0.1:9999/blazegraph/sparql'
+# )
 #### end of savvy.py stuff
 
 
