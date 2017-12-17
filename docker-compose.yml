@@ -11,8 +11,8 @@ services:
     - redis
     volumes:
     - /datastore
-    networks:
-      - dockernet
+    # networks:
+    #   - dockernet
 
   reactapp:
     build:
@@ -23,8 +23,8 @@ services:
     - "8091:5000"
     depends_on:
     - webserver
-    networks:
-      - dockernet
+    # networks:
+    #   - dockernet
 
   worker:
     build:
@@ -37,8 +37,8 @@ services:
     - webserver
     depends_on:
     - webserver
-    networks:
-      - dockernet
+    # networks:
+    #   - dockernet
 
   worker-blazegraph-ids:
     build:
@@ -49,8 +49,8 @@ services:
     - webserver
     depends_on:
     - webserver
-    networks:
-      - dockernet
+    # networks:
+    #   - dockernet
 
   worker-priority:
     build:
@@ -61,8 +61,8 @@ services:
     - webserver
     depends_on:
     - webserver
-    networks:
-      - dockernet
+    # networks:
+    #   - dockernet
 
   redis:
     image: redis:3.2
