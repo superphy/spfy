@@ -6,7 +6,7 @@ services:
       dockerfile: Dockerfile-spfy
     image: backend
     ports:
-    - "8090:80"
+    - "8000:80"
     depends_on:
     - redis
     volumes:
@@ -20,7 +20,7 @@ services:
       dockerfile: Dockerfile-reactapp
     image: reactapp
     ports:
-    - "8091:5000"
+    - "8090:5000"
     depends_on:
     - webserver
     # networks:
