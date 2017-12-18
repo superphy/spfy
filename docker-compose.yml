@@ -61,8 +61,6 @@ services:
     - webserver
     depends_on:
     - webserver
-    # networks:
-    #   - dockernet
 
   redis:
     image: redis:3.2
