@@ -1,3 +1,4 @@
+# This builds the 'webserver' image which is our Flask API.
 FROM superphy/docker-flask-conda:webserver
 
 ## Nginx:
