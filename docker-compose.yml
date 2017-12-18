@@ -11,6 +11,8 @@ services:
     - redis
     volumes:
     - /datastore
+    # networks:
+    #   - dockernet
 
   reactapp:
     build:
@@ -18,9 +20,11 @@ services:
       dockerfile: Dockerfile-reactapp
     image: reactapp
     ports:
-    - "8091:5000"
+    - "8090:5000"
     depends_on:
     - webserver
+    # networks:
+    #   - dockernet
 
   worker:
     build:
@@ -33,6 +37,8 @@ services:
     - webserver
     depends_on:
     - webserver
+    # networks:
+    #   - dockernet
 
   worker-blazegraph-ids:
     build:
@@ -43,6 +49,8 @@ services:
     - webserver
     depends_on:
     - webserver
+    # networks:
+    #   - dockernet
 
   worker-priority:
     build:
@@ -56,10 +64,20 @@ services:
 
   redis:
     image: redis:3.2
+    # networks:
+    #   - dockernet
 
   blazegraph:
     image: superphy/blazegraph:2.1.4-inferencing
     ports:
-    - "8080:8080"
+      - "8080:8080"
     volumes:
-    - /var/lib/jetty/
+      - /var/lib/jetty/
+
+# networks:
+#   dockernet:
+#     driver: bridge
+#     ipam:
+#       config:
+#         - subnet: 192.168.0.0/24
+#           gateway: 192.168.0.1
