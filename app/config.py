@@ -68,3 +68,14 @@ database['blazegraph_url'] = os.getenv(
 # to configure RQ for it in a single step
 # NOTE!!!: There is a bug with Raven that needs to be accounted for in RQ config. You must prefix your sentry dsn with sync+ eg 'sync+https://...' see https://github.com/nvie/rq/issues/350 . As of Mar.'17 this hasn't been fixed.
 #SENTRY_DSN = 'sync+https://public:secret@example.com/1'
+
+## For User Accounts
+# Flask-SQLAlchemy settings
+SQLALCHEMY_DATABASE_URI = 'postgresql://postgres/spfy'
+SQLALCHEMY_TRACK_MODIFICATIONS = False    # Avoids SQLAlchemy warning
+
+# Flask-User settings
+USER_APP_NAME = "Spfy Accounts"      # Shown in and email templates and page footers
+USER_ENABLE_EMAIL = False      # Disable email authentication
+USER_ENABLE_USERNAME = True    # Enable username authentication
+USER_REQUIRE_RETYPE_PASSWORD = False    # Simplify register form
