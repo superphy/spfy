@@ -3,20 +3,33 @@ This is the app factory used to geenrate an instance of the Flask app.
 '''
 
 from flask import Flask
+
+from flask_recaptcha import ReCaptcha
+from flask_cors import CORS, cross_origin
+from raven.contrib.flask import Sentry
+# from flask_mail import Mail
+from flask_migrate import Migrate, MigrateCommand
 from flask_sqlalchemy import SQLAlchemy
-from flask_user import UserManager, UserMixin
+from flask_user import UserManager, SQLAlchemyAdapter
+# from flask_wtf.csrf import CSRFProtect
+
 import config
+
 from routes.views import bp as spfy
 from routes.ra_views import bp_ra_views
 from routes.ra_posts import bp_ra_posts
 from routes.ra_statuses import bp_ra_statuses
 from routes.ra_module_database import bp_ra_db
 from routes.ra_module_metadata import bp_ra_meta
-from flask_recaptcha import ReCaptcha
-from flask_cors import CORS, cross_origin
-from raven.contrib.flask import Sentry
 from routes.ra_pan import bp_ra_pan
 from routes.alive import bp_alive
+from routes.ra_accounts import main_blueprint
+
+# Instantiate Flask extensions
+db = SQLAlchemy()
+# csrf_protect = CSRFProtect()
+# mail = Mail()
+migrate = Migrate()
 
 def create_app():
     app = Flask(__name__)
@@ -31,35 +44,51 @@ def create_app():
     app.url_map.strict_slashes = False
 
     ## Extensions
+
+    # ReCaptcha
     recaptcha = ReCaptcha()
     recaptcha.init_app(app)
+
+    # CORS
     cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
-    # sentry
+
+    # Sentry
     if hasattr(config, 'SENTRY_DSN'):
         sentry = Sentry(dsn=config.SENTRY_DSN)
         sentry.init_app(app)
 
     # Initialize Flask-SQLAlchemy
-    db = SQLAlchemy(app)
-    # Define the User data-model.
-    # NB: Make sure to add flask_user UserMixin !!!
-    class User(db.Model, UserMixin):
-        __tablename__ = 'users'
-        id = db.Column(db.Integer, primary_key=True)
-        active = db.Column('is_active', db.Boolean(), nullable=False, server_default='1')
+    db.init_app(app)
 
-        # User authentication information
-        username = db.Column(db.String(100), nullable=False, unique=True)
-        password = db.Column(db.String(255), nullable=False, server_default='')
-        email_confirmed_at = db.Column(db.DateTime())
+    # Setup Flask-Migrate
+    migrate.init_app(app, db)
 
-        # User information
-        first_name = db.Column(db.String(100), nullable=False, server_default='')
-        last_name = db.Column(db.String(100), nullable=False, server_default='')
-    # Create all database tables
-    db.create_all()
-    # Setup Flask-User and specify the User data-model
-    user_manager = UserManager(app, db, User)
+    # # Setup Flask-Mail
+    # mail.init_app(app)
+    #
+    # # Setup WTForms CSRFProtect
+    # csrf_protect.init_app(app)
+
+    # Define bootstrap_is_hidden_field for flask-bootstrap's bootstrap_wtf.html
+    from wtforms.fields import HiddenField
+
+    def is_hidden_field_filter(field):
+        return isinstance(field, HiddenField)
+
+    app.jinja_env.globals['bootstrap_is_hidden_field'] = is_hidden_field_filter
+
+    # # Setup an error-logger to send emails to app.config.ADMINS
+    # init_email_error_handler(app)
+
+    # Setup Flask-User to handle user account related forms
+    from .models.user_models import User, MyRegisterForm
+    from .views.misc_views import user_profile_page
+
+    db_adapter = SQLAlchemyAdapter(db, User)  # Setup the SQLAlchemy DB Adapter
+    user_manager = UserManager(db_adapter, app,  # Init Flask-User and bind to app
+                               register_form=MyRegisterForm,  # using a custom register form with UserProfile fields
+                               user_profile_view_function=user_profile_page,
+    )
 
     ## Routes
     app.register_blueprint(spfy)
@@ -71,5 +100,6 @@ def create_app():
     app.register_blueprint(bp_ra_meta)
     app.register_blueprint(bp_ra_pan)
     app.register_blueprint(bp_alive)
+    app.register_blueprint(main_blueprint)
 
     return app
