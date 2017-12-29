@@ -38,6 +38,11 @@ install:
   - wget https://raw.githubusercontent.com/superphy/docker-flask-conda/master/app/environment.yml
   - conda env create -f environment.yml -n backend
   - source activate backend
+  # Get our webserver environment.yml
+  - wget https://raw.githubusercontent.com/superphy/docker-flask-conda/webserver/app/environment.yml -O environment-webserver.yml
+  # Update the backend env with the dependencies for the webserver
+  - conda env update -f environment-webserver.yml
+  # Run pytest
   - pip install pytest
 script:
   #### Run Pytest
