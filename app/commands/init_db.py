@@ -9,8 +9,8 @@ import datetime
 from flask import current_app
 from flask_script import Command
 
-from ..factory import db
-from ..models.user_models import User, Role
+from .factory import db
+from .models.user_models import User, Role
 
 class InitDbCommand(Command):
     """ Initialize the database."""
