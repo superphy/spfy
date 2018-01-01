@@ -23,12 +23,6 @@ from routes.alive import bp_alive
 # from routes.ra_accounts import main_blueprint
 from routes.ra_restricted import bp_ra_restricted
 
-# Instantiate Flask extensions
-db = SQLAlchemy()
-# csrf_protect = CSRFProtect()
-# mail = Mail()
-migrate = Migrate()
-
 # Auth0
 # Error handler
 class AuthError(Exception):

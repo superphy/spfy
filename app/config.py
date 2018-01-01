@@ -71,5 +71,5 @@ database['blazegraph_url'] = os.getenv(
 
 # AUTH0
 AUTH0_DOMAIN = 'spfy.auth0.com'
-API_AUDIENCE = YOUR_API_AUDIENCE
+API_AUDIENCE = 'https://lfz.corefacility.ca/superphy/spfyapi/'
 ALGORITHMS = ["RS256"]
