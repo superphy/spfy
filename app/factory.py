@@ -2,7 +2,7 @@
 This is the app factory used to geenrate an instance of the Flask app.
 '''
 
-from flask import Flask
+from flask import Flask, jsonify
 
 from flask_recaptcha import ReCaptcha
 from flask_cors import CORS, cross_origin
@@ -23,7 +23,8 @@ from routes.ra_module_database import bp_ra_db
 from routes.ra_module_metadata import bp_ra_meta
 from routes.ra_pan import bp_ra_pan
 from routes.alive import bp_alive
-from routes.ra_accounts import main_blueprint
+# from routes.ra_accounts import main_blueprint
+from routes.ra_restricted import bp_ra_restricted
 
 # Instantiate Flask extensions
 db = SQLAlchemy()
@@ -31,8 +32,21 @@ db = SQLAlchemy()
 # mail = Mail()
 migrate = Migrate()
 
+# Auth0
+# Error handler
+class AuthError(Exception):
+    def __init__(self, error, status_code):
+        self.error = error
+        self.status_code = status_code
+
 def create_app():
     app = Flask(__name__)
+
+    @app.errorhandler(AuthError)
+    def handle_auth_error(ex):
+        response = jsonify(ex.error)
+        response.status_code = ex.status_code
+        return response
 
     ## Flask Configs
     app.config.from_object(config)
@@ -100,6 +114,7 @@ def create_app():
     app.register_blueprint(bp_ra_meta)
     app.register_blueprint(bp_ra_pan)
     app.register_blueprint(bp_alive)
-    app.register_blueprint(main_blueprint)
+    # app.register_blueprint(main_blueprint)
+    app.register_blueprint(bp_ra_restricted)
 
     return app
