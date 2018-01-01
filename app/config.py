@@ -68,3 +68,8 @@ database['blazegraph_url'] = os.getenv(
 # to configure RQ for it in a single step
 # NOTE!!!: There is a bug with Raven that needs to be accounted for in RQ config. You must prefix your sentry dsn with sync+ eg 'sync+https://...' see https://github.com/nvie/rq/issues/350 . As of Mar.'17 this hasn't been fixed.
 #SENTRY_DSN = 'sync+https://public:secret@example.com/1'
+
+# AUTH0
+AUTH0_DOMAIN = 'spfy.auth0.com'
+API_AUDIENCE = YOUR_API_AUDIENCE
+ALGORITHMS = ["RS256"]

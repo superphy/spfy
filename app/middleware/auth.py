@@ -6,9 +6,7 @@ from flask import Flask, request, jsonify, _app_ctx_stack
 from flask_cors import cross_origin
 from jose import jwt
 
-AUTH0_DOMAIN = 'spfy.auth0.com'
-API_AUDIENCE = YOUR_API_AUDIENCE
-ALGORITHMS = ["RS256"]
+from config import AUTH0_DOMAIN, API_AUDIENCE, ALGORITHMS
 
 # Format error response and append status code
 def get_token_auth_header():
