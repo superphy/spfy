@@ -8,9 +8,6 @@ from flask_recaptcha import ReCaptcha
 from flask_cors import CORS, cross_origin
 from raven.contrib.flask import Sentry
 # from flask_mail import Mail
-from flask_migrate import Migrate, MigrateCommand
-from flask_sqlalchemy import SQLAlchemy
-from flask_user import UserManager, SQLAlchemyAdapter
 # from flask_wtf.csrf import CSRFProtect
 
 import config
@@ -71,38 +68,11 @@ def create_app():
         sentry = Sentry(dsn=config.SENTRY_DSN)
         sentry.init_app(app)
 
-    # Initialize Flask-SQLAlchemy
-    db.init_app(app)
-
-    # Setup Flask-Migrate
-    migrate.init_app(app, db)
-
     # # Setup Flask-Mail
     # mail.init_app(app)
     #
     # # Setup WTForms CSRFProtect
     # csrf_protect.init_app(app)
-
-    # Define bootstrap_is_hidden_field for flask-bootstrap's bootstrap_wtf.html
-    from wtforms.fields import HiddenField
-
-    def is_hidden_field_filter(field):
-        return isinstance(field, HiddenField)
-
-    app.jinja_env.globals['bootstrap_is_hidden_field'] = is_hidden_field_filter
-
-    # # Setup an error-logger to send emails to app.config.ADMINS
-    # init_email_error_handler(app)
-
-    # Setup Flask-User to handle user account related forms
-    from .models.user_models import User, MyRegisterForm
-    from .views.misc_views import user_profile_page
-
-    db_adapter = SQLAlchemyAdapter(db, User)  # Setup the SQLAlchemy DB Adapter
-    user_manager = UserManager(db_adapter, app,  # Init Flask-User and bind to app
-                               register_form=MyRegisterForm,  # using a custom register form with UserProfile fields
-                               user_profile_view_function=user_profile_page,
-    )
 
     ## Routes
     app.register_blueprint(spfy)
