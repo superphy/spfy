@@ -74,10 +74,13 @@ services:
     volumes:
       - /var/lib/jetty/
 
-  postgres:
-    image: postgres:10.1-alpine
+  mongodb:
+    image: mongo:3.6.1-jessie
     environment:
-      POSTGRES_PASSWORD: example
+      - MONGO_DATA_DIR=/data/db
+      - MONGO_LOG_DIR=/dev/null
+    volumes:
+      - /data/db
 
 # networks:
 #   dockernet:

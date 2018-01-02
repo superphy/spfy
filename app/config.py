@@ -47,7 +47,7 @@ namespaces = {
     'typon' : 'http://purl.phyloviz.net/ontology/typon#'
 }
 
-#database defaults
+# Blazegraph defaults
 DATABASE_ENABLED = True
 database = {}
 #database['blazegraph_url'] = 'http://blazegraph:8080/bigdata/sparql'
@@ -73,3 +73,8 @@ database['blazegraph_url'] = os.getenv(
 AUTH0_DOMAIN = 'spfy.auth0.com'
 API_AUDIENCE = 'https://lfz.corefacility.ca/superphy/spfyapi/'
 ALGORITHMS = ["RS256"]
+
+# MongoDB
+MONGO_DBNAME = 'spfydb'
+MONGO_URI = 'mongodb://mongodb:27017/'
+MONGO_ACCOUNTSCOLLECTION = 'accounts'

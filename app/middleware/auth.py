@@ -98,3 +98,10 @@ def requires_scope(required_scope):
                 if token_scope == required_scope:
                     return True
     return False
+
+def get_sub_claim():
+    """Retrieves the sub claim in the access token. Used as a user-id.
+    """
+    token = get_token_auth_header()
+    unverified_claims = jwt.get_unverified_claims(token)
+    return unverified_claims.get("sub")
