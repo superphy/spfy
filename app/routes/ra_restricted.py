@@ -30,6 +30,7 @@ def update():
     json = request.json
     print('update()', json)
     mongo_update(uid,json)
+    return jsonify('true')
 
 @bp_ra_restricted.route("/api/v0/secured/accounts/store")
 @requires_auth
