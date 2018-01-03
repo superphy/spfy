@@ -26,14 +26,10 @@ def secured_private_ping():
 @requires_auth
 def update():
     uid = get_sub_claim()
+    print('update() request:', request)
     json = request.json
     print('update()', json)
-    try:
-        mongo_update(uid,json)
-        return jsonify('true')
-    except Exception as e:
-        return jsonify(e.strerror)
-
+    mongo_update(uid,json)
 
 @bp_ra_restricted.route("/api/v0/secured/accounts/store")
 @requires_auth
