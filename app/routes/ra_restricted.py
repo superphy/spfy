@@ -32,11 +32,8 @@ def update():
     mongo_update(uid,json)
     return jsonify('true')
 
-@bp_ra_restricted.route("/api/v0/secured/accounts/store")
+@bp_ra_restricted.route("/api/v0/secured/accounts/find")
 @requires_auth
 def find():
-    try:
-        store = mongo_find(uid)
-        return jsonify(store)
-    except:
-        return jsonify('false')
+    store = mongo_find(uid)
+    return jsonify(store)
