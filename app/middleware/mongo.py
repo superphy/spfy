@@ -2,7 +2,7 @@ from pymongo import MongoClient
 from config import MONGO_URI, MONGO_DBNAME, MONGO_ACCOUNTSCOLLECTION
 
 # Connection to MongoDB
-client = MongoClient(MONGO_URI)
+client = MongoClient(MONGO_URI, connect=False)
 # Access Spfy's DB in MongoDB
 db = client[MONGO_DBNAME]
 # Access the collection of accounts information from Spfy's DB
