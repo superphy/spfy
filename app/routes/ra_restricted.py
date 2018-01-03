@@ -35,5 +35,6 @@ def update():
 @bp_ra_restricted.route("/api/v0/secured/accounts/find")
 @requires_auth
 def find():
+    uid = get_sub_claim()
     store = mongo_find(uid)
     return jsonify(store)
