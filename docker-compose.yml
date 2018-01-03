@@ -74,6 +74,14 @@ services:
     volumes:
       - /var/lib/jetty/
 
+  mongodb:
+    image: mongo:3.6.1-jessie
+    environment:
+      - MONGO_DATA_DIR=/data/db
+      - MONGO_LOG_DIR=/dev/null
+    volumes:
+      - /data/db
+
 # networks:
 #   dockernet:
 #     driver: bridge
