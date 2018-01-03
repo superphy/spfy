@@ -14,5 +14,5 @@ def mongo_update(uid, json, key='store'):
     collection_accounts.update_one({'_id':uid},{'$set':{key:json}},upsert=True)
 
 def mongo_find(uid, key='store'):
-    doc = collection_accounts.find_ome({'_id':uid})
+    doc = collection_accounts.find_one({'_id':uid})
     return doc[key]
