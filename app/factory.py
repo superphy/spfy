@@ -7,8 +7,6 @@ from flask import Flask, jsonify
 from flask_recaptcha import ReCaptcha
 from flask_cors import CORS, cross_origin
 from raven.contrib.flask import Sentry
-# from flask_mail import Mail
-# from flask_wtf.csrf import CSRFProtect
 
 import config
 
@@ -20,7 +18,6 @@ from routes.ra_module_database import bp_ra_db
 from routes.ra_module_metadata import bp_ra_meta
 from routes.ra_pan import bp_ra_pan
 from routes.alive import bp_alive
-# from routes.ra_accounts import main_blueprint
 from routes.ra_restricted import bp_ra_restricted
 
 # Auth0
@@ -62,12 +59,6 @@ def create_app():
         sentry = Sentry(dsn=config.SENTRY_DSN)
         sentry.init_app(app)
 
-    # # Setup Flask-Mail
-    # mail.init_app(app)
-    #
-    # # Setup WTForms CSRFProtect
-    # csrf_protect.init_app(app)
-
     ## Routes
     app.register_blueprint(spfy)
     # register the new blueprints used by reactapp
@@ -78,7 +69,6 @@ def create_app():
     app.register_blueprint(bp_ra_meta)
     app.register_blueprint(bp_ra_pan)
     app.register_blueprint(bp_alive)
-    # app.register_blueprint(main_blueprint)
     app.register_blueprint(bp_ra_restricted)
 
     return app
