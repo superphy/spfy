@@ -1,6 +1,7 @@
 import os
 import requests
 from time import sleep
+import json
 
 def get(identifier, barcode, dl_folder):
     f = requests.get('http://enterobase.warwick.ac.uk/upload/download?assembly_id=' + str(identifier) + '&database=ecoli')
@@ -8,7 +9,7 @@ def get(identifier, barcode, dl_folder):
     if not f.text == 'No Assembly or strain record found':
         with open(fn, 'w') as fl:
             fl.write(f.text)
-            print 'wrote ' + fn
+            print('wrote ' + fn)
 
 def enterobase():
     '''
@@ -28,7 +29,7 @@ def enterobase():
     strains = d['strains']
     experiment = d['experiment']
     # >>> len(strains)
-    # 53179
+    # 54181
     # >>> len(experiment)
     # 53179
     # >>> strains[0]
@@ -42,11 +43,32 @@ def enterobase():
     #        u'status', u'top_species', u'total_length'],
     #       dtype='object')
     dl_folder = 'enterobase_db'
+    # Retrive assembly barcode from experiment
+    strains_len = len(strains)
+    experiment_len = len(experiment)
+    print("{} strains and {} experiment objects found".format(strains_len, experiment_len))
+    print("Begin mapping assembly barcode")
+    for index, row in enumerate(strains):
+        print("Finding assembly barcode for {}/{} strains".format(index+1, strains_len))
+        assembled = row['assembly_status']
+        assembly_barcode=''
+        if assembled == 'Assembled':
+            id = row['id']
+            for row2 in experiment:
+                if row2['id'] == id:
+                    assembly_barcode = row2['barcode']
+            if assembly_barcode == '':
+                raise Warning('no assembly barcode found')
+        strains[index]['assembly_barcode'] = assembly_barcode
+    print("Finish mapping assembly barcode")
+    with open("strains.json", 'w') as outfile:
+        json.dump(strains, outfile, indent=4, separators=(',', ': '))
+    print("Modified strains file stored as strains.json")
     if not os.path.exists(dl_folder):
         os.makedirs(dl_folder)
     for row in strains:
         identifier = row['best_assembly']
-        barcode = row['strain']
+        barcode = row['assembly_barcode']
         assembled = row['assembly_status']
         if assembled == 'Assembled':
             i = 1
@@ -55,10 +77,11 @@ def enterobase():
                     get(identifier, barcode, dl_folder)
                     i = 10
                 except:
-                    print 'sleeping ' + str(i) + ' min'
+                    print('sleeping ' + str(i) + ' min')
                     sleep(60 * i)
                     i += 1
                     continue
+
 
 if __name__ == '__main__':
     enterobase()
