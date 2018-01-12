@@ -2,7 +2,6 @@ import redis
 from ast import literal_eval
 from flask import Blueprint, request, jsonify, current_app
 from routes.job_utils import fetch_job
-from routes.ra_api import subtyping_dependencies
 
 bp_ra_statuses = Blueprint('reactapp_statuses', __name__)
 

@@ -7,10 +7,10 @@ from flask import Blueprint, request, jsonify, current_app
 from flask_recaptcha import ReCaptcha
 from werkzeug.utils import secure_filename
 from routes.file_utils import fix_uri, handle_tar, handle_zip
-from routes.ra_api import subtyping_dependencies
 from modules.gc import blob_gc_enqueue
 from modules.pan_spfy import spfy
 from routes.ra_posts import handle_groupresults, handle_singleton
+from middleware.api import subtyping_dependencies
 
 bp_ra_pan = Blueprint('reactapp_pan', __name__)
 
@@ -96,11 +96,11 @@ def pan_upload():
         # defaults
         options['pi']=90
         options['pan'] = True
-        options['amr']=False 
+        options['amr']=False
         options['vf']=False
         options['serotype']=False
         options['bulk']=False
-        
+
 
         # processing form data
         for key, value in form.items():
@@ -127,7 +127,7 @@ def pan_upload():
 
         # get a list of files submitted
         uploaded_files = request.files.getlist("file")
-        
+
 
 
         #set up constants for identifying this sessions
@@ -166,7 +166,7 @@ def pan_upload():
         if options['pan']:
             jobs_enqueued = spfy({'i': file_list, 'pi':options['pi'], 'options':options})
             jobs_dict.update(jobs_enqueued)
-                    
+
         print 'upload(): all files enqueued, returning...'
         #if groupresults:
         #    return jsonify(handle_groupresults(jobs_dict))

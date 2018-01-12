@@ -14,9 +14,9 @@ from flask import Blueprint, request, jsonify, current_app
 from flask_recaptcha import ReCaptcha
 from werkzeug.utils import secure_filename
 from routes.file_utils import fix_uri, handle_tar, handle_zip
-from routes.ra_api import subtyping_dependencies
 from modules.gc import blob_gc_enqueue
 from modules.spfy import spfy
+from middleware.api import subtyping_dependencies
 
 bp_ra_posts = Blueprint('reactapp_posts', __name__)
 
@@ -165,36 +165,8 @@ def handle_singleton(jobs_dict):
                 blob_ids.update(create_blob_id(f,analysis,blob_dict))
     return blob_ids
 
-def current_milli_time():
-    return int(round(time.time() * 1000))
-
-def intWithCommas(x):
-    if type(x) not in [type(0), type(0L)]:
-        raise TypeError("Parameter must be an integer.")
-    if x < 0:
-        return '-' + intWithCommas(-x)
-    result = ''
-    while x >= 1000:
-        x, r = divmod(x, 1000)
-        result = ",%03d%s" % (r, result)
-    return "%d%s" % (x, result)
-
-def measure_spent_time():
-    start = current_milli_time()
-    diff = { 'res' : None }
-    def get_spent_time(raw=False):
-        if diff['res'] == None:
-            diff['res'] = current_milli_time() - start
-        if raw:
-            return diff['res']
-        else:
-            return intWithCommas(diff['res'])
-    return get_spent_time
-
-
 # for Subtyping module
 # the /api/v0 prefix is set to allow CORS for any postfix
-# this is a modification of the old upload() methods in views.py
 @bp_ra_posts.route('/api/v0/upload', methods=['POST'])
 def upload():
     recaptcha = ReCaptcha(app=current_app)

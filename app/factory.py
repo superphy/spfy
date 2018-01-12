@@ -10,7 +10,6 @@ from raven.contrib.flask import Sentry
 
 import config
 
-from routes.views import bp as spfy
 from routes.ra_views import bp_ra_views
 from routes.ra_posts import bp_ra_posts
 from routes.ra_statuses import bp_ra_statuses
@@ -60,7 +59,6 @@ def create_app():
         sentry.init_app(app)
 
     ## Routes
-    app.register_blueprint(spfy)
     # register the new blueprints used by reactapp
     app.register_blueprint(bp_ra_views)
     app.register_blueprint(bp_ra_posts)
