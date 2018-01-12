@@ -9,9 +9,7 @@ def test_api():
     '''
     r = requests.get("""http://localhost:{port}/{api_root}alive""".format(port=WEBSERVER_PORT,api_root=API_ROOT))
     # There is a route defined in the Flask API that returns the string 'true' when queried.
-    assert True == True
-    # TODO: figure out why we get 404 for the test below
-    # assert r.text == 'true'
+    assert r.text == 'true'
 
 import subprocess
 import config
