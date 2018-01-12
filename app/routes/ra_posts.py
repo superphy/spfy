@@ -16,10 +16,9 @@ from werkzeug.utils import secure_filename
 from routes.file_utils import fix_uri, handle_tar, handle_zip
 from modules.gc import blob_gc_enqueue
 from modules.spfy import spfy
+from middleware.api import subtyping_dependencies
 
 bp_ra_posts = Blueprint('reactapp_posts', __name__)
-
-subtyping_dependencies = {"Quality Control", "ID Reservation"}
 
 # for Subtyping module
 def handle_groupresults(jobs_dict):
