@@ -14,11 +14,12 @@ from flask import Blueprint, request, jsonify, current_app
 from flask_recaptcha import ReCaptcha
 from werkzeug.utils import secure_filename
 from routes.file_utils import fix_uri, handle_tar, handle_zip
-from routes.ra_api import subtyping_dependencies
 from modules.gc import blob_gc_enqueue
 from modules.spfy import spfy
 
 bp_ra_posts = Blueprint('reactapp_posts', __name__)
+
+subtyping_dependencies = {"Quality Control", "ID Reservation"}
 
 # for Subtyping module
 def handle_groupresults(jobs_dict):
