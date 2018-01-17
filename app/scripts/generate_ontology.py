@@ -35,32 +35,6 @@ def generate_ontology(example=True):
     # spfyId class
     graph.add((gu(':spfyId'), gu('rdf:type'), gu('owl:Class')))
     graph.add((gu(':spfyId'), gu('rdfs:comment'), Literal(':spfyid')))
-    # example
-    if example:
-        spfyid = 1
-        uriGenome = gu(':de9f2c7fd25e1b3afad3e85a0bd17d9b100db4b3')
-        # reservation_triple() will also link the spfyid to the genome uri.
-        graph = reservation_triple(graph, uriGenome, spfyid)
-        graph.add((
-            gu(':spfy1'),
-            gu('ge:0001567'),
-            Literal('bacterium')
-        ))
-        graph.add((
-            gu(':spfy1'),
-            gu('ge:0001076'),
-            Literal('O157')
-        ))
-        graph.add((
-            gu(':spfy1'),
-            gu('ge:0001076'),
-            Literal('H7')
-        ))
-        graph.add((
-            gu(':spfy1'),
-            gu('ge:0001684'),
-            Literal('K3')
-        ))
 
     # ge:0001567 'bacterium'
     graph.add((gu('ge:0001567'), gu('rdf:type'), gu('owl:ObjectProperty')))
