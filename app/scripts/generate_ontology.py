@@ -4,6 +4,17 @@ from rdflib import Literal
 from modules.turtleGrapher.turtle_grapher import generate_graph
 from modules.turtleGrapher.turtle_utils import generate_uri as gu, link_uris
 from modules.blazeUploader.reserve_id import reservation_triple
+from modules.savvy import savvy
+
+def write_graph(graph):
+    '''
+    Used to write a rdf graph to disk as a turtle file.
+    '''
+    data = graph.serialize(format="turtle")
+    f = 'spfy_ontology.ttl'
+    with open(f, 'w') as fl:
+        fl.write(data)
+    return f
 
 def generate_ontology(example=True):
     '''
@@ -12,15 +23,6 @@ def generate_ontology(example=True):
     Recall that an ontology is really just a set of triples, but applied to
     classes/subclasses instead of specific instances.
     '''
-    def write_graph(graph):
-        '''
-        Used to write a rdf graph to disk as a turtle file.
-        '''
-        data = graph.serialize(format="turtle")
-        f = 'spfy_ontology.ttl'
-        with open(f, 'w') as fl:
-            fl.write(data)
-        return f
     # generates the base graph with namespaces appended to it
     # also defines edge relations for :hasPart and :isFoundIn
     # also defines subclasses for our custom types
@@ -104,7 +106,8 @@ def generate_ontology(example=True):
     graph.add((gu('so:0001462'), gu('rdfs:comment'), Literal('bag of contigs')))
 
     # link bag of contigs
-    graph = link_uris(graph, gu('g:Genome'), gu('so:0001462'))
+    if not example:
+        graph = link_uris(graph, gu('g:Genome'), gu('so:0001462'))
 
     # contig class
     graph.add((gu('g:Contig'), gu('rdf:type'), gu('owl:Class')))
@@ -153,15 +156,17 @@ def generate_ontology(example=True):
     graph.add((gu('faldo:End'), gu('rdfs:subClassOf'), gu('faldo:Position')))
 
     # link faldo:Position to faldo:Reference
-    graph = link_uris(graph, gu('faldo:Reference'), gu('faldo:Position'))
+    if not example:
+        graph = link_uris(graph, gu('faldo:Reference'), gu('faldo:Position'))
 
     # faldo:Region
     graph.add((gu('faldo:Region'), gu('rdf:type'), gu('owl:Class')))
     graph.add((gu('faldo:Region'), gu('rdf:comment'), Literal('a region containing the start and the end positions')))
 
     # link faldo:Region with faldo:Begin and faldo:End
-    graph = link_uris(graph, gu('faldo:Begin'), gu('faldo:Region'))
-    graph = link_uris(graph, gu('faldo:End'), gu('faldo:Region'))
+    if not example:
+        graph = link_uris(graph, gu('faldo:Begin'), gu('faldo:Region'))
+        graph = link_uris(graph, gu('faldo:End'), gu('faldo:Region'))
 
     # :Marker
     graph.add((gu(':Marker'), gu('rdf:type'), gu('owl:Class')))
@@ -169,9 +174,68 @@ def generate_ontology(example=True):
     # were already defined in the generate_graph functions
 
     # link :Marker and faldo:Region
-    graph = link_uris(graph, gu('faldo:Region'), gu(':Marker'))
+    if not example:
+        graph = link_uris(graph, gu('faldo:Region'), gu(':Marker'))
 
-    return write_graph(graph)
+    return graph
+
+def generate_example(args_dict):
+    ontology_graph = generate_ontology(example=True)
+    savvy_graphs = savvy(args_dict=args_dict, return_graphs=True)
+    for g in savvy_graphs:
+        ontology_graph = ontology_graph + g
+    return ontology_graph
+
+def main(args_dict)
+    if 'i' in args_dict:
+        # Then a file was supplied so we generate the ontology with an example.
+        g = generate_example(args_dict)
+        return write_graph(g)
+    else:
+        # A file wasn't supplied.
+        # Generate the base ontology.
+        g = generate_ontology(example=False)
+        return write_graph(g)
 
 if __name__ == '__main__':
-    print generate_ontology()
+    import argparse
+
+    # parsing cli-input
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "-i",
+        help="FASTA file"
+    )
+    parser.add_argument(
+        "--disable-serotype",
+        help="Disables use of the Serotyper. Serotyper is triggered by default.",
+        action="store_true"
+    )
+    parser.add_argument(
+        "--disable-vf",
+        help="Disables use of ECTyper to get associated Virulence Factors. VFs are computed by default.",
+        action="store_true"
+    )
+    parser.add_argument(
+        "--disable-amr",
+        help="Disables use of RGI to get Antimicrobial Resistance Factors.  AMR genes are computed by default.",
+        action="store_true"
+    )
+    parser.add_argument("--pi",
+                        type=int,
+                        help="Percentage of identity wanted to use against the database. From 0 to 100, default is 90%.",
+                        default=90, choices=range(0, 100))
+    args = parser.parse_args()
+    # we make a dictionary from the cli-inputs and add are uris to it
+    # mainly used for when a func needs a lot of the args
+    args_dict = vars(args)
+
+    # check/convert file to abspath
+    args_dict['i'] = os.path.abspath(args_dict['i'])
+
+    # add nested dictionary to mimick output from spfy web-app
+    spfy_options = {'vf': not args_dict['disable_vf'], 'amr': not args_dict['disable_amr'], 'serotype': not args_dict['disable_serotype']}
+    # the 'options' field represents things the user (of the web-app) has chosen to display, we still run ALL analysis on their files so their choices are not added to module calls (& hence kept separate)
+    args_dict['options'] = spfy_options
+
+    print main(args_dict)

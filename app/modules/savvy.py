@@ -56,7 +56,7 @@ def mock_reserve_id():
         fl.write(str(spfyid))
     return spfyid
 
-def savvy(args_dict):
+def savvy(args_dict, return_graphs=False):
     '''
     Mimicks the spfy pipeline without RQ backend or Blazegraph.
     Generate three turtle files:
@@ -154,8 +154,10 @@ def savvy(args_dict):
     base_turtle_graph = generate_turtle_skeleton(query_file)
     base_ttl = write_graph(base_turtle_graph, 'base')
     log.debug('Graph Result for base of fasta info: ' + base_ttl)
-
-    return (base_ttl, ectyper_ttl, amr_ttl, ectyper_json, amr_json)
+    if return_graphs:
+        return (base_turtle_graph, ectyper_graph, amr_graph)
+    else:
+        return (base_ttl, ectyper_ttl, amr_ttl, ectyper_json, amr_json)
 
 if __name__ == "__main__":
     import argparse
