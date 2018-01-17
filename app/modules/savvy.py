@@ -23,6 +23,7 @@ from modules.amr.amr_to_dict import amr_to_dict
 from modules.beautify.beautify import beautify
 from modules.turtleGrapher.datastruct_savvy import generate_datastruct
 from modules.turtleGrapher.turtle_grapher import generate_turtle_skeleton
+from modules.turtleGrapher.turtle_utils import generate_hash
 from modules.loggingFunctions import initialize_logging
 
 log_file = initialize_logging()
@@ -108,6 +109,13 @@ def savvy(args_dict):
 
     #Call PanPredic
     #panpredic_p = pan(args_dict)
+
+    # (2b) Create the reservation_triple:
+    graph = generate_turtle_skeleton(query_file)
+    file_hash = generate_hash(query_file)
+    uriGenome = gu(':' + file_hash)
+    reservation_graph = reservation_triple(graph, uriGenome, 1)
+    reservation_ttl = write_graph(reservation_graph, 'reservation')
 
     # (3) ECTyper Step:
     ectyper_p = call_ectyper(args_dict)

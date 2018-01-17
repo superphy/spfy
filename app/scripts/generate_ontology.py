@@ -1,9 +1,11 @@
 # baseURI: https://www.github.com/superphy#
+from datetime import datetime
 from rdflib import Literal
 from modules.turtleGrapher.turtle_grapher import generate_graph
 from modules.turtleGrapher.turtle_utils import generate_uri as gu, link_uris
+from modules.blazeUploader.reserve_id import reservation_triple
 
-def generate_ontology():
+def generate_ontology(example=True):
     '''
     Generates an ontology for the Spfy backend using utility methods used in
     production. Serializes the ontology as a turtle file, similar to faldo.ttl
@@ -31,6 +33,32 @@ def generate_ontology():
     # spfyId class
     graph.add((gu(':spfyId'), gu('rdf:type'), gu('owl:Class')))
     graph.add((gu(':spfyId'), gu('rdfs:comment'), Literal(':spfyid')))
+    # example
+    if example:
+        spfyid = 1
+        uriGenome = gu(':de9f2c7fd25e1b3afad3e85a0bd17d9b100db4b3')
+        # reservation_triple() will also link the spfyid to the genome uri.
+        graph = reservation_triple(graph, uriGenome, spfyid)
+        graph.add((
+            gu(':spfy1'),
+            gu('ge:0001567'),
+            Literal('bacterium')
+        ))
+        graph.add((
+            gu(':spfy1'),
+            gu('ge:0001076'),
+            Literal('O157')
+        ))
+        graph.add((
+            gu(':spfy1'),
+            gu('ge:0001076'),
+            Literal('H7')
+        ))
+        graph.add((
+            gu(':spfy1'),
+            gu('ge:0001684'),
+            Literal('K3')
+        ))
 
     # ge:0001567 'bacterium'
     graph.add((gu('ge:0001567'), gu('rdf:type'), gu('owl:ObjectProperty')))
@@ -56,8 +84,10 @@ def generate_ontology():
     graph.add((gu('g:Genome'), gu('rdf:type'), gu('owl:Class')))
     graph.add((gu('g:Genome'), gu('rdfs:comment'), Literal('genome instance')))
 
-    # link genome file class and spfyid class
-    graph = link_uris(graph, gu(':spfyId'), gu('g:Genome'))
+    # Link genome file class and spfyid class.
+    # If example=True, the reservation_triple() will do this instead.
+    if not example:
+        graph = link_uris(graph, gu(':spfyId'), gu('g:Genome'))
 
     # dc:date on g:Genome
     graph.add((gu('dc:date'), gu('rdf:type'), gu('owl:ObjectProperty')))
