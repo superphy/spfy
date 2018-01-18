@@ -160,7 +160,7 @@ def generate_example(args_dict):
         ontology_graph = ontology_graph + g
     return ontology_graph
 
-def main(args_dict)
+def main(args_dict):
     if 'i' in args_dict:
         # Then a file was supplied so we generate the ontology with an example.
         g = generate_example(args_dict)
