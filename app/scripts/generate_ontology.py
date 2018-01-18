@@ -167,7 +167,7 @@ def generate_example(args_dict):
     return ontology_graph
 
 def main(args_dict):
-    if 'i' in args_dict:
+    if 'i' in args_dict and args_dict['i'] != None:
         # Then a file was supplied so we generate the ontology with an example.
         g = generate_example(args_dict)
         return write_graph(g)
