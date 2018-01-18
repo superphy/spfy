@@ -212,7 +212,7 @@ if __name__ == '__main__':
     args_dict = vars(args)
 
     # check/convert file to abspath
-    if 'i' in args_dict:
+    if 'i' in args_dict and args_dict['i'] != None:
         args_dict['i'] = os.path.abspath(args_dict['i'])
 
     # add nested dictionary to mimick output from spfy web-app
