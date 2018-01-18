@@ -62,7 +62,13 @@ def generate_ontology(example=True):
 
     # Link genome file class and spfyid class.
     # If example=True, the reservation_triple() will do this instead.
-    if not example:
+    if example:
+        graph = link_uris(
+            graph,
+            gu(':spfyId'),
+            gu('g:Genome')
+        )
+    else:
         graph = link_uris(graph, gu(':spfyId'), gu('g:Genome'))
 
     # dc:date on g:Genome
