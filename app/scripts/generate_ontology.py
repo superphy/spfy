@@ -212,7 +212,8 @@ if __name__ == '__main__':
     args_dict = vars(args)
 
     # check/convert file to abspath
-    args_dict['i'] = os.path.abspath(args_dict['i'])
+    if 'i' in args_dict:
+        args_dict['i'] = os.path.abspath(args_dict['i'])
 
     # add nested dictionary to mimick output from spfy web-app
     spfy_options = {'vf': not args_dict['disable_vf'], 'amr': not args_dict['disable_amr'], 'serotype': not args_dict['disable_serotype']}
