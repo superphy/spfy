@@ -173,6 +173,7 @@ def main(args_dict):
 
 if __name__ == '__main__':
     import argparse
+    import os
 
     # parsing cli-input
     parser = argparse.ArgumentParser()
