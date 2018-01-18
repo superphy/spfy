@@ -23,7 +23,7 @@ from modules.amr.amr_to_dict import amr_to_dict
 from modules.beautify.beautify import beautify
 from modules.turtleGrapher.datastruct_savvy import generate_datastruct
 from modules.turtleGrapher.turtle_grapher import generate_turtle_skeleton
-from modules.turtleGrapher.turtle_utils import generate_hash
+from modules.turtleGrapher.turtle_utils import generate_hash, generate_uri as gu
 from modules.loggingFunctions import initialize_logging
 
 log_file = initialize_logging()
