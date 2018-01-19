@@ -75,6 +75,11 @@ def generate_ontology(example=True):
             gu(':cats'),
             gu('g:Genome')
         ))
+        graph.add((
+            gu(':cats'),
+            gu('rdf:type'),
+            gu('owl:ObjectProperty')
+        ))
 
     # dc:date on g:Genome
     graph.add((gu('dc:date'), gu('rdf:type'), gu('owl:DatatypeProperty')))
