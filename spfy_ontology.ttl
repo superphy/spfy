@@ -65,13 +65,17 @@ g:Identifier a owl:DatatypeProperty ;
 :VirulenceFactor dc:description "Virulence_Factor" ;
     rdfs:subClassOf :Marker .
 
-:hasPart a owl:ObjectProperty ;
+:hasPart a owl:TransitiveProperty .
+
+:hasPart_htt_htt a owl:ObjectProperty ;
     rdfs:domain g:Genome,
         :spfyId ;
     rdfs:range <http://purl.obolibrary.org/obo/SO_0001462>,
         g:Genome .
 
-:isFoundIn rdfs:domain <http://purl.obolibrary.org/obo/SO_0001462>,
+:isFoundIn a owl:TransitiveProperty .
+
+:isFoundIn_htt_htt rdfs:domain <http://purl.obolibrary.org/obo/SO_0001462>,
         g:Genome ;
     rdfs:range g:Genome,
         :spfyId .
