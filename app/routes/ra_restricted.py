@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from middleware.auth import requires_auth, requires_scope, get_sub_claim
+from middleware.auth import requires_auth, requires_scope, get_sub_claim, requires_simple_auth
 from middleware.mongo import mongo_update, mongo_find
 
 bp_ra_restricted = Blueprint('reactapp_restricted', __name__)
@@ -15,6 +15,15 @@ def securedPing():
 
 @bp_ra_restricted.route("/api/v0/secured/private/ping")
 @requires_auth
+def secured_private_ping():
+    """A valid access token and an appropriate scope are required to access this route
+    """
+    if requires_scope("example:scope"):
+        return "All good. You're authenticated and the access token has the appropriate scope"
+    return "You don't have access to this resource"
+
+@bp_ra_restricted.route("/api/v0/secured/simple/ping")
+@requires_simple_auth
 def secured_private_ping():
     """A valid access token and an appropriate scope are required to access this route
     """

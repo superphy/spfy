@@ -8,6 +8,8 @@ from jose import jwt
 
 from config import AUTH0_DOMAIN, API_AUDIENCE, ALGORITHMS
 
+from middleware.mongo import mongo_find
+
 # Format error response and append status code
 def get_token_auth_header():
     """Obtains the access token from the Authorization Header
@@ -36,6 +38,28 @@ def get_token_auth_header():
 
     token = parts[1]
     return token
+
+def validate_simple(token):
+    """Checks that the given token exists.
+    """
+    status = mongo_find(token, 'status')
+    return status == "active"
+
+def requires_simple_auth(f):
+    """A simple authentication check.
+    """
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        token = get_token_auth_header()
+        try:
+            assert validate_simple(token) == True
+        except Exception:
+            raise AuthError({"code": "invalid_header",
+                            "description":
+                                "Token doesn't exist"
+                                " token."}, 400)
+        return f(*args, **kwargs)
+    return decorated
 
 def requires_auth(f):
     """Determines if the access token is valid
