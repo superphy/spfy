@@ -18,6 +18,7 @@ from routes.ra_module_metadata import bp_ra_meta
 from routes.ra_pan import bp_ra_pan
 from routes.alive import bp_alive
 from routes.ra_restricted import bp_ra_restricted
+from routes.ra_accounts import bp_ra_accounts
 
 # Auth0
 # Error handler
@@ -68,5 +69,6 @@ def create_app():
     app.register_blueprint(bp_ra_pan)
     app.register_blueprint(bp_alive)
     app.register_blueprint(bp_ra_restricted)
+    app.register_blueprint(bp_ra_accounts)
 
     return app
