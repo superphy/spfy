@@ -148,6 +148,16 @@ def generate_ontology(example=True):
     graph.add((gu('faldo:Reference'), gu('rdf:comment'), Literal('a g:Contig that is referenced in some :Marker')))
     graph.add((gu('faldo:Reference'), gu('rdfs:subClassOf'), gu('g:Contig')))
 
+    if not example:
+        graph = ontology_link(graph, gu('so:0001462'), gu('g:Contig'))
+
+    # faldo:Region
+    graph.add((gu('faldo:Region'), gu('rdf:type'), gu('owl:Class')))
+    graph.add((gu('faldo:Region'), gu('rdf:comment'), Literal('a region containing the start and the end positions')))
+
+    if not example:
+        graph = ontology_link(graph, gu('g:Contig'), gu('faldo:Region'))
+
     # faldo:Position
     graph.add((gu('faldo:Position'), gu('rdf:type'), gu('owl:Class')))
     graph.add((gu('faldo:ExactPosition'), gu('rdfs:subClassOf'), gu('faldo:Position')))
@@ -169,16 +179,7 @@ def generate_ontology(example=True):
 
     # link faldo:Position to faldo:Reference
     if not example:
-        graph = link_uris(graph, gu('faldo:Reference'), gu('faldo:Position'))
-
-    # faldo:Region
-    graph.add((gu('faldo:Region'), gu('rdf:type'), gu('owl:Class')))
-    graph.add((gu('faldo:Region'), gu('rdf:comment'), Literal('a region containing the start and the end positions')))
-
-    # link faldo:Region with faldo:Begin and faldo:End
-    if not example:
-        graph = link_uris(graph, gu('faldo:Begin'), gu('faldo:Region'))
-        graph = link_uris(graph, gu('faldo:End'), gu('faldo:Region'))
+        graph = ontology_link(graph, gu('faldo:Reference'), gu('faldo:Position'))
 
     # :Marker
     graph.add((gu(':Marker'), gu('rdf:type'), gu('owl:Class')))
@@ -187,7 +188,7 @@ def generate_ontology(example=True):
 
     # link :Marker and faldo:Region
     if not example:
-        graph = link_uris(graph, gu('faldo:Region'), gu(':Marker'))
+        graph = ontology_link(graph, gu('faldo:Region'), gu(':Marker'))
 
     return graph
 
