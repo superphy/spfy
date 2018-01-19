@@ -52,6 +52,16 @@ def ontology_link(graph, uri_towards_spfyid, uri_towards_marker):
         gu('rdf:type'),
         gu('owl:ObjectProperty')
     ))
+    graph.add((
+        isFoundIn,
+        gu('rdf:type'),
+        gu('owl:TransitiveProperty')
+    ))
+    graph.add((
+        hasPart,
+        gu('rdf:type'),
+        gu('owl:TransitiveProperty')
+    ))
     return graph
 
 def generate_ontology(example=True):
