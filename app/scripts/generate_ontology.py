@@ -16,16 +16,19 @@ def write_graph(graph):
         fl.write(data)
     return f
 
-def ontology_link(graph, uri_edge, uri_towards_spfyid, uri_towards_marker):
+def ontology_link(graph, uri_edge, uri_source, uri_destination):
+    """
+    Creats links that work in WebVOWL.
+    """
     graph.add((
         uri_edge,
         gu('rdfs:domain'),
-        uri_towards_spfyid
+        uri_source
     ))
     graph.add((
         uri_edge,
         gu('rdfs:range'),
-        uri_towards_marker
+        uri_destination
     ))
     graph.add((
         uri_edge,
@@ -87,7 +90,7 @@ def generate_ontology(example=True):
             gu('g:Genome')
         )
     else:
-        graph = ontology_link(graph, gu(':cats'), gu(':spfyId'), gu('g:Genome'))
+        graph = ontology_link(graph, gu(':hasPart'), gu(':spfyId'), gu('g:Genome'))
 
     # dc:date on g:Genome
     graph.add((gu('dc:date'), gu('rdf:type'), gu('owl:DatatypeProperty')))
