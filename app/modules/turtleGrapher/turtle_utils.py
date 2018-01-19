@@ -124,7 +124,7 @@ def fulluri_to_basename(uri):
     for value in config.namespaces.values():
         if uri.startswith(value):
             return uri[len(value):]
-            
+
     raise Exception('Unknown ontology in URI'.format(uri))
 
 
@@ -168,5 +168,3 @@ def normalize_rdfterm(rdf_term):
     else:
         # Some random string
         return None
-
-   

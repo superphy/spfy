@@ -11,103 +11,153 @@
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix so: <http://purl.obolibrary.org/obo/SO_> .
+@prefix subt: <https://www.github.com/superphy/typing#> .
+@prefix typon: <http://purl.phyloviz.net/ontology/typon#> .
 @prefix xml: <http://www.w3.org/XML/1998/namespace> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
+faldo:Begin rdfs:subClassOf faldo:Position .
+
+faldo:End rdfs:subClassOf faldo:Position .
+
 faldo:ForwardStrandPosition rdfs:subClassOf faldo:ExactPosition .
+
+faldo:Reference a owl:Class ;
+    rdf:comment "a g:Contig that is referenced in some :Marker" ;
+    rdfs:subClassOf g:Contig .
 
 faldo:ReverseStrandPosition rdfs:subClassOf faldo:ExactPosition .
 
-faldo:position a owl:ObjectProperty ;
+faldo:position a owl:DatatypeProperty ;
     rdfs:comment "the numerical location of a position" ;
-    rdfs:range faldo:Position .
+    rdfs:domain faldo:Position .
 
-<http://purl.obolibrary.org/obo/GENEPIO_0001065> rdfs:range :spfyId .
+<http://purl.obolibrary.org/obo/GENEPIO_0000024> dc:description "Upload_Date" .
 
-<http://purl.obolibrary.org/obo/GENEPIO_0001076> a owl:ObjectProperty ;
-    rdfs:comment "o-antigen" .
+<http://purl.obolibrary.org/obo/GENEPIO_0001076> a owl:DatatypeProperty ;
+    dc:description "O-Type" ;
+    rdfs:comment "o-antigen" ;
+    rdfs:domain :spfyId .
 
-<http://purl.obolibrary.org/obo/GENEPIO_0001077> a owl:ObjectProperty ;
+<http://purl.obolibrary.org/obo/GENEPIO_0001077> a owl:DatatypeProperty ;
+    dc:description "H-Type" ;
     rdfs:comment "h-antigen" ;
-    rdfs:range :spfyId .
+    rdfs:domain :spfyId .
 
-<http://purl.obolibrary.org/obo/GENEPIO_0001567> a owl:ObjectProperty ;
+<http://purl.obolibrary.org/obo/GENEPIO_0001567> a owl:DatatypeProperty ;
     rdfs:comment "subject species" ;
-    rdfs:range :spfyId .
+    rdfs:domain :spfyId .
 
-<http://purl.obolibrary.org/obo/GENEPIO_0001684> a owl:ObjectProperty ;
+<http://purl.obolibrary.org/obo/GENEPIO_0001684> a owl:DatatypeProperty ;
     rdfs:comment "k-antigen" ;
-    rdfs:range :spfyId .
+    rdfs:domain :spfyId .
 
-dc:date a owl:ObjectProperty ;
+dc:date a owl:DatatypeProperty ;
     rdfs:comment "submission date" ;
-    rdfs:range g:Genome .
+    rdfs:domain g:Genome .
 
-dc:description a owl:ObjectProperty ;
+dc:description a owl:DatatypeProperty ;
     rdfs:comment "class descriptor" ;
-    rdfs:range g:Genome .
+    rdfs:domain g:Genome .
 
-g:DNASequence a owl:ObjectProperty ;
+g:DNASequence a owl:DatatypeProperty ;
     rdfs:comment "a dna sequence" ;
-    rdfs:range g:Contig .
+    rdfs:domain g:Contig .
 
-g:Description a owl:ObjectProperty ;
+g:Description a owl:DatatypeProperty ;
     rdfs:comment "record.description" ;
-    rdfs:range g:Contig .
+    rdfs:domain g:Contig .
 
-g:Identifier a owl:ObjectProperty ;
+g:Identifier a owl:DatatypeProperty ;
     rdfs:comment "accession number ie. record.id" ;
-    rdfs:range g:Contig .
+    rdfs:domain g:Contig .
 
 : a owl:Ontology ;
     dc:license <https://www.apache.org/licenses/LICENSE-2.0> .
 
-:AntimicrobialResistanceGene rdfs:subClassOf :Marker .
+:AntimicrobialResistanceGene dc:description "AMR_Gene" ;
+    rdfs:subClassOf :Marker .
 
-:VirulenceFactor rdfs:subClassOf :Marker .
+:PanGenomeRegion rdfs:subClassOf :Marker .
 
-:hasPart a owl:TransitiveProperty .
+:VirulenceFactor dc:description "Virulence_Factor" ;
+    rdfs:subClassOf :Marker .
 
-:isFoundIn a owl:TransitiveProperty .
+:hasPart_SO__gfv a owl:ObjectProperty,
+        owl:TransitiveProperty ;
+    rdfs:domain <http://purl.obolibrary.org/obo/SO_0001462> ;
+    rdfs:range g:Contig .
 
-faldo:Begin rdfs:subClassOf faldo:Position ;
-    :hasPart faldo:Region .
+:hasPart_fal_fal a owl:ObjectProperty,
+        owl:TransitiveProperty ;
+    rdfs:domain faldo:Region ;
+    rdfs:range faldo:Position .
 
-faldo:End rdfs:subClassOf faldo:Position ;
-    :hasPart faldo:Region .
+:hasPart_fal_sup a owl:ObjectProperty,
+        owl:TransitiveProperty ;
+    rdfs:domain faldo:Region ;
+    rdfs:range :Marker .
 
-faldo:Reference a owl:Class ;
-    rdf:comment "a g:Contig that is referenced in some :Marker" ;
-    rdfs:subClassOf g:Contig ;
-    :hasPart faldo:Position .
+:hasPart_gfv_SO_ a owl:ObjectProperty,
+        owl:TransitiveProperty ;
+    rdfs:domain g:Genome ;
+    rdfs:range <http://purl.obolibrary.org/obo/SO_0001462> .
 
-<http://purl.obolibrary.org/obo/SO_0001462> a owl:Class ;
-    rdfs:comment "bag of contigs" ;
-    :isFoundIn g:Genome .
+:hasPart_gfv_fal a owl:ObjectProperty,
+        owl:TransitiveProperty ;
+    rdfs:domain g:Contig ;
+    rdfs:range faldo:Region .
+
+:hasPart_sup_gfv a owl:ObjectProperty,
+        owl:TransitiveProperty ;
+    rdfs:domain :spfyId ;
+    rdfs:range g:Genome .
+
+:isFoundIn_SO__gfv a owl:TransitiveProperty ;
+    rdfs:domain <http://purl.obolibrary.org/obo/SO_0001462> ;
+    rdfs:range g:Genome .
+
+:isFoundIn_fal_fal a owl:TransitiveProperty ;
+    rdfs:domain faldo:Position ;
+    rdfs:range faldo:Region .
+
+:isFoundIn_fal_gfv a owl:TransitiveProperty ;
+    rdfs:domain faldo:Region ;
+    rdfs:range g:Contig .
+
+:isFoundIn_gfv_SO_ a owl:TransitiveProperty ;
+    rdfs:domain g:Contig ;
+    rdfs:range <http://purl.obolibrary.org/obo/SO_0001462> .
+
+:isFoundIn_gfv_sup a owl:TransitiveProperty ;
+    rdfs:domain g:Genome ;
+    rdfs:range :spfyId .
+
+:isFoundIn_sup_fal a owl:TransitiveProperty ;
+    rdfs:domain :Marker ;
+    rdfs:range faldo:Region .
 
 faldo:ExactPosition rdfs:subClassOf faldo:Position .
 
-faldo:Region a owl:Class ;
-    rdf:comment "a region containing the start and the end positions" ;
-    :hasPart :Marker ;
-    :isFoundIn faldo:Begin,
-        faldo:End .
+<http://purl.obolibrary.org/obo/SO_0001462> a owl:Class ;
+    dc:description "Bag_of_Contigs" ;
+    rdfs:comment "bag of contigs" .
 
 :Marker a owl:Class ;
-    :isFoundIn faldo:Region .
+    dc:description "Any_Marker" .
+
+faldo:Position a owl:Class .
+
+faldo:Region a owl:Class ;
+    rdf:comment "a region containing the start and the end positions" .
+
+g:Genome a owl:Class ;
+    rdfs:comment "genome instance" .
+
+:spfyId a owl:Class ;
+    dc:description "SpfyId" ;
+    rdfs:comment ":spfyid" .
 
 g:Contig a owl:Class ;
     rdfs:comment "a contig" .
-
-g:Genome a owl:Class ;
-    rdfs:comment "genome instance" ;
-    :hasPart <http://purl.obolibrary.org/obo/SO_0001462> ;
-    :isFoundIn :spfyId .
-
-faldo:Position a owl:Class ;
-    :isFoundIn faldo:Reference .
-
-:spfyId a owl:Class ;
-    rdfs:comment ":spfyid" ;
-    :hasPart g:Genome .
 

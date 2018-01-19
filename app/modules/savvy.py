@@ -23,7 +23,9 @@ from modules.amr.amr_to_dict import amr_to_dict
 from modules.beautify.beautify import beautify
 from modules.turtleGrapher.datastruct_savvy import generate_datastruct
 from modules.turtleGrapher.turtle_grapher import generate_turtle_skeleton
+from modules.turtleGrapher.turtle_utils import generate_hash, generate_uri as gu
 from modules.loggingFunctions import initialize_logging
+from modules.blazeUploader.reserve_id import reservation_triple
 
 log_file = initialize_logging()
 log = logging.getLogger(__name__)
@@ -55,7 +57,7 @@ def mock_reserve_id():
         fl.write(str(spfyid))
     return spfyid
 
-def savvy(args_dict):
+def savvy(args_dict, return_graphs=False):
     '''
     Mimicks the spfy pipeline without RQ backend or Blazegraph.
     Generate three turtle files:
@@ -109,6 +111,13 @@ def savvy(args_dict):
     #Call PanPredic
     #panpredic_p = pan(args_dict)
 
+    # (2b) Create the reservation_triple:
+    graph = generate_turtle_skeleton(query_file)
+    file_hash = generate_hash(query_file)
+    uriGenome = gu(':' + file_hash)
+    reservation_graph = reservation_triple(graph, uriGenome, 1)
+    reservation_ttl = write_graph(reservation_graph, 'reservation')
+
     # (3) ECTyper Step:
     ectyper_p = call_ectyper(args_dict)
     log.debug("Pickled ECTyper File: " + ectyper_p)
@@ -146,8 +155,10 @@ def savvy(args_dict):
     base_turtle_graph = generate_turtle_skeleton(query_file)
     base_ttl = write_graph(base_turtle_graph, 'base')
     log.debug('Graph Result for base of fasta info: ' + base_ttl)
-
-    return (base_ttl, ectyper_ttl, amr_ttl, ectyper_json, amr_json)
+    if return_graphs:
+        return (base_turtle_graph, ectyper_graph, amr_graph)
+    else:
+        return (base_ttl, ectyper_ttl, amr_ttl, ectyper_json, amr_json)
 
 if __name__ == "__main__":
     import argparse
