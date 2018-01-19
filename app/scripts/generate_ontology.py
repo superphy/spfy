@@ -105,7 +105,7 @@ def generate_ontology(example=True):
             gu('g:Genome')
         )
     else:
-        graph = ontology_link(graph, gu(':hasPart'), gu(':spfyId'), gu('g:Genome'))
+        graph = ontology_link(graph, gu(':spfyId'), gu('g:Genome'))
 
     # dc:date on g:Genome
     graph.add((gu('dc:date'), gu('rdf:type'), gu('owl:DatatypeProperty')))
