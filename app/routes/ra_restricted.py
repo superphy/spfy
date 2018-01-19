@@ -24,7 +24,7 @@ def secured_private_ping():
 
 @bp_ra_restricted.route("/api/v0/secured/simple/ping")
 @requires_simple_auth
-def secured_private_ping():
+def secured_simple_ping():
     """A valid access token and an appropriate scope are required to access this route
     """
     if requires_scope("example:scope"):
