@@ -82,7 +82,7 @@ def generate_ontology(example=True):
     # ge:0001076
     graph.add((gu('ge:0001076'), gu('rdf:type'), gu('owl:DatatypeProperty')))
     graph.add((gu('ge:0001076'), gu('rdfs:comment'), Literal('o-antigen')))
-    graph.add((gu('ge:0001065'), gu('rdfs:domain'), gu(':spfyId')))
+    graph.add((gu('ge:0001076'), gu('rdfs:domain'), gu(':spfyId')))
 
     # ge:0001077
     graph.add((gu('ge:0001077'), gu('rdf:type'), gu('owl:DatatypeProperty')))
