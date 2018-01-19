@@ -70,6 +70,11 @@ def generate_ontology(example=True):
         )
     else:
         graph = link_uris(graph, gu(':spfyId'), gu('g:Genome'))
+        graph.add((
+            gu(':spfyId'),
+            gu(':cats'),
+            gu('g:Genome')
+        ))
 
     # dc:date on g:Genome
     graph.add((gu('dc:date'), gu('rdf:type'), gu('owl:ObjectProperty')))
