@@ -16,6 +16,24 @@ def write_graph(graph):
         fl.write(data)
     return f
 
+def ontology_link(graph, uri_edge, uri_towards_spfyid, uri_towards_marker):
+    graph.add((
+        uri_edge,
+        gu('rdfs:domain'),
+        uri_towards_spfyid
+    ))
+    graph.add((
+        uri_edge,
+        gu('rdfs:range'),
+        uri_towards_marker
+    ))
+    graph.add((
+        uri_edge,
+        gu('rdf:type'),
+        gu('owl:ObjectProperty')
+    ))
+    return graph
+
 def generate_ontology(example=True):
     '''
     Generates an ontology for the Spfy backend using utility methods used in
@@ -69,22 +87,7 @@ def generate_ontology(example=True):
             gu('g:Genome')
         )
     else:
-        graph = link_uris(graph, gu(':spfyId'), gu('g:Genome'))
-        graph.add((
-            gu(':cats'),
-            gu('rdfs:domain'),
-            gu(':spfyId')
-        ))
-        graph.add((
-            gu(':cats'),
-            gu('rdfs:range'),
-            gu('g:Genome')
-        ))
-        graph.add((
-            gu(':cats'),
-            gu('rdf:type'),
-            gu('owl:ObjectProperty')
-        ))
+        graph = ontology_link(graph, gu(':cats'), gu(':spfyId'), gu('g:Genome'))
 
     # dc:date on g:Genome
     graph.add((gu('dc:date'), gu('rdf:type'), gu('owl:DatatypeProperty')))

@@ -65,7 +65,9 @@ g:Identifier a owl:DatatypeProperty ;
 :VirulenceFactor dc:description "Virulence_Factor" ;
     rdfs:subClassOf :Marker .
 
-:cats a owl:ObjectProperty .
+:cats a owl:ObjectProperty ;
+    rdfs:domain :spfyId ;
+    rdfs:range g:Genome .
 
 :hasPart a owl:TransitiveProperty .
 
@@ -90,13 +92,12 @@ faldo:Reference a owl:Class ;
 g:Contig a owl:Class ;
     rdfs:comment "a contig" .
 
+faldo:ExactPosition rdfs:subClassOf faldo:Position .
+
 :spfyId a owl:Class ;
     dc:description "SpfyId" ;
     rdfs:comment ":spfyid" ;
-    :cats g:Genome ;
     :hasPart g:Genome .
-
-faldo:ExactPosition rdfs:subClassOf faldo:Position .
 
 faldo:Region a owl:Class ;
     rdf:comment "a region containing the start and the end positions" ;
