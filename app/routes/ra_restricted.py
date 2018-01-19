@@ -27,9 +27,7 @@ def secured_private_ping():
 def secured_simple_ping():
     """A valid access token and an appropriate scope are required to access this route
     """
-    if requires_scope("example:scope"):
-        return "All good. You're authenticated and the access token has the appropriate scope"
-    return "You don't have access to this resource"
+    return "All good. You only get this message if you're authenticated"
 
 @bp_ra_restricted.route("/api/v0/secured/accounts/update", methods=['POST'])
 @requires_auth

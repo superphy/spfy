@@ -30,3 +30,16 @@ def test_api_internal_blazegraph():
     cmd = '"curl {blazegraph}"'.format(blazegraph=blazegraph_url)
     o = subprocess.check_output("""{exc} {cmd}""".format(exc=exc,cmd=cmd), shell=True, stderr=subprocess.STDOUT)
     assert '</rdf:RDF>' in o
+
+def test_simple_auth():
+    # Retrieve a bearer token from the api.
+    r = requests.get("""http://localhost:{port}/{api_root}accounts""".format(port=WEBSERVER_PORT,api_root=API_ROOT))
+    token = r.text
+    assert type(token) is str
+
+    # Check the bearer token allows access to a protected ping.
+    headers = {
+        'Authorization': 'Bearer ' + token
+    }
+    r = requests.get("""http://localhost:{port}/{api_root}secured/simple/ping""".format(port=WEBSERVER_PORT,api_root=API_ROOT), headers=headers)
+    assert r.text == "All good. You only get this message if you're authenticated"

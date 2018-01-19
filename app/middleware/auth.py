@@ -10,6 +10,13 @@ from config import AUTH0_DOMAIN, API_AUDIENCE, ALGORITHMS
 
 from middleware.mongo import mongo_find
 
+# Auth0
+# Error handler
+class AuthError(Exception):
+    def __init__(self, error, status_code):
+        self.error = error
+        self.status_code = status_code
+
 # Format error response and append status code
 def get_token_auth_header():
     """Obtains the access token from the Authorization Header
