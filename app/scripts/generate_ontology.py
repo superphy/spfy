@@ -77,7 +77,7 @@ def generate_ontology(example=True):
     # ge:0001567 'bacterium'
     graph.add((gu('ge:0001567'), gu('rdf:type'), gu('owl:DatatypeProperty')))
     graph.add((gu('ge:0001567'), gu('rdfs:comment'), Literal('subject species')))
-    # graph.add((gu('ge:0001567'), gu('rdfs:range'), gu(':spfyId')))
+    graph.add((gu('ge:0001567'), gu('rdfs:range'), gu(':spfyId')))
 
     # ge:0001076
     graph.add((gu('ge:0001076'), gu('rdf:type'), gu('owl:DatatypeProperty')))

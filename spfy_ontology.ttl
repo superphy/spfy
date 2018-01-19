@@ -67,18 +67,21 @@ g:Identifier a owl:DatatypeProperty ;
 
 :hasPart a owl:TransitiveProperty .
 
-:hasPart_htt_htt a owl:ObjectProperty ;
-    rdfs:domain g:Genome,
-        :spfyId ;
-    rdfs:range <http://purl.obolibrary.org/obo/SO_0001462>,
-        g:Genome .
+:hasPart_gfv_SO_ a owl:ObjectProperty ;
+    rdfs:domain g:Genome ;
+    rdfs:range <http://purl.obolibrary.org/obo/SO_0001462> .
+
+:hasPart_sup_gfv a owl:ObjectProperty ;
+    rdfs:domain :spfyId ;
+    rdfs:range g:Genome .
 
 :isFoundIn a owl:TransitiveProperty .
 
-:isFoundIn_htt_htt rdfs:domain <http://purl.obolibrary.org/obo/SO_0001462>,
-        g:Genome ;
-    rdfs:range g:Genome,
-        :spfyId .
+:isFoundIn_SO__gfv rdfs:domain <http://purl.obolibrary.org/obo/SO_0001462> ;
+    rdfs:range g:Genome .
+
+:isFoundIn_gfv_sup rdfs:domain g:Genome ;
+    rdfs:range :spfyId .
 
 faldo:Begin rdfs:subClassOf faldo:Position ;
     :hasPart faldo:Region .
