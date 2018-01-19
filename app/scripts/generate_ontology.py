@@ -20,8 +20,10 @@ def ontology_link(graph, uri_towards_spfyid, uri_towards_marker):
     """
     Creats links that work in WebVOWL.
     """
-    hasPart = gu(':hasPart' + '_' + str(uri_towards_spfyid)[:3] + '_' + str(uri_towards_marker)[:3])
-    isFoundIn = gu(':isFoundIn'+ '_' + str(uri_towards_marker)[:3] + '_' + str(uri_towards_spfyid)[:3])
+    def name(uri):
+        return str(uri).split('/')[:3]
+    hasPart = gu(':hasPart' + '_' + name(uri_towards_spfyid) + '_' + name(uri_towards_marker))
+    isFoundIn = gu(':isFoundIn'+ '_' + name(uri_towards_marker) + '_' + name(uri_towards_spfyid))
     # hasPart:
     graph.add((
         hasPart,
