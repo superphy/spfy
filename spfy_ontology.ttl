@@ -67,12 +67,16 @@ g:Identifier a owl:DatatypeProperty ;
 
 :hasPart a owl:ObjectProperty,
         owl:TransitiveProperty ;
-    rdfs:domain :spfyId ;
-    rdfs:range g:Genome .
+    rdfs:domain g:Genome,
+        :spfyId ;
+    rdfs:range <http://purl.obolibrary.org/obo/SO_0001462>,
+        g:Genome .
 
 :isFoundIn a owl:TransitiveProperty ;
-    rdfs:domain g:Genome ;
-    rdfs:range :spfyId .
+    rdfs:domain <http://purl.obolibrary.org/obo/SO_0001462>,
+        g:Genome ;
+    rdfs:range g:Genome,
+        :spfyId .
 
 faldo:Begin rdfs:subClassOf faldo:Position ;
     :hasPart faldo:Region .
@@ -85,15 +89,14 @@ faldo:Reference a owl:Class ;
     rdfs:subClassOf g:Contig ;
     :hasPart faldo:Position .
 
-<http://purl.obolibrary.org/obo/SO_0001462> a owl:Class ;
-    dc:description "Bag_of_Contigs" ;
-    rdfs:comment "bag of contigs" ;
-    :isFoundIn g:Genome .
-
 g:Contig a owl:Class ;
     rdfs:comment "a contig" .
 
 faldo:ExactPosition rdfs:subClassOf faldo:Position .
+
+<http://purl.obolibrary.org/obo/SO_0001462> a owl:Class ;
+    dc:description "Bag_of_Contigs" ;
+    rdfs:comment "bag of contigs" .
 
 :spfyId a owl:Class ;
     dc:description "SpfyId" ;
@@ -105,12 +108,11 @@ faldo:Region a owl:Class ;
     :isFoundIn faldo:Begin,
         faldo:End .
 
-g:Genome a owl:Class ;
-    rdfs:comment "genome instance" ;
-    :hasPart <http://purl.obolibrary.org/obo/SO_0001462> .
-
 faldo:Position a owl:Class ;
     :isFoundIn faldo:Reference .
+
+g:Genome a owl:Class ;
+    rdfs:comment "genome instance" .
 
 :Marker a owl:Class ;
     dc:description "Any_Marker" ;
