@@ -179,7 +179,7 @@ def generate_ontology(example=True):
 
     # link faldo:Position to faldo:Reference
     if not example:
-        graph = ontology_link(graph, gu('faldo:Reference'), gu('faldo:Position'))
+        graph = ontology_link(graph, gu('faldo:Region'), gu('faldo:Position'))
 
     # :Marker
     graph.add((gu(':Marker'), gu('rdf:type'), gu('owl:Class')))

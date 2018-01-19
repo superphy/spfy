@@ -79,8 +79,6 @@ g:Identifier a owl:DatatypeProperty ;
 :VirulenceFactor dc:description "Virulence_Factor" ;
     rdfs:subClassOf :Marker .
 
-:hasPart a owl:TransitiveProperty .
-
 :hasPart_SO__gfv a owl:ObjectProperty ;
     rdfs:domain <http://purl.obolibrary.org/obo/SO_0001462> ;
     rdfs:range g:Contig .
@@ -104,8 +102,6 @@ g:Identifier a owl:DatatypeProperty ;
 :hasPart_sup_gfv a owl:ObjectProperty ;
     rdfs:domain :spfyId ;
     rdfs:range g:Genome .
-
-:isFoundIn a owl:TransitiveProperty .
 
 :isFoundIn_SO__gfv rdfs:domain <http://purl.obolibrary.org/obo/SO_0001462> ;
     rdfs:range g:Genome .
