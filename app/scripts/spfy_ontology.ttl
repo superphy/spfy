@@ -83,46 +83,58 @@ g:Identifier a owl:DatatypeProperty ;
 :VirulenceFactor dc:description "Virulence_Factor" ;
     rdfs:subClassOf :Marker .
 
-:hasPart_SO__gfv a owl:ObjectProperty ;
+:hasPart_SO__gfv a owl:ObjectProperty,
+        owl:TransitiveProperty ;
     rdfs:domain <http://purl.obolibrary.org/obo/SO_0001462> ;
     rdfs:range g:Contig .
 
-:hasPart_fal_fal a owl:ObjectProperty ;
+:hasPart_fal_fal a owl:ObjectProperty,
+        owl:TransitiveProperty ;
     rdfs:domain faldo:Region ;
     rdfs:range faldo:Position .
 
-:hasPart_fal_sup a owl:ObjectProperty ;
+:hasPart_fal_sup a owl:ObjectProperty,
+        owl:TransitiveProperty ;
     rdfs:domain faldo:Region ;
     rdfs:range :Marker .
 
-:hasPart_gfv_SO_ a owl:ObjectProperty ;
+:hasPart_gfv_SO_ a owl:ObjectProperty,
+        owl:TransitiveProperty ;
     rdfs:domain g:Genome ;
     rdfs:range <http://purl.obolibrary.org/obo/SO_0001462> .
 
-:hasPart_gfv_fal a owl:ObjectProperty ;
+:hasPart_gfv_fal a owl:ObjectProperty,
+        owl:TransitiveProperty ;
     rdfs:domain g:Contig ;
     rdfs:range faldo:Region .
 
-:hasPart_sup_gfv a owl:ObjectProperty ;
+:hasPart_sup_gfv a owl:ObjectProperty,
+        owl:TransitiveProperty ;
     rdfs:domain :spfyId ;
     rdfs:range g:Genome .
 
-:isFoundIn_SO__gfv rdfs:domain <http://purl.obolibrary.org/obo/SO_0001462> ;
+:isFoundIn_SO__gfv a owl:TransitiveProperty ;
+    rdfs:domain <http://purl.obolibrary.org/obo/SO_0001462> ;
     rdfs:range g:Genome .
 
-:isFoundIn_fal_fal rdfs:domain faldo:Position ;
+:isFoundIn_fal_fal a owl:TransitiveProperty ;
+    rdfs:domain faldo:Position ;
     rdfs:range faldo:Region .
 
-:isFoundIn_fal_gfv rdfs:domain faldo:Region ;
+:isFoundIn_fal_gfv a owl:TransitiveProperty ;
+    rdfs:domain faldo:Region ;
     rdfs:range g:Contig .
 
-:isFoundIn_gfv_SO_ rdfs:domain g:Contig ;
+:isFoundIn_gfv_SO_ a owl:TransitiveProperty ;
+    rdfs:domain g:Contig ;
     rdfs:range <http://purl.obolibrary.org/obo/SO_0001462> .
 
-:isFoundIn_gfv_sup rdfs:domain g:Genome ;
+:isFoundIn_gfv_sup a owl:TransitiveProperty ;
+    rdfs:domain g:Genome ;
     rdfs:range :spfyId .
 
-:isFoundIn_sup_fal rdfs:domain :Marker ;
+:isFoundIn_sup_fal a owl:TransitiveProperty ;
+    rdfs:domain :Marker ;
     rdfs:range faldo:Region .
 
 faldo:ExactPosition rdfs:subClassOf faldo:Position .
