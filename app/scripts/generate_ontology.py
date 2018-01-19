@@ -20,8 +20,8 @@ def ontology_link(graph, uri_towards_spfyid, uri_towards_marker):
     """
     Creats links that work in WebVOWL.
     """
-    hasPart = gu(':hasPart')
-    isFoundIn = gu(':isFoundIn')
+    hasPart = gu(':hasPart' + '_' + str(uri_towards_spfyid)[:3] + '_' + str(uri_towards_marker)[:3])
+    isFoundIn = gu(':isFoundIn'+ '_' + str(uri_towards_marker)[:3] + '_' + str(uri_towards_spfyid)[:3])
     # hasPart:
     graph.add((
         hasPart,
@@ -62,7 +62,7 @@ def generate_ontology(example=True):
     # generates the base graph with namespaces appended to it
     # also defines edge relations for :hasPart and :isFoundIn
     # also defines subclasses for our custom types
-    graph = generate_graph(transitive=False)
+    graph = generate_graph()
 
     # adds info about this ontology being generated
     graph.add((gu('https://www.github.com/superphy#'), gu('rdf:type'), gu('owl:Ontology')))

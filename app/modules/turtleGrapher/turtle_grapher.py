@@ -12,7 +12,7 @@ from rdflib import Namespace, Graph, Literal, plugin
 from Bio import SeqIO
 from os.path import basename
 
-def generate_graph(transitive=True):
+def generate_graph():
     '''
     Parses all the Namespaces defined in the config file and returns a graph
     with them bound.
@@ -30,10 +30,9 @@ def generate_graph(transitive=True):
             graph.bind(key, config.namespaces[key])
 
     # add edge equivlaence properties
-    if transitive:
-        graph.add((gu(':hasPart'), gu('rdf:type'), gu('owl:TransitiveProperty')))
-        graph.add((gu(':isFoundIn'), gu('rdf:type'), gu('owl:TransitiveProperty')))
-        #graph.add((gu(':hasPart'), gu('rdf:type'), gu('owl:SymmetricProperty')))
+    graph.add((gu(':hasPart'), gu('rdf:type'), gu('owl:TransitiveProperty')))
+    graph.add((gu(':isFoundIn'), gu('rdf:type'), gu('owl:TransitiveProperty')))
+    #graph.add((gu(':hasPart'), gu('rdf:type'), gu('owl:SymmetricProperty')))
 
     # make AntimicrobialResistanceGene & VirulenceFactor subclasses of :Marker
     graph.add((gu(':AntimicrobialResistanceGene'), gu('rdfs:subClassOf'), gu(':Marker')))
