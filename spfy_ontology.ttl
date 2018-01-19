@@ -65,11 +65,10 @@ g:Identifier a owl:DatatypeProperty ;
 :VirulenceFactor dc:description "Virulence_Factor" ;
     rdfs:subClassOf :Marker .
 
-:cats a owl:ObjectProperty ;
+:hasPart a owl:ObjectProperty,
+        owl:TransitiveProperty ;
     rdfs:domain :spfyId ;
     rdfs:range g:Genome .
-
-:hasPart a owl:TransitiveProperty .
 
 :isFoundIn a owl:TransitiveProperty .
 

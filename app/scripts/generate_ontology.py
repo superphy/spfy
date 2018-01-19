@@ -16,22 +16,37 @@ def write_graph(graph):
         fl.write(data)
     return f
 
-def ontology_link(graph, uri_edge, uri_source, uri_destination):
+def ontology_link(graph, uri_towards_spfyid, uri_towards_marker):
     """
     Creats links that work in WebVOWL.
     """
+    hasPart = gu(':hasPart')
+    isFoundIn = gu(':isFoundIn')
+    # hasPart:
     graph.add((
-        uri_edge,
+        hasPart,
         gu('rdfs:domain'),
-        uri_source
+        uri_towards_spfyid
     ))
     graph.add((
-        uri_edge,
+        hasPart,
         gu('rdfs:range'),
-        uri_destination
+        uri_towards_marker
+    ))
+    # isFoundIn
+    graph.add((
+        isFoundIn,
+        gu('rdfs:domain'),
+        uri_towards_marker
     ))
     graph.add((
-        uri_edge,
+        isFoundIn,
+        gu('rdfs:range'),
+        uri_towards_spfyid
+    ))
+    # Edge types. Subsequent calls will not add to graph.
+    graph.add((
+        hasPart,
         gu('rdf:type'),
         gu('owl:ObjectProperty')
     ))
