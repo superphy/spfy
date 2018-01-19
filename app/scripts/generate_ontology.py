@@ -64,7 +64,7 @@ def generate_ontology(example=True):
     # generates the base graph with namespaces appended to it
     # also defines edge relations for :hasPart and :isFoundIn
     # also defines subclasses for our custom types
-    graph = generate_graph()
+    graph = generate_graph(transitive=False)
 
     # adds info about this ontology being generated
     graph.add((gu('https://www.github.com/superphy#'), gu('rdf:type'), gu('owl:Ontology')))
