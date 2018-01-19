@@ -20,10 +20,11 @@ def store(token):
     """
     Stores the bearer token to MongoDB.
     """
+    # We should add a check for collision, but it's unlikely we'll see any.
     # Add the account to mongo.
     mongo_update(token, 'active', 'status')
 
-def token():
+def bearer():
     token = generate_token()
     store(token)
     return token
