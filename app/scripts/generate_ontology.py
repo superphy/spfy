@@ -82,17 +82,17 @@ def generate_ontology(example=True):
     # ge:0001076
     graph.add((gu('ge:0001076'), gu('rdf:type'), gu('owl:DatatypeProperty')))
     graph.add((gu('ge:0001076'), gu('rdfs:comment'), Literal('o-antigen')))
-    # graph.add((gu('ge:0001065'), gu('rdfs:range'), gu(':spfyId')))
+    graph.add((gu('ge:0001065'), gu('rdfs:domain'), gu(':spfyId')))
 
     # ge:0001077
     graph.add((gu('ge:0001077'), gu('rdf:type'), gu('owl:DatatypeProperty')))
     graph.add((gu('ge:0001077'), gu('rdfs:comment'), Literal('h-antigen')))
-    # graph.add((gu('ge:0001077'), gu('rdfs:range'), gu(':spfyId')))
+    graph.add((gu('ge:0001077'), gu('rdfs:domain'), gu(':spfyId')))
 
     # ge:0001684
     graph.add((gu('ge:0001684'), gu('rdf:type'), gu('owl:DatatypeProperty')))
     graph.add((gu('ge:0001684'), gu('rdfs:comment'), Literal('k-antigen')))
-    # graph.add((gu('ge:0001684'), gu('rdfs:range'), gu(':spfyId')))
+    graph.add((gu('ge:0001684'), gu('rdfs:domain'), gu(':spfyId')))
 
     # genome file class
     graph.add((gu('g:Genome'), gu('rdf:type'), gu('owl:Class')))
@@ -106,12 +106,12 @@ def generate_ontology(example=True):
     # dc:date on g:Genome
     graph.add((gu('dc:date'), gu('rdf:type'), gu('owl:DatatypeProperty')))
     graph.add((gu('dc:date'), gu('rdfs:comment'), Literal('submission date')))
-    # graph.add((gu('dc:date'), gu('rdfs:range'), gu('g:Genome')))
+    graph.add((gu('dc:date'), gu('rdfs:domain'), gu('g:Genome')))
 
     # dc:description on g:Genome
     graph.add((gu('dc:description'), gu('rdf:type'), gu('owl:DatatypeProperty')))
     graph.add((gu('dc:description'), gu('rdfs:comment'), Literal('class descriptor')))
-    # graph.add((gu('dc:description'), gu('rdfs:range'), gu('g:Genome')))
+    graph.add((gu('dc:description'), gu('rdfs:domain'), gu('g:Genome')))
 
     # bag of contigs class
     graph.add((gu('so:0001462'), gu('rdf:type'), gu('owl:Class')))
@@ -128,17 +128,17 @@ def generate_ontology(example=True):
     # g:Identifier
     graph.add((gu('g:Identifier'), gu('rdf:type'), gu('owl:DatatypeProperty')))
     graph.add((gu('g:Identifier'), gu('rdfs:comment'), Literal('accession number ie. record.id')))
-    # graph.add((gu('g:Identifier'), gu('rdfs:range'), gu('g:Contig')))
+    graph.add((gu('g:Identifier'), gu('rdfs:domain'), gu('g:Contig')))
 
     # g:DNASequence
     graph.add((gu('g:DNASequence'), gu('rdf:type'), gu('owl:DatatypeProperty')))
     graph.add((gu('g:DNASequence'), gu('rdfs:comment'), Literal('a dna sequence')))
-    # graph.add((gu('g:DNASequence'), gu('rdfs:range'), gu('g:Contig')))
+    graph.add((gu('g:DNASequence'), gu('rdfs:domain'), gu('g:Contig')))
 
     # g:Description
     graph.add((gu('g:Description'), gu('rdf:type'), gu('owl:DatatypeProperty')))
     graph.add((gu('g:Description'), gu('rdfs:comment'), Literal('record.description')))
-    # graph.add((gu('g:Description'), gu('rdfs:range'), gu('g:Contig')))
+    graph.add((gu('g:Description'), gu('rdfs:domain'), gu('g:Contig')))
 
     # faldo:Reference
     # here, we differ from faldo's implementation:
@@ -158,7 +158,7 @@ def generate_ontology(example=True):
     # note the lower-case
     graph.add((gu('faldo:position'), gu('rdf:type'), gu('owl:DatatypeProperty')))
     graph.add((gu('faldo:position'), gu('rdfs:comment'), Literal('the numerical location of a position')))
-    # graph.add((gu('faldo:position'), gu('rdfs:range'), gu('faldo:Position')))
+    graph.add((gu('faldo:position'), gu('rdfs:domain'), gu('faldo:Position')))
 
     # faldo:Begin faldo:End
     # here, we also differe from faldo's implementation

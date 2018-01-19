@@ -35,7 +35,7 @@ faldo:position a owl:DatatypeProperty ;
 
 <http://purl.obolibrary.org/obo/GENEPIO_0001567> a owl:DatatypeProperty ;
     rdfs:comment "subject species" ;
-    rdfs:range :spfyId .
+    rdfs:domain :spfyId .
 
 <http://purl.obolibrary.org/obo/GENEPIO_0001684> a owl:DatatypeProperty ;
     rdfs:comment "k-antigen" .
