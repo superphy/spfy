@@ -35,7 +35,7 @@ def test_simple_auth():
     # Retrieve a bearer token from the api.
     r = requests.get("""http://localhost:{port}/{api_root}accounts""".format(port=WEBSERVER_PORT,api_root=API_ROOT))
     token = r.text
-    assert type(token) is str
+    assert type(token) in (str, unicode)
 
     # Check the bearer token allows access to a protected ping.
     headers = {
