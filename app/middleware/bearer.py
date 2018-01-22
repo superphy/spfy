@@ -23,6 +23,8 @@ def store(token):
     # We should add a check for collision, but it's unlikely we'll see any.
     # Add the account to mongo.
     mongo_update(token, 'active', 'status')
+    # Create an empty jobs dictionary for the account.
+    mongo_update(token)
 
 def bearer():
     token = generate_token()
