@@ -30,7 +30,7 @@ def secured_simple_ping():
     return "All good. You only get this message if you're authenticated"
 
 @bp_ra_restricted.route("/api/v0/secured/accounts/update", methods=['POST'])
-@requires_auth
+@requires_simple_auth
 def update():
     uid = get_sub_claim()
     print('update() request:', request)
