@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from middleware.auth import requires_auth, requires_scope, get_sub_claim, requires_simple_auth
+from middleware.auth import requires_auth, requires_scope, get_token_auth_header, requires_simple_auth
 from middleware.mongo import mongo_update, mongo_find
 
 bp_ra_restricted = Blueprint('reactapp_restricted', __name__)
@@ -42,6 +42,6 @@ def update():
 @bp_ra_restricted.route("/api/v0/secured/accounts/find")
 @requires_simple_auth
 def find():
-    uid = get_sub_claim()
+    uid = get_token_auth_header
     store = mongo_find(uid)
     return jsonify(store)
