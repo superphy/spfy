@@ -42,6 +42,6 @@ def update():
 @bp_ra_restricted.route("/api/v0/secured/accounts/find")
 @requires_simple_auth
 def find():
-    uid = get_token_auth_header
+    uid = get_token_auth_header()
     store = mongo_find(uid)
     return jsonify(store)
