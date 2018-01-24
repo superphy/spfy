@@ -32,7 +32,7 @@ def secured_simple_ping():
 @bp_ra_restricted.route("/api/v0/secured/accounts/update", methods=['POST'])
 @requires_simple_auth
 def update():
-    uid = get_sub_claim()
+    uid = get_token_auth_header()
     print('update() request:', request)
     json = request.json
     print('update()', json)
