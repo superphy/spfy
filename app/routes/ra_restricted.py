@@ -33,8 +33,9 @@ def secured_simple_ping():
 @requires_simple_auth
 def update():
     uid = get_token_auth_header()
-    print('update() request:', request)
+    print('update() request')
     json = request.json
+    print(json)
     # Get the store currently in the database.
     previous_store = mongo_find(uid)
     assert type(previous_store) is list
@@ -51,7 +52,7 @@ def update():
     # The previous_store should now be merged with the update.
     print('update()', json)
     mongo_update(uid, previous_store)
-    return jsonify('true')
+    return jsonify('success!')
 
 @bp_ra_restricted.route("/api/v0/secured/accounts/find")
 @requires_simple_auth
