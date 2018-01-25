@@ -40,7 +40,7 @@ def copy(p, dst):
             print('problem character detected, copying: ' + f + ' as ' + dst_f)
             shutil.copy2(f, dst_f)
         else:
-            print 'moving {0} to {1}'.format(f,dst)
+            print 'copying {0} to {1}'.format(f,dst)
             shutil.copy(f,dst)
 
 if __name__ == '__main__':

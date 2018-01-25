@@ -78,9 +78,7 @@ def check_largest_spfyid():
         # no result was found (fresh DB)
         return 0
 
-def reservation_triple(uriGenome, spfyid):
-    graph = Graph()
-
+def reservation_triple(graph, uriGenome, spfyid):
     uriIsolate = gu(':spfy' + str(spfyid))
     # set object type of spfyid
     graph.add((uriIsolate, gu('rdf:type'), gu(':spfyId')))
@@ -99,8 +97,9 @@ def reservation_triple(uriGenome, spfyid):
     now = datetime.now()
     now_readable = now.strftime("%Y-%m-%d")
     now_accurate = now.strftime("%Y-%m-%d-%H-%M-%S-%f")
+    # dc:date is used for presentation elements
     graph.add((uriGenome, gu('dc:date'), Literal(now_readable)))
-    # upload date
+    # upload date is used for comparisons
     graph.add((uriGenome, gu('ge:0000024'), Literal(now_accurate)))
     return graph
 
@@ -127,7 +126,8 @@ def reserve_id(query_file):
         # no duplicates were found, check the current largest spfyID
         largest = check_largest_spfyid()
         # create a rdflib.graph object with the spfyID we want the new file to use
-        graph = reservation_triple(uriGenome, largest+1)
+        graph = Graph()
+        graph = reservation_triple(graph, uriGenome, largest+1)
         # uploading the reservation graph secures the file->spfyID link
         upload_graph(graph)
         # returns the (int) of the spfyID we want the new file to use

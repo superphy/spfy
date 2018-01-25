@@ -174,6 +174,9 @@ CLI: Generate Graph Files:
 
 CLI: Generate Ontology:
 -----------------------
+.. image:: screenshots/ontology.svg
+    :align: center
+    :alt: screenshot of the results page
 
 The ontology for Spfy is available at:
 https://raw.githubusercontent.com/superphy/backend/master/app/scripts/spfy\_ontology.ttl
@@ -182,6 +185,8 @@ https://raw.githubusercontent.com/superphy/backend/master/app/scripts/generate\_
 with shared functions from Spfy's backend code. If you wish to run it,
 do: 1. ``cd app/`` 2. ``python -m scripts/generate_ontology`` which will
 put the ontology in ``app/``
+
+You can generate a pretty diagram from the .ttl file using http://www.visualdataweb.de/webvowl/
 
 CLI: Enqueue Subtyping Tasks w/o Reactapp:
 ------------------------------------------
