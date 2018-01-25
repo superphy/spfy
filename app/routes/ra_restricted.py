@@ -35,8 +35,22 @@ def update():
     uid = get_token_auth_header()
     print('update() request:', request)
     json = request.json
+    # Get the store currently in the database.
+    previous_store = mongo_find(uid)
+    assert type(previous_store) is list
+    hashes = set()
+    # Create a set of the hashes.
+    for item in previous_store:
+        # Check if the item (eg. the job) has a hash.
+        if item.hash:
+            hashes.add(item.hash)
+    # Check the update.
+    for item in json:
+        if item.hash and item.hash not in hashes:
+            previous_store.append(item)
+    # The previous_store should now be merged with the update.
     print('update()', json)
-    mongo_update(uid,json)
+    mongo_update(uid, previous_store)
     return jsonify('true')
 
 @bp_ra_restricted.route("/api/v0/secured/accounts/find")
