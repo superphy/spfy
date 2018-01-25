@@ -43,11 +43,11 @@ def update():
     # Create a set of the hashes.
     for item in previous_store:
         # Check if the item (eg. the job) has a hash.
-        if item.hash:
-            hashes.add(item.hash)
+        if 'hash' in item:
+            hashes.add(item['hash'])
     # Check the update.
     for item in json:
-        if item.hash and item.hash not in hashes:
+        if 'hash' in item and item['hash'] not in hashes:
             previous_store.append(item)
     # The previous_store should now be merged with the update.
     print('update()', json)
