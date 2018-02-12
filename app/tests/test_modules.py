@@ -3,6 +3,7 @@
 
 import pytest
 import os
+import subprocess
 import cPickle as pickle
 
 from modules.qc.qc import qc, check_header_parsing, check_ecoli
@@ -57,7 +58,10 @@ def test_qc():
     for non_ecoli_genome in GENOMES_LIST_NOT_ECOLI:
         assert qc(non_ecoli_genome) == False
 
-def test_ectyper():
+def test_ectyper_vf():
+    """Check the ECTyper from `superphy` which is used for virulance factor
+    identification. Installed as a submodule in the `modules` directory.
+    """
     for ecoli_genome in GENOMES_LIST_ECOLI:
         # basic ECTyper check
         single_dict = dict(ARGS_DICT)
@@ -69,6 +73,14 @@ def test_ectyper():
         # beautify ECTyper check
         json_return = beautify(single_dict, pickled_ectyper_dict)
         assert type(json_return) == list
+
+def test_ectyper_serotype():
+    """Check the ECTyper from `master` which only performs serotyping.
+    Installed in the conda environment.
+    """
+    for ecoli_genome in GENOMES_LIST_ECOLI:
+        ret_code = subprocess.call(['ectyper', '-i', ecoli_genome])
+        assert ret_code == 0
 
 def test_amr():
         ecoli_genome = GENOMES_LIST_ECOLI[0]
