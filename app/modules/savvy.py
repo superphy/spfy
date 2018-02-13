@@ -128,7 +128,7 @@ def savvy(args_dict, return_graphs=False):
     ectyper_json = write_json(ectyper_beautify, 'ectyper')
 
     # (5) Graphing ECTyper Result:
-    ectyper_graph = generate_datastruct(query_file, query_file + '_id.txt', query_file + '_ectyper.p')
+    ectyper_graph = generate_datastruct(query_file, query_file + '_id.txt', ectyper_p)
 
     ectyper_ttl = write_graph(ectyper_graph, 'ectyper')
     log.debug('Graph Result for ECtyper: ' + ectyper_ttl)

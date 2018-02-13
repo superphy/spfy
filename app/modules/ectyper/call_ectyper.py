@@ -66,7 +66,7 @@ def call_ectyper_serotype(args_dict):
     """Use the new version of ECTyper at `master` for serotyping.
     """
     genome_file = args_dict['i']
-    pi = args_dict['pi']
+    pi = str(args_dict['pi']) # Cast to str to execvp() in subprocess().
     pl = '50' # This is the default in ECTyper.
     output_dir = tempfile.mkdtemp()
     ret_code = subprocess.call([
