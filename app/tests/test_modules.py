@@ -5,10 +5,11 @@ import pytest
 import os
 import subprocess
 import cPickle as pickle
+import pandas as pd
 
 from modules.qc.qc import qc, check_header_parsing, check_ecoli
 from modules.blazeUploader.reserve_id import write_reserve_id
-from modules.ectyper.call_ectyper import call_ectyper
+from modules.ectyper.call_ectyper import call_ectyper_vf, call_ectyper_serotype
 from modules.amr.amr import amr
 from modules.amr.amr_to_dict import amr_to_dict
 from modules.beautify.beautify import beautify
@@ -66,7 +67,7 @@ def test_ectyper_vf():
         # basic ECTyper check
         single_dict = dict(ARGS_DICT)
         single_dict.update({'i':ecoli_genome})
-        pickled_ectyper_dict = call_ectyper(single_dict)
+        pickled_ectyper_dict = call_ectyper_vf(single_dict)
         ectyper_dict = pickle.load(open(pickled_ectyper_dict,'rb'))
         assert type(ectyper_dict) == dict
 
@@ -79,8 +80,16 @@ def test_ectyper_serotype():
     Installed in the conda environment.
     """
     for ecoli_genome in GENOMES_LIST_ECOLI:
+        # Check that the conda env can run ectyper.
         ret_code = subprocess.call(['ectyper', '-i', ecoli_genome])
         assert ret_code == 0
+
+        # Check the actual call from Spfy's code.
+        single_dict = dict(ARGS_DICT)
+        single_dict.update({'i':ecoli_genome})
+        pickled_serotype_df = call_ectyper_serotype(single_dict)
+        ectyper_serotype_df = pickle.load(open(pickled_serotype_df,'rb'))
+        assert isinstance(ectyper_serotype_df, pd.DataFrame)
 
 def test_amr():
         ecoli_genome = GENOMES_LIST_ECOLI[0]

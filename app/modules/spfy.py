@@ -72,18 +72,48 @@ def blob_savvy_enqueue(single_dict):
 
     # ECTYPER PIPELINE
     def ectyper_pipeline(singles, multiples):
-        # the ectyper call is special in that it requires the entire arguments
-        # to decide whether to carry the serotype option flag, virulance
-        # factors option flag, and percent identity field
-        job_ectyper = singles.enqueue(
-            call_ectyper, single_dict, depends_on=job_id)
-        # after this call, the result is stored in Blazegraph
-        # new to 4.3.3
-        # if bulk uploading is set, we return the datastruct as the end task
-        # to poll for job completion, therefore must set ttl of -1
+        """The ectyper call is special in that it requires the entire arguments
+        to decide whether to carry the serotype option flag, virulance
+        factors option flag, and percent identity field. We use the old ECTyper
+        for VF and the new ECTyper for Serotyping.
+        """
+        if single_dict['options']['vf']:
+            # Create a copy of the arguments dictionary and disable Serotype.
+            # This copy is passed to the old ECTyper.
+            single_dict_vf = dict(single_dict)
+            single_dict_vf['options']['serotype'] = False
+            # Enqueue the old ECTyper
+            job_ectyper_vf = singles.enqueue(
+                call_ectyper_vf,
+                single_dict_vf,
+                depends_on=job_id)
+        if single_dict['options']['serotype']:
+            # Enqueue the new ECTyper
+            job_ectyper_serotype = multiples.enqueue(
+                call_ectyper_serotype,
+                single_dict,
+                depends_on=job_id)
+
+        # datastruct_savvy() stores result to Blazegraph.
         if single_dict['options']['bulk']:
-            job_ectyper_datastruct = multiples.enqueue(
-                datastruct_savvy, query_file, query_file + '_id.txt', query_file + '_ectyper.p', depends_on=job_ectyper, result_ttl=-1)
+            # If bulk uploading is set, we return the datastruct as the end task
+            # to poll for job completion, therefore must set ttl of -1.
+            if single_dict['options']['vf']:
+                job_ectyper_datastruct = multiples.enqueue(
+                    datastruct_savvy,
+                    query_file,
+                    query_file + '_id.txt',
+                    query_file + '_ectyper_vf.p',
+                    depends_on=job_ectyper,
+                    result_ttl=-1)
+            if single_dict['options']['serotype']:
+                job_ectyper_datastruct = multiples.enqueue(
+                    datastruct_savvy,
+                    query_file,
+                    query_file + '_id.txt',
+                    query_file + '_ectyper_serotype.p',
+                    depends_on=job_ectyper,
+                    result_ttl=-1)
         else:
             job_ectyper_datastruct = multiples.enqueue(
                 datastruct_savvy, query_file, query_file + '_id.txt', query_file + '_ectyper.p', depends_on=job_ectyper)
