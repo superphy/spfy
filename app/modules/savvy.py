@@ -119,7 +119,7 @@ def savvy(args_dict, return_graphs=False):
     reservation_ttl = write_graph(reservation_graph, 'reservation')
 
     # (3) ECTyper Step:
-    ectyper_p = call_ectyper(args_dict)
+    ectyper_p = call_ectyper_vf(args_dict) # call_ectyper_vf is the older ver.
     log.debug("Pickled ECTyper File: " + ectyper_p)
 
     # (4) ECTyper Beautify Step:
