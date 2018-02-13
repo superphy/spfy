@@ -89,9 +89,9 @@ def call_ectyper_serotype(args_dict):
         df['pl'] = pl
         # The final result file from ECTyper serotyping. This copies it back to
         # config.DATASTORE
-        p = os.path.join(genome_file + '_ectyper_serotype.p')
-        with open(p, 'w') as fh:
+        csv_file = os.path.join(genome_file + '_ectyper_serotype.csv')
+        with open(csv_file, 'w') as fh:
             df.to_csv(fh, header=True, index_label='genome')
-        return p
+        return csv_file
     else:
         raise Exception('ECTyper Serotyping failed for' + genome_file)
