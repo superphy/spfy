@@ -73,9 +73,9 @@ def call_ectyper_serotype(args_dict):
         "ectyper",
         "-i",
         genome_file,
-        "-pi",
+        "-d", # Percent Identity
         pi,
-        "-pl",
+        "-l", # Percent Length
         pl,
         "-o",
         output_dir
