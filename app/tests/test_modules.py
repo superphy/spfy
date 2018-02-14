@@ -87,9 +87,10 @@ def test_ectyper_serotype():
         # Check the actual call from Spfy's code.
         single_dict = dict(ARGS_DICT)
         single_dict.update({'i':ecoli_genome})
-        serotype_csv = call_ectyper_serotype(single_dict)
-        ectyper_serotype_df = pd.read_csv(serotype_csv)
-        assert isinstance(ectyper_serotype_df, pd.DataFrame)
+        pickled_serotype_model = call_ectyper_serotype(single_dict)
+        ectyper_serotype_model = pickle.load(open(pickled_serotype_model,'rb'))
+        # Validate (throws error if invalidate).
+        ectyper_serotype_model.validate()
 
 def test_amr():
         ecoli_genome = GENOMES_LIST_ECOLI[0]

@@ -8,6 +8,7 @@ import pandas as pd
 from ast import literal_eval
 from os.path import basename
 from modules.loggingFunctions import initialize_logging
+from middleware.modellers import model_serotype
 
 log_file = initialize_logging()
 log = logging.getLogger(__name__)
@@ -82,16 +83,14 @@ def call_ectyper_serotype(args_dict):
     ])
     if ret_code == 0:
         output_file = os.path.join(output_dir, 'output.csv')
-        df = pd.read_csv(output_file)
-        # Add the PI to our DataFrame.
-        df['pi'] = pi
-        # Add the PL to our DataFrame.
-        df['pl'] = pl
-        # The final result file from ECTyper serotyping. This copies it back to
-        # config.DATASTORE
-        csv_file = os.path.join(genome_file + '_ectyper_serotype.csv')
-        with open(csv_file, 'w') as fh:
-            df.to_csv(fh, header=True, index_label='genome')
-        return csv_file
+        # Create a SubtypingResult model from the output.
+        subtyping_result = model_serotype(
+            pi=pi,
+            pl=pl,
+            output_file=output_file
+        )
+        p = os.path.join(genome_file, '_ectyper_vf.p')
+        pickle.dump(subtyping_result,open(p,'wb'))
+        return p
     else:
         raise Exception('ECTyper Serotyping failed for' + genome_file)

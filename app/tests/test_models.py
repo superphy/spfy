@@ -1,7 +1,10 @@
 from middleware.models import SubtypingRow, SubtypingResult
 from tests.constants import BEAUTIFY_VF_SEROTYPE
 
-def test_models():
+def test_subtyping_model_direct():
+    """
+    Use our dataset to directly create a subtyping results model and validate it.
+    """
     subtyping_list = [
         SubtypingRow(
             analysis=d['analysis'],
