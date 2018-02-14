@@ -4,7 +4,7 @@ from rdflib import Literal
 from middleware.graphers.turtle_grapher import generate_graph
 from middleware.graphers.turtle_utils import generate_uri as gu, link_uris
 from middleware.blazegraph.reserve_id import reservation_triple
-from modules.savvy import savvy
+from scripts.savvy import savvy
 
 def write_graph(graph):
     '''
