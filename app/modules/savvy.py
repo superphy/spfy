@@ -1,7 +1,7 @@
 #!/usr/bin/env python2
 # -*- coding: UTF-8 -*-
 
-# use: python -m scripts.savvy -i /home/kevin/Desktop/nonGenBankEcoli/ECI-2866_lcl.fasta
+# use: python -m modules.savvy -i /home/kevin/Desktop/nonGenBankEcoli/ECI-2866_lcl.fasta
 
 # S:erotype
 # A:ntimicrobial Resistance

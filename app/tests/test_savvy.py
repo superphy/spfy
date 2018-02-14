@@ -2,7 +2,7 @@ import os
 import shutil
 import pytest
 from hashlib import sha1
-from scripts.savvy import mock_reserve_id, get_spfyid_file, savvy
+from modules.savvy import mock_reserve_id, get_spfyid_file, savvy
 from tests.constants import ARGS_DICT
 
 def sha1_hash(f):
