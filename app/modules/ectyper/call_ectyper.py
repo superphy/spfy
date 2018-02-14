@@ -58,7 +58,8 @@ def call_ectyper_vf(args_dict):
         # we are calling tools_controller on only one file, so grab that dict
         key, ectyper_dict = ectyper_dict.popitem()
 
-        p = os.path.join(filepath + '_ectyper_vf.p')
+        # Path for the pickle dump.
+        p = filepath + '_ectyper_vf.p'
         pickle.dump(ectyper_dict,open(p,'wb'))
 
     return p
@@ -89,7 +90,8 @@ def call_ectyper_serotype(args_dict):
             pl=pl,
             output_file=output_file
         )
-        p = os.path.join(genome_file, '_ectyper_vf.p')
+        # Path for the pickle dump.
+        p = genome_file + '_ectyper_vf.p'
         pickle.dump(subtyping_result,open(p,'wb'))
         return p
     else:
