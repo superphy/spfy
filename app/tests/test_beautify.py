@@ -2,7 +2,7 @@ import os
 import pytest
 import cPickle as pickle
 import pandas as pd
-from modules.beautify.beautify import beautify, json_return, has_failed
+from middleware.display.beautify import beautify, json_return, has_failed
 from tests.constants import ARGS_DICT, BEAUTIFY_VF_SEROTYPE
 
 vf_serotype_gene_dict = os.path.join('tests/refs', 'GCA_000005845.2_ASM584v2_genomic.fna_ectyper-vf_serotype.p')

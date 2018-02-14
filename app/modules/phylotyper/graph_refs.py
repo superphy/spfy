@@ -4,8 +4,8 @@ import shutil
 import requests
 from tempfile import NamedTemporaryFile
 from rdflib import Literal
-from modules.turtleGrapher.turtle_grapher import generate_graph
-from modules.turtleGrapher.turtle_utils import generate_uri as gu
+from middleware.graphers.turtle_grapher import generate_graph
+from middleware.graphers.turtle_utils import generate_uri as gu
 
 def get_ref_vfs():
     # we use a tempfile.TemporaryFile to store the ref

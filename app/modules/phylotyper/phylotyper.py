@@ -22,8 +22,8 @@ from collections import OrderedDict
 
 
 import config
-from modules.turtleGrapher.turtle_utils import generate_uri as gu, fulluri_to_basename as u2b, normalize_rdfterm as normalize 
-from modules.blazeUploader.upload_graph import upload_graph
+from middleware.graphers.turtle_utils import generate_uri as gu, fulluri_to_basename as u2b, normalize_rdfterm as normalize 
+from middleware.blazegraph.upload_graph import upload_graph
 from modules.phylotyper import ontology, exceptions
 from modules.phylotyper.sequences import MarkerSequences, phylotyper_query, genename_query
 

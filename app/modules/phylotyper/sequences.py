@@ -6,8 +6,8 @@ Example:
 
 """
 
-from modules.decorators import submit, prefix, tojson
-from modules.turtleGrapher import turtle_utils
+from middleware.decorators import submit, prefix, tojson
+from middleware.graphers import turtle_utils
 
 @submit
 @prefix
