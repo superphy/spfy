@@ -26,9 +26,9 @@ def model_serotype(pi, pl, output_file):
         )
     for index, row in df.iterrows()]
 
-    # SubtypingResult.row expects a list.
-    subtyping_result = SubtypingResult([
+    # Convert the list of rows into a SubtypingResult model.
+    subtyping_result = SubtypingResult(
         subtyping_row
-    ])
+    )
 
     return subtyping_result
