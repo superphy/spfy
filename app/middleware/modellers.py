@@ -29,7 +29,7 @@ def model_serotype(pi, pl, output_file):
 
     # Convert the list of rows into a SubtypingResult model.
     subtyping_result = SubtypingResult(
-        subtyping_list
+        rows = subtyping_list
     )
 
     return subtyping_result
