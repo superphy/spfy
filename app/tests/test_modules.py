@@ -12,7 +12,7 @@ from middleware.blazegraph.reserve_id import write_reserve_id
 from modules.ectyper.call_ectyper import call_ectyper_vf, call_ectyper_serotype
 from modules.amr.amr import amr
 from modules.amr.amr_to_dict import amr_to_dict
-from middleware.display.beautify import beautify
+from middleware.display.beautify import beautify, model_to_json
 from middleware.graphers.datastruct_savvy import datastruct_savvy
 from middleware.graphers.turtle_grapher import turtle_grapher
 
@@ -91,6 +91,11 @@ def test_ectyper_serotype():
         ectyper_serotype_model = pickle.load(open(pickled_serotype_model,'rb'))
         # Validate (throws error if invalidate).
         ectyper_serotype_model.validate()
+
+        # Check the conversion for the front-end.
+        json_r = model_to_json(ectyper_serotype_model)
+        # This is not strictly json; more like a list than a dict structure.
+        assert isinstance(json_r, list)
 
 def test_amr():
         ecoli_genome = GENOMES_LIST_ECOLI[0]

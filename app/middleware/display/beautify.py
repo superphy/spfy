@@ -5,10 +5,32 @@ from os.path import basename
 from modules.loggingFunctions import initialize_logging
 from middleware.display.find_widest import check_alleles
 from middleware.graphers.turtle_utils import actual_filename
+from middleware.models import SubtypingResult
 
 # logging
 log_file = initialize_logging()
 log = logging.getLogger(__name__)
+
+
+def _convert_subtyping(model):
+    # Convert the model to a generic JSON structure.
+    struct = model.to_struct()
+    # This is not strictly json; more like a list than a dict structure.
+    rows_list = struct['rows']
+    return rows_list
+
+def model_to_json(model):
+    """
+    Converts models to json for the front-end.
+    """
+    # Validate the model submitted before processing.
+    model.validate()
+    # Conversion.
+    if isinstance(model, SubtypingResult):
+        return _convert_subtyping(model)
+    else:
+        raise Exception('model_to_json() called for a model without a handler.')
+
 
 def json_return(args_dict, gene_dict):
     """
