@@ -2,7 +2,7 @@ from middleware.models import SubtypingRow, SubtypingResult
 from tests.constants import BEAUTIFY_VF_SEROTYPE
 
 def test_models():
-    subtyping_result = [
+    subtyping_list = [
         SubtypingRow(
             analysis=d['analysis'],
             contigid=d['contigid'],
@@ -14,4 +14,7 @@ def test_models():
             hitstop=str(d['hitstop'])
         )
     for d in BEAUTIFY_VF_SEROTYPE]
+    subtyping_result = SubtypingResult(
+        rows = subtyping_list
+    )
     subtyping_result.validate()
