@@ -1,7 +1,7 @@
 #!/usr/bin/env python2
 # -*- coding: UTF-8 -*-
 
-# use: python -m modules.savvy -i /home/kevin/Desktop/nonGenBankEcoli/ECI-2866_lcl.fasta
+# use: python -m scripts.savvy -i /home/kevin/Desktop/nonGenBankEcoli/ECI-2866_lcl.fasta
 
 # S:erotype
 # A:ntimicrobial Resistance
@@ -16,16 +16,16 @@ import tempfile
 import shutil
 import json
 from modules.qc.qc import qc
-from modules.blazeUploader.reserve_id import write_reserve_id
+from middleware.blazegraph.reserve_id import write_reserve_id
 from modules.ectyper.call_ectyper import call_ectyper_vf, call_ectyper_serotype
 from modules.amr.amr import amr
 from modules.amr.amr_to_dict import amr_to_dict
-from modules.beautify.beautify import beautify
-from modules.turtleGrapher.datastruct_savvy import generate_datastruct
-from modules.turtleGrapher.turtle_grapher import generate_turtle_skeleton
-from modules.turtleGrapher.turtle_utils import generate_hash, generate_uri as gu
+from middleware.display.beautify import beautify
+from middleware.graphers.datastruct_savvy import generate_datastruct
+from middleware.graphers.turtle_grapher import generate_turtle_skeleton
+from middleware.graphers.turtle_utils import generate_hash, generate_uri as gu
 from modules.loggingFunctions import initialize_logging
-from modules.blazeUploader.reserve_id import reservation_triple
+from middleware.blazegraph.reserve_id import reservation_triple
 
 log_file = initialize_logging()
 log = logging.getLogger(__name__)

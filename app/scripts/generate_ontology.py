@@ -1,10 +1,10 @@
 # baseURI: https://www.github.com/superphy#
 from datetime import datetime
 from rdflib import Literal
-from modules.turtleGrapher.turtle_grapher import generate_graph
-from modules.turtleGrapher.turtle_utils import generate_uri as gu, link_uris
-from modules.blazeUploader.reserve_id import reservation_triple
-from modules.savvy import savvy
+from middleware.graphers.turtle_grapher import generate_graph
+from middleware.graphers.turtle_utils import generate_uri as gu, link_uris
+from middleware.blazegraph.reserve_id import reservation_triple
+from scripts.savvy import savvy
 
 def write_graph(graph):
     '''

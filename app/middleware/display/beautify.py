@@ -3,8 +3,8 @@ import pandas as pd
 import cPickle as pickle
 from os.path import basename
 from modules.loggingFunctions import initialize_logging
-from modules.beautify.find_widest import check_alleles
-from modules.turtleGrapher.turtle_utils import actual_filename
+from middleware.display.find_widest import check_alleles
+from middleware.graphers.turtle_utils import actual_filename
 
 # logging
 log_file = initialize_logging()

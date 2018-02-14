@@ -289,7 +289,7 @@ Directly Adding a New Module
 
 .. code-block:: python
 
-  from modules.blazeUploader.reserve_id import write_reserve_id
+  from middleware.blazegraph.reserve_id import write_reserve_id
 
 The top-most directory is used to build Docker Images and copies the contents of ``/app`` to run inside the containers. This is done as the apps (Flask, Reactapp) themselves don't need copies of the Dockerfiles, other apps, etc.
 
@@ -471,7 +471,7 @@ If you're integrating your codebase with Spfy, add your code to a new directory 
   import config
   import redis
   from rq import Queue
-  from modules.groupComparisons.groupcomparisons import groupcomparisons
+  from modules.comparisons.groupcomparisons import groupcomparisons
   from modules.loggingFunctions import initialize_logging
 
   # logging
