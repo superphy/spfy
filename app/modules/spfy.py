@@ -2,6 +2,7 @@
 # -*- coding: UTF-8 -*-
 
 import os
+import copy
 
 import redis
 import config
@@ -20,7 +21,7 @@ from middleware.blazegraph.reserve_id import write_reserve_id
 from modules.ectyper.call_ectyper import call_ectyper_vf, call_ectyper_serotype
 from modules.amr.amr import amr
 from modules.amr.amr_to_dict import amr_to_dict
-from middleware.display.beautify import beautify
+from middleware.display.beautify import beautify, model_to_json
 from middleware.graphers.datastruct_savvy import datastruct_savvy
 from middleware.graphers.turtle_grapher import turtle_grapher
 from middleware.graphers.turtle_utils import actual_filename
@@ -50,6 +51,101 @@ if config.BACKLOG_ENABLED:
     backlog_multiples_q = Queue(
         'backlog_multiples', connection=redis_conn, default_timeout=config.DEFAULT_TIMEOUT)
 
+def _ectyper_pipeline_vf(singles, multiples, query_file, single_dict):
+    """
+    Enqueue all the jobs required for VF.
+    """
+    # Dictionary of Job instances to return
+    d = {}
+
+    # Create a copy of the arguments dictionary and disable Serotype.
+    # This copy is passed to the old ECTyper.
+    single_dict_vf = copy.deepcopy(single_dict)
+    single_dict_vf['options']['serotype'] = False
+    # Enqueue the old ECTyper
+    job_ectyper_vf = singles.enqueue(
+        call_ectyper_vf,
+        single_dict_vf,
+        depends_on=job_id)
+    d['job_ectyper_vf'] = job_ectyper_vf
+
+    # If bulk uploading is set, we return the datastruct as the end task
+    # to poll for job completion, therefore must set ttl of -1.
+    if single_dict['options']['bulk']:
+        ttl_value = -1
+    else:
+        ttl_value = config.DEFAULT_RESULT_TTL
+
+    # datastruct_savvy() stores result to Blazegraph.
+    job_ectyper_datastruct_vf = multiples.enqueue(
+        datastruct_savvy,
+        query_file,
+        query_file + '_id.txt',
+        query_file + '_ectyper_vf.p',
+        depends_on=job_ectyper,
+        result_ttl=ttl_value)
+    d['job_ectyper_datastruct_vf'] = job_ectyper_datastruct_vf
+
+    if not single_dict['options']['bulk']:
+        # Only bother parsing into json if user has requested either vf or
+        # serotype, and we're not in bulk uploading.
+        job_ectyper_beautify_vf = multiples.enqueue(
+            beautify,
+            single_dict,
+            query_file + '_ectyper.p',
+            depends_on=job_ectyper_vf,
+            result_ttl=-1
+        )
+        d['job_ectyper_beautify_vf'] = job_ectyper_beautify_vf
+
+    return d
+
+def _ectyper_pipeline_serotype(singles, multiples, query_file, single_dict):
+    """
+    Enqueue all the jobs required for VF.
+    """
+    # Dictionary of Job instances to return
+    d = {}
+
+    # Create a copy of the arguments dictionary and disable Serotype.
+    # This copy is passed to the old ECTyper.
+    single_dict_vf = copy.deepcopy(single_dict)
+    # Enqueue the new ECTyper
+    job_ectyper_serotype = multiples.enqueue(
+        call_ectyper_serotype,
+        single_dict,
+        depends_on=job_id)
+    d['job_ectyper_serotype'] = job_ectyper_serotype
+
+    # If bulk uploading is set, we return the datastruct as the end task
+    # to poll for job completion, therefore must set ttl of -1.
+    if single_dict['options']['bulk']:
+        ttl_value = -1
+    else:
+        ttl_value = config.DEFAULT_RESULT_TTL
+
+    # datastruct_savvy() stores result to Blazegraph.
+    job_ectyper_datastruct_serotype = multiples.enqueue(
+        datastruct_savvy,
+        query_file,
+        query_file + '_id.txt',
+        query_file + '_ectyper_serotype.p',
+        depends_on=job_ectyper,
+        result_ttl=-1)
+    d['job_ectyper_serotype'] = job_ectyper_datastruct_serotype
+
+    if not single_dict['options']['bulk']:
+        # Only bother parsing into json if user has requested either vf or
+        # serotype, and we're not in bulk uploading.
+        job_ectyper_beautify_serotype = multiples.enqueue(
+            beautify,
+            pickled_result = query_file + '_ectyper_serotype.p',
+            depends_on=job_ectyper_vf,
+            result_ttl=-1
+        )
+        d['job_ectyper_beautify_serotype'] = job_ectyper_beautify_serotype
+
+    return d
 
 def blob_savvy_enqueue(single_dict):
     '''
@@ -70,77 +166,69 @@ def blob_savvy_enqueue(single_dict):
     job_id = blazegraph_q.enqueue(
         write_reserve_id, query_file, depends_on=job_qc, result_ttl=-1)
 
-    # ECTYPER PIPELINE
-    def ectyper_pipeline(singles, multiples):
-        """The ectyper call is special in that it requires the entire arguments
-        to decide whether to carry the serotype option flag, virulance
-        factors option flag, and percent identity field. We use the old ECTyper
-        for VF and the new ECTyper for Serotyping.
-        """
-        if single_dict['options']['vf']:
-            # Create a copy of the arguments dictionary and disable Serotype.
-            # This copy is passed to the old ECTyper.
-            single_dict_vf = dict(single_dict)
-            single_dict_vf['options']['serotype'] = False
-            # Enqueue the old ECTyper
-            job_ectyper_vf = singles.enqueue(
-                call_ectyper_vf,
-                single_dict_vf,
-                depends_on=job_id)
-        if single_dict['options']['serotype']:
-            # Enqueue the new ECTyper
-            job_ectyper_serotype = multiples.enqueue(
-                call_ectyper_serotype,
-                single_dict,
-                depends_on=job_id)
-
-        # datastruct_savvy() stores result to Blazegraph.
+    ## ECTyper (VF & Serotype)
+    # VF
+    if single_dict['options']['vf']:
+        ectyper_vf_jobs = _ectyper_pipeline_vf(
+            singles_q,
+            multiples_q,
+            query_file,
+            single_dict
+        )
         if single_dict['options']['bulk']:
-            # If bulk uploading is set, we return the datastruct as the end task
-            # to poll for job completion, therefore must set ttl of -1.
-            if single_dict['options']['vf']:
-                job_ectyper_datastruct = multiples.enqueue(
-                    datastruct_savvy,
-                    query_file,
-                    query_file + '_id.txt',
-                    query_file + '_ectyper_vf.p',
-                    depends_on=job_ectyper,
-                    result_ttl=-1)
-            if single_dict['options']['serotype']:
-                job_ectyper_datastruct = multiples.enqueue(
-                    datastruct_savvy,
-                    query_file,
-                    query_file + '_id.txt',
-                    query_file + '_ectyper_serotype.p',
-                    depends_on=job_ectyper,
-                    result_ttl=-1)
+            ret_job_ectyper = ectyper_vf_jobs['job_ectyper_datastruct_vf']
+            jobs[ret_job_ectyper.get_id()] = {
+                'file': single_dict['i'],
+                'analysis': 'Virulence Factors'}
         else:
-            job_ectyper_datastruct = multiples.enqueue(
-                datastruct_savvy, query_file, query_file + '_id.txt', query_file + '_ectyper.p', depends_on=job_ectyper)
-        d = {'job_ectyper': job_ectyper,
-             'job_ectyper_datastruct': job_ectyper_datastruct}
-        # only bother parsing into json if user has requested either vf or
-        # serotype
-        if (single_dict['options']['vf'] or single_dict['options']['serotype']) and not single_dict['options']['bulk']:
-            job_ectyper_beautify = multiples.enqueue(
-                beautify, single_dict, query_file + '_ectyper.p', depends_on=job_ectyper, result_ttl=-1)
-            d.update({'job_ectyper_beautify': job_ectyper_beautify})
-        return d
-
-    # if user selected any ectyper-dependent options on the front-end
-    if single_dict['options']['vf'] or single_dict['options']['serotype']:
-        ectyper_jobs = ectyper_pipeline(singles_q, multiples_q)
-        job_ectyper = ectyper_jobs['job_ectyper']
-        job_ectyper_datastruct = ectyper_jobs['job_ectyper_datastruct']
-        if not single_dict['options']['bulk']:
-            job_ectyper_beautify = ectyper_jobs['job_ectyper_beautify']
-    # or if the backlog queue is enabled
+            ret_job_ectyper = ectyper_vf_jobs['job_ectyper_beautify_vf']
+            jobs[ret_job_ectyper.get_id()] = {
+                'file': single_dict['i'],
+                'analysis': 'Virulence Factors'}
     elif config.BACKLOG_ENABLED:
-        # we need to create a dict with these options enabled:
+        # We need to create a dict with the options enabled.
+        backlog_d = copy.deepcopy(single_dict)
+        backlog_d['options']['vf'] = True
+        # Explictedly set serotype to false in case of overlap.
+        backlog_d['options']['serotype'] = False
+        # Note: we use different queues.
+         _ectyper_pipeline_vf(
+            backlog_singles_q,
+            backlog_multiples_q,
+            query_file,
+            backlog_d
+        )
 
-        # just enqueue the jobs, we don't care about returning them
-        ectyper_jobs = ectyper_pipeline(backlog_singles_q, backlog_multiples_q)
-        job_ectyper_datastruct = ectyper_jobs['job_ectyper_datastruct']
+    # Serotype
+    if single_dict['options']['serotype']:
+        ectyper_serotype_jobs = _ectyper_pipeline_serotype(
+            singles_q,
+            multiples_q,
+            query_file,
+            single_dict
+        )
+        if single_dict['options']['bulk']:
+            ret_job_ectyper = ectyper_serotype_jobs['job_ectyper_datastruct_serotype']
+            jobs[ret_job_ectyper.get_id()] = {
+                'file': single_dict['i'],
+                'analysis': 'Serotype'}
+        else:
+            ret_job_ectyper = ectyper_serotype_jobs['job_ectyper_beautify_serotype']
+            jobs[ret_job_ectyper.get_id()] = {
+                'file': single_dict['i'],
+                'analysis': 'Virulence Factors'}
+    elif config.BACKLOG_ENABLED:
+        # We need to create a dict with the options enabled.
+        backlog_d = copy.deepcopy(single_dict)
+        # Explictedly set vf to false in case of overlap.
+        backlog_d['options']['vf'] = False
+        backlog_d['options']['serotype'] = True
+        _ectyper_pipeline_serotype(
+           backlog_singles_q,
+           backlog_multiples_q,
+           query_file,
+           backlog_d
+       )
     # END ECTYPER PIPELINE
 
     # AMR PIPELINE
@@ -241,20 +329,11 @@ def blob_savvy_enqueue(single_dict):
     # to poll for completion of all jobs
     # these two ifs handle the case where amr (or vf or serotype) might not
     # be selected but bulk is
-    if (single_dict['options']['vf'] or single_dict['options']['serotype']):
-        ret_job_ectyper = job_ectyper_datastruct
     if single_dict['options']['amr']:
         ret_job_amr = job_amr_datastruct
-    # if bulk uploading isnt used, return the beautify result as the final task
-    if not single_dict['options']['bulk']:
-        if (single_dict['options']['vf'] or single_dict['options']['serotype']):
-            ret_job_ectyper = job_ectyper_beautify
-        if single_dict['options']['amr']:
-            ret_job_amr = job_amr_beautify
-    # add the jobs to the return
-    if (single_dict['options']['vf'] or single_dict['options']['serotype']):
-        jobs[ret_job_ectyper.get_id()] = {'file': single_dict[
-            'i'], 'analysis': 'Virulence Factors and Serotype'}
+
+    # Add the jobs to the return.
+    # TODO: incorporate this into pipeline calls, as in the ECTYper pipeline.
     if single_dict['options']['amr']:
         jobs[ret_job_amr.get_id()] = {'file': single_dict[
             'i'], 'analysis': 'Antimicrobial Resistance'}

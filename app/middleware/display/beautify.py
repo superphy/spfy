@@ -130,7 +130,8 @@ def handle_failed(json_r, args_dict):
         ret.append(t)
     return ret
 
-def beautify(args_dict, pickled_dictionary):
+# TODO: convert this to models-only.
+def beautify(args_dict=None, pickled_result):
     '''
     Converts a given 'spit' datum (a dictionary with our results from rgi/ectyper) to a json form used by the frontend. This result is to be stored in Redis by the calling RQ Worker.
     :param args_dict: The arguments supplied by the user. In the case of spfy web-app, this is used to determine which analysis options were set.
@@ -139,16 +140,22 @@ def beautify(args_dict, pickled_dictionary):
     :return: json representation of the results, as required by the front-end.
     '''
 
-    gene_dict = pickle.load(open(pickled_dictionary, 'rb'))
-    # this converts our dictionary structure into json and adds metadata (filename, etc.)
-    json_r =  json_return(args_dict, gene_dict)
-    log.debug('First parse into json_r: ' + str(json_r))
-    # if looking for only serotype, skip this step
-    if args_dict['options']['vf'] or args_dict['options']['amr']:
-        json_r = check_alleles(json_r)
-    log.debug('After checking alleles json_r: ' + str(json_r))
-    # check if there is an analysis module that has failed in the result
-    if has_failed(json_r):
-        return handle_failed(json_r, args_dict)
+    result = pickle.load(open(pickled_result, 'rb'))
+    if isinstance(result, dict):
+        gene_dict = result
+        # this converts our dictionary structure into json and adds metadata (filename, etc.)
+        json_r =  json_return(args_dict, gene_dict)
+        log.debug('First parse into json_r: ' + str(json_r))
+        # if looking for only serotype, skip this step
+        if args_dict['options']['vf'] or args_dict['options']['amr']:
+            json_r = check_alleles(json_r)
+        log.debug('After checking alleles json_r: ' + str(json_r))
+        # check if there is an analysis module that has failed in the result
+        if has_failed(json_r):
+            return handle_failed(json_r, args_dict)
+        else:
+            return json_r
+    elif isinstance(result, SubtypingResult):
+        return model_to_json(result)
     else:
-        return json_r
+        raise Exception("beautify() could not handle pickled file: {0}.".format(pickled_result))
