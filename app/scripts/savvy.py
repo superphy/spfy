@@ -123,7 +123,7 @@ def savvy(args_dict, return_graphs=False):
     log.debug("Pickled ECTyper File: " + ectyper_p)
 
     # (4) ECTyper Beautify Step:
-    ectyper_beautify = beautify(args_dict, ectyper_p)
+    ectyper_beautify = beautify(ectyper_p, args_dict)
     log.debug('Beautified ECTyper Result: ' + str(ectyper_beautify))
     ectyper_json = write_json(ectyper_beautify, 'ectyper')
 
@@ -142,7 +142,7 @@ def savvy(args_dict, return_graphs=False):
     log.debug("Pickled AMR Results File: " + amr_p)
 
     # (8) AMR Beautify Step:
-    amr_beautify = beautify(args_dict, amr_p)
+    amr_beautify = beautify(amr_p, args_dict)
     log.debug('Beautified AMR Result: ' + str(amr_beautify))
     amr_json = write_json(amr_beautify, 'rgi')
 

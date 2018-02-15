@@ -72,7 +72,7 @@ def test_ectyper_vf():
         assert type(ectyper_dict) == dict
 
         # beautify ECTyper check
-        json_return = beautify(single_dict, pickled_ectyper_dict)
+        json_return = beautify(pickled_ectyper_dict, single_dict)
         assert type(json_return) == list
 
 def test_ectyper_serotype():
@@ -112,5 +112,5 @@ def test_amr():
         # beautify amr check
         single_dict = dict(ARGS_DICT)
         single_dict.update({'i':ecoli_genome})
-        json_return = beautify(single_dict,pickled_amr_dict)
+        json_return = beautify(pickled_amr_dict, single_dict)
         assert type(json_return) == list

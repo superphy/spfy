@@ -131,7 +131,7 @@ def handle_failed(json_r, args_dict):
     return ret
 
 # TODO: convert this to models-only.
-def beautify(args_dict=None, pickled_result):
+def beautify(pickled_result, args_dict=None):
     '''
     Converts a given 'spit' datum (a dictionary with our results from rgi/ectyper) to a json form used by the frontend. This result is to be stored in Redis by the calling RQ Worker.
     :param args_dict: The arguments supplied by the user. In the case of spfy web-app, this is used to determine which analysis options were set.
