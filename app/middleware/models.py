@@ -15,7 +15,6 @@ class SubtypingRow(models.Base):
 class SubtypingResult(models.Base):
     rows = fields.ListField([SubtypingRow], nullable=True)
 
-
 class Pipeline(models.Base):
-    jobs = fields.EmbeddedField(dict, default={})
+    jobs = {}
     single_dict = fields.EmbeddedField(dict, default={})
