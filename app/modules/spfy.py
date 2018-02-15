@@ -94,8 +94,8 @@ def _ectyper_pipeline_vf(singles, multiples, query_file, single_dict, pipeline=N
         # serotype, and we're not in bulk uploading.
         job_ectyper_beautify_vf = multiples.enqueue(
             beautify,
-            single_dict,
             query_file + '_ectyper.p',
+            single_dict,
             depends_on=job_ectyper_vf,
             result_ttl=ttl_value
         )
@@ -266,7 +266,11 @@ def blob_savvy_enqueue(single_dict):
         # blazegraph
         if single_dict['options']['amr'] and not single_dict['options']['bulk']:
             job_amr_beautify = multiples.enqueue(
-                beautify, single_dict, query_file + '_rgi.tsv_rgi.p', depends_on=job_amr_dict, result_ttl=-1)
+                beautify,
+                query_file + '_rgi.tsv_rgi.p',
+                single_dict,
+                depends_on=job_amr_dict,
+                result_ttl=-1)
             d.update({'job_amr_beautify': job_amr_beautify})
         return d
 
