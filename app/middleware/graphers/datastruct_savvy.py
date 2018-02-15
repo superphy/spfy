@@ -21,7 +21,7 @@ def _convert_subtyping(graph, model, uriIsolate):
         graph.add((
             uriIsolate,
             gu('ge:0001077'),
-            Literal(serotyper_dict['H_prediction'])
+            Literal(row['H_prediction'])
         ))
     return graph
 

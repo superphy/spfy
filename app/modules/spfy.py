@@ -26,6 +26,7 @@ from middleware.graphers.datastruct_savvy import datastruct_savvy
 from middleware.graphers.turtle_grapher import turtle_grapher
 from middleware.graphers.turtle_utils import actual_filename
 from modules.phylotyper import phylotyper
+from middleware.models import Pipeline
 
 from modules.loggingFunctions import initialize_logging
 import logging
@@ -51,12 +52,14 @@ if config.BACKLOG_ENABLED:
     backlog_multiples_q = Queue(
         'backlog_multiples', connection=redis_conn, default_timeout=config.DEFAULT_TIMEOUT)
 
-def _ectyper_pipeline_vf(singles, multiples, query_file, single_dict):
+def _ectyper_pipeline_vf(singles, multiples, query_file, single_dict, pipeline=None):
     """
     Enqueue all the jobs required for VF.
     """
     # Dictionary of Job instances to return
     d = {}
+    # Alias.
+    job_id = pipeline.jobs['job_id']
 
     # Create a copy of the arguments dictionary and disable Serotype.
     # This copy is passed to the old ECTyper.
@@ -82,7 +85,7 @@ def _ectyper_pipeline_vf(singles, multiples, query_file, single_dict):
         query_file,
         query_file + '_id.txt',
         query_file + '_ectyper_vf.p',
-        depends_on=job_ectyper,
+        depends_on=job_ectyper_vf,
         result_ttl=ttl_value)
     d['job_ectyper_datastruct_vf'] = job_ectyper_datastruct_vf
 
@@ -94,18 +97,20 @@ def _ectyper_pipeline_vf(singles, multiples, query_file, single_dict):
             single_dict,
             query_file + '_ectyper.p',
             depends_on=job_ectyper_vf,
-            result_ttl=-1
+            result_ttl=ttl_value
         )
         d['job_ectyper_beautify_vf'] = job_ectyper_beautify_vf
 
     return d
 
-def _ectyper_pipeline_serotype(singles, multiples, query_file, single_dict):
+def _ectyper_pipeline_serotype(singles, multiples, query_file, single_dict, pipeline=None):
     """
     Enqueue all the jobs required for VF.
     """
     # Dictionary of Job instances to return
     d = {}
+    # Alias.
+    job_id = pipeline.jobs['job_id']
 
     # Create a copy of the arguments dictionary and disable Serotype.
     # This copy is passed to the old ECTyper.
@@ -113,7 +118,7 @@ def _ectyper_pipeline_serotype(singles, multiples, query_file, single_dict):
     # Enqueue the new ECTyper
     job_ectyper_serotype = multiples.enqueue(
         call_ectyper_serotype,
-        single_dict,
+        single_dict_vf,
         depends_on=job_id)
     d['job_ectyper_serotype'] = job_ectyper_serotype
 
@@ -130,8 +135,8 @@ def _ectyper_pipeline_serotype(singles, multiples, query_file, single_dict):
         query_file,
         query_file + '_id.txt',
         query_file + '_ectyper_serotype.p',
-        depends_on=job_ectyper,
-        result_ttl=-1)
+        depends_on=job_ectyper_serotype,
+        result_ttl=ttl_value)
     d['job_ectyper_serotype'] = job_ectyper_datastruct_serotype
 
     if not single_dict['options']['bulk']:
@@ -140,8 +145,8 @@ def _ectyper_pipeline_serotype(singles, multiples, query_file, single_dict):
         job_ectyper_beautify_serotype = multiples.enqueue(
             beautify,
             pickled_result = query_file + '_ectyper_serotype.p',
-            depends_on=job_ectyper_vf,
-            result_ttl=-1
+            depends_on=job_ectyper_serotype,
+            result_ttl=ttl_value
         )
         d['job_ectyper_beautify_serotype'] = job_ectyper_beautify_serotype
 
@@ -161,10 +166,14 @@ def blob_savvy_enqueue(single_dict):
     '''
     jobs = {}
     query_file = single_dict['i']
+    pipeline = Pipeline
+    pipeline.single_dict = copy.deepcopy(single_dict)
 
     job_qc = multiples_q.enqueue(qc, query_file, result_ttl=-1)
+    pipeline.jobs.update({'job_qc':job_qc})
     job_id = blazegraph_q.enqueue(
         write_reserve_id, query_file, depends_on=job_qc, result_ttl=-1)
+    pipeline.jobs.update({'job_id':job_id})
 
     ## ECTyper (VF & Serotype)
     # VF
@@ -173,8 +182,10 @@ def blob_savvy_enqueue(single_dict):
             singles_q,
             multiples_q,
             query_file,
-            single_dict
+            single_dict,
+            pipeline=pipeline
         )
+        pipeline.jobs.update(ectyper_vf_jobs)
         if single_dict['options']['bulk']:
             ret_job_ectyper = ectyper_vf_jobs['job_ectyper_datastruct_vf']
             jobs[ret_job_ectyper.get_id()] = {
@@ -192,11 +203,12 @@ def blob_savvy_enqueue(single_dict):
         # Explictedly set serotype to false in case of overlap.
         backlog_d['options']['serotype'] = False
         # Note: we use different queues.
-         _ectyper_pipeline_vf(
+        _ectyper_pipeline_vf(
             backlog_singles_q,
             backlog_multiples_q,
             query_file,
-            backlog_d
+            backlog_d,
+            pipeline=pipeline
         )
 
     # Serotype
@@ -205,8 +217,10 @@ def blob_savvy_enqueue(single_dict):
             singles_q,
             multiples_q,
             query_file,
-            single_dict
+            single_dict,
+            pipeline=pipeline
         )
+        pipeline.jobs.update(ectyper_serotype_jobs)
         if single_dict['options']['bulk']:
             ret_job_ectyper = ectyper_serotype_jobs['job_ectyper_datastruct_serotype']
             jobs[ret_job_ectyper.get_id()] = {
@@ -227,8 +241,9 @@ def blob_savvy_enqueue(single_dict):
            backlog_singles_q,
            backlog_multiples_q,
            query_file,
-           backlog_d
-       )
+           backlog_d,
+           pipeline=pipeline
+        )
     # END ECTYPER PIPELINE
 
     # AMR PIPELINE
@@ -274,8 +289,12 @@ def blob_savvy_enqueue(single_dict):
         picklefile = query_file + jobname + '.p'
 
         job_pt = multiples.enqueue(
-            phylotyper.phylotyper, None, subtype, tsvfile, id_file=query_file + '_id.txt',
-            depends_on=job_ectyper_datastruct)
+            phylotyper.phylotyper,
+            None,
+            subtype,
+            tsvfile,
+            id_file=query_file + '_id.txt',
+            depends_on=pipeline.jobs['job_ectyper_datastruct_vf'])
         job_pt_dict = multiples.enqueue(
             phylotyper.to_dict, tsvfile, subtype, picklefile,
             depends_on=job_pt)
