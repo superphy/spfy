@@ -17,4 +17,4 @@ class SubtypingResult(models.Base):
 
 class Pipeline(models.Base):
     jobs = {}
-    single_dict = fields.EmbeddedField(dict, default={})
+    single_dict = {}
