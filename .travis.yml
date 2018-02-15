@@ -48,5 +48,8 @@ install:
 script:
   #### Run Pytest
   - python -m pytest --ignore modules/ectyper/ecoli_serotyping -v
+after_failure:
+  # Check the logs if tests fail.
+  - docker-compose logs webserver
 notifications:
   email: false
