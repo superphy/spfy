@@ -91,7 +91,7 @@ def call_ectyper_serotype(args_dict):
             output_file=output_file
         )
         # Path for the pickle dump.
-        p = genome_file + '_ectyper_vf.p'
+        p = genome_file + '_ectyper_serotype.p'
         pickle.dump(subtyping_result,open(p,'wb'))
         return p
     else:
