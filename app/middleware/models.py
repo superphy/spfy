@@ -15,6 +15,17 @@ class SubtypingRow(models.Base):
 class SubtypingResult(models.Base):
     rows = fields.ListField([SubtypingRow], nullable=True)
 
-class Pipeline(models.Base):
-    jobs = {}
-    single_dict = {}
+class Job():
+    def __init__(self, job, transitory=True, display=False):
+        self.job = job # an instance of the RQ Job class
+        self.transitory = # if the job won't persist in Redis DB
+        self.display = # used for display to the front-end
+        
+class Pipeline():
+    def __init__(self, jobs=None, single_dict=None):
+        if not jobs:
+            jobs = {}
+        if not single_dict:
+            single_dict = {}
+        self.jobs = {}
+        self.single_dict = {}
