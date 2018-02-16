@@ -94,7 +94,7 @@ def _ectyper_pipeline_vf(singles, multiples, query_file, single_dict, pipeline=N
         # serotype, and we're not in bulk uploading.
         job_ectyper_beautify_vf = multiples.enqueue(
             beautify,
-            query_file + '_ectyper.p',
+            query_file + '_ectyper_vf.p',
             single_dict,
             depends_on=job_ectyper_vf,
             result_ttl=ttl_value
