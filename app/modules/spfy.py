@@ -155,7 +155,7 @@ def _ectyper_pipeline_serotype(singles, multiples, query_file, single_dict, pipe
     pipeline.jobs.update(d)
     return d
 
-def blob_savvy_enqueue(single_dict):
+def blob_savvy_enqueue(single_dict, pipeline):
     '''
     Handles enqueueing of single file to multiple queues.
     :param f: a fasta file
@@ -169,9 +169,7 @@ def blob_savvy_enqueue(single_dict):
     '''
     jobs = {}
     query_file = single_dict['i']
-    pipeline = Pipeline()
-    pipeline.single_dict = copy.deepcopy(single_dict)
-
+    
     job_qc = multiples_q.enqueue(qc, query_file, result_ttl=-1)
     pipeline.jobs.update({'job_qc':job_qc})
     job_id = blazegraph_q.enqueue(
@@ -376,23 +374,28 @@ def blob_savvy_enqueue(single_dict):
     return jobs
 
 
-def blob_savvy(args_dict):
+def blob_savvy(args_dict, pipeline):
     '''
-    Handles enqueuing of all files in a given directory or just a single file
+    Handles enqueuing of all files in a given directory or just a single file.
     '''
     d = {}
     if os.path.isdir(args_dict['i']):
         for f in os.listdir(args_dict['i']):
             single_dict = dict(args_dict.items() +
                                {'i': os.path.join(args_dict['i'], f)}.items())
-            d.update(blob_savvy_enqueue(single_dict))
+            d.update(
+                blob_savvy_enqueue(
+                    single_dict,
+                    pipeline
+                )
+            )
     else:
         d.update(blob_savvy_enqueue(args_dict))
 
     return d
 
 
-def spfy(args_dict):
+def spfy(args_dict, pipeline):
     '''
     '''
     # abs path resolution should be handled in spfy.py
@@ -400,6 +403,6 @@ def spfy(args_dict):
 
     #print 'Starting blob_savvy call'
     #logger.info('args_dict: ' + str(args_dict))
-    jobs_dict = blob_savvy(args_dict)
+    jobs_dict = blob_savvy(args_dict, pipeline)
 
     return jobs_dict

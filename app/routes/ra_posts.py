@@ -17,6 +17,7 @@ from routes.file_utils import fix_uri, handle_tar, handle_zip
 from modules.gc import blob_gc_enqueue
 from modules.spfy import spfy
 from middleware.api import subtyping_dependencies
+from middleware.models import Pipeline
 
 bp_ra_posts = Blueprint('reactapp_posts', __name__)
 
@@ -234,6 +235,12 @@ def upload():
         now = now.strftime("%Y-%m-%d-%H-%M-%S-%f")
         jobs_dict = {}
 
+        pipeline = Pipeline(
+            files = uploaded_files,
+            func = spfy,
+            options = options
+        )
+
         for file in uploaded_files:
             if file:
                 # for saving file
@@ -250,7 +257,9 @@ def upload():
 
                 # for enqueing task
                 jobs_enqueued = spfy(
-                    {'i': filename, 'pi':options['pi'], 'options':options})
+                    args_dict = {'i': filename, 'pi':options['pi'], 'options':options},
+                    pipeline = pipeline
+                )
                 jobs_dict.update(jobs_enqueued)
         # new in 4.2.0
         print 'upload(): all files enqueued, returning...'

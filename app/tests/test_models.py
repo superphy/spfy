@@ -1,5 +1,8 @@
-from middleware.models import SubtypingRow, SubtypingResult
-from tests.constants import BEAUTIFY_VF_SEROTYPE
+from middleware.models import SubtypingRow, SubtypingResult, Pipeline
+from modules.spfy import spfy
+from scripts.savvy import savvy
+from tests.constants import BEAUTIFY_VF_SEROTYPE, ARGS_DICT
+
 
 def test_subtyping_model_direct():
     """
@@ -21,3 +24,46 @@ def test_subtyping_model_direct():
         rows = subtyping_list
     )
     subtyping_result.validate()
+
+def test_pipeline_model_signature():
+    """
+    Function signatures should be identical if called on the same function.
+    """
+    p1 = Pipeline(
+        func = spfy,
+        options = ARGS_DICT
+    )
+    p2 = Pipeline(
+        func = spfy,
+        options = ARGS_DICT
+    )
+    r1 = p1.signature()
+    r2 = p2.signature()
+    # These are identical pipelines, should be equal.
+    assert r1 == r2
+
+    p1 = Pipeline(
+        func = spfy,
+        options = ARGS_DICT
+    )
+    p2 = Pipeline(
+        func = savvy,
+        options = ARGS_DICT
+    )
+    r1 = p1.signature()
+    r2 = p2.signature()
+    # These pipelines have different functions, should be different.
+    assert r1 != r2
+
+    p1 = Pipeline(
+        func = spfy,
+        options = ARGS_DICT
+    )
+    p2 = Pipeline(
+        func = spfy,
+        options = {'cats':1}
+    )
+    r1 = p1.signature()
+    r2 = p2.signature()
+    # These pipelines have different options, should be different.
+    assert r1 != r2
