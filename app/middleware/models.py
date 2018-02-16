@@ -3,7 +3,7 @@ from hashlib import sha1
 from dis import dis
 from StringIO import StringIO
 from jsonmodels import models, fields
-from middleware.graphing.turtle_utils import actual_filename
+from middleware.graphers.turtle_utils import actual_filename
 from middleware.display.beautify import model_to_json
 
 
