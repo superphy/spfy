@@ -36,10 +36,9 @@ initialize_logging()
 logger = logging.getLogger(__name__)
 
 
-# the only ONE time for global variables
-# when naming queues, make sure you actually set a worker to listen to that queue
+# When naming queues, make sure you set a worker to listen to that queue
 # we use the high priority queue for things that should be immediately
-# returned to the user
+# returned to the user.
 redis_url = config.REDIS_URL
 redis_conn = redis.from_url(redis_url)
 singles_q = Queue('singles', connection=redis_conn)
@@ -101,6 +100,8 @@ def _ectyper_pipeline_vf(singles, multiples, query_file, single_dict, pipeline=N
         )
         d['job_ectyper_beautify_vf'] = job_ectyper_beautify_vf
 
+    # Mutate the jobs pipeline from the calling function.
+    pipeline.jobs.update(d)
     return d
 
 def _ectyper_pipeline_serotype(singles, multiples, query_file, single_dict, pipeline=None):
@@ -150,6 +151,8 @@ def _ectyper_pipeline_serotype(singles, multiples, query_file, single_dict, pipe
         )
         d['job_ectyper_beautify_serotype'] = job_ectyper_beautify_serotype
 
+    # Mutate the jobs pipeline from the calling function.
+    pipeline.jobs.update(d)
     return d
 
 def blob_savvy_enqueue(single_dict):
@@ -166,7 +169,7 @@ def blob_savvy_enqueue(single_dict):
     '''
     jobs = {}
     query_file = single_dict['i']
-    pipeline = Pipeline
+    pipeline = Pipeline()
     pipeline.single_dict = copy.deepcopy(single_dict)
 
     job_qc = multiples_q.enqueue(qc, query_file, result_ttl=-1)
@@ -185,7 +188,7 @@ def blob_savvy_enqueue(single_dict):
             single_dict,
             pipeline=pipeline
         )
-        pipeline.jobs.update(ectyper_vf_jobs)
+        # pipeline.jobs.update(ectyper_vf_jobs)
         if single_dict['options']['bulk']:
             ret_job_ectyper = ectyper_vf_jobs['job_ectyper_datastruct_vf']
             jobs[ret_job_ectyper.get_id()] = {
@@ -220,7 +223,7 @@ def blob_savvy_enqueue(single_dict):
             single_dict,
             pipeline=pipeline
         )
-        pipeline.jobs.update(ectyper_serotype_jobs)
+        # pipeline.jobs.update(ectyper_serotype_jobs)
         if single_dict['options']['bulk']:
             ret_job_ectyper = ectyper_serotype_jobs['job_ectyper_datastruct_serotype']
             jobs[ret_job_ectyper.get_id()] = {
