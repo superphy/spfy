@@ -21,12 +21,11 @@ from middleware.blazegraph.reserve_id import write_reserve_id
 from modules.ectyper.call_ectyper import call_ectyper_vf, call_ectyper_serotype
 from modules.amr.amr import amr
 from modules.amr.amr_to_dict import amr_to_dict
-from middleware.display.beautify import beautify, model_to_json
+from middleware.display.beautify import beautify
 from middleware.graphers.datastruct_savvy import datastruct_savvy
 from middleware.graphers.turtle_grapher import turtle_grapher
 from middleware.graphers.turtle_utils import actual_filename
 from modules.phylotyper import phylotyper
-from middleware.models import Pipeline
 
 from modules.loggingFunctions import initialize_logging
 import logging

@@ -4,7 +4,25 @@ from dis import dis
 from StringIO import StringIO
 from jsonmodels import models, fields
 from middleware.graphers.turtle_utils import actual_filename
-from middleware.display.beautify import model_to_json
+
+def _convert_subtyping(model):
+    # Convert the model to a generic JSON structure.
+    struct = model.to_struct()
+    # This is not strictly json; more like a list than a dict structure.
+    rows_list = struct['rows']
+    return rows_list
+
+def model_to_json(model):
+    """
+    Converts models to json for the front-end.
+    """
+    # Validate the model submitted before processing.
+    model.validate()
+    # Conversion.
+    if isinstance(model, SubtypingResult):
+        return _convert_subtyping(model)
+    else:
+        raise Exception('model_to_json() called for a model without a handler.')
 
 
 class SubtypingRow(models.Base):
@@ -57,7 +75,7 @@ class Pipeline():
         """
         Check if all jobs are completed
         """
-        for j in jobs.itervalues():
+        for j in self.jobs.itervalues():
             rq_job = j.rq_job
             if j.backlog:
                 # Some backlog job, we don't care (though Sentry will catch it).
@@ -65,7 +83,7 @@ class Pipeline():
             elif rq_job.is_failed:
                 # If the job failed, return the error.
                 return rq_job.exc_info
-            elif not job.is_finished:
+            elif not rq_job.is_finished:
                 # One of the jobs hasn't finished.
                 return False
         return True
@@ -76,7 +94,7 @@ class Pipeline():
         """
         # Gather all the jobs that have finished and haven't failed.
         completed_jobs = [
-            j.rq_job for j in jobs.itervalues()
+            j.rq_job for j in self.jobs.itervalues()
             if j.display and j.rq_job.is_finished and not j.rq_job.is_failed
         ]
         # Merge the json lists together.
@@ -126,7 +144,7 @@ class Pipeline():
         # Create a string of the options.
         str_options = str(self.options)
         # Update the hash with our args information.
-        hx.update(str_args)
+        hx.update(str_options)
 
         # Use the hexdigest as the signature.
         sig = hx.hexdigest()
