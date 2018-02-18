@@ -206,7 +206,7 @@ class Pipeline():
         pipeline_id = "pipeline{0}".format(self.sig)
 
         # Start a Redis connection.
-        redis_url = config['REDIS_URL']
+        redis_url = config.REDIS_URL
         redis_connection = redis.from_url(redis_url)
 
         # Store the pipeline instance.
