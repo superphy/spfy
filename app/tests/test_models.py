@@ -1,21 +1,7 @@
-from middleware.models import
-    SubtypingRow,
-    SubtypingResult,
-    PhylotyperRow,
-    PhylotyperResult,
-    Pipeline,
-    Job
+from middleware import models
 from modules.spfy import spfy
 from scripts.savvy import savvy
-from tests.constants import
-    BEAUTIFY_VF_SEROTYPE,
-    BEAUTIFY_SEROTYPE,
-    BEAUTIFY_VF,
-    BEAUTIFY_AMR,
-    BEAUTIFY_STX1,
-    BEAUTIFY_STX2,
-    BEAUTIFY_EAE,
-    ARGS_DICT
+from tests import constants
 
 class MockRQJob():
     """
@@ -28,12 +14,12 @@ class MockRQJob():
         self.exc_info = exc_info
         self.result = result
 
-def test_subtyping_model_direct(l=BEAUTIFY_VF_SEROTYPE):
+def test_subtyping_model_direct(l=constants.BEAUTIFY_VF_SEROTYPE):
     """
     Use our dataset to directly create a subtyping results model and validate it.
     """
     subtyping_list = [
-        SubtypingRow(
+        models.SubtypingRow(
             analysis=d['analysis'],
             contigid=d['contigid'],
             filename=d['filename'],
@@ -44,19 +30,19 @@ def test_subtyping_model_direct(l=BEAUTIFY_VF_SEROTYPE):
             hitstop=str(d['hitstop'])
         )
     for d in l]
-    subtyping_result = SubtypingResult(
+    subtyping_result = models.SubtypingResult(
         rows = subtyping_list
     )
     subtyping_result.validate()
     # Return for incorporation into later tests.
     return subtyping_result
 
-def test_phylotyper_model_direct(l=BEAUTIFY_STX1):
+def test_phylotyper_model_direct(l=constants.BEAUTIFY_STX1):
     """
     Use our dataset to directly create a phylotyper results model and validate it.
     """
     phylotyper_list = [
-        PhylotyperRow(
+        models.PhylotyperRow(
             contig=d['contig'],
             genome=d['genome'],
             probability=str(d['probability']),
@@ -66,7 +52,7 @@ def test_phylotyper_model_direct(l=BEAUTIFY_STX1):
             subtype_gene=d['subtype_gene']
         )
     for d in l]
-    phylotyper_result = PhylotyperResult(
+    phylotyper_result = models.PhylotyperResult(
         rows = phylotyper_list
     )
     phylotyper_result.validate()
@@ -77,19 +63,19 @@ def test_pipeline_model_subtyping():
     """
     Test the Pipeline model itself for subtyping via ECTyper and RGI.
     """
-    p = Pipeline(
+    p = models.Pipeline(
         func = spfy,
-        options = ARGS_DICT
+        options = constants.ARGS_DICT
     )
     mock_serotype = MockRQJob(
-        result = test_subtyping_model_direct(BEAUTIFY_SEROTYPE)
+        result = test_subtyping_model_direct(constants.BEAUTIFY_SEROTYPE)
     )
     mock_vf = MockRQJob(
-        result = test_subtyping_model_direct(BEAUTIFY_VF)
+        result = test_subtyping_model_direct(constants.BEAUTIFY_VF)
     )
     # Mimicks a Serotype result that will be converted to json.
     p.jobs.update({
-        'job_ectyper_beautify_serotype': Job(
+        'job_ectyper_beautify_serotype': models.Job(
             rq_job=mock_serotype,
             name='job_ectyper_beautify_vf',
             transitory=False,
@@ -99,7 +85,7 @@ def test_pipeline_model_subtyping():
     })
     # Mimicks a VF result that will be converted to json.
     p.jobs.update({
-        'job_ectyper_beautify_vf': Job(
+        'job_ectyper_beautify_vf': models.Job(
             rq_job=mock_vf,
             name='job_ectyper_beautify_vf',
             transitory=False,
@@ -107,10 +93,10 @@ def test_pipeline_model_subtyping():
             display=True
         )
     })
-    assert isinstance(p, Pipeline)
+    assert isinstance(p, models.Pipeline)
     assert isinstance(p.jobs, dict)
     for k in p.jobs:
-        assert isinstance(p.jobs[k], Job)
+        assert isinstance(p.jobs[k], models.Job)
 
     # Test Pipeline.complete(), should be True.
     assert p.complete()
@@ -121,10 +107,10 @@ def test_pipeline_model_subtyping():
 
     # Add an AMR job and re-test.
     mock_amr  = MockRQJob(
-        result = test_subtyping_model_direct(BEAUTIFY_AMR)
+        result = test_subtyping_model_direct(constants.BEAUTIFY_AMR)
     )
     p.jobs.update({
-        'job_ectyper_beautify_amr': Job(
+        'job_ectyper_beautify_amr': models.Job(
             rq_job=mock_amr,
             name='job_ectyper_beautify_amr',
             transitory=False,
@@ -140,18 +126,18 @@ def test_pipeline_model_phyotyping():
     """
     Test the Pipeline model itself for subtyping via Phylotyper.
     """
-    p = Pipeline(
+    p = models.Pipeline(
         func = spfy,
-        options = ARGS_DICT
+        options = constants.ARGS_DICT
     )
     mock_stx1 = MockRQJob(
-        result = test_phylotyper_model_direct(BEAUTIFY_STX1)
+        result = test_phylotyper_model_direct(constants.BEAUTIFY_STX1)
     )
     mock_stx2 = MockRQJob(
-        result = test_phylotyper_model_direct(BEAUTIFY_STX2)
+        result = test_phylotyper_model_direct(constants.BEAUTIFY_STX2)
     )
     p.jobs.update({
-        'job_phylotyper_beautify_stx1': Job(
+        'job_phylotyper_beautify_stx1': models.Job(
             rq_job=mock_stx1,
             name='job_phylotyper_beautify_stx1',
             transitory=False,
@@ -160,7 +146,7 @@ def test_pipeline_model_phyotyping():
         )
     })
     p.jobs.update({
-        'job_phylotyper_beautify_stx2': Job(
+        'job_phylotyper_beautify_stx2': models.Job(
             rq_job=mock_stx2,
             name='job_phylotyper_beautify_stx2',
             transitory=False,
@@ -168,10 +154,10 @@ def test_pipeline_model_phyotyping():
             display=True
         )
     })
-    assert isinstance(p, Pipeline)
+    assert isinstance(p, models.Pipeline)
     assert isinstance(p.jobs, dict)
     for k in p.jobs:
-        assert isinstance(p.jobs[k], Job)
+        assert isinstance(p.jobs[k], models.Job)
 
     # Test Pipeline.complete(), should be True.
     assert p.complete()
@@ -182,10 +168,10 @@ def test_pipeline_model_phyotyping():
 
     # Add an AMR job and re-test.
     mock_eae  = MockRQJob(
-        result = test_phylotyper_model_direct(BEAUTIFY_EAE)
+        result = test_phylotyper_model_direct(constants.BEAUTIFY_EAE)
     )
     p.jobs.update({
-        'job_phylotyper_beautify_eae': Job(
+        'job_phylotyper_beautify_eae': models.Job(
             rq_job=mock_eae,
             name='job_phylotyper_beautify_stx2',
             transitory=False,
@@ -201,37 +187,37 @@ def test_pipeline_model_signature():
     """
     Function signatures should be identical if called on the same function.
     """
-    p1 = Pipeline(
+    p1 = models.Pipeline(
         func = spfy,
-        options = ARGS_DICT
+        options = constants.ARGS_DICT
     )
-    p2 = Pipeline(
+    p2 = models.Pipeline(
         func = spfy,
-        options = ARGS_DICT
+        options = constants.ARGS_DICT
     )
     r1 = p1.signature()
     r2 = p2.signature()
     # These are identical pipelines, should be equal.
     assert r1 == r2
 
-    p1 = Pipeline(
+    p1 = models.Pipeline(
         func = spfy,
-        options = ARGS_DICT
+        options = constants.ARGS_DICT
     )
-    p2 = Pipeline(
+    p2 = models.Pipeline(
         func = savvy,
-        options = ARGS_DICT
+        options = constants.ARGS_DICT
     )
     r1 = p1.signature()
     r2 = p2.signature()
     # These pipelines have different functions, should be different.
     assert r1 != r2
 
-    p1 = Pipeline(
+    p1 = models.Pipeline(
         func = spfy,
-        options = ARGS_DICT
+        options = constants.ARGS_DICT
     )
-    p2 = Pipeline(
+    p2 = models.Pipeline(
         func = spfy,
         options = {'cats':1}
     )
