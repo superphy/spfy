@@ -22,7 +22,7 @@ def model_to_json(model):
     # Validate the model submitted before processing.
     model.validate()
     # Conversion.
-    if issubclass(model, models.Base)():
+    if isinstance(model, models.Base):
         return _convert_model(model)
     else:
         raise Exception('model_to_json() called for a model without a handler.')
