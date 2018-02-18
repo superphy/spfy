@@ -39,6 +39,17 @@ class SubtypingRow(models.Base):
 class SubtypingResult(models.Base):
     rows = fields.ListField([SubtypingRow], nullable=True)
 
+class PhylotyperRow(models.Base):
+    contig = fields.StringField(nullable=True)
+    genome = fields.StringField()
+    probability = fields.StringField(nullable=True) # actually float
+    start = fields.StringField(nullable=True) # actually int
+    stop = fields.StringField(nullable=True) # actually int
+    subtype = fields.StringField()
+    subtype_gene = fields.StringField(nullable=True)
+
+class PhylotyperResult(models.Base):
+    rows = fields.ListField([PhylotyperRow], nullable=True)
 
 class Job():
     def __init__(self, rq_job, name="", transitory=True, backlog=True, display=False):

@@ -2430,3 +2430,888 @@ BEAUTIFY_VF = [
       "hitstop": 3095080
     }
 ]
+
+BEAUTIFY_AMR = [
+  {
+    "analysis": "Antimicrobial Resistance",
+    "contigid": "MOHB01000001.1",
+    "filename": "GCA_001891995.1_ASM189199v1_genomic.fna",
+    "hitcutoff": "Strict",
+    "hitname": "Escherichia coli gyrA conferring resistance to fluoroquinolones",
+    "hitorientation": "+",
+    "hitstart": 159252,
+    "hitstop": 161879
+  },
+  {
+    "analysis": "Antimicrobial Resistance",
+    "contigid": "MOHB01000001.1",
+    "filename": "GCA_001891995.1_ASM189199v1_genomic.fna",
+    "hitcutoff": "Strict",
+    "hitname": "PmrE",
+    "hitorientation": "+",
+    "hitstart": 388190,
+    "hitstop": 389356
+  },
+  {
+    "analysis": "Antimicrobial Resistance",
+    "contigid": "MOHB01000001.1",
+    "filename": "GCA_001891995.1_ASM189199v1_genomic.fna",
+    "hitcutoff": "Perfect",
+    "hitname": "PmrF",
+    "hitorientation": "-",
+    "hitstart": 134984,
+    "hitstop": 135952
+  },
+  {
+    "analysis": "Antimicrobial Resistance",
+    "contigid": "MOHB01000001.1",
+    "filename": "GCA_001891995.1_ASM189199v1_genomic.fna",
+    "hitcutoff": "Strict",
+    "hitname": "arnA",
+    "hitorientation": "-",
+    "hitstart": 133002,
+    "hitstop": 134984
+  },
+  {
+    "analysis": "Antimicrobial Resistance",
+    "contigid": "MOHB01000001.1",
+    "filename": "GCA_001891995.1_ASM189199v1_genomic.fna",
+    "hitcutoff": "Perfect",
+    "hitname": "baeR",
+    "hitorientation": "-",
+    "hitstart": 323408,
+    "hitstop": 324130
+  },
+  {
+    "analysis": "Antimicrobial Resistance",
+    "contigid": "MOHB01000001.1",
+    "filename": "GCA_001891995.1_ASM189199v1_genomic.fna",
+    "hitcutoff": "Perfect",
+    "hitname": "baeS",
+    "hitorientation": "-",
+    "hitstart": 324127,
+    "hitstop": 325530
+  },
+  {
+    "analysis": "Antimicrobial Resistance",
+    "contigid": "MOHB01000001.1",
+    "filename": "GCA_001891995.1_ASM189199v1_genomic.fna",
+    "hitcutoff": "Perfect",
+    "hitname": "mdtB",
+    "hitorientation": "-",
+    "hitstart": 330021,
+    "hitstop": 333143
+  },
+  {
+    "analysis": "Antimicrobial Resistance",
+    "contigid": "MOHB01000001.1",
+    "filename": "GCA_001891995.1_ASM189199v1_genomic.fna",
+    "hitcutoff": "Strict",
+    "hitname": "mdtD",
+    "hitorientation": "-",
+    "hitstart": 325527,
+    "hitstop": 326942
+  },
+  {
+    "analysis": "Antimicrobial Resistance",
+    "contigid": "MOHB01000001.1",
+    "filename": "GCA_001891995.1_ASM189199v1_genomic.fna",
+    "hitcutoff": "Strict",
+    "hitname": "mexN",
+    "hitorientation": "-",
+    "hitstart": 326943,
+    "hitstop": 330020
+  },
+  {
+    "analysis": "Antimicrobial Resistance",
+    "contigid": "MOHB01000003.1",
+    "filename": "GCA_001891995.1_ASM189199v1_genomic.fna",
+    "hitcutoff": "Strict",
+    "hitname": "PmrA",
+    "hitorientation": "+",
+    "hitstart": 28893,
+    "hitstop": 29561
+  },
+  {
+    "analysis": "Antimicrobial Resistance",
+    "contigid": "MOHB01000003.1",
+    "filename": "GCA_001891995.1_ASM189199v1_genomic.fna",
+    "hitcutoff": "Strict",
+    "hitname": "PmrB",
+    "hitorientation": "+",
+    "hitstart": 29562,
+    "hitstop": 30662
+  },
+  {
+    "analysis": "Antimicrobial Resistance",
+    "contigid": "MOHB01000003.1",
+    "filename": "GCA_001891995.1_ASM189199v1_genomic.fna",
+    "hitcutoff": "Strict",
+    "hitname": "PmrC",
+    "hitorientation": "+",
+    "hitstart": 27253,
+    "hitstop": 28896
+  },
+  {
+    "analysis": "Antimicrobial Resistance",
+    "contigid": "MOHB01000003.1",
+    "filename": "GCA_001891995.1_ASM189199v1_genomic.fna",
+    "hitcutoff": "Strict",
+    "hitname": "mdtN",
+    "hitorientation": "+",
+    "hitstart": 58230,
+    "hitstop": 59261
+  },
+  {
+    "analysis": "Antimicrobial Resistance",
+    "contigid": "MOHB01000003.1",
+    "filename": "GCA_001891995.1_ASM189199v1_genomic.fna",
+    "hitcutoff": "Strict",
+    "hitname": "mdtO",
+    "hitorientation": "+",
+    "hitstart": 59261,
+    "hitstop": 61312
+  },
+  {
+    "analysis": "Antimicrobial Resistance",
+    "contigid": "MOHB01000003.1",
+    "filename": "GCA_001891995.1_ASM189199v1_genomic.fna",
+    "hitcutoff": "Strict",
+    "hitname": "mdtP",
+    "hitorientation": "+",
+    "hitstart": 61309,
+    "hitstop": 62775
+  },
+  {
+    "analysis": "Antimicrobial Resistance",
+    "contigid": "MOHB01000004.1",
+    "filename": "GCA_001891995.1_ASM189199v1_genomic.fna",
+    "hitcutoff": "Strict",
+    "hitname": "mdtK",
+    "hitorientation": "+",
+    "hitstart": 126030,
+    "hitstop": 127403
+  },
+  {
+    "analysis": "Antimicrobial Resistance",
+    "contigid": "MOHB01000005.1",
+    "filename": "GCA_001891995.1_ASM189199v1_genomic.fna",
+    "hitcutoff": "Strict",
+    "hitname": "ACT-7",
+    "hitorientation": "-",
+    "hitstart": 4604,
+    "hitstop": 5737
+  },
+  {
+    "analysis": "Antimicrobial Resistance",
+    "contigid": "MOHB01000005.1",
+    "filename": "GCA_001891995.1_ASM189199v1_genomic.fna",
+    "hitcutoff": "Strict",
+    "hitname": "mdtM",
+    "hitorientation": "-",
+    "hitstart": 187550,
+    "hitstop": 188782
+  },
+  {
+    "analysis": "Antimicrobial Resistance",
+    "contigid": "MOHB01000005.1",
+    "filename": "GCA_001891995.1_ASM189199v1_genomic.fna",
+    "hitcutoff": "Strict",
+    "hitname": "robA",
+    "hitorientation": "-",
+    "hitstart": 251658,
+    "hitstop": 252527
+  },
+  {
+    "analysis": "Antimicrobial Resistance",
+    "contigid": "MOHB01000006.1",
+    "filename": "GCA_001891995.1_ASM189199v1_genomic.fna",
+    "hitcutoff": "Strict",
+    "hitname": "CRP",
+    "hitorientation": "-",
+    "hitstart": 176803,
+    "hitstop": 177435
+  },
+  {
+    "analysis": "Antimicrobial Resistance",
+    "contigid": "MOHB01000006.1",
+    "filename": "GCA_001891995.1_ASM189199v1_genomic.fna",
+    "hitcutoff": "Strict",
+    "hitname": "gadX",
+    "hitorientation": "+",
+    "hitstart": 397,
+    "hitstop": 1221
+  },
+  {
+    "analysis": "Antimicrobial Resistance",
+    "contigid": "MOHB01000006.1",
+    "filename": "GCA_001891995.1_ASM189199v1_genomic.fna",
+    "hitcutoff": "Strict",
+    "hitname": "mdtE",
+    "hitorientation": "-",
+    "hitstart": 5818,
+    "hitstop": 6975
+  },
+  {
+    "analysis": "Antimicrobial Resistance",
+    "contigid": "MOHB01000006.1",
+    "filename": "GCA_001891995.1_ASM189199v1_genomic.fna",
+    "hitcutoff": "Strict",
+    "hitname": "mexD",
+    "hitorientation": "-",
+    "hitstart": 2680,
+    "hitstop": 5793
+  },
+  {
+    "analysis": "Antimicrobial Resistance",
+    "contigid": "MOHB01000007.1",
+    "filename": "GCA_001891995.1_ASM189199v1_genomic.fna",
+    "hitcutoff": "Perfect",
+    "hitname": "H-NS",
+    "hitorientation": "-",
+    "hitstart": 187722,
+    "hitstop": 188135
+  },
+  {
+    "analysis": "Antimicrobial Resistance",
+    "contigid": "MOHB01000007.1",
+    "filename": "GCA_001891995.1_ASM189199v1_genomic.fna",
+    "hitcutoff": "Perfect",
+    "hitname": "mdtG",
+    "hitorientation": "-",
+    "hitstart": 25571,
+    "hitstop": 26797
+  },
+  {
+    "analysis": "Antimicrobial Resistance",
+    "contigid": "MOHB01000007.1",
+    "filename": "GCA_001891995.1_ASM189199v1_genomic.fna",
+    "hitcutoff": "Strict",
+    "hitname": "mdtH",
+    "hitorientation": "-",
+    "hitstart": 35428,
+    "hitstop": 36636
+  },
+  {
+    "analysis": "Antimicrobial Resistance",
+    "contigid": "MOHB01000007.1",
+    "filename": "GCA_001891995.1_ASM189199v1_genomic.fna",
+    "hitcutoff": "Strict",
+    "hitname": "phoP",
+    "hitorientation": "-",
+    "hitstart": 101156,
+    "hitstop": 101827
+  },
+  {
+    "analysis": "Antimicrobial Resistance",
+    "contigid": "MOHB01000007.1",
+    "filename": "GCA_001891995.1_ASM189199v1_genomic.fna",
+    "hitcutoff": "Perfect",
+    "hitname": "phoQ",
+    "hitorientation": "-",
+    "hitstart": 99696,
+    "hitstop": 101156
+  },
+  {
+    "analysis": "Antimicrobial Resistance",
+    "contigid": "MOHB01000008.1",
+    "filename": "GCA_001891995.1_ASM189199v1_genomic.fna",
+    "hitcutoff": "Strict",
+    "hitname": "emrK",
+    "hitorientation": "-",
+    "hitstart": 9140,
+    "hitstop": 10303
+  },
+  {
+    "analysis": "Antimicrobial Resistance",
+    "contigid": "MOHB01000008.1",
+    "filename": "GCA_001891995.1_ASM189199v1_genomic.fna",
+    "hitcutoff": "Strict",
+    "hitname": "emrY",
+    "hitorientation": "-",
+    "hitstart": 7602,
+    "hitstop": 9140
+  },
+  {
+    "analysis": "Antimicrobial Resistance",
+    "contigid": "MOHB01000008.1",
+    "filename": "GCA_001891995.1_ASM189199v1_genomic.fna",
+    "hitcutoff": "Perfect",
+    "hitname": "evgA",
+    "hitorientation": "+",
+    "hitstart": 10719,
+    "hitstop": 11333
+  },
+  {
+    "analysis": "Antimicrobial Resistance",
+    "contigid": "MOHB01000008.1",
+    "filename": "GCA_001891995.1_ASM189199v1_genomic.fna",
+    "hitcutoff": "Strict",
+    "hitname": "evgS",
+    "hitorientation": "+",
+    "hitstart": 11338,
+    "hitstop": 14931
+  },
+  {
+    "analysis": "Antimicrobial Resistance",
+    "contigid": "MOHB01000008.1",
+    "filename": "GCA_001891995.1_ASM189199v1_genomic.fna",
+    "hitcutoff": "Strict",
+    "hitname": "mexD",
+    "hitorientation": "+",
+    "hitstart": 104776,
+    "hitstop": 107889
+  },
+  {
+    "analysis": "Antimicrobial Resistance",
+    "contigid": "MOHB01000009.1",
+    "filename": "GCA_001891995.1_ASM189199v1_genomic.fna",
+    "hitcutoff": "Perfect",
+    "hitname": "cpxA",
+    "hitorientation": "+",
+    "hitstart": 22429,
+    "hitstop": 23802
+  },
+  {
+    "analysis": "Antimicrobial Resistance",
+    "contigid": "MOHB01000009.1",
+    "filename": "GCA_001891995.1_ASM189199v1_genomic.fna",
+    "hitcutoff": "Perfect",
+    "hitname": "cpxR",
+    "hitorientation": "+",
+    "hitstart": 21734,
+    "hitstop": 22432
+  },
+  {
+    "analysis": "Antimicrobial Resistance",
+    "contigid": "MOHB01000011.1",
+    "filename": "GCA_001891995.1_ASM189199v1_genomic.fna",
+    "hitcutoff": "Strict",
+    "hitname": "Escherichia coli marR mutant resulting in antibiotic resistance",
+    "hitorientation": "+",
+    "hitstart": 51100,
+    "hitstop": 51534
+  },
+  {
+    "analysis": "Antimicrobial Resistance",
+    "contigid": "MOHB01000011.1",
+    "filename": "GCA_001891995.1_ASM189199v1_genomic.fna",
+    "hitcutoff": "Perfect",
+    "hitname": "marA",
+    "hitorientation": "+",
+    "hitstart": 51554,
+    "hitstop": 51937
+  },
+  {
+    "analysis": "Antimicrobial Resistance",
+    "contigid": "MOHB01000012.1",
+    "filename": "GCA_001891995.1_ASM189199v1_genomic.fna",
+    "hitcutoff": "Strict",
+    "hitname": "emrA",
+    "hitorientation": "-",
+    "hitstart": 312493,
+    "hitstop": 313665
+  },
+  {
+    "analysis": "Antimicrobial Resistance",
+    "contigid": "MOHB01000012.1",
+    "filename": "GCA_001891995.1_ASM189199v1_genomic.fna",
+    "hitcutoff": "Perfect",
+    "hitname": "emrB",
+    "hitorientation": "-",
+    "hitstart": 310938,
+    "hitstop": 312476
+  },
+  {
+    "analysis": "Antimicrobial Resistance",
+    "contigid": "MOHB01000012.1",
+    "filename": "GCA_001891995.1_ASM189199v1_genomic.fna",
+    "hitcutoff": "Strict",
+    "hitname": "emrR",
+    "hitorientation": "-",
+    "hitstart": 313792,
+    "hitstop": 314322
+  },
+  {
+    "analysis": "Antimicrobial Resistance",
+    "contigid": "MOHB01000013.1",
+    "filename": "GCA_001891995.1_ASM189199v1_genomic.fna",
+    "hitcutoff": "Strict",
+    "hitname": "Staphylococcus aureus gyrB conferring resistance to aminocoumarin",
+    "hitorientation": "-",
+    "hitstart": 131568,
+    "hitstop": 133982
+  },
+  {
+    "analysis": "Antimicrobial Resistance",
+    "contigid": "MOHB01000013.1",
+    "filename": "GCA_001891995.1_ASM189199v1_genomic.fna",
+    "hitcutoff": "Strict",
+    "hitname": "emrD",
+    "hitorientation": "+",
+    "hitstart": 107782,
+    "hitstop": 108966
+  },
+  {
+    "analysis": "Antimicrobial Resistance",
+    "contigid": "MOHB01000013.1",
+    "filename": "GCA_001891995.1_ASM189199v1_genomic.fna",
+    "hitcutoff": "Perfect",
+    "hitname": "mdtL",
+    "hitorientation": "+",
+    "hitstart": 145479,
+    "hitstop": 146654
+  },
+  {
+    "analysis": "Antimicrobial Resistance",
+    "contigid": "MOHB01000015.1",
+    "filename": "GCA_001891995.1_ASM189199v1_genomic.fna",
+    "hitcutoff": "Strict",
+    "hitname": "Escherichia coli parC conferring resistance to fluoroquinolone",
+    "hitorientation": "-",
+    "hitstart": 68709,
+    "hitstop": 70967
+  },
+  {
+    "analysis": "Antimicrobial Resistance",
+    "contigid": "MOHB01000015.1",
+    "filename": "GCA_001891995.1_ASM189199v1_genomic.fna",
+    "hitcutoff": "Strict",
+    "hitname": "bacA",
+    "hitorientation": "-",
+    "hitstart": 104717,
+    "hitstop": 105538
+  },
+  {
+    "analysis": "Antimicrobial Resistance",
+    "contigid": "MOHB01000015.1",
+    "filename": "GCA_001891995.1_ASM189199v1_genomic.fna",
+    "hitcutoff": "Strict",
+    "hitname": "tolC",
+    "hitorientation": "+",
+    "hitstart": 80879,
+    "hitstop": 82360
+  },
+  {
+    "analysis": "Antimicrobial Resistance",
+    "contigid": "MOHB01000016.1",
+    "filename": "GCA_001891995.1_ASM189199v1_genomic.fna",
+    "hitcutoff": "Strict",
+    "hitname": "ACT-7",
+    "hitorientation": "+",
+    "hitstart": 286,
+    "hitstop": 1431
+  },
+  {
+    "analysis": "Antimicrobial Resistance",
+    "contigid": "MOHB01000022.1",
+    "filename": "GCA_001891995.1_ASM189199v1_genomic.fna",
+    "hitcutoff": "Strict",
+    "hitname": "Mycobacterium tuberculosis rpoB mutants conferring resistance to rifampicin",
+    "hitorientation": "-",
+    "hitstart": 22720,
+    "hitstop": 26748
+  },
+  {
+    "analysis": "Antimicrobial Resistance",
+    "contigid": "MOHB01000023.1",
+    "filename": "GCA_001891995.1_ASM189199v1_genomic.fna",
+    "hitcutoff": "Strict",
+    "hitname": "macA",
+    "hitorientation": "-",
+    "hitstart": 5642,
+    "hitstop": 6757
+  },
+  {
+    "analysis": "Antimicrobial Resistance",
+    "contigid": "MOHB01000023.1",
+    "filename": "GCA_001891995.1_ASM189199v1_genomic.fna",
+    "hitcutoff": "Strict",
+    "hitname": "macB",
+    "hitorientation": "-",
+    "hitstart": 3699,
+    "hitstop": 5645
+  },
+  {
+    "analysis": "Antimicrobial Resistance",
+    "contigid": "MOHB01000023.1",
+    "filename": "GCA_001891995.1_ASM189199v1_genomic.fna",
+    "hitcutoff": "Strict",
+    "hitname": "mdfA",
+    "hitorientation": "-",
+    "hitstart": 39796,
+    "hitstop": 41028
+  },
+  {
+    "analysis": "Antimicrobial Resistance",
+    "contigid": "MOHB01000024.1",
+    "filename": "GCA_001891995.1_ASM189199v1_genomic.fna",
+    "hitcutoff": "Perfect",
+    "hitname": "CTX-M-55",
+    "hitorientation": "-",
+    "hitstart": 37702,
+    "hitstop": 38577
+  },
+  {
+    "analysis": "Antimicrobial Resistance",
+    "contigid": "MOHB01000026.1",
+    "filename": "GCA_001891995.1_ASM189199v1_genomic.fna",
+    "hitcutoff": "Strict",
+    "hitname": "Mycobacterium tuberculosis katG mutations conferring resistance to isoniazid",
+    "hitorientation": "+",
+    "hitstart": 8536,
+    "hitstop": 10716
+  },
+  {
+    "analysis": "Antimicrobial Resistance",
+    "contigid": "MOHB01000027.1",
+    "filename": "GCA_001891995.1_ASM189199v1_genomic.fna",
+    "hitcutoff": "Strict",
+    "hitname": "APH(3'')",
+    "hitorientation": "-",
+    "hitstart": 10215,
+    "hitstop": 11018
+  },
+  {
+    "analysis": "Antimicrobial Resistance",
+    "contigid": "MOHB01000027.1",
+    "filename": "GCA_001891995.1_ASM189199v1_genomic.fna",
+    "hitcutoff": "Perfect",
+    "hitname": "APH(6)",
+    "hitorientation": "-",
+    "hitstart": 9379,
+    "hitstop": 10215
+  },
+  {
+    "analysis": "Antimicrobial Resistance",
+    "contigid": "MOHB01000027.1",
+    "filename": "GCA_001891995.1_ASM189199v1_genomic.fna",
+    "hitcutoff": "Strict",
+    "hitname": "floR",
+    "hitorientation": "+",
+    "hitstart": 5030,
+    "hitstop": 6244
+  },
+  {
+    "analysis": "Antimicrobial Resistance",
+    "contigid": "MOHB01000027.1",
+    "filename": "GCA_001891995.1_ASM189199v1_genomic.fna",
+    "hitcutoff": "Perfect",
+    "hitname": "sul2",
+    "hitorientation": "-",
+    "hitstart": 11079,
+    "hitstop": 11894
+  },
+  {
+    "analysis": "Antimicrobial Resistance",
+    "contigid": "MOHB01000027.1",
+    "filename": "GCA_001891995.1_ASM189199v1_genomic.fna",
+    "hitcutoff": "Strict",
+    "hitname": "tetG",
+    "hitorientation": "-",
+    "hitstart": 6844,
+    "hitstop": 8043
+  },
+  {
+    "analysis": "Antimicrobial Resistance",
+    "contigid": "MOHB01000028.1",
+    "filename": "GCA_001891995.1_ASM189199v1_genomic.fna",
+    "hitcutoff": "Strict",
+    "hitname": "emrE",
+    "hitorientation": "+",
+    "hitstart": 30648,
+    "hitstop": 30980
+  },
+  {
+    "analysis": "Antimicrobial Resistance",
+    "contigid": "MOHB01000032.1",
+    "filename": "GCA_001891995.1_ASM189199v1_genomic.fna",
+    "hitcutoff": "Perfect",
+    "hitname": "acrE",
+    "hitorientation": "+",
+    "hitstart": 32702,
+    "hitstop": 33859
+  },
+  {
+    "analysis": "Antimicrobial Resistance",
+    "contigid": "MOHB01000032.1",
+    "filename": "GCA_001891995.1_ASM189199v1_genomic.fna",
+    "hitcutoff": "Strict",
+    "hitname": "acrS",
+    "hitorientation": "-",
+    "hitstart": 31641,
+    "hitstop": 32303
+  },
+  {
+    "analysis": "Antimicrobial Resistance",
+    "contigid": "MOHB01000032.1",
+    "filename": "GCA_001891995.1_ASM189199v1_genomic.fna",
+    "hitcutoff": "Strict",
+    "hitname": "mexD",
+    "hitorientation": "+",
+    "hitstart": 33871,
+    "hitstop": 36975
+  },
+  {
+    "analysis": "Antimicrobial Resistance",
+    "contigid": "MOHB01000036.1",
+    "filename": "GCA_001891995.1_ASM189199v1_genomic.fna",
+    "hitcutoff": "Strict",
+    "hitname": "Klebsiella pneumoniae acrR mutant resulting in high level antibiotic resistance",
+    "hitorientation": "+",
+    "hitstart": 107902,
+    "hitstop": 108495
+  },
+  {
+    "analysis": "Antimicrobial Resistance",
+    "contigid": "MOHB01000036.1",
+    "filename": "GCA_001891995.1_ASM189199v1_genomic.fna",
+    "hitcutoff": "Strict",
+    "hitname": "acrE",
+    "hitorientation": "-",
+    "hitstart": 106513,
+    "hitstop": 107706
+  },
+  {
+    "analysis": "Antimicrobial Resistance",
+    "contigid": "MOHB01000036.1",
+    "filename": "GCA_001891995.1_ASM189199v1_genomic.fna",
+    "hitcutoff": "Strict",
+    "hitname": "mexD",
+    "hitorientation": "-",
+    "hitstart": 103341,
+    "hitstop": 106490
+  },
+  {
+    "analysis": "Antimicrobial Resistance",
+    "contigid": "MOHB01000036.1",
+    "filename": "GCA_001891995.1_ASM189199v1_genomic.fna",
+    "hitcutoff": "Strict",
+    "hitname": "rosA",
+    "hitorientation": "-",
+    "hitstart": 125513,
+    "hitstop": 126733
+  },
+  {
+    "analysis": "Antimicrobial Resistance",
+    "contigid": "MOHB01000036.1",
+    "filename": "GCA_001891995.1_ASM189199v1_genomic.fna",
+    "hitcutoff": "Strict",
+    "hitname": "rosB",
+    "hitorientation": "-",
+    "hitstart": 123599,
+    "hitstop": 125275
+  },
+  {
+    "analysis": "Antimicrobial Resistance",
+    "contigid": "MOHB01000036.1",
+    "filename": "GCA_001891995.1_ASM189199v1_genomic.fna",
+    "hitcutoff": "Strict",
+    "hitname": "vanG",
+    "hitorientation": "-",
+    "hitstart": 19876,
+    "hitstop": 20970
+  },
+  {
+    "analysis": "Antimicrobial Resistance",
+    "contigid": "MOHB01000037.1",
+    "filename": "GCA_001891995.1_ASM189199v1_genomic.fna",
+    "hitcutoff": "Perfect",
+    "hitname": "MCR-1",
+    "hitorientation": "+",
+    "hitstart": 13553,
+    "hitstop": 15178
+  },
+  {
+    "analysis": "Antimicrobial Resistance",
+    "contigid": "MOHB01000050.1",
+    "filename": "GCA_001891995.1_ASM189199v1_genomic.fna",
+    "hitcutoff": "Perfect",
+    "hitname": "FosA3",
+    "hitorientation": "+",
+    "hitstart": 4459,
+    "hitstop": 4875
+  },
+  {
+    "analysis": "Antimicrobial Resistance",
+    "contigid": "MOHB01000050.1",
+    "filename": "GCA_001891995.1_ASM189199v1_genomic.fna",
+    "hitcutoff": "Perfect",
+    "hitname": "mphA",
+    "hitorientation": "+",
+    "hitstart": 89,
+    "hitstop": 994
+  },
+  {
+    "analysis": "Antimicrobial Resistance",
+    "contigid": "MOHB01000053.1",
+    "filename": "GCA_001891995.1_ASM189199v1_genomic.fna",
+    "hitcutoff": "Strict",
+    "hitname": "ErmB",
+    "hitorientation": "-",
+    "hitstart": 1455,
+    "hitstop": 2192
+  },
+  {
+    "analysis": "Antimicrobial Resistance",
+    "contigid": "MOHB01000062.1",
+    "filename": "GCA_001891995.1_ASM189199v1_genomic.fna",
+    "hitcutoff": "Perfect",
+    "hitname": "sul1",
+    "hitorientation": "+",
+    "hitstart": 452,
+    "hitstop": 1291
+  },
+  {
+    "analysis": "Antimicrobial Resistance",
+    "contigid": "MOHB01000064.1",
+    "filename": "GCA_001891995.1_ASM189199v1_genomic.fna",
+    "hitcutoff": "Perfect",
+    "hitname": "TEM-1",
+    "hitorientation": "+",
+    "hitstart": 3455,
+    "hitstop": 4315
+  },
+  {
+    "analysis": "Antimicrobial Resistance",
+    "contigid": "MOHB01000080.1",
+    "filename": "GCA_001891995.1_ASM189199v1_genomic.fna",
+    "hitcutoff": "Perfect",
+    "hitname": "NDM-1",
+    "hitorientation": "+",
+    "hitstart": 724,
+    "hitstop": 1536
+  },
+  {
+    "analysis": "Antimicrobial Resistance",
+    "contigid": "MOHB01000090.1",
+    "filename": "GCA_001891995.1_ASM189199v1_genomic.fna",
+    "hitcutoff": "Strict",
+    "hitname": "aadA11",
+    "hitorientation": "+",
+    "hitstart": 690,
+    "hitstop": 1535
+  },
+  {
+    "analysis": "Antimicrobial Resistance",
+    "contigid": "MOHB01000090.1",
+    "filename": "GCA_001891995.1_ASM189199v1_genomic.fna",
+    "hitcutoff": "Strict",
+    "hitname": "dfrA25",
+    "hitorientation": "+",
+    "hitstart": 36,
+    "hitstop": 509
+  },
+  {
+    "analysis": "Antimicrobial Resistance",
+    "contigid": "MOHB01000098.1",
+    "filename": "GCA_001891995.1_ASM189199v1_genomic.fna",
+    "hitcutoff": "Perfect",
+    "hitname": "catI",
+    "hitorientation": "-",
+    "hitstart": 166,
+    "hitstop": 825
+  },
+  {
+    "analysis": "Antimicrobial Resistance",
+    "contigid": "MOHB01000101.1",
+    "filename": "GCA_001891995.1_ASM189199v1_genomic.fna",
+    "hitcutoff": "Perfect",
+    "hitname": "arr-3",
+    "hitorientation": "+",
+    "hitstart": 37,
+    "hitstop": 489
+  },
+  {
+    "analysis": "Antimicrobial Resistance",
+    "contigid": "MOHB01000104.1",
+    "filename": "GCA_001891995.1_ASM189199v1_genomic.fna",
+    "hitcutoff": "Perfect",
+    "hitname": "rmtB",
+    "hitorientation": "+",
+    "hitstart": 43,
+    "hitstop": 798
+  },
+  {
+    "analysis": "Antimicrobial Resistance",
+    "contigid": "MOHB01000106.1",
+    "filename": "GCA_001891995.1_ASM189199v1_genomic.fna",
+    "hitcutoff": "Perfect",
+    "hitname": "aadA5",
+    "hitorientation": "-",
+    "hitstart": 115,
+    "hitstop": 903
+  }
+]
+
+BEAUTIFY_STX1 = [
+  {
+    "contig": "lcl|ECI-2644|NODE_8_length_178521_cov_25.218_ID_15",
+    "genome": "ECI-2644_lcl.fasta",
+    "probability": 0.9561446,
+    "start": 174535,
+    "stop": 175491,
+    "subtype": "a",
+    "subtype_gene": "stx1A"
+  },
+  {
+    "contig": "lcl|ECI-2644|NODE_8_length_178521_cov_25.218_ID_15",
+    "genome": "ECI-2644_lcl.fasta",
+    "probability": 0.9561446,
+    "start": 175501,
+    "stop": 175770,
+    "subtype": "a",
+    "subtype_gene": "stx1B"
+  },
+  {
+    "contig": "lcl|ECI-2644|NODE_8_length_178521_cov_25.218_ID_15",
+    "genome": "ECI-2644_lcl.fasta",
+    "probability": 0.9561446,
+    "start": 174544,
+    "stop": 175491,
+    "subtype": "a",
+    "subtype_gene": "stx1A"
+  },
+  {
+    "contig": "lcl|ECI-2644|NODE_8_length_178521_cov_25.218_ID_15",
+    "genome": "ECI-2644_lcl.fasta",
+    "probability": 0.9561446,
+    "start": 175501,
+    "stop": 175770,
+    "subtype": "a",
+    "subtype_gene": "stx1B"
+  }
+]
+
+BEAUTIFY_STX2 = [
+  {
+    "contig": "lcl|ECI-2644|NODE_51_length_5713_cov_24.063_ID_101",
+    "genome": "ECI-2644_lcl.fasta",
+    "probability": 0.9460619,
+    "start": 4390,
+    "stop": 5349,
+    "subtype": "a",
+    "subtype_gene": "stx2A"
+  },
+  {
+    "contig": "lcl|ECI-2644|NODE_51_length_5713_cov_24.063_ID_101",
+    "genome": "ECI-2644_lcl.fasta",
+    "probability": 0.9460619,
+    "start": 4109,
+    "stop": 4378,
+    "subtype": "a",
+    "subtype_gene": "stx2B"
+  }
+]
+
+BEAUTIFY_EAE = [
+  {
+    "contig": "N/A",
+    "genome": "GCA_000005845.2_ASM584v2_genomic.fna",
+    "probability": "N/A",
+    "start": "N/A",
+    "stop": "N/A",
+    "subtype": "Subtype loci not found in genome",
+    "subtype_gene": "N/A"
+  }
+]
