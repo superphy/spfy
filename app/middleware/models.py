@@ -69,7 +69,7 @@ class Pipeline():
         # TODO: incorporate below into the pipeline.
         self.files = []
         self.func = func # Additional attribute for storing pipeline function.
-        self.options = None
+        self.options = options
 
     def complete(self):
         """
