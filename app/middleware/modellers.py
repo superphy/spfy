@@ -31,5 +31,28 @@ def model_serotype(pi, pl, output_file):
     subtyping_result = SubtypingResult(
         rows = subtyping_list
     )
+    return subtyping_result
 
+def model_vf(json_r, analysis="Virulence Factors"):
+    """
+    Casts the output from display.beautify into a SubtypingResult object.
+    """
+    # Type check.
+    assert isinstance(json_r, list)
+    subtyping_list = [
+        SubtypingRow(
+            analysis=analysis,
+            contigid=item['contigid'],
+            filename=item['filename'],
+            hitcutoff=item['hitcutoff'],
+            hitname=item['hitname'],
+            hitorientation=item['hitorientation'],
+            hitstart=item['hitstart'],
+            hitstop=item['hitstop']
+        )
+    for item in json_r]
+    # Convert the list of rows into a SubtypingResult model.
+    subtyping_result = SubtypingResult(
+        rows = subtyping_list
+    )
     return subtyping_result

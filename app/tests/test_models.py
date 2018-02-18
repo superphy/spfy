@@ -33,7 +33,7 @@ def test_pipeline_model():
         func = spfy,
         options = ARGS_DICT
     )
-    pipeline.jobs.update({
+    p.jobs.update({
         'job_ectyper_vf': Job(
             rq_job='SHOULDBEANACTUALJOB',
             name='job_ectyper_vf',
