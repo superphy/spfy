@@ -5,7 +5,7 @@ from StringIO import StringIO
 from jsonmodels import models, fields
 from middleware.graphers.turtle_utils import actual_filename
 
-def _convert_subtyping(model):
+def _convert_model(model):
     # Convert the model to a generic JSON structure.
     struct = model.to_struct()
     # This is not strictly json; more like a list than a dict structure.
@@ -19,8 +19,8 @@ def model_to_json(model):
     # Validate the model submitted before processing.
     model.validate()
     # Conversion.
-    if isinstance(model, SubtypingResult):
-        return _convert_subtyping(model)
+    if issubclass(model, models.Base)():
+        return _convert_model(model)
     else:
         raise Exception('model_to_json() called for a model without a handler.')
 
