@@ -1,5 +1,7 @@
 import sys
 import copy
+import config
+import redis
 from hashlib import sha1
 from dis import dis
 from StringIO import StringIO
@@ -193,3 +195,27 @@ class Pipeline():
         sig = hx.hexdigest()
         self.sig = sig
         return sig
+
+    def store(self):
+        """
+        Stores the pipeline to Redis DB and creates a pipeline id for return.
+        :param pipeline: An instance of the models.Pipeline class.
+        :return: (dict): {"pipeline..." id: "Subtyping"}
+        """
+        pipeline_id = "pipeline{0}".format(self.sig)
+
+        # Start a Redis connection.
+        redis_url = config['REDIS_URL']
+        redis_connection = redis.from_url(redis_url)
+
+        # Store the pipeline instance.
+        redis_connection.set(pipeline_id, self)
+
+        # Create a similar structure to the old return
+        d = {}
+        d[pipeline_id] = {}
+        d[pipeline_id]['analysis'] = "Subtyping"
+
+        d[pipeline_id]['file'] = self.files
+        print '_store_pipeline(): finished'
+        return d

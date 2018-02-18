@@ -266,7 +266,8 @@ def upload():
         print 'upload(): all files enqueued, returning...'
         pipeline.merge_jobs()
         if groupresults:
-            return jsonify(handle_groupresults(jobs_dict))
+            return jsonify(pipeline.store())
+            # return jsonify(handle_groupresults(jobs_dict))
         else:
             return jsonify(handle_singleton(jobs_dict))
     else:

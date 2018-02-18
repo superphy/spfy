@@ -209,10 +209,18 @@ def test_pipeline_model_signature():
         func = spfy,
         options = constants.ARGS_DICT
     )
+    # Signatures should be generated on init.
+    assert p1.sig == p2.sig
+
+    # Call the signature method to re-generate.
     r1 = p1.signature()
     r2 = p2.signature()
     # These are identical pipelines, should be equal.
     assert r1 == r2
+
+    # Both methods of signature generation should be the same.
+    assert p1.sig == r1
+    assert p2.sig == r2
 
     p1 = models.Pipeline(
         func = spfy,
