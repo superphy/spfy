@@ -31,6 +31,46 @@ def model_to_json(model):
     else:
         raise Exception('model_to_json() called for a model without a handler.')
 
+def store(pipeline):
+    """
+    Stores the pipeline (via Pickle) to Redis DB and creates a pipeline id for return.
+    :param pipeline: An instance of the models.Pipeline class.
+    :return: (dict): {"pipeline..." id: "Subtyping"}
+    """
+    pipeline_id = "pipeline{0}".format(pipeline.sig)
+
+    # Start a Redis connection.
+    redis_url = config.REDIS_URL
+    redis_connection = redis.from_url(redis_url)
+
+    # Store the pipeline instance.
+    redis_connection.set(pipeline_id, pickle.dumps(pipeline))
+
+    # Create a similar structure to the old return
+    d = {}
+    d[pipeline_id] = {}
+    d[pipeline_id]['analysis'] = "Subtyping"
+
+    d[pipeline_id]['file'] = pipeline.files
+    print '_store_pipeline(): finished'
+    return d
+
+def load(pipeline_id):
+    """
+    Must load Pipeline instances with this function, as a pickle.loads() needs
+    access to the Pipeline class definition to correctly load it.
+    :param pipeline_id: 
+    :return: 
+    """
+    # Start a Redis connection.
+    redis_url = config.REDIS_URL
+    redis_connection = redis.from_url(redis_url)
+
+    # Get the pipeline instance.
+    raw = redis_connection.get(pipeline_id)
+    pipeline = pickle.loads(raw)
+    return pipeline
+
 
 class SubtypingRow(models.Base):
     analysis = fields.StringField(required=True)
@@ -57,6 +97,7 @@ class PhylotyperRow(models.Base):
 
 class PhylotyperResult(models.Base):
     rows = fields.ListField([PhylotyperRow], nullable=True)
+
 
 class Job():
     def __init__(self, rq_job, name="", transitory=True, backlog=True, display=False):
@@ -101,7 +142,7 @@ class Pipeline():
 
     def merge_jobs(self):
         """
-        
+
         """
         # If the jobs dictionary is not empty.
         if self.jobs:
@@ -196,27 +237,3 @@ class Pipeline():
         sig = hx.hexdigest()
         self.sig = sig
         return sig
-
-    def store(self):
-        """
-        Stores the pipeline (via Pickle) to Redis DB and creates a pipeline id for return.
-        :param pipeline: An instance of the models.Pipeline class.
-        :return: (dict): {"pipeline..." id: "Subtyping"}
-        """
-        pipeline_id = "pipeline{0}".format(self.sig)
-
-        # Start a Redis connection.
-        redis_url = config.REDIS_URL
-        redis_connection = redis.from_url(redis_url)
-
-        # Store the pipeline instance.
-        redis_connection.set(pipeline_id, pickle.dumps(self))
-
-        # Create a similar structure to the old return
-        d = {}
-        d[pipeline_id] = {}
-        d[pipeline_id]['analysis'] = "Subtyping"
-
-        d[pipeline_id]['file'] = self.files
-        print '_store_pipeline(): finished'
-        return d

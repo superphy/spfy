@@ -17,7 +17,7 @@ from routes.file_utils import fix_uri, handle_tar, handle_zip
 from modules.gc import blob_gc_enqueue
 from modules.spfy import spfy
 from middleware.api import subtyping_dependencies
-from middleware.models import Pipeline
+from middleware.models import Pipeline, store
 
 bp_ra_posts = Blueprint('reactapp_posts', __name__)
 
@@ -266,7 +266,7 @@ def upload():
         print 'upload(): all files enqueued, returning...'
         pipeline.merge_jobs()
         if groupresults:
-            return jsonify(pipeline.store())
+            return jsonify(store(pipeline))
             # return jsonify(handle_groupresults(jobs_dict))
         else:
             return jsonify(handle_singleton(jobs_dict))
