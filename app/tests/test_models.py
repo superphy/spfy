@@ -1,4 +1,4 @@
-from middleware.models import SubtypingRow, SubtypingResult, Pipeline
+from middleware.models import SubtypingRow, SubtypingResult, Pipeline, Job
 from modules.spfy import spfy
 from scripts.savvy import savvy
 from tests.constants import BEAUTIFY_VF_SEROTYPE, ARGS_DICT
@@ -24,6 +24,28 @@ def test_subtyping_model_direct():
         rows = subtyping_list
     )
     subtyping_result.validate()
+
+def test_pipeline_model():
+    """
+    Test the Pipeline model itself.
+    """
+    p = Pipeline(
+        func = spfy,
+        options = ARGS_DICT
+    )
+    pipeline.jobs.update({
+        'job_ectyper_vf': Job(
+            rq_job='SHOULDBEANACTUALJOB',
+            name='job_ectyper_vf',
+            transitory=True,
+            backlog=False,
+            display=False
+        )
+    })
+    assert isinstance(p, Pipeline)
+    assert isinstance(p.jobs, dict)
+    assert isinstance(p.jobs['job_ectyper_vf'], Job)
+
 
 def test_pipeline_model_signature():
     """

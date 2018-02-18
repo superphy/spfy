@@ -41,7 +41,7 @@ class SubtypingResult(models.Base):
 
 
 class Job():
-    def __init__(self, rq_job, transitory=True, backlog=True, display=False):
+    def __init__(self, rq_job, name="", transitory=True, backlog=True, display=False):
         """
         Args:
             rq_job: An instance of the RQ Job class.
@@ -52,6 +52,7 @@ class Job():
             display: To per parsed for the front-end.
         """
         self.rq_job = rq_job
+        self.name = name
         self.transitory = transitory
         self.backlog = backlog
         self.display = display

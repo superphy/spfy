@@ -26,6 +26,7 @@ from middleware.graphers.datastruct_savvy import datastruct_savvy
 from middleware.graphers.turtle_grapher import turtle_grapher
 from middleware.graphers.turtle_utils import actual_filename
 from modules.phylotyper import phylotyper
+from middleware.models import Job
 
 from modules.loggingFunctions import initialize_logging
 import logging
@@ -57,7 +58,7 @@ def _ectyper_pipeline_vf(singles, multiples, query_file, single_dict, pipeline=N
     # Dictionary of Job instances to return
     d = {}
     # Alias.
-    job_id = pipeline.jobs['job_id']
+    job_id = pipeline.jobs['job_id'].rq_job
 
     # Create a copy of the arguments dictionary and disable Serotype.
     # This copy is passed to the old ECTyper.
@@ -68,7 +69,17 @@ def _ectyper_pipeline_vf(singles, multiples, query_file, single_dict, pipeline=N
         call_ectyper_vf,
         single_dict_vf,
         depends_on=job_id)
+    # TODO: this is double, switch everything to pipeline once tested
     d['job_ectyper_vf'] = job_ectyper_vf
+    pipeline.jobs.update({
+        'job_ectyper_vf': Job(
+            rq_job=job_ectyper_vf,
+            name='job_ectyper_vf',
+            transitory=True,
+            backlog=False,
+            display=False
+        )
+    })
 
     # If bulk uploading is set, we return the datastruct as the end task
     # to poll for job completion, therefore must set ttl of -1.
@@ -86,6 +97,15 @@ def _ectyper_pipeline_vf(singles, multiples, query_file, single_dict, pipeline=N
         depends_on=job_ectyper_vf,
         result_ttl=ttl_value)
     d['job_ectyper_datastruct_vf'] = job_ectyper_datastruct_vf
+    pipeline.jobs.update({
+        'job_ectyper_datastruct_vf': Job(
+            rq_job=job_ectyper_datastruct_vf,
+            name='job_ectyper_datastruct_vf',
+            transitory=True,
+            backlog=False,
+            display=False
+        )
+    })
 
     if not single_dict['options']['bulk']:
         # Only bother parsing into json if user has requested either vf or
@@ -98,9 +118,15 @@ def _ectyper_pipeline_vf(singles, multiples, query_file, single_dict, pipeline=N
             result_ttl=ttl_value
         )
         d['job_ectyper_beautify_vf'] = job_ectyper_beautify_vf
-
-    # Mutate the jobs pipeline from the calling function.
-    pipeline.jobs.update(d)
+        pipeline.jobs.update({
+            'job_ectyper_beautify_vf': Job(
+                rq_job=job_ectyper_beautify_vf,
+                name='job_ectyper_beautify_vf',
+                transitory=True,
+                backlog=False,
+                display=True
+            )
+        })
     return d
 
 def _ectyper_pipeline_serotype(singles, multiples, query_file, single_dict, pipeline=None):
@@ -110,7 +136,7 @@ def _ectyper_pipeline_serotype(singles, multiples, query_file, single_dict, pipe
     # Dictionary of Job instances to return
     d = {}
     # Alias.
-    job_id = pipeline.jobs['job_id']
+    job_id = pipeline.jobs['job_id'].rq_job
 
     # Create a copy of the arguments dictionary and disable Serotype.
     # This copy is passed to the old ECTyper.
@@ -121,6 +147,15 @@ def _ectyper_pipeline_serotype(singles, multiples, query_file, single_dict, pipe
         single_dict_vf,
         depends_on=job_id)
     d['job_ectyper_serotype'] = job_ectyper_serotype
+    pipeline.jobs.update({
+        'job_ectyper_serotype': Job(
+            rq_job=job_ectyper_serotype,
+            name='job_ectyper_serotype',
+            transitory=True,
+            backlog=False,
+            display=False
+        )
+    })
 
     # If bulk uploading is set, we return the datastruct as the end task
     # to poll for job completion, therefore must set ttl of -1.
@@ -137,7 +172,16 @@ def _ectyper_pipeline_serotype(singles, multiples, query_file, single_dict, pipe
         query_file + '_ectyper_serotype.p',
         depends_on=job_ectyper_serotype,
         result_ttl=ttl_value)
-    d['job_ectyper_serotype'] = job_ectyper_datastruct_serotype
+    d['job_ectyper_datastruct_serotype'] = job_ectyper_datastruct_serotype
+    pipeline.jobs.update({
+        'job_ectyper_datastruct_serotype': Job(
+            rq_job=job_ectyper_datastruct_serotype,
+            name='job_ectyper_datastruct_serotype',
+            transitory=True,
+            backlog=False,
+            display=False
+        )
+    })
 
     if not single_dict['options']['bulk']:
         # Only bother parsing into json if user has requested either vf or
@@ -149,9 +193,15 @@ def _ectyper_pipeline_serotype(singles, multiples, query_file, single_dict, pipe
             result_ttl=ttl_value
         )
         d['job_ectyper_beautify_serotype'] = job_ectyper_beautify_serotype
-
-    # Mutate the jobs pipeline from the calling function.
-    pipeline.jobs.update(d)
+        pipeline.jobs.update({
+            'job_ectyper_beautify_serotype':  Job(
+                rq_job=job_ectyper_beautify_serotype,
+                name='job_ectyper_beautify_serotype',
+                transitory=True,
+                backlog=False,
+                display=True
+            )
+        })
     return d
 
 def blob_savvy_enqueue(single_dict, pipeline):
@@ -168,12 +218,28 @@ def blob_savvy_enqueue(single_dict, pipeline):
     '''
     jobs = {}
     query_file = single_dict['i']
-    
+
     job_qc = multiples_q.enqueue(qc, query_file, result_ttl=-1)
-    pipeline.jobs.update({'job_qc':job_qc})
+    pipeline.jobs.update({
+        'job_qc': Job(
+            rq_job=job_qc,
+            name='job_qc',
+            transitory=False,
+            backlog=False,
+            display=False
+        )
+    })
     job_id = blazegraph_q.enqueue(
         write_reserve_id, query_file, depends_on=job_qc, result_ttl=-1)
-    pipeline.jobs.update({'job_id':job_id})
+    pipeline.jobs.update({
+        'job_id': Job(
+            rq_job=job_id,
+            name='job_id',
+            transitory=False,
+            backlog=False,
+            display=False
+        )
+    })
 
     ## ECTyper (VF & Serotype)
     # VF
