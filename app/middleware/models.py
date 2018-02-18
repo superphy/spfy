@@ -91,7 +91,9 @@ class Pipeline():
 
     def to_json(self):
         """
-        Reduces all results from self.jobs to json for return.
+        Reduces all results from self.jobs to json for return. Note: currently
+        using a list as this is what the front-end is expecting, but convert
+        to dict a some point.
         """
         # Gather all the jobs that have finished and haven't failed.
         completed_jobs = [

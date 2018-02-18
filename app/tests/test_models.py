@@ -1,10 +1,20 @@
 from middleware.models import SubtypingRow, SubtypingResult, Pipeline, Job
 from modules.spfy import spfy
 from scripts.savvy import savvy
-from tests.constants import BEAUTIFY_VF_SEROTYPE, ARGS_DICT
+from tests.constants import BEAUTIFY_VF_SEROTYPE, BEAUTIFY_SEROTYPE, BEAUTIFY_VF, ARGS_DICT
 
+class MockRQJob():
+    """
+    A mock Job class returned by RQ. Also emulates response the Job gets from
+    querying Redis DB.
+    """
+    def __init__(self, is_finished=True, is_failed=False, exc_info='', result=None):
+        self.is_finished = is_finished
+        self.is_failed = is_failed
+        self.exc_info = exc_info
+        self.result = result
 
-def test_subtyping_model_direct():
+def test_subtyping_model_direct(l=BEAUTIFY_VF_SEROTYPE):
     """
     Use our dataset to directly create a subtyping results model and validate it.
     """
@@ -19,11 +29,13 @@ def test_subtyping_model_direct():
             hitstart=str(d['hitstart']),
             hitstop=str(d['hitstop'])
         )
-    for d in BEAUTIFY_VF_SEROTYPE]
+    for d in l]
     subtyping_result = SubtypingResult(
         rows = subtyping_list
     )
     subtyping_result.validate()
+    # Return for incorporation into later tests.
+    return subtyping_result
 
 def test_pipeline_model():
     """
@@ -33,19 +45,52 @@ def test_pipeline_model():
         func = spfy,
         options = ARGS_DICT
     )
+    mock_serotype = MockRQJob(
+        result = test_subtyping_model_direct(BEAUTIFY_SEROTYPE)
+    )
+    mock_vf = MockRQJob(
+        result = test_subtyping_model_direct(BEAUTIFY_VF)
+    )
+    # Flags should exclude the result from conversion to json.
     p.jobs.update({
         'job_ectyper_vf': Job(
-            rq_job='SHOULDBEANACTUALJOB',
+            rq_job="Should throw an error if read.",
             name='job_ectyper_vf',
             transitory=True,
             backlog=False,
             display=False
         )
     })
+    # Mimicks a Serotype result that will be converted to json.
+    p.jobs.update({
+        'job_ectyper_beautify_serotype': Job(
+            rq_job=mock_serotype,
+            name='job_ectyper_beautify_vf',
+            transitory=False,
+            backlog=False,
+            display=True
+        )
+    })
+    # Mimicks a VF result that will be converted to json.
+    p.jobs.update({
+        'job_ectyper_beautify_vf': Job(
+            rq_job=mock_vf,
+            name='job_ectyper_beautify_vf',
+            transitory=False,
+            backlog=False,
+            display=True
+        )
+    })
     assert isinstance(p, Pipeline)
     assert isinstance(p.jobs, dict)
     assert isinstance(p.jobs['job_ectyper_vf'], Job)
 
+    # Test Pipeline.complete(), should be True.
+    assert p.complete()
+
+    # Test Pipeline.to_json().
+    json = p.to_json()
+    assert isinstance(json, list)
 
 def test_pipeline_model_signature():
     """

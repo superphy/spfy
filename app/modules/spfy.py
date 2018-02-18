@@ -122,7 +122,7 @@ def _ectyper_pipeline_vf(singles, multiples, query_file, single_dict, pipeline=N
             'job_ectyper_beautify_vf': Job(
                 rq_job=job_ectyper_beautify_vf,
                 name='job_ectyper_beautify_vf',
-                transitory=True,
+                transitory=False,
                 backlog=False,
                 display=True
             )
@@ -197,7 +197,7 @@ def _ectyper_pipeline_serotype(singles, multiples, query_file, single_dict, pipe
             'job_ectyper_beautify_serotype':  Job(
                 rq_job=job_ectyper_beautify_serotype,
                 name='job_ectyper_beautify_serotype',
-                transitory=True,
+                transitory=False,
                 backlog=False,
                 display=True
             )
