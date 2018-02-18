@@ -2,7 +2,7 @@ import sys
 import copy
 import config
 import redis
-import cPickle as pickle
+import dill as pickle
 from hashlib import sha1
 from dis import dis
 from StringIO import StringIO
@@ -59,8 +59,8 @@ def load(pipeline_id):
     """
     Must load Pipeline instances with this function, as a pickle.loads() needs
     access to the Pipeline class definition to correctly load it.
-    :param pipeline_id: 
-    :return: 
+    :param pipeline_id:
+    :return:
     """
     # Start a Redis connection.
     redis_url = config.REDIS_URL
