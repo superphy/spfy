@@ -51,16 +51,6 @@ def test_pipeline_model():
     mock_vf = MockRQJob(
         result = test_subtyping_model_direct(BEAUTIFY_VF)
     )
-    # Flags should exclude the result from conversion to json.
-    p.jobs.update({
-        'job_ectyper_vf': Job(
-            rq_job="Should throw an error if read.",
-            name='job_ectyper_vf',
-            transitory=True,
-            backlog=False,
-            display=False
-        )
-    })
     # Mimicks a Serotype result that will be converted to json.
     p.jobs.update({
         'job_ectyper_beautify_serotype': Job(
@@ -83,7 +73,8 @@ def test_pipeline_model():
     })
     assert isinstance(p, Pipeline)
     assert isinstance(p.jobs, dict)
-    assert isinstance(p.jobs['job_ectyper_vf'], Job)
+    for k in p.jobs:
+        assert isinstance(p.jobs[k], Job)
 
     # Test Pipeline.complete(), should be True.
     assert p.complete()

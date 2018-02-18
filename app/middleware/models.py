@@ -77,6 +77,8 @@ class Pipeline():
         Check if all jobs are completed
         """
         for j in self.jobs.itervalues():
+            # Type check.
+            assert isinstance(j, Job)
             rq_job = j.rq_job
             if j.backlog:
                 # Some backlog job, we don't care (though Sentry will catch it).
