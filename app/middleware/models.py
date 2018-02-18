@@ -2,6 +2,7 @@ import sys
 import copy
 import config
 import redis
+import cPickle as pickle
 from hashlib import sha1
 from dis import dis
 from StringIO import StringIO
@@ -198,7 +199,7 @@ class Pipeline():
 
     def store(self):
         """
-        Stores the pipeline to Redis DB and creates a pipeline id for return.
+        Stores the pipeline (via Pickle) to Redis DB and creates a pipeline id for return.
         :param pipeline: An instance of the models.Pipeline class.
         :return: (dict): {"pipeline..." id: "Subtyping"}
         """
@@ -209,7 +210,7 @@ class Pipeline():
         redis_connection = redis.from_url(redis_url)
 
         # Store the pipeline instance.
-        redis_connection.set(pipeline_id, self)
+        redis_connection.set(pipeline_id, pickle.dumps(self))
 
         # Create a similar structure to the old return
         d = {}

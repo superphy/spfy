@@ -1,4 +1,5 @@
 import redis
+import cPickle as pickle
 from ast import literal_eval
 from flask import Blueprint, request, jsonify, current_app
 from routes.job_utils import fetch_job
@@ -60,6 +61,27 @@ def job_status_reactapp_grouped(job_id, redis_connection):
         # if you've gotten to this point, then all jobs are finished
         return jsonify(merge_job_results(jobs_dict, redis_connection))
 
+def _status_pipeline(pipeline_id, redis_connection):
+    """
+    Checks the status of a pipeline. Returns "pending", the exc_info if failed, or the result.
+    :param pipeline_id: 
+    :param redis_connection: 
+    :return: 
+    """
+    # Retrieve the models.Pipeline instance.
+    pipeline = pickle.loads(redis_connection.get(pipeline_id))
+    complete = pipeline.complete() # Normally bool, but str if failed.
+    if isinstance(complete, bool):
+        if complete:
+            # Everything finished successfully.
+            return pipeline.to_json()
+        else:
+            # Some job in the pipeline is still pending.
+            return jsonify("pending")
+    else:
+        # Something failed and we have an exc_info.
+        return jsonify(complete)
+
 @bp_ra_statuses.route('/api/v0/results/<job_id>')
 def job_status_reactapp(job_id):
     '''
@@ -72,6 +94,8 @@ def job_status_reactapp(job_id):
     # check if the job_id is of the new format and should be handled diff
     if job_id.startswith('blob'):
         return job_status_reactapp_grouped(job_id, redis_connection)
+    elif job_id.startswith('pipeline'):
+        return _status_pipeline(job_id, redis_connection)
     else:
         # old code
         job = fetch_job(job_id, redis_connection)
