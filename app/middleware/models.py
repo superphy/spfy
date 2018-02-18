@@ -83,11 +83,11 @@ class Pipeline():
         self.jobs = {} # {'somename': instance of RQ.Job} Only used when enqueing.
         self.final_jobs = [] # Jobs for every file in the request.
         self.cache = [] # For temporary storage of RQ.Jobs.
-        self.sig = None # Signtaure isn't generated until necessary
-        # TODO: incorporate below into the pipeline.
+        self.sig = None
         self.files = []
         self.func = func # Additional attribute for storing pipeline function.
         self.options = options
+        self.signature() # Create & Store a signature for the pipeline.
 
     def cache_jobs(self):
         """

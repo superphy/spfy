@@ -261,8 +261,10 @@ def upload():
                     pipeline = pipeline
                 )
                 jobs_dict.update(jobs_enqueued)
+                pipeline.cache_jobs()
         # new in 4.2.0
         print 'upload(): all files enqueued, returning...'
+        pipeline.merge_jobs()
         if groupresults:
             return jsonify(handle_groupresults(jobs_dict))
         else:
