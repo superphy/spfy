@@ -96,7 +96,7 @@ class Pipeline():
         """
         Copy current jobs to cache.
         """
-        self.cache += [copy.deepcopy(self.jobs)]
+        self.cache += [self.jobs]
         self.jobs = {}
 
     def merge_jobs(self):
