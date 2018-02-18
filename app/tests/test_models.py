@@ -98,6 +98,10 @@ def test_pipeline_model_subtyping():
     for k in p.jobs:
         assert isinstance(p.jobs[k], models.Job)
 
+    # Test Pipeline.cache_jobs()
+    p.cache_jobs()
+    # Test Pipeline.merge_jobs()
+    p.merge_jobs()
     # Test Pipeline.complete(), should be True.
     assert p.complete()
 
@@ -118,6 +122,9 @@ def test_pipeline_model_subtyping():
             display=True
         )
     })
+    p.merge_jobs()
+    # Test Pipeline.complete(), should be True.
+    assert p.complete()
     # Test Pipeline.to_json().
     json = p.to_json()
     assert isinstance(json, list)
@@ -159,6 +166,10 @@ def test_pipeline_model_phyotyping():
     for k in p.jobs:
         assert isinstance(p.jobs[k], models.Job)
 
+    # Test Pipeline.cache_jobs()
+    p.cache_jobs()
+    # Test Pipeline.merge_jobs()
+    p.merge_jobs()
     # Test Pipeline.complete(), should be True.
     assert p.complete()
 
@@ -179,6 +190,9 @@ def test_pipeline_model_phyotyping():
             display=True
         )
     })
+    p.merge_jobs()
+    # Test Pipeline.complete(), should be True.
+    assert p.complete()
     # Test Pipeline.to_json().
     json = p.to_json()
     assert isinstance(json, list)

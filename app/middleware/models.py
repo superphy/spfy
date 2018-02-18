@@ -1,4 +1,5 @@
 import sys
+import copy
 from hashlib import sha1
 from dis import dis
 from StringIO import StringIO
@@ -79,18 +80,41 @@ class Pipeline():
             files = []
         if not options:
             options = {}
-        self.jobs = {} # {'somename': instance of RQ.Job}
+        self.jobs = {} # {'somename': instance of RQ.Job} Only used when enqueing.
+        self.final_jobs = [] # Jobs for every file in the request.
+        self.cache = {} # For temporary storage of RQ.Jobs.
         self.sig = None # Signtaure isn't generated until necessary
         # TODO: incorporate below into the pipeline.
         self.files = []
         self.func = func # Additional attribute for storing pipeline function.
         self.options = options
 
+    def cache_jobs(self):
+        """
+        Copy current jobs to cache.
+        """
+        self.cache += [copy.deepcopy(self.jobs)]
+        self.jobs = {}
+
+    def merge_jobs(self):
+        """
+        
+        """
+        # If the jobs dictionary is not empty.
+        if self.jobs:
+            self.cache_jobs()
+        # Actual merge. Notice were converting to list.
+        self.final_jobs = [
+            item
+            for d in self.cache
+            for item in d
+        ]
+
     def complete(self):
         """
         Check if all jobs are completed
         """
-        for j in self.jobs.itervalues():
+        for j in self.final_jobs:
             # Type check.
             assert isinstance(j, Job)
             rq_job = j.rq_job
@@ -113,7 +137,7 @@ class Pipeline():
         """
         # Gather all the jobs that have finished and haven't failed.
         completed_jobs = [
-            j.rq_job for j in self.jobs.itervalues()
+            j.rq_job for j in self.final_jobs
             if j.display and j.rq_job.is_finished and not j.rq_job.is_failed
         ]
         # Merge the json lists together.

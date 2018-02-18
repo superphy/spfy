@@ -455,7 +455,7 @@ def blob_savvy(args_dict, pipeline):
                 )
             )
     else:
-        d.update(blob_savvy_enqueue(args_dict))
+        d.update(blob_savvy_enqueue(args_dict, pipeline))
 
     return d
 
