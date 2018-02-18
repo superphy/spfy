@@ -105,9 +105,9 @@ class Pipeline():
             self.cache_jobs()
         # Actual merge. Notice were converting to list.
         self.final_jobs = [
-            item
+            j
             for d in self.cache
-            for item in d
+            for j in d.values()
         ]
 
     def complete(self):
