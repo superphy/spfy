@@ -364,7 +364,7 @@ def blob_savvy_enqueue(single_dict, pipeline):
             subtype,
             tsvfile,
             id_file=query_file + '_id.txt',
-            depends_on=pipeline.jobs['job_ectyper_datastruct_vf'])
+            depends_on=pipeline.jobs['job_ectyper_datastruct_vf'].rq_job)
         job_pt_dict = multiples.enqueue(
             phylotyper.to_dict, tsvfile, subtype, picklefile,
             depends_on=job_pt)
