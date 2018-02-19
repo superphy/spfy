@@ -37,6 +37,7 @@ def store(pipeline):
     :param pipeline: An instance of the models.Pipeline class.
     :return: (dict): {"pipeline..." id: "Subtyping"}
     """
+    assert isinstance(pipeline, Pipeline)
     pipeline_id = "pipeline{0}".format(pipeline.sig)
 
     # Start a Redis connection.
@@ -69,6 +70,7 @@ def load(pipeline_id):
     # Get the pipeline instance.
     raw = redis_connection.get(pipeline_id)
     pipeline = pickle.loads(raw)
+    assert isinstance(pipeline, Pipeline)
     return pipeline
 
 
@@ -188,6 +190,10 @@ class Pipeline():
         l = []
         for rq_job in completed_jobs:
             model = rq_job.result
+            try:
+                assert isinstance(model, models.Base)
+            except:
+                raise Exception("to_json() called with result of type {0} and info {1}".format(type(model), str(model)))
             list_json = model_to_json(model)
             l += list_json
         return l
