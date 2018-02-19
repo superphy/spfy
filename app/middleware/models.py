@@ -167,12 +167,15 @@ class Pipeline():
             rq_job = j.rq_job
             if j.backlog:
                 # Some backlog job, we don't care (though Sentry will catch it).
+                print("complete(): job {0} is in backlog.".format(j.name))
                 continue
             elif rq_job.is_failed:
                 # If the job failed, return the error.
+                print("complete(): job {0} is failed with exc_info {1}.".format(j.name, rq_job.exc_info))
                 return rq_job.exc_info
             elif not rq_job.is_finished:
                 # One of the jobs hasn't finished.
+                print("complete(): job {0} is finished.".format(j.name))
                 return False
         return True
 
