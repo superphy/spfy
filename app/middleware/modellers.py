@@ -39,6 +39,7 @@ def model_vf(json_r):
     """
     # Type check.
     assert isinstance(json_r, list)
+    print("model_vf() called with type {0} containing {1}".format(type(json_r), str(json_r)))
     subtyping_list = [
         SubtypingRow(
             analysis=item('analysis'),

@@ -13,7 +13,9 @@ def test_beautify_vf_serotype():
     ## test vf & serotype json return
     single_dict = dict(ARGS_DICT)
     single_dict.update({'i': vf_serotype_gene_dict})
-    assert len(beautify(vf_serotype_gene_dict, single_dict)) == len(BEAUTIFY_VF_SEROTYPE)
+    r = beautify(vf_serotype_gene_dict, single_dict)
+    assert isinstance(r, list)
+    assert len(r) == len(BEAUTIFY_VF_SEROTYPE)
 
 def test_beautify_serotype_only():
     ## test serotype only json return
@@ -25,6 +27,7 @@ def test_beautify_serotype_only():
     single_dict.update({'options':{'vf': False, 'amr': False, 'serotype': True}})
     # beautify is what is actually called by the RQ worker & returned to the user
     r = beautify(vf_serotype_gene_dict, single_dict)
+    assert isinstance(r, list)
     assert len(r) == 1
 
 def test_beautify_json_r_serotype_only():
@@ -49,6 +52,7 @@ def test_beautify_amr_only():
     # this mimicks user selection of serotype only
     single_dict.update({'options':{'vf': False, 'amr': True, 'serotype': False}})
     r = beautify(amr_gene_dict, single_dict)
+    assert isinstance(r, list)
     assert len(r) > 1
 
 def test_beautify_json_r_amr_only():
