@@ -264,7 +264,7 @@ def upload():
                 pipeline.cache_jobs()
         print 'upload(): all files enqueued, returning...'
         pipeline.merge_jobs()
-        print("upload() pipeline jobs: {0}".format(str(pipeline.all_jobs)))
+        print("upload() pipeline jobs: {0}".format(str(pipeline.final_jobs)))
         pipeline_id = store(pipeline)
         if groupresults:
             return jsonify(pipeline_id)
