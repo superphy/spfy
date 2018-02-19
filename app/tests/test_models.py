@@ -1,3 +1,4 @@
+import dill
 from middleware import models
 from modules.spfy import spfy
 from scripts.savvy import savvy
@@ -59,19 +60,16 @@ def test_phylotyper_model_direct(l=constants.BEAUTIFY_STX1):
     # Return for incorporation into later tests.
     return phylotyper_result
 
-def test_pipeline_model_subtyping():
-    """
-    Test the Pipeline model itself for subtyping via ECTyper and RGI.
-    """
+def _create_example_pipeline():
     p = models.Pipeline(
-        func = spfy,
-        options = constants.ARGS_DICT
+        func=spfy,
+        options=constants.ARGS_DICT
     )
     mock_serotype = MockRQJob(
-        result = test_subtyping_model_direct(constants.BEAUTIFY_SEROTYPE)
+        result=test_subtyping_model_direct(constants.BEAUTIFY_SEROTYPE)
     )
     mock_vf = MockRQJob(
-        result = test_subtyping_model_direct(constants.BEAUTIFY_VF)
+        result=test_subtyping_model_direct(constants.BEAUTIFY_VF)
     )
     # Mimicks a Serotype result that will be converted to json.
     p.jobs.update({
@@ -93,6 +91,15 @@ def test_pipeline_model_subtyping():
             display=True
         )
     })
+    return p
+
+def test_pipeline_model_subtyping(p=None):
+    """
+    Test the Pipeline model itself for subtyping via ECTyper and RGI.
+    """
+    if not p:
+        p = _create_example_pipeline()
+
     assert isinstance(p, models.Pipeline)
     assert isinstance(p.jobs, dict)
     for k in p.jobs:
@@ -128,6 +135,15 @@ def test_pipeline_model_subtyping():
     # Test Pipeline.to_json().
     json = p.to_json()
     assert isinstance(json, list)
+
+def test_pipeline_model_dill():
+    p = _create_example_pipeline()
+    # Test dumping the Pipeline into a str.
+    buffer = dill.dumps(p)
+    # Test loading the Pipeline from a str.
+    loaded_pipeline = dill.loads(buffer)
+    # Run the same tests on the loaded pipeline.
+    test_pipeline_model_subtyping(p=loaded_pipeline)
 
 def test_pipeline_model_phyotyping():
     """
