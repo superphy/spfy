@@ -8,7 +8,7 @@ from middleware.models import SubtypingResult
 # working with Serotype, Antimicrobial Resistance, & Virulence Factor data
 # structures
 
-def _convert_subtyping(graph, model, uriIsolate):
+def _graph_subtyping(graph, model, uriIsolate):
     # Convert the model to a graph.
     struct = model.to_struct()
     rows_list = struct['rows']
@@ -30,7 +30,7 @@ def model_to_graph(graph, model, uriIsolate):
     model.validate()
     # Conversion.
     if isinstance(model, SubtypingResult):
-        return _convert_subtyping(model)
+        return _graph_subtyping(graph, model, uriIsolate)
     else:
         raise Exception('model_to_graph() called for a model without a handler.')
 
