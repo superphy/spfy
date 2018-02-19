@@ -169,7 +169,7 @@ def _ectyper_pipeline_serotype(singles, multiples, query_file, single_dict, pipe
         datastruct_savvy,
         query_file,
         query_file + '_id.txt',
-        query_file + '_ectyper_serotype.p',
+        query_file + '_ectyper_serotype.model',
         depends_on=job_ectyper_serotype,
         result_ttl=ttl_value)
     d['job_ectyper_datastruct_serotype'] = job_ectyper_datastruct_serotype
@@ -188,7 +188,7 @@ def _ectyper_pipeline_serotype(singles, multiples, query_file, single_dict, pipe
         # serotype, and we're not in bulk uploading.
         job_ectyper_beautify_serotype = multiples.enqueue(
             beautify,
-            pickled_result = query_file + '_ectyper_serotype.p',
+            pickled_result = query_file + '_ectyper_serotype.model',
             depends_on=job_ectyper_serotype,
             result_ttl=ttl_value
         )

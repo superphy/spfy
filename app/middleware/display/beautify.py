@@ -5,6 +5,7 @@ from modules.loggingFunctions import initialize_logging
 from middleware.display.find_widest import check_alleles
 from middleware.graphers.turtle_utils import actual_filename
 from middleware.models import SubtypingResult, model_to_json
+from middleware.modellers import model_vf
 
 # logging
 log_file = initialize_logging()
@@ -122,18 +123,19 @@ def beautify(pickled_result, args_dict=None):
     result = pickle.load(open(pickled_result, 'rb'))
     if isinstance(result, dict):
         gene_dict = result
-        # this converts our dictionary structure into json and adds metadata (filename, etc.)
+        # Convert the old ECTYper's dictionary structure into list and adds metadata (filename, etc.).
         json_r =  json_return(args_dict, gene_dict)
-        log.debug('First parse into json_r: ' + str(json_r))
-        # if looking for only serotype, skip this step
+        # For VF/AMR, find widest gene matched. Strip shorter matches.
         if args_dict['options']['vf'] or args_dict['options']['amr']:
             json_r = check_alleles(json_r)
-        log.debug('After checking alleles json_r: ' + str(json_r))
-        # check if there is an analysis module that has failed in the result
+        # Check if there is an analysis module that has failed in the result.
         if has_failed(json_r):
+            # If failed, return.
             return handle_failed(json_r, args_dict)
         else:
-            return json_r
+            # Everything worked, cast result into a model.
+            model = model_vf(json_r)
+            return model_to_json(model)
     elif isinstance(result, SubtypingResult):
         return model_to_json(result)
     else:
