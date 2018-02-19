@@ -160,6 +160,7 @@ class Pipeline():
         """
         Check if all jobs are completed
         """
+        print("complete() checking status for: {0}".format(str(self.final_jobs)))
         for j in self.final_jobs:
             # Type check.
             assert isinstance(j, Job)
@@ -186,6 +187,7 @@ class Pipeline():
             j.rq_job for j in self.final_jobs
             if j.display and j.rq_job.is_finished and not j.rq_job.is_failed
         ]
+        print("to_json() completed_jobs: {0}".format(str(completed_jobs)))
         # Merge the json lists together.
         l = []
         for rq_job in completed_jobs:
