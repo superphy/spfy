@@ -111,7 +111,7 @@ def handle_failed(json_r, args_dict):
     return ret
 
 # TODO: convert this to models-only.
-def beautify(pickled_result, args_dict=None):
+def beautify(gene_dict, args_dict=None):
     '''
     Converts a given 'spit' datum (a dictionary with our results from rgi/ectyper) to a json form used by the frontend. This result is to be stored in Redis by the calling RQ Worker.
     :param args_dict: The arguments supplied by the user. In the case of spfy web-app, this is used to determine which analysis options were set.
@@ -119,23 +119,28 @@ def beautify(pickled_result, args_dict=None):
     :param gene_dict: optionally, if using this to test via cli, you can supply the actual dictionary object.
     :return: json representation of the results, as required by the front-end.
     '''
+    # Convert the old ECTYper's dictionary structure into list and adds metadata (filename, etc.).
+    json_r =  json_return(args_dict, gene_dict)
+    # For VF/AMR, find widest gene matched. Strip shorter matches.
+    if args_dict['options']['vf'] or args_dict['options']['amr']:
+        json_r = check_alleles(json_r)
+    # Check if there is an analysis module that has failed in the result.
+    if has_failed(json_r):
+        # If failed, return.
+        return handle_failed(json_r, args_dict)
+    else:
+        return json_r
+        # Everything worked, cast result into a model.
+        model = model_vf(json_r)
+        return model_to_json(model)
 
+def display_subtyping(pickled_result, args_dict=None):
     result = pickle.load(open(pickled_result, 'rb'))
     if isinstance(result, dict):
-        gene_dict = result
-        # Convert the old ECTYper's dictionary structure into list and adds metadata (filename, etc.).
-        json_r =  json_return(args_dict, gene_dict)
-        # For VF/AMR, find widest gene matched. Strip shorter matches.
-        if args_dict['options']['vf'] or args_dict['options']['amr']:
-            json_r = check_alleles(json_r)
-        # Check if there is an analysis module that has failed in the result.
-        if has_failed(json_r):
-            # If failed, return.
-            return handle_failed(json_r, args_dict)
-        else:
-            # Everything worked, cast result into a model.
-            model = model_vf(json_r)
-            return model_to_json(model)
+        list_return = beautify(result, args_dict)
+        assert isinstance(list_return, list)
+        model = model_vf(json_r)
+        return model_to_json(model)
     elif isinstance(result, SubtypingResult):
         return model_to_json(result)
     else:
