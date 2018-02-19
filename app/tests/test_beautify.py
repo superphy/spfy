@@ -40,7 +40,7 @@ def test_beautify_json_r_serotype_only():
     gene_dict = pickle.load(open(vf_serotype_gene_dict, 'rb'))
     assert type(gene_dict) == dict
     assert len(gene_dict.keys()) == 2
-    r = json_return(single_dict, gene_dict)
+    r = json_return(gene_dict=gene_dict, args_dict=single_dict)
     assert len(r) == 1
 
     failed = has_failed(r)
@@ -64,7 +64,7 @@ def test_beautify_json_r_amr_only():
     assert type(gene_dict) == dict
     assert len(gene_dict.keys()) == 1
     assert 'Antimicrobial Resistance' in gene_dict.keys()
-    r = json_return(single_dict, gene_dict)
+    r = json_return(gene_dict=gene_dict, args_dict=single_dict)
     assert len(r) > 1
 
     ## test some pandas stuff on the json_r
