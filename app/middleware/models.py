@@ -149,7 +149,7 @@ class Pipeline():
             self.cache_jobs()
         # Actual merge. Notice were converting to list.
         self.final_jobs = [
-            j
+            j # Where j is our custom Job class, not an rq_job
             for d in self.cache
             for j in d.values()
         ]
