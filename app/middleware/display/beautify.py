@@ -12,7 +12,7 @@ log_file = initialize_logging()
 log = logging.getLogger(__name__)
 
 
-def json_return(args_dict, gene_dict):
+def json_return(gene_dict, args_dict):
     """
     This converts the gene dict into a json format for return to the front end
     """
@@ -119,8 +119,10 @@ def beautify(gene_dict, args_dict=None):
     :param gene_dict: optionally, if using this to test via cli, you can supply the actual dictionary object.
     :return: json representation of the results, as required by the front-end.
     '''
+    if isinstance(gene_dict, str): # For the tests.
+        gene_dict = pickle.load(open(gene_dict, 'rb'))
     # Convert the old ECTYper's dictionary structure into list and adds metadata (filename, etc.).
-    json_r =  json_return(args_dict, gene_dict)
+    json_r =  json_return(gene_dict, args_dict)
     # For VF/AMR, find widest gene matched. Strip shorter matches.
     if args_dict['options']['vf'] or args_dict['options']['amr']:
         json_r = check_alleles(json_r)
