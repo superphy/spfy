@@ -118,7 +118,7 @@ def test_ectyper_serotype_call_pickle():
         # Pickle the model, and return the path to the file.
         pickled_serotype_model = call_ectyper_serotype(single_dict)
         ectyper_serotype_model = unpickle(pickled_serotype_model)
-        _validate_model(pickled_serotype_model)
+        _validate_model(ectyper_serotype_model)
 
 def test_amr():
         ecoli_genome = GENOMES_LIST_ECOLI[0]
