@@ -12,6 +12,8 @@ from middleware.graphers.turtle_utils import actual_filename
 def _convert_model(model):
     # Convert the model to a generic JSON structure.
     struct = model.to_struct()
+    # Check that struct isn't empty.
+    assert struct
     if 'rows' in struct:
         # This is not strictly json; more like a list than a dict structure.
         rows_list = struct['rows']
