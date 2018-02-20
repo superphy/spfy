@@ -83,6 +83,9 @@ def unpickle(pickled_file):
     assert isinstance(unpickled, (models.Base, Pipeline, dict, list))
     return unpickled
 
+def dump(obj, path):
+    pickle.dump(obj, open(path, 'wb'))
+
 class SubtypingRow(models.Base):
     analysis = fields.StringField(required=True)
     contigid = fields.StringField(required=True)
@@ -206,6 +209,7 @@ class Pipeline():
             rq_job = j.rq_job
             model = rq_job.result
             try:
+                # TODO: This is not correct as while the new ECTYper call does return a model, the display_subtyping() call that the return job is associated with will already convert the result to a list and return it.
                 assert isinstance(model, models.Base)
             except:
                 raise Exception("to_json() called for job {0}  with result of type {1} and info {2}".format(j.name, type(model), str(model)))

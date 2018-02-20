@@ -9,6 +9,7 @@ from ast import literal_eval
 from os.path import basename
 from modules.loggingFunctions import initialize_logging
 from middleware.modellers import model_serotype
+from middleware.models import dump
 
 log_file = initialize_logging()
 log = logging.getLogger(__name__)
@@ -93,7 +94,7 @@ def call_ectyper_serotype(args_dict):
         )
         # Path for the pickle dump.
         p = genome_file + '_ectyper_serotype.model'
-        pickle.dump(subtyping_result,open(p,'wb'))
+        dump(subtyping_result, p)
         return p
     else:
         raise Exception('ECTyper Serotyping failed for' + genome_file)
