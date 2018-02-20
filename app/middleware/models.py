@@ -73,6 +73,15 @@ def load(pipeline_id):
     assert isinstance(pipeline, Pipeline)
     return pipeline
 
+def unpickle(pickled_file):
+    """
+    Define a function for unpickling. Should address issues with unpickling custom classes.
+    :param pickled_file: 
+    :return: 
+    """
+    unpickled = pickle.load(open(pickled_file, 'rb'))
+    assert isinstance(unpickled, (models.Base, Pipeline, dict, list))
+    return unpickled
 
 class SubtypingRow(models.Base):
     analysis = fields.StringField(required=True)

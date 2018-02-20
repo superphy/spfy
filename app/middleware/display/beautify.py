@@ -4,7 +4,7 @@ import cPickle as pickle
 from modules.loggingFunctions import initialize_logging
 from middleware.display.find_widest import check_alleles
 from middleware.graphers.turtle_utils import actual_filename
-from middleware.models import SubtypingResult, model_to_json
+from middleware.models import SubtypingResult, model_to_json, unpickle
 from middleware.modellers import model_vf
 
 # logging
@@ -133,15 +133,15 @@ def beautify(gene_dict, args_dict=None):
     else:
         return json_r
         # Everything worked, cast result into a model.
-        model = model_vf(json_r)
-        return model_to_json(model)
+        # model = model_vf(json_r)
+        # return model_to_json(model)
 
 def display_subtyping(pickled_result, args_dict=None):
-    result = pickle.load(open(pickled_result, 'rb'))
+    result = unpickle(pickled_result)
     if isinstance(result, dict):
         list_return = beautify(result, args_dict)
         assert isinstance(list_return, list)
-        model = model_vf(json_r)
+        model = model_vf(list_return)
         return model_to_json(model)
     elif isinstance(result, SubtypingResult):
         return model_to_json(result)

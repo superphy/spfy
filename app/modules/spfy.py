@@ -21,7 +21,7 @@ from middleware.blazegraph.reserve_id import write_reserve_id
 from modules.ectyper.call_ectyper import call_ectyper_vf, call_ectyper_serotype
 from modules.amr.amr import amr
 from modules.amr.amr_to_dict import amr_to_dict
-from middleware.display.beautify import beautify
+from middleware.display.beautify import beautify, display_subtyping
 from middleware.graphers.datastruct_savvy import datastruct_savvy
 from middleware.graphers.turtle_grapher import turtle_grapher
 from middleware.graphers.turtle_utils import actual_filename
@@ -117,7 +117,7 @@ def _ectyper_pipeline_vf(query_file, single_dict, pipeline=None, backlog=False):
         # Only bother parsing into json if user has requested either vf or
         # serotype, and we're not in bulk uploading.
         job_ectyper_beautify_vf = multiples.enqueue(
-            beautify,
+            display_subtyping,
             query_file + '_ectyper_vf.p',
             single_dict,
             depends_on=job_ectyper_vf,
@@ -150,13 +150,10 @@ def _ectyper_pipeline_serotype(query_file, single_dict, pipeline=None, backlog=F
         singles = backlog_singles_q
         multiples = backlog_multiples_q
 
-    # Create a copy of the arguments dictionary and disable Serotype.
-    # This copy is passed to the old ECTyper.
-    single_dict_vf = copy.deepcopy(single_dict)
     # Enqueue the new ECTyper
     job_ectyper_serotype = multiples.enqueue(
         call_ectyper_serotype,
-        single_dict_vf,
+        single_dict,
         depends_on=job_id)
     d['job_ectyper_serotype'] = job_ectyper_serotype
     pipeline.jobs.update({
@@ -199,8 +196,8 @@ def _ectyper_pipeline_serotype(query_file, single_dict, pipeline=None, backlog=F
         # Only bother parsing into json if user has requested either vf or
         # serotype, and we're not in bulk uploading.
         job_ectyper_beautify_serotype = multiples.enqueue(
-            beautify,
-            pickled_result = query_file + '_ectyper_serotype.model',
+            display_subtyping,
+            query_file + '_ectyper_serotype.model',
             depends_on=job_ectyper_serotype,
             result_ttl=ttl_value
         )

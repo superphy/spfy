@@ -4,7 +4,7 @@ from middleware.graphers.turtle_utils import generate_uri as gu, generate_hash, 
 from middleware.graphers.turtle_grapher import generate_graph
 from middleware.blazegraph.upload_graph import queue_upload
 from modules.PanPredic.pan_utils import contig_name_parse
-from middleware.models import SubtypingResult
+from middleware.models import SubtypingResult, unpickle
 # working with Serotype, Antimicrobial Resistance, & Virulence Factor data
 # structures
 
@@ -196,7 +196,7 @@ def generate_datastruct(query_file, id_file, pickled_dictionary):
     uriIsolate = gu(':spfy' + str(spfyid))
 
     # Unpickle.
-    results = pickle.load(open(pickled_dictionary, 'rb'))
+    results = unpickle(pickled_dictionary)
     # Check if we have a model or a dictionary.
     if isinstance(results, dict):
         # graphing functions
