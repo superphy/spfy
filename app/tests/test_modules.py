@@ -15,6 +15,7 @@ from modules.amr.amr_to_dict import amr_to_dict
 from middleware.display.beautify import beautify, model_to_json
 from middleware.graphers.datastruct_savvy import datastruct_savvy
 from middleware.graphers.turtle_grapher import turtle_grapher
+from middleware.models import unpickle
 
 from tests.constants import ARGS_DICT
 
@@ -88,14 +89,18 @@ def test_ectyper_serotype():
         single_dict = dict(ARGS_DICT)
         single_dict.update({'i':ecoli_genome})
         pickled_serotype_model = call_ectyper_serotype(single_dict)
-        ectyper_serotype_model = pickle.load(open(pickled_serotype_model,'rb'))
+        ectyper_serotype_model = unpickle(pickled_serotype_model)
         # Validate (throws error if invalidate).
         ectyper_serotype_model.validate()
+        # Check that the return rows is not some random empty list.
+        assert ectyper_serotype_model.rows
 
         # Check the conversion for the front-end.
         json_r = model_to_json(ectyper_serotype_model)
         # This is not strictly json; more like a list than a dict structure.
         assert isinstance(json_r, list)
+        # Check that this isn't empty.
+        assert json_r
 
 def test_amr():
         ecoli_genome = GENOMES_LIST_ECOLI[0]

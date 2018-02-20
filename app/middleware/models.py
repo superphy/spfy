@@ -2,7 +2,7 @@ import sys
 import copy
 import config
 import redis
-import dill as pickle
+import dill
 from hashlib import sha1
 from dis import dis
 from StringIO import StringIO
@@ -45,7 +45,7 @@ def store(pipeline):
     redis_connection = redis.from_url(redis_url)
 
     # Store the pipeline instance.
-    redis_connection.set(pipeline_id, pickle.dumps(pipeline))
+    redis_connection.set(pipeline_id, dill.dumps(pipeline))
 
     # Create a similar structure to the old return
     d = {}
@@ -69,7 +69,7 @@ def load(pipeline_id):
 
     # Get the pipeline instance.
     raw = redis_connection.get(pipeline_id)
-    pipeline = pickle.loads(raw)
+    pipeline = dill.loads(raw)
     assert isinstance(pipeline, Pipeline)
     return pipeline
 
@@ -79,12 +79,12 @@ def unpickle(pickled_file):
     :param pickled_file: 
     :return: 
     """
-    unpickled = pickle.load(open(pickled_file, 'rb'))
+    unpickled = dill.load(open(pickled_file, 'rb'))
     assert isinstance(unpickled, (models.Base, Pipeline, dict, list))
     return unpickled
 
 def dump(obj, path):
-    pickle.dump(obj, open(path, 'wb'))
+    dill.dump(obj, open(path, 'wb'))
 
 class SubtypingRow(models.Base):
     analysis = fields.StringField(required=True)
