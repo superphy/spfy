@@ -139,7 +139,7 @@ def beautify(gene_dict, args_dict=None):
 def display_subtyping(pickled_result, args_dict=None):
     result = unpickle(pickled_result)
     if isinstance(result, dict):
-        list_return = beautify(result, args_dict)
+        list_return = beautify(gene_dict=result, args_dict=args_dict)
         assert isinstance(list_return, list)
         model = model_vf(list_return)
         return model_to_json(model)

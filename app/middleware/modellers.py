@@ -33,13 +33,13 @@ def model_serotype(pi, pl, output_file):
     )
     return subtyping_result
 
-def model_vf(json_r):
+def model_vf(lst):
     """
     Casts the output from display.beautify into a SubtypingResult object.
     """
     # Type check.
-    assert isinstance(json_r, list)
-    print("model_vf() called with type {0} containing {1}".format(type(json_r), str(json_r)))
+    assert isinstance(lst, list)
+    print("model_vf() called with type {0} containing {1}".format(type(lst), str(lst)))
     subtyping_list = [
         SubtypingRow(
             analysis=item('analysis'),
@@ -51,7 +51,7 @@ def model_vf(json_r):
             hitstart=item['hitstart'],
             hitstop=item['hitstop']
         )
-    for item in json_r]
+    for item in lst]
     # Convert the list of rows into a SubtypingResult model.
     subtyping_result = SubtypingResult(
         rows = subtyping_list
