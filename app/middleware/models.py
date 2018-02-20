@@ -196,18 +196,19 @@ class Pipeline():
         """
         # Gather all the jobs that have finished and haven't failed.
         completed_jobs = [
-            j.rq_job for j in self.final_jobs
+            j for j in self.final_jobs
             if j.display and j.rq_job.is_finished and not j.rq_job.is_failed
         ]
         print("to_json() completed_jobs: {0}".format(str(completed_jobs)))
         # Merge the json lists together.
         l = []
-        for rq_job in completed_jobs:
+        for j in completed_jobs:
+            rq_job = j.rq_job
             model = rq_job.result
             try:
                 assert isinstance(model, models.Base)
             except:
-                raise Exception("to_json() called with result of type {0} and info {1}".format(type(model), str(model)))
+                raise Exception("to_json() called for job {0}  with result of type {1} and info {2}".format(j.name, type(model), str(model)))
             list_json = model_to_json(model)
             l += list_json
         return l
