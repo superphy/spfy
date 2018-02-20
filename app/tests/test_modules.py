@@ -76,7 +76,19 @@ def test_ectyper_vf():
         json_return = beautify(pickled_ectyper_dict, single_dict)
         assert type(json_return) == list
 
-def test_ectyper_serotype():
+def _validate_model(model):
+    # Validate (throws error if invalidate).
+    model.validate()
+    # Check that the return rows is not some random empty list.
+    assert model.rows
+    # Check the conversion for the front-end.
+    r = model_to_json(model)
+    # This is not really json; more like a list than a dict structure.
+    assert isinstance(r, list)
+    # Check that this isn't empty.
+    assert r
+
+def test_ectyper_serotype_direct():
     """Check the ECTyper from `master` which only performs serotyping.
     Installed in the conda environment.
     """
@@ -85,22 +97,28 @@ def test_ectyper_serotype():
         ret_code = subprocess.call(['ectyper', '-i', ecoli_genome])
         assert ret_code == 0
 
-        # Check the actual call from Spfy's code.
+def test_ectyper_serotype_call_nopickle():
+    """
+    Check the actual call from Spfy's code.
+    """
+    for ecoli_genome in GENOMES_LIST_ECOLI:
         single_dict = dict(ARGS_DICT)
         single_dict.update({'i':ecoli_genome})
+        # Have the call return the model without pickling.
+        serotype_model = call_ectyper_serotype(single_dict, pickle=False)
+        _validate_model(serotype_model)
+
+def test_ectyper_serotype_call_pickle():
+    """
+    Check the actual call from Spfy's code.
+    """
+    for ecoli_genome in GENOMES_LIST_ECOLI:
+        single_dict = dict(ARGS_DICT)
+        single_dict.update({'i':ecoli_genome})
+        # Pickle the model, and return the path to the file.
         pickled_serotype_model = call_ectyper_serotype(single_dict)
         ectyper_serotype_model = unpickle(pickled_serotype_model)
-        # Validate (throws error if invalidate).
-        ectyper_serotype_model.validate()
-        # Check that the return rows is not some random empty list.
-        assert ectyper_serotype_model.rows
-
-        # Check the conversion for the front-end.
-        json_r = model_to_json(ectyper_serotype_model)
-        # This is not strictly json; more like a list than a dict structure.
-        assert isinstance(json_r, list)
-        # Check that this isn't empty.
-        assert json_r
+        _validate_model(pickled_serotype_model)
 
 def test_amr():
         ecoli_genome = GENOMES_LIST_ECOLI[0]

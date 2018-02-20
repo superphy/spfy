@@ -66,7 +66,7 @@ def call_ectyper_vf(args_dict):
 
     return p
 
-def call_ectyper_serotype(args_dict):
+def call_ectyper_serotype(args_dict, pickle=True):
     """Use the new version of ECTyper at `master` for serotyping.
     """
     genome_file = args_dict['i']
@@ -92,9 +92,12 @@ def call_ectyper_serotype(args_dict):
             pl=pl,
             output_file=output_file
         )
-        # Path for the pickle dump.
-        p = genome_file + '_ectyper_serotype.model'
-        dump(subtyping_result, p)
-        return p
+        if pickle:
+            # Path for the pickle dump.
+            p = genome_file + '_ectyper_serotype.model'
+            dump(subtyping_result, p)
+            return p
+        else:
+            return subtyping_result
     else:
         raise Exception('ECTyper Serotyping failed for' + genome_file)
