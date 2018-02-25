@@ -195,6 +195,15 @@ def generate_ontology(example=True):
     graph.add((gu(':Marker'), gu('rdf:type'), gu('owl:Class')))
     # the subclasses AntimicrobialResistanceGene and VirulenceFactor
     # were already defined in the generate_graph functions
+    # Stx1
+    graph.add((gu('subt:stx1'), gu('rdfs:subClassOf'), gu(':Marker')))
+    graph.add((gu('subt:stx1'), gu('dc:description'), Literal('subt:stx1')))
+    # Stx2
+    graph.add((gu('subt:stx2'), gu('rdfs:subClassOf'), gu(':Marker')))
+    graph.add((gu('subt:stx2'), gu('dc:description'), Literal('subt:stx2')))
+    # Eae
+    graph.add((gu('subt:eae'), gu('rdfs:subClassOf'), gu(':Marker')))
+    graph.add((gu('subt:eae'), gu('dc:description'), Literal('subt:eae')))
 
     # link :Marker and faldo:Region
     if not example:
