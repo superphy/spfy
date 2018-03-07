@@ -220,7 +220,7 @@ class Pipeline():
             model = rq_job.result
             try:
                 # TODO: This is not correct as while the new ECTYper call does return a model, the display_subtyping() call that the return job is associated with will already convert the result to a list and return it.
-                assert isinstance(model, models.Base)
+                assert isinstance(model, (models.Base,list))
             except:
                 raise Exception("to_json() called for job {0}  with result of type {1} and info {2}".format(j.name, type(model), str(model)))
             list_json = model_to_json(model)
