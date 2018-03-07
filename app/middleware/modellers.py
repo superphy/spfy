@@ -15,7 +15,7 @@ def model_serotype(pi, pl, output_file):
 
     # Loop.
     subtyping_list = [
-        SubtypingRow(
+        {
             analysis='Serotype',
             contigid='n/a',
             filename=actual_filename(row['genome']),
@@ -24,14 +24,14 @@ def model_serotype(pi, pl, output_file):
             hitorientation='n/a',
             hitstart='n/a',
             hitstop='n/a'
-        )
+        }
     for index, row in df.iterrows()]
 
     # Convert the list of rows into a SubtypingResult model.
-    subtyping_result = SubtypingResult(
-        rows = subtyping_list
-    )
-    return subtyping_result
+    # subtyping_result = SubtypingResult(
+    #     rows = subtyping_list
+    # )
+    return subtyping_list
 
 def model_vf(lst):
     """
@@ -41,7 +41,7 @@ def model_vf(lst):
     assert isinstance(lst, list)
     print("model_vf() called with type {0} containing {1}".format(type(lst), str(lst)))
     subtyping_list = [
-        SubtypingRow(
+        {
             analysis=item('analysis'),
             contigid=item['contigid'],
             filename=item['filename'],
@@ -50,10 +50,10 @@ def model_vf(lst):
             hitorientation=item['hitorientation'],
             hitstart=item['hitstart'],
             hitstop=item['hitstop']
-        )
+        }
     for item in lst]
     # Convert the list of rows into a SubtypingResult model.
-    subtyping_result = SubtypingResult(
-        rows = subtyping_list
-    )
-    return subtyping_result
+    # subtyping_result = SubtypingResult(
+    #     rows = subtyping_list
+    # )
+    return subtyping_list

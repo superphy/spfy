@@ -9,29 +9,31 @@ from StringIO import StringIO
 from jsonmodels import models, fields
 from middleware.graphers.turtle_utils import actual_filename
 
-def _convert_model(model):
-    # Convert the model to a generic JSON structure.
-    struct = model.to_struct()
-    # Check that struct isn't empty.
-    assert struct
-    if 'rows' in struct:
-        # This is not strictly json; more like a list than a dict structure.
-        rows_list = struct['rows']
-        return rows_list
-    else:
-        return struct
+# def _convert_model(model):
+#     # Convert the model to a generic JSON structure.
+#     struct = model.to_struct()
+#     # Check that struct isn't empty.
+#     assert struct
+#     if 'rows' in struct:
+#         # This is not strictly json; more like a list than a dict structure.
+#         rows_list = struct['rows']
+#         return rows_list
+#     else:
+#         return struct
 
 def model_to_json(model):
     """
     Converts models to json for the front-end.
     """
     # Validate the model submitted before processing.
-    model.validate()
+    assert isinstance(model, list)
+    # model.validate()
     # Conversion.
-    if isinstance(model, models.Base):
-        return _convert_model(model)
-    else:
-        raise Exception('model_to_json() called for a model without a handler.')
+    return model
+    # if isinstance(model, models.Base):
+    #     return _convert_model(model)
+    # else:
+    #     raise Exception('model_to_json() called for a model without a handler.')
 
 def store(pipeline):
     """

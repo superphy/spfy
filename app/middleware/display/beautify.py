@@ -143,7 +143,7 @@ def display_subtyping(pickled_result, args_dict=None):
         assert isinstance(list_return, list)
         model = model_vf(list_return)
         return model_to_json(model)
-    elif isinstance(result, SubtypingResult):
+    elif isinstance(result, list):
         return model_to_json(result)
     else:
         raise Exception("beautify() could not handle pickled file: {0}.".format(pickled_result))
