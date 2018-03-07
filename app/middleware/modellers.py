@@ -16,14 +16,14 @@ def model_serotype(pi, pl, output_file):
     # Loop.
     subtyping_list = [
         {
-            analysis='Serotype',
-            contigid='n/a',
-            filename=actual_filename(row['genome']),
-            hitcutoff=str(pi),
-            hitname="{0}:{1}".format(row['O_prediction'],row['H_prediction']),
-            hitorientation='n/a',
-            hitstart='n/a',
-            hitstop='n/a'
+            'analysis':'Serotype',
+            'contigid':'n/a',
+            'filename':actual_filename(row['genome']),
+            'hitcutoff':str(pi),
+            'hitname':"{0}:{1}".format(row['O_prediction'],row['H_prediction']),
+            'hitorientation':'n/a',
+            'hitstart':'n/a',
+            'hitstop':'n/a'
         }
     for index, row in df.iterrows()]
 
@@ -42,14 +42,14 @@ def model_vf(lst):
     print("model_vf() called with type {0} containing {1}".format(type(lst), str(lst)))
     subtyping_list = [
         {
-            analysis=item('analysis'),
-            contigid=item['contigid'],
-            filename=item['filename'],
-            hitcutoff=item['hitcutoff'],
-            hitname=item['hitname'],
-            hitorientation=item['hitorientation'],
-            hitstart=item['hitstart'],
-            hitstop=item['hitstop']
+            'analysis':item('analysis'),
+            'contigid':item['contigid'],
+            'filename':item['filename'],
+            'hitcutoff':item['hitcutoff'],
+            'hitname':item['hitname'],
+            'hitorientation':item['hitorientation'],
+            'hitstart':item['hitstart'],
+            'hitstop':item['hitstop']
         }
     for item in lst]
     # Convert the list of rows into a SubtypingResult model.
