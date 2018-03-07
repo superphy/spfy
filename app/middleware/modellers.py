@@ -39,10 +39,11 @@ def model_vf(lst):
     """
     # Type check.
     assert isinstance(lst, list)
+    assert isinstance(lst[0], dict)
     print("model_vf() called with type {0} containing {1}".format(type(lst), str(lst)))
     subtyping_list = [
         {
-            'analysis':item('analysis'),
+            'analysis':item['analysis'],
             'contigid':item['contigid'],
             'filename':item['filename'],
             'hitcutoff':item['hitcutoff'],
