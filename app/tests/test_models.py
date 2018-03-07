@@ -3,6 +3,7 @@ from middleware import models, modellers
 from modules.spfy import spfy
 from scripts.savvy import savvy
 from tests import constants
+from tests.test_modules import test_ectyper_vf, test_ectyper_serotype_call_pickle
 
 class MockRQJob():
     """
@@ -50,11 +51,13 @@ def _create_example_pipeline():
         func=spfy,
         options=constants.ARGS_DICT
     )
+    r_serotype = test_ectyper_serotype_call_pickle(return_one=True)
     mock_serotype = MockRQJob(
-        result=test_subtyping_model_direct(constants.BEAUTIFY_SEROTYPE)
+        result=test_subtyping_model_direct(r_serotype)
     )
+    r_vf = test_ectyper_vf(return_one=True)
     mock_vf = MockRQJob(
-        result=test_subtyping_model_direct(constants.BEAUTIFY_VF)
+        result=test_subtyping_model_direct(r_vf)
     )
     # Mimicks a Serotype result that will be converted to json.
     p.jobs.update({

@@ -60,7 +60,7 @@ def test_qc():
     for non_ecoli_genome in GENOMES_LIST_NOT_ECOLI:
         assert qc(non_ecoli_genome) == False
 
-def test_ectyper_vf():
+def test_ectyper_vf(return_one=False):
     """Check the ECTyper from `superphy` which is used for virulance factor
     identification. Installed as a submodule in the `modules` directory.
     """
@@ -75,6 +75,8 @@ def test_ectyper_vf():
         # beautify ECTyper check
         json_return = beautify(pickled_ectyper_dict, single_dict)
         assert type(json_return) == list
+        if return_one:
+            return json_return
 
 def _validate_model(model):
     # Validate (throws error if invalidate).
@@ -108,7 +110,7 @@ def test_ectyper_serotype_call_nopickle():
         serotype_model = call_ectyper_serotype(single_dict, pickle=False)
         _validate_model(serotype_model)
 
-def test_ectyper_serotype_call_pickle():
+def test_ectyper_serotype_call_pickle(return_one=False):
     """
     Check the actual call from Spfy's code.
     """
@@ -119,6 +121,8 @@ def test_ectyper_serotype_call_pickle():
         pickled_serotype_model = call_ectyper_serotype(single_dict)
         ectyper_serotype_model = unpickle(pickled_serotype_model)
         _validate_model(ectyper_serotype_model)
+        if return_one:
+            return ectyper_serotype_model
 
 def test_amr():
         ecoli_genome = GENOMES_LIST_ECOLI[0]
