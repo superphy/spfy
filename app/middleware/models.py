@@ -30,6 +30,7 @@ def model_to_json(model):
     assert isinstance(model, list)
     # model.validate()
     # Conversion.
+    print("model_to_json() called with model: {0}".format(str(model)))
     return model
     # if isinstance(model, models.Base):
     #     return _convert_model(model)

@@ -27,7 +27,7 @@ def _graph_subtyping(graph, model, uriIsolate):
 
 def model_to_graph(graph, model, uriIsolate):
     # Validate the model submitted before processing.
-    model.validate()
+    # model.validate()
     # Conversion.
     if isinstance(model, list):
         return _graph_subtyping(graph, model, uriIsolate)
