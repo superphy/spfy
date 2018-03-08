@@ -10,8 +10,8 @@ from middleware.models import SubtypingResult, unpickle
 
 def _graph_subtyping(graph, model, uriIsolate):
     # Convert the model to a graph.
-    struct = model.to_struct()
-    rows_list = struct['rows']
+    # struct = model.to_struct()
+    rows_list = model
     for row in rows_list:
         graph.add((
             uriIsolate,
@@ -29,7 +29,7 @@ def model_to_graph(graph, model, uriIsolate):
     # Validate the model submitted before processing.
     model.validate()
     # Conversion.
-    if isinstance(model, SubtypingResult):
+    if isinstance(model, list):
         return _graph_subtyping(graph, model, uriIsolate)
     else:
         raise Exception('model_to_graph() called for a model without a handler.')
@@ -209,7 +209,7 @@ def generate_datastruct(query_file, id_file, pickled_dictionary):
                 graph = parse_gene_dict(graph, results['Antimicrobial Resistance'], uriGenome,
                                         'AntimicrobialResistanceGene')
         return graph
-    elif isinstance(results, SubtypingResult):
+    elif isinstance(results, list):
         graph = model_to_graph(graph, results, uriIsolate)
         return graph
     else:
