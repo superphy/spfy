@@ -31,6 +31,8 @@ def model_serotype(pi, pl, output_file):
     # subtyping_result = SubtypingResult(
     #     rows = subtyping_list
     # )
+    assert subtyping_list
+    assert subtyping_list[0]
     return subtyping_list
 
 def model_vf(lst):
