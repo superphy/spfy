@@ -212,7 +212,7 @@ class Pipeline():
         # Gather all the jobs that have finished and haven't failed.
         completed_jobs = [
             j for j in self.final_jobs
-            if j.display and j.rq_job.is_finished and not j.rq_job.is_failed
+            if j.display and not j.backlog and j.rq_job.is_finished and not j.rq_job.is_failed
         ]
         print("to_json() completed_jobs: {0}".format(str(completed_jobs)))
         # Merge the json lists together.
