@@ -113,7 +113,7 @@ def _ectyper_pipeline_vf(query_file, single_dict, pipeline=None, backlog=False):
         )
     })
 
-    if not single_dict['options']['bulk']:
+    if not single_dict['options']['bulk'] or not backlog:
         # Only bother parsing into json if user has requested either vf or
         # serotype, and we're not in bulk uploading.
         job_ectyper_beautify_vf = multiples.enqueue(
@@ -192,7 +192,7 @@ def _ectyper_pipeline_serotype(query_file, single_dict, pipeline=None, backlog=F
         )
     })
 
-    if not single_dict['options']['bulk']:
+    if not single_dict['options']['bulk'] or not backlog:
         # Only bother parsing into json if user has requested either vf or
         # serotype, and we're not in bulk uploading.
         job_ectyper_beautify_serotype = multiples.enqueue(
