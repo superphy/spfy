@@ -7,6 +7,7 @@ from hashlib import sha1
 from dis import dis
 from StringIO import StringIO
 from jsonmodels import models, fields
+from flask import jsonify
 from middleware.graphers.turtle_utils import actual_filename
 
 # def _convert_model(model):
@@ -225,7 +226,7 @@ class Pipeline():
                 raise Exception("to_json() called for job {0}  with result of type {1} and info {2}".format(j.name, type(model), str(model)))
             list_json = model_to_json(model)
             l += list_json
-        return l
+        return jsonify(l)
 
     def _function_signature(self):
         """
