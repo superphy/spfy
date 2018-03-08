@@ -13,15 +13,16 @@ def _graph_subtyping(graph, model, uriIsolate):
     # struct = model.to_struct()
     rows_list = model
     for row in rows_list:
+        o_type, h_type = row['hitname'].split(':')
         graph.add((
             uriIsolate,
             gu('ge:0001076'),
-            Literal(row['O_prediction'])
+            Literal(o_type)
         ))
         graph.add((
             uriIsolate,
             gu('ge:0001077'),
-            Literal(row['H_prediction'])
+            Literal(h_type)
         ))
     return graph
 
