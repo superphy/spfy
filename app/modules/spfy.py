@@ -213,6 +213,88 @@ def _ectyper_pipeline_serotype(query_file, single_dict, pipeline=None, backlog=F
         })
     return d
 
+# AMR PIPELINE
+def _amr_pipeline(pipeline=None, backlog=False, bulk=False):
+    # Alias.
+    job_id = pipeline.jobs['job_id'].rq_job
+    if not backlog:
+        multiples = multiples_q
+    else:
+        multiples = backlog_multiples_q
+
+    job_amr = multiples.enqueue(amr, query_file, depends_on=job_id)
+    pipeline.jobs.update({
+        'job_amr': Job(
+            rq_job=job_amr,
+            name='job_amr',
+            transitory=True,
+            backlog=backlog,
+            display=False
+        )
+    })
+
+    job_amr_dict = multiples.enqueue(
+        amr_to_dict, query_file + '_rgi.tsv', depends_on=job_amr)
+    pipeline.jobs.update({
+        'job_amr_dict': Job(
+            rq_job=job_amr_dict,
+            name='job_amr_dict',
+            transitory=True,
+            backlog=backlog,
+            display=False
+        )
+    })
+
+    # Create a graph, and upload to Blazegraph.
+    if backlog:
+        job_amr_datastruct = multiples.enqueue(
+            datastruct_savvy, query_file, query_file + '_id.txt', query_file + '_rgi.tsv_rgi.p', depends_on=job_amr_dict, result_ttl=-1)
+        pipeline.jobs.update({
+            'job_amr_datastruct': Job(
+                rq_job=job_amr_datastruct,
+                name='job_amr_datastruct',
+                transitory=False,
+                backlog=backlog,
+                display=False
+            )
+        })
+    else:
+        job_amr_datastruct = multiples.enqueue(
+            datastruct_savvy, query_file, query_file + '_id.txt', query_file + '_rgi.tsv_rgi.p', depends_on=job_amr_dict)
+        pipeline.jobs.update({
+            'job_amr_datastruct': Job(
+                rq_job=job_amr_datastruct,
+                name='job_amr_datastruct',
+                transitory=True,
+                backlog=backlog,
+                display=False
+            )
+        })
+    d = {'job_amr': job_amr, 'job_amr_dict': job_amr_dict,
+         'job_amr_datastruct': job_amr_datastruct}
+    # we still check for the user-selected amr option again because
+    # if it was not selected but BACKLOG_ENABLED=True, we dont have to
+    # enqueue it to backlog_multiples_q since beautify doesnt upload
+    # blazegraph
+    if not bulk:
+        job_amr_beautify = multiples.enqueue(
+            beautify,
+            query_file + '_rgi.tsv_rgi.p',
+            single_dict,
+            depends_on=job_amr_dict,
+            result_ttl=-1)
+        pipeline.jobs.update({
+            'job_amr_beautify': Job(
+                rq_job=job_amr_beautify,
+                name='job_amr_beautify',
+                transitory=False,
+                backlog=backlog,
+                display=True
+            )
+        })
+        d.update({'job_amr_beautify': job_amr_beautify})
+    return d
+
 def blob_savvy_enqueue(single_dict, pipeline):
     '''
     Handles enqueueing of single file to multiple queues.
@@ -315,36 +397,8 @@ def blob_savvy_enqueue(single_dict, pipeline):
         )
     # END ECTYPER PIPELINE
 
-    # AMR PIPELINE
-    def amr_pipeline(multiples):
-        job_amr = multiples.enqueue(amr, query_file, depends_on=job_id)
-        job_amr_dict = multiples.enqueue(
-            amr_to_dict, query_file + '_rgi.tsv', depends_on=job_amr)
-        # this uploads result to blazegraph
-        if single_dict['options']['bulk']:
-            job_amr_datastruct = multiples.enqueue(
-                datastruct_savvy, query_file, query_file + '_id.txt', query_file + '_rgi.tsv_rgi.p', depends_on=job_amr_dict, result_ttl=-1)
-        else:
-            job_amr_datastruct = multiples.enqueue(
-                datastruct_savvy, query_file, query_file + '_id.txt', query_file + '_rgi.tsv_rgi.p', depends_on=job_amr_dict)
-        d = {'job_amr': job_amr, 'job_amr_dict': job_amr_dict,
-             'job_amr_datastruct': job_amr_datastruct}
-        # we still check for the user-selected amr option again because
-        # if it was not selected but BACKLOG_ENABLED=True, we dont have to
-        # enqueue it to backlog_multiples_q since beautify doesnt upload
-        # blazegraph
-        if single_dict['options']['amr'] and not single_dict['options']['bulk']:
-            job_amr_beautify = multiples.enqueue(
-                beautify,
-                query_file + '_rgi.tsv_rgi.p',
-                single_dict,
-                depends_on=job_amr_dict,
-                result_ttl=-1)
-            d.update({'job_amr_beautify': job_amr_beautify})
-        return d
-
     if single_dict['options']['amr']:
-        amr_jobs = amr_pipeline(multiples_q)
+        amr_jobs = _amr_pipeline(bulk=single_dict['options']['bulk'])
         job_amr = amr_jobs['job_amr']
         job_amr_dict = amr_jobs['job_amr_dict']
         job_amr_datastruct = amr_jobs['job_amr_datastruct']
