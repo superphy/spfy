@@ -276,7 +276,7 @@ def _amr_pipeline(pipeline=None, backlog=False, bulk=False):
     # if it was not selected but BACKLOG_ENABLED=True, we dont have to
     # enqueue it to backlog_multiples_q since beautify doesnt upload
     # blazegraph
-    if not bulk:
+    if not backlog and not bulk:
         job_amr_beautify = multiples.enqueue(
             beautify,
             query_file + '_rgi.tsv_rgi.p',
@@ -293,6 +293,84 @@ def _amr_pipeline(pipeline=None, backlog=False, bulk=False):
             )
         })
         d.update({'job_amr_beautify': job_amr_beautify})
+    return d
+
+def _phylotyper_pipeline(subtype, pipeline=None, backlog=False):
+    # Alias.
+    job_id = pipeline.jobs['job_id'].rq_job
+    if not backlog:
+        multiples = multiples_q
+    else:
+        multiples = backlog_multiples_q
+
+    jobname = '_pt' +subtype
+    tsvfile = query_file + jobname + '.tsv'
+    picklefile = query_file + jobname + '.p'
+
+    job_pt = multiples.enqueue(
+        phylotyper.phylotyper,
+        None,
+        subtype,
+        tsvfile,
+        id_file=query_file + '_id.txt',
+        depends_on=pipeline.jobs['job_ectyper_datastruct_vf'].rq_job)
+    pipeline.jobs.update({
+        'job'+jobname: Job(
+            rq_job=job_pt,
+            name='job'+jobname,
+            transitory=True,
+            backlog=backlog,
+            display=False
+        )
+    })
+
+    job_pt_dict = multiples.enqueue(
+        phylotyper.to_dict, tsvfile, subtype, picklefile,
+        depends_on=job_pt)
+    pipeline.jobs.update({
+        'job'+jobname+'_dict': Job(
+            rq_job=job_pt_dict,
+            name='job'+jobname+'_dict',
+            transitory=True,
+            backlog=backlog,
+            display=False
+        )
+    })
+
+    job_pt_datastruct = multiples.enqueue(
+        phylotyper.savvy, picklefile, subtype,
+        depends_on=job_pt_dict)
+    pipeline.jobs.update({
+         'job'+jobname+'_datastruct': Job(
+            rq_job=job_pt_datastruct,
+            name='job'+jobname+'_datastruct',
+            transitory=True,
+            backlog=backlog,
+            display=False
+        )
+    })
+
+    d = {'job'+jobname: job_pt, 'job'+jobname+'_dict': job_pt_dict,
+         'job'+jobname+'_datastruct': job_pt_datastruct}
+    # we still check for the user-selected amr option again because
+    # if it was not selected but BACKLOG_ENABLED=True, we dont have to
+    # enqueue it to backlog_multiples_q since beautify doesnt upload
+    # blazegraph
+    if not backlog:
+        job_pt_beautify = multiples.enqueue(
+            phylotyper.beautify, picklefile, actual_filename(query_file),
+            depends_on=job_pt_dict, result_ttl=-1)
+        pipeline.jobs.update({
+            'job'+jobname+'_beautify': Job(
+                rq_job=job_pt_beautify,
+                name='job'+jobname+'_beautify',
+                transitory=False,
+                backlog=backlog,
+                display=True
+            )
+        })
+        d.update({'job'+jobname+'_beautify': job_pt_beautify})
+
     return d
 
 def blob_savvy_enqueue(single_dict, pipeline):
@@ -398,73 +476,48 @@ def blob_savvy_enqueue(single_dict, pipeline):
     # END ECTYPER PIPELINE
 
     if single_dict['options']['amr']:
-        amr_jobs = _amr_pipeline(bulk=single_dict['options']['bulk'])
+        amr_jobs = _amr_pipeline(, pipeline=pipeline, bulk=single_dict['options']['bulk'])
         job_amr = amr_jobs['job_amr']
         job_amr_dict = amr_jobs['job_amr_dict']
         job_amr_datastruct = amr_jobs['job_amr_datastruct']
         if not single_dict['options']['bulk']:
             job_amr_beautify = amr_jobs['job_amr_beautify']
     elif config.BACKLOG_ENABLED:
-        amr_pipeline(backlog_multiples_q)
+        _amr_pipeline(pipeline=pipeline, backlog=True)
     # END AMR PIPELINE
 
     # Phylotyper Pipeline
-    def phylotyper_pipeline(multiples, subtype):
-
-        jobname = '_pt' +subtype
-        tsvfile = query_file + jobname + '.tsv'
-        picklefile = query_file + jobname + '.p'
-
-        job_pt = multiples.enqueue(
-            phylotyper.phylotyper,
-            None,
-            subtype,
-            tsvfile,
-            id_file=query_file + '_id.txt',
-            depends_on=pipeline.jobs['job_ectyper_datastruct_vf'].rq_job)
-        job_pt_dict = multiples.enqueue(
-            phylotyper.to_dict, tsvfile, subtype, picklefile,
-            depends_on=job_pt)
-        job_pt_datastruct = multiples.enqueue(
-            phylotyper.savvy, picklefile, subtype,
-            depends_on=job_pt_dict)
-
-        d = {'job'+jobname: job_pt, 'job'+jobname+'_dict': job_pt_dict,
-             'job'+jobname+'_datastruct': job_pt_datastruct}
-        # we still check for the user-selected amr option again because
-        # if it was not selected but BACKLOG_ENABLED=True, we dont have to
-        # enqueue it to backlog_multiples_q since beautify doesnt upload
-        # blazegraph
-        if single_dict['options'][subtype]:
-            job_pt_beautify = multiples.enqueue(
-                phylotyper.beautify, picklefile, actual_filename(query_file),
-                depends_on=job_pt_dict, result_ttl=-1)
-            d.update({'job'+jobname+'_beautify': job_pt_beautify})
-
-        return d
-
     if single_dict['options']['stx1']:
-        pt_jobs = phylotyper_pipeline(multiples_q, 'stx1')
+        pt_jobs = _phylotyper_pipeline('stx1', pipeline=pipeline)
         job_stx1_beautify = pt_jobs['job_ptstx1_beautify']
     elif config.BACKLOG_ENABLED:
-        phylotyper_pipeline(backlog_multiples_q, 'stx1')
+        _phylotyper_pipeline('stx1', pipeline=pipeline, backlog=True)
 
     if single_dict['options']['stx2']:
-        pt_jobs = phylotyper_pipeline(multiples_q, 'stx2')
+        pt_jobs = _phylotyper_pipeline('stx2', pipeline=pipeline)
         job_stx2_beautify = pt_jobs['job_ptstx2_beautify']
     elif config.BACKLOG_ENABLED:
-        phylotyper_pipeline(backlog_multiples_q, 'stx2')
+        _phylotyper_pipeline('stx2', pipeline=pipeline, backlog=True)
 
     if single_dict['options']['eae']:
-        pt_jobs = phylotyper_pipeline(multiples_q, 'eae')
+        pt_jobs = _phylotyper_pipeline('eae', pipeline=pipeline)
         job_eae_beautify = pt_jobs['job_pteae_beautify']
     elif config.BACKLOG_ENABLED:
-        phylotyper_pipeline(backlog_multiples_q, 'eae')
+        _phylotyper_pipeline('eae', pipeline=pipeline, backlog=True)
     # END Phylotyper pipeline
 
     # the base file data for blazegraph
     job_turtle = multiples_q.enqueue(
         turtle_grapher, query_file, depends_on=job_qc)
+    pipeline.jobs.update({
+        'job_turtle': Job(
+            rq_job=job_turtle,
+            name='job_turtle',
+            transitory=True,
+            backlog=False,
+            display=False
+        )
+    })
 
     jobs[job_qc.get_id()] = {'file': single_dict['i'],
                              'analysis': 'Quality Control'}
