@@ -214,7 +214,7 @@ def _ectyper_pipeline_serotype(query_file, single_dict, pipeline=None, backlog=F
     return d
 
 # AMR PIPELINE
-def _amr_pipeline(pipeline=None, backlog=False, bulk=False):
+def _amr_pipeline(query_file, single_dict, pipeline=None, backlog=False, bulk=False):
     # Alias.
     job_id = pipeline.jobs['job_id'].rq_job
     if not backlog:
@@ -295,7 +295,7 @@ def _amr_pipeline(pipeline=None, backlog=False, bulk=False):
         d.update({'job_amr_beautify': job_amr_beautify})
     return d
 
-def _phylotyper_pipeline(subtype, pipeline=None, backlog=False):
+def _phylotyper_pipeline(subtype, query_file, pipeline=None, backlog=False):
     # Alias.
     job_id = pipeline.jobs['job_id'].rq_job
     if not backlog:
@@ -475,35 +475,36 @@ def blob_savvy_enqueue(single_dict, pipeline):
         )
     # END ECTYPER PIPELINE
 
+    # AMR Pipeline
     if single_dict['options']['amr']:
-        amr_jobs = _amr_pipeline(, pipeline=pipeline, bulk=single_dict['options']['bulk'])
+        amr_jobs = _amr_pipeline(query_file=query_file, single_dict=single_dict, pipeline=pipeline, bulk=single_dict['options']['bulk'])
         job_amr = amr_jobs['job_amr']
         job_amr_dict = amr_jobs['job_amr_dict']
         job_amr_datastruct = amr_jobs['job_amr_datastruct']
         if not single_dict['options']['bulk']:
             job_amr_beautify = amr_jobs['job_amr_beautify']
     elif config.BACKLOG_ENABLED:
-        _amr_pipeline(pipeline=pipeline, backlog=True)
+        _amr_pipeline(query_file=query_file, single_dict=single_dict, pipeline=pipeline, backlog=True)
     # END AMR PIPELINE
 
     # Phylotyper Pipeline
     if single_dict['options']['stx1']:
-        pt_jobs = _phylotyper_pipeline('stx1', pipeline=pipeline)
+        pt_jobs = _phylotyper_pipeline('stx1', query_file=query_file, pipeline=pipeline)
         job_stx1_beautify = pt_jobs['job_ptstx1_beautify']
     elif config.BACKLOG_ENABLED:
-        _phylotyper_pipeline('stx1', pipeline=pipeline, backlog=True)
+        _phylotyper_pipeline('stx1', query_file=query_file, pipeline=pipeline, backlog=True)
 
     if single_dict['options']['stx2']:
-        pt_jobs = _phylotyper_pipeline('stx2', pipeline=pipeline)
+        pt_jobs = _phylotyper_pipeline('stx2', query_file=query_file, pipeline=pipeline)
         job_stx2_beautify = pt_jobs['job_ptstx2_beautify']
     elif config.BACKLOG_ENABLED:
-        _phylotyper_pipeline('stx2', pipeline=pipeline, backlog=True)
+        _phylotyper_pipeline('stx2', query_file=query_file, pipeline=pipeline, backlog=True)
 
     if single_dict['options']['eae']:
-        pt_jobs = _phylotyper_pipeline('eae', pipeline=pipeline)
+        pt_jobs = _phylotyper_pipeline('eae', query_file=query_file, pipeline=pipeline)
         job_eae_beautify = pt_jobs['job_pteae_beautify']
     elif config.BACKLOG_ENABLED:
-        _phylotyper_pipeline('eae', pipeline=pipeline, backlog=True)
+        _phylotyper_pipeline('eae', query_file=query_file, pipeline=pipeline, backlog=True)
     # END Phylotyper pipeline
 
     # the base file data for blazegraph
