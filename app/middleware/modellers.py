@@ -23,7 +23,8 @@ def model_serotype(pi, pl, output_file):
             'hitname':"{0}:{1}".format(row['O_prediction'],row['H_prediction']),
             'hitorientation':'n/a',
             'hitstart':'n/a',
-            'hitstop':'n/a'
+            'hitstop':'n/a',
+            'probability':'n/a'
         }
     for index, row in df.iterrows()]
 
@@ -52,7 +53,8 @@ def model_vf(lst):
             'hitname':item['hitname'],
             'hitorientation':item['hitorientation'],
             'hitstart':item['hitstart'],
-            'hitstop':item['hitstop']
+            'hitstop':item['hitstop'],
+            'probability':'n/a'
         }
     for item in lst]
     # Convert the list of rows into a SubtypingResult model.
@@ -60,3 +62,23 @@ def model_vf(lst):
     #     rows = subtyping_list
     # )
     return subtyping_list
+
+def model_phylotyper(lst):
+    """
+    Casts phylotyper's return to the same format as VF/Serotyping.
+    """
+    phylotyper_list = [
+        {
+            'analysis:':d['subtype_gene'],
+            'contigid':d['contig'],
+            'filename':d['genome'],
+            'hitcutoff':'n/a',
+            'hitname':d['subtype'],
+            'hitorientation':'n/a',
+            'hitstart':d['start'],
+            'hitstop':d['stop'],
+            'probability':d['probability']
+        }
+    for d in lst]
+    
+    return phylotyper_list

@@ -22,8 +22,9 @@ from collections import OrderedDict
 
 
 import config
-from middleware.graphers.turtle_utils import generate_uri as gu, fulluri_to_basename as u2b, normalize_rdfterm as normalize 
+from middleware.graphers.turtle_utils import generate_uri as gu, fulluri_to_basename as u2b, normalize_rdfterm as normalize
 from middleware.blazegraph.upload_graph import upload_graph
+from middleware.modellers import model_phylotyper
 from modules.phylotyper import ontology, exceptions
 from modules.phylotyper.sequences import MarkerSequences, phylotyper_query, genename_query
 
@@ -42,7 +43,7 @@ def phylotyper(uriIsolate, subtype, result_file, id_file=None):
 
     Returns:
         file to tab-delimited text results
-    
+
     """
 
     # uriIsolate retrieval
@@ -94,7 +95,7 @@ def phylotyper(uriIsolate, subtype, result_file, id_file=None):
 
     shutil.move(output_file, result_file)
     shutil.rmtree(temp_dir)
-          
+
     return result_file
 
 
@@ -105,7 +106,7 @@ def to_dict(pt_file, subtype, pickle_file):
 
     """
 
-     
+
     pt_results = pd.read_table(pt_file)
 
     if pt_results['phylotyper_assignment'].empty or pt_results['phylotyper_assignment'].values[0] == 'Subtype loci not found in genome':
@@ -114,7 +115,7 @@ def to_dict(pt_file, subtype, pickle_file):
         }
 
     else:
-    
+
         pt_results = pt_results[['subtype','probability','loci']]
 
         pt_results = pt_results.to_dict()
@@ -144,7 +145,7 @@ def to_dict(pt_file, subtype, pickle_file):
             pt_results['contig'][k] = contigs
             pt_results['start'][k] = starts
             pt_results['stop'][k] = stops
-           
+
     pickle.dump(pt_results, open(pickle_file, 'wb'))
 
     return pickle_file
@@ -179,7 +180,7 @@ def beautify(p_file, genome):
         # Expand into table rows - one per loci
         table_rows = []
         for k in pt_dict['loci']:
-            
+
             # Location info
             for i in range(len(pt_dict['loci'][k])):
                 instance_dict = {}
@@ -194,20 +195,20 @@ def beautify(p_file, genome):
                 allele_rdf = normalize(allele_uri)
                 gene_result = genename_query(allele_rdf)
                 instance_dict['subtype_gene'] = gene_result[0]['markerLabel']
-                
+
                 # Genome
                 instance_dict['genome'] = genome
 
                 # Subtype info
                 instance_dict['subtype'] = pt_dict['subtype'][k]
                 instance_dict['probability'] = pt_dict['probability'][k]
-            
+
                 table_rows.append(instance_dict)
 
-    return table_rows
-        
+    # Cast
+    unified_format = model_phylotyper(table_rows)
 
-
+    return unified_format
 
 def savvy(p_file, subtype):
     """ Load phylotyper results into DB
@@ -222,7 +223,7 @@ def savvy(p_file, subtype):
 
         # Phylotyper scheme
         phylotyper_uri = gu('subt:'+subtype)
-        
+
         # Get list of permissable subtype values
         subtypes_results = ontology.subtypeset_query(normalize(phylotyper_uri))
         subtypes = {}
@@ -289,7 +290,7 @@ def ignorant(genome_uri, subtype, pickle_file):
         'stop': {}
     }
     for row in results:
-        
+
         if row['pt'] in subtype_assignments:
             k = subtype_assignments[row['pt']]
         else:
@@ -345,7 +346,7 @@ if __name__=='__main__':
     g = u2b(gu(input_g))
     pt_file = os.path.join(config.DATASTORE, g+'_pt.tsv')
     pickle_file = os.path.join(config.DATASTORE, g+'_pt.p')
-    
+
     phylotyper(args.g, args.s, pt_file)
     to_dict(pt_file, args.s, pickle_file)
     print(beautify(pickle_file, args.g))
