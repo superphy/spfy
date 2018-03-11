@@ -477,7 +477,12 @@ def blob_savvy_enqueue(single_dict, pipeline):
 
     # AMR Pipeline
     if single_dict['options']['amr']:
-        amr_jobs = _amr_pipeline(query_file=query_file, single_dict=single_dict, pipeline=pipeline, bulk=single_dict['options']['bulk'])
+        amr_jobs = _amr_pipeline(
+            query_file=query_file,
+            single_dict=single_dict,
+            pipeline=pipeline,
+            backlog=False,
+            bulk=single_dict['options']['bulk'])
         job_amr = amr_jobs['job_amr']
         job_amr_dict = amr_jobs['job_amr_dict']
         job_amr_datastruct = amr_jobs['job_amr_datastruct']

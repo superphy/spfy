@@ -208,7 +208,9 @@ def generate_datastruct(query_file, id_file, pickled_dictionary):
                 graph = parse_gene_dict(graph, results['Virulence Factors'], uriGenome, 'VirulenceFactor')
             elif key == 'Antimicrobial Resistance':
                 graph = parse_gene_dict(graph, results['Antimicrobial Resistance'], uriGenome,
-                                        'AntimicrobialResistanceGene')
+                                        'AntimicrobialResistanceGene'
+            else:
+                raise Exception("generate_datastruct() failed to find key for query_file: {0}, pickled_dictionary: {1}, with results dictionary: {2}".format(query_file, pickled_dictionary, str(results)))
         return graph
     elif isinstance(results, list):
         graph = model_to_graph(graph, results, uriIsolate)
