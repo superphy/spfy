@@ -8,3 +8,6 @@
 [submodule "app/modules/PanPredic"]
         path = app/modules/PanPredic
         url = https://github.com/superphy/PanPredic.git
+[submodule "docker-blazegraph"]
+	path = docker-blazegraph
+	url = https://github.com/superphy/docker-blazegraph.git
