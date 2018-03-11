@@ -77,7 +77,7 @@ services:
   blazegraph:
     build:
       context: ./docker-blazegraph/2.1.4-inferencing
-      dockerfile: ./docker-blazegraph/2.1.4-inferencing/Dockerfile
+      dockerfile: Dockerfile # inherits the context from above.
     image: blazegraph
     ports:
       - "8080:8080"
