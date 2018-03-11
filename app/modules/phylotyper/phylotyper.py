@@ -314,6 +314,7 @@ def ignorant(genome_uri, subtype, pickle_file):
         pt_dict['stop'][k].append(row['endPos'])
 
     if not results:
+        raise Exception("ignorant() could not find phylotyper results for genome_uri: {0}, subtype: {1}, with pickle_file: {2}".format(genome_uri, subtype, pickle_file))
         pt_dict = {
             'subtype': 'No loci'
         }
