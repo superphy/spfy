@@ -94,7 +94,7 @@ def _ectyper_pipeline_vf(query_file, single_dict, pipeline=None, backlog=False):
     else:
         ttl_value = config.DEFAULT_RESULT_TTL
 
-    # datastruct_savvy() stores result to Blazegraph.
+    # datastruct_savvy() graphs and uploads result to Blazegraph.
     job_ectyper_datastruct_vf = multiples.enqueue(
         datastruct_savvy,
         query_file,
