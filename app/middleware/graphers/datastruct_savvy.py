@@ -198,6 +198,8 @@ def generate_datastruct(query_file, id_file, pickled_dictionary):
 
     # Unpickle.
     results = unpickle(pickled_dictionary)
+    # Ensure this isn't empty.
+    assert results
     # Check if we have a model or a dictionary.
     if isinstance(results, dict):
         # graphing functions

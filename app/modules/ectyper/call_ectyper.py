@@ -58,11 +58,11 @@ def call_ectyper_vf(args_dict):
         # TODO: edit ectyper so we're not using this ducktape approach
         # we are calling tools_controller on only one file, so grab that dict
         key, ectyper_dict = ectyper_dict.popitem()
-
+        assert isinstance(ectyper_dict, dict)
         # TODO: convert this to a VF model.
         # Path for the pickle dump.
         p = filepath + '_ectyper_vf.p'
-        pickle.dump(ectyper_dict,open(p,'wb'))
+        dump(ectyper_dict, p)
 
     return p
 
