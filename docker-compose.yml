@@ -1,5 +1,6 @@
 version: '2'
 services:
+  # The main controlling webserver.
   webserver:
     build:
       context: .
@@ -14,11 +15,12 @@ services:
     # networks:
     #   - dockernet
 
-  reactapp:
+  # The ReactJS app for the frontend.
+  grouch:
     build:
       context: .
-      dockerfile: Dockerfile-reactapp
-    image: reactapp
+      dockerfile: Dockerfile-grouch
+    image: grouch
     ports:
     - "8090:5000"
     depends_on:
@@ -26,6 +28,7 @@ services:
     # networks:
     #   - dockernet
 
+  # The main set of RQ workers.
   worker:
     build:
       context: .
@@ -40,6 +43,7 @@ services:
     # networks:
     #   - dockernet
 
+  # Reserved RQ worker for creating & syncing Spfy IDs.
   worker-blazegraph-ids:
     build:
       context: .
@@ -52,6 +56,7 @@ services:
     # networks:
     #   - dockernet
 
+  # Extra priority workers serving the frontend.
   worker-priority:
     build:
       context: .
@@ -62,11 +67,13 @@ services:
     depends_on:
     - webserver
 
+  # Redis DB for the RQ workers + some frontend tasks.
   redis:
     image: redis:3.2
     # networks:
     #   - dockernet
 
+  # Blazegraph DB for LTS.
   blazegraph:
     image: superphy/blazegraph:2.1.4-inferencing
     ports:
@@ -74,6 +81,7 @@ services:
     volumes:
       - /var/lib/jetty/
 
+  # MongoDB for token based accounts.
   mongodb:
     image: mongo:3.6.1-jessie
     environment:
