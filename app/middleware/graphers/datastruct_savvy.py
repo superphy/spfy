@@ -102,6 +102,10 @@ def parse_gene_dict(graph, gene_dict, uriGenome, geneType):
             # some gene names, esp those which are effectively a description,
             # have spaces
             gene_name = gene_record['GENE_NAME'].replace(' ', '_')
+            # Workaround to assume all eae alleles are just eae.
+            # See https://github.com/superphy/spfy/pull/274
+            if gene_name.startswith('eae'):
+                gene_name = 'eae'
             uriGene = gu(':' + gene_name)
             # define the object type of the gene
             graph.add((uriGene, gu('rdf:type'), gu(':' + geneType)))
