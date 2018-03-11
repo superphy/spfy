@@ -11,7 +11,7 @@ Platform for predicting Serotype & Virulence Factors (via
 Antimicrobial Resistance (via
 `CARD <https://card.mcmaster.ca/analyze/rgi>`__) from E.coli genome
 sequences bundled using task queues (RQ) and a SPA front-end
-(React/Flask).
+(React/Flask). Builds graph data for population-wide comparative analyses.
 
 .. image:: screenshots/screen-results_list.png
     :align: center
