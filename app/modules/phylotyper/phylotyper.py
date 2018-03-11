@@ -30,7 +30,12 @@ from modules.phylotyper.sequences import MarkerSequences, phylotyper_query, gene
 
 logger = logging.getLogger(__name__)
 
-
+def _check_tsv(pt_file):
+    pt_results = pd.read_table(pt_file)
+    try:
+        assert pt_results
+    except:
+        raise Exception('_check_tsv() failed (df is empty) for pt_file: ' + pt_file)
 
 def phylotyper(uriIsolate, subtype, result_file, id_file=None):
     """ Wrapper for Phylotyper
@@ -71,6 +76,7 @@ def phylotyper(uriIsolate, subtype, result_file, id_file=None):
     # Get alleles for this genome
     markerseqs = MarkerSequences(loci)
     fasta = markerseqs.fasta(uriIsolate)
+    # fasta =
 
     temp_dir = mkdtemp(prefix='pt'+subtype, dir=config.DATASTORE)
     query_file = os.path.join(temp_dir, 'query.fasta')
@@ -81,7 +87,7 @@ def phylotyper(uriIsolate, subtype, result_file, id_file=None):
         with open(query_file, 'w') as fh:
             fh.write(fasta)
 
-        subprocess.call(['phylotyper', 'genome', '--noplots',
+        subprocess.check_call(['phylotyper', 'genome', '--noplots',
                          subtype,
                          temp_dir,
                          query_file])
@@ -100,6 +106,8 @@ def phylotyper(uriIsolate, subtype, result_file, id_file=None):
 
     shutil.move(output_file, result_file)
     shutil.rmtree(temp_dir)
+
+    _check_tsv(result_file)
 
     return result_file
 
