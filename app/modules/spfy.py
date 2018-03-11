@@ -298,6 +298,10 @@ def _amr_pipeline(query_file, single_dict, pipeline=None, backlog=False, bulk=Fa
 def _phylotyper_pipeline(subtype, query_file, pipeline=None, backlog=False):
     # Alias.
     job_id = pipeline.jobs['job_id'].rq_job
+    job_ectyper_datastruct_vf = pipeline.jobs['job_ectyper_datastruct_vf'].rq_job
+    assert job_id
+    assert job_ectyper_datastruct_vf
+    # Alias queues.
     if not backlog:
         multiples = multiples_q
     else:
@@ -313,7 +317,7 @@ def _phylotyper_pipeline(subtype, query_file, pipeline=None, backlog=False):
         subtype,
         tsvfile,
         id_file=query_file + '_id.txt',
-        depends_on=pipeline.jobs['job_ectyper_datastruct_vf'].rq_job)
+        depends_on=job_ectyper_datastruct_vf)
     pipeline.jobs.update({
         'job'+jobname: Job(
             rq_job=job_pt,
