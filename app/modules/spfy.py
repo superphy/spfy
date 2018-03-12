@@ -429,7 +429,7 @@ def blob_savvy_enqueue(single_dict, pipeline):
         display_vf = True
     ## ECTyper (VF & Serotype)
     # VF
-    if single_dict['options']['vf']:
+    if single_dict['options']['vf'] or chose_phylotyper:
         ectyper_vf_jobs = _ectyper_pipeline_vf(
             query_file,
             single_dict,
