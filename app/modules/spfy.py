@@ -44,6 +44,8 @@ redis_conn = redis.from_url(redis_url)
 singles_q = Queue('singles', connection=redis_conn)
 multiples_q = Queue('multiples', connection=redis_conn,
                     default_timeout=config.DEFAULT_TIMEOUT)
+phylotyper_q = Queue('phylotyper', connection=redis_conn,
+                    default_timeout=config.DEFAULT_TIMEOUT)
 blazegraph_q = Queue('blazegraph', connection=redis_conn)
 if config.BACKLOG_ENABLED:
     # backlog queues
@@ -311,7 +313,7 @@ def _phylotyper_pipeline(subtype, query_file, pipeline=None, backlog=False):
     tsvfile = query_file + jobname + '.tsv'
     picklefile = query_file + jobname + '.p'
 
-    job_pt = multiples.enqueue(
+    job_pt = phylotyper_q.enqueue(
         phylotyper.phylotyper,
         None,
         subtype,

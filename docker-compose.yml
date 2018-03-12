@@ -43,6 +43,21 @@ services:
     # networks:
     #   - dockernet
 
+  # The small set of workers specific to phylotyper's env.
+  worker-phylotyper:
+    build:
+      context: .
+      dockerfile: Dockerfile-rq-phylotyper
+    image: backend-rq-phylotyper
+    ports:
+    - "9181:9181" #this is for debugging, drop a shell and run rq-dashboard if you need to see jobs
+    volumes_from:
+    - webserver
+    depends_on:
+    - webserver
+    # networks:
+    #   - dockernet
+
   # Reserved RQ worker for creating & syncing Spfy IDs.
   worker-blazegraph-ids:
     build:
