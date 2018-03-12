@@ -24,7 +24,6 @@ from collections import OrderedDict
 import config
 from middleware.graphers.turtle_utils import generate_uri as gu, fulluri_to_basename as u2b, normalize_rdfterm as normalize
 from middleware.blazegraph.upload_graph import upload_graph
-from middleware.modellers import model_phylotyper
 from modules.phylotyper import ontology, exceptions
 from modules.phylotyper.sequences import MarkerSequences, phylotyper_query, genename_query
 
@@ -175,6 +174,7 @@ def beautify(p_file, genome):
 
 
     """
+    from middleware.modellers import model_phylotyper # See https://github.com/superphy/spfy/issues/271
 
     pt_dict = pickle.load(open(p_file, 'rb'))
 
