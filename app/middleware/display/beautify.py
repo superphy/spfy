@@ -1,16 +1,18 @@
 import logging
 import pandas as pd
 import cPickle as pickle
-from os.path import basename
 from modules.loggingFunctions import initialize_logging
-from modules.beautify.find_widest import check_alleles
-from modules.turtleGrapher.turtle_utils import actual_filename
+from middleware.display.find_widest import check_alleles
+from middleware.graphers.turtle_utils import actual_filename
+from middleware.models import SubtypingResult, model_to_json, unpickle
+from middleware.modellers import model_vf
 
 # logging
 log_file = initialize_logging()
 log = logging.getLogger(__name__)
 
-def json_return(args_dict, gene_dict):
+
+def json_return(gene_dict, args_dict):
     """
     This converts the gene dict into a json format for return to the front end
     """
@@ -108,7 +110,8 @@ def handle_failed(json_r, args_dict):
         ret.append(t)
     return ret
 
-def beautify(args_dict, pickled_dictionary):
+# TODO: convert this to models-only.
+def beautify(gene_dict, args_dict=None):
     '''
     Converts a given 'spit' datum (a dictionary with our results from rgi/ectyper) to a json form used by the frontend. This result is to be stored in Redis by the calling RQ Worker.
     :param args_dict: The arguments supplied by the user. In the case of spfy web-app, this is used to determine which analysis options were set.
@@ -116,17 +119,33 @@ def beautify(args_dict, pickled_dictionary):
     :param gene_dict: optionally, if using this to test via cli, you can supply the actual dictionary object.
     :return: json representation of the results, as required by the front-end.
     '''
-
-    gene_dict = pickle.load(open(pickled_dictionary, 'rb'))
-    # this converts our dictionary structure into json and adds metadata (filename, etc.)
-    json_r =  json_return(args_dict, gene_dict)
-    log.debug('First parse into json_r: ' + str(json_r))
-    # if looking for only serotype, skip this step
+    if isinstance(gene_dict, str): # For the tests.
+        gene_dict = pickle.load(open(gene_dict, 'rb'))
+    # Convert the old ECTYper's dictionary structure into list and adds metadata (filename, etc.).
+    json_r =  json_return(gene_dict, args_dict)
+    # For VF/AMR, find widest gene matched. Strip shorter matches.
     if args_dict['options']['vf'] or args_dict['options']['amr']:
         json_r = check_alleles(json_r)
-    log.debug('After checking alleles json_r: ' + str(json_r))
-    # check if there is an analysis module that has failed in the result
+    # Check if there is an analysis module that has failed in the result.
     if has_failed(json_r):
+        # If failed, return.
         return handle_failed(json_r, args_dict)
     else:
         return json_r
+        # Everything worked, cast result into a model.
+        # model = model_vf(json_r)
+        # return model_to_json(model)
+
+def display_subtyping(pickled_result, args_dict=None):
+    result = unpickle(pickled_result)
+    if isinstance(result, dict):
+        # VF
+        list_return = beautify(gene_dict=result, args_dict=args_dict)
+        assert isinstance(list_return, list)
+        model = model_vf(list_return)
+        return model_to_json(model)
+    elif isinstance(result, list):
+        # Serotyping
+        return model_to_json(result)
+    else:
+        raise Exception("beautify() could not handle pickled file: {0}.".format(pickled_result))

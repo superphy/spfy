@@ -16,20 +16,19 @@ from rq import Queue
 from rdflib import Graph
 
 from modules.qc.qc import qc
-from modules.blazeUploader.reserve_id import write_reserve_id
-from modules.ectyper.call_ectyper import call_ectyper
+from middleware.blazegraph.reserve_id import write_reserve_id
 from modules.amr.amr import amr
 from modules.amr.amr_to_dict import amr_to_dict
-from modules.beautify.beautify import beautify
-from modules.turtleGrapher.datastruct_savvy import datastruct_savvy, parse_gene_dict
-from modules.turtleGrapher.turtle_grapher import turtle_grapher, generate_graph
+from middleware.display.beautify import beautify
+from middleware.graphers.datastruct_savvy import datastruct_savvy, parse_gene_dict
+from middleware.graphers.turtle_grapher import turtle_grapher, generate_graph
 from modules.PanPredic.pan import pan
-from modules.turtleGrapher.turtle_utils import generate_uri as gu
+from middleware.graphers.turtle_utils import generate_uri as gu
 from modules.PanPredic.queries import get_single_region
 from datetime import datetime
 import ast
 import cPickle as pickle
-from modules.blazeUploader import upload_graph
+from middleware.blazegraph import upload_graph
 
 # the only ONE time for global variables
 # when naming queues, make sure you actually set a worker to listen to that queue

@@ -4,7 +4,7 @@ import tempfile
 import subprocess
 import argparse
 import pandas as pd
-from modules.turtleGrapher.turtle_grapher import generate_turtle_skeleton
+from middleware.graphers.turtle_grapher import generate_turtle_skeleton
 
 def create_blast_db(query_file):
     '''

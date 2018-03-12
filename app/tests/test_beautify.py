@@ -2,7 +2,7 @@ import os
 import pytest
 import cPickle as pickle
 import pandas as pd
-from modules.beautify.beautify import beautify, json_return, has_failed
+from middleware.display.beautify import beautify, json_return, has_failed
 from tests.constants import ARGS_DICT, BEAUTIFY_VF_SEROTYPE
 
 vf_serotype_gene_dict = os.path.join('tests/refs', 'GCA_000005845.2_ASM584v2_genomic.fna_ectyper-vf_serotype.p')
@@ -13,7 +13,9 @@ def test_beautify_vf_serotype():
     ## test vf & serotype json return
     single_dict = dict(ARGS_DICT)
     single_dict.update({'i': vf_serotype_gene_dict})
-    assert len(beautify(single_dict, vf_serotype_gene_dict)) == len(BEAUTIFY_VF_SEROTYPE)
+    r = beautify(vf_serotype_gene_dict, single_dict)
+    assert isinstance(r, list)
+    assert len(r) == len(BEAUTIFY_VF_SEROTYPE)
 
 def test_beautify_serotype_only():
     ## test serotype only json return
@@ -24,7 +26,8 @@ def test_beautify_serotype_only():
     # this mimicks user selection of serotype only
     single_dict.update({'options':{'vf': False, 'amr': False, 'serotype': True}})
     # beautify is what is actually called by the RQ worker & returned to the user
-    r = beautify(single_dict, vf_serotype_gene_dict)
+    r = beautify(vf_serotype_gene_dict, single_dict)
+    assert isinstance(r, list)
     assert len(r) == 1
 
 def test_beautify_json_r_serotype_only():
@@ -37,7 +40,7 @@ def test_beautify_json_r_serotype_only():
     gene_dict = pickle.load(open(vf_serotype_gene_dict, 'rb'))
     assert type(gene_dict) == dict
     assert len(gene_dict.keys()) == 2
-    r = json_return(single_dict, gene_dict)
+    r = json_return(gene_dict=gene_dict, args_dict=single_dict)
     assert len(r) == 1
 
     failed = has_failed(r)
@@ -48,7 +51,8 @@ def test_beautify_amr_only():
     single_dict.update({'i': amr_gene_dict})
     # this mimicks user selection of serotype only
     single_dict.update({'options':{'vf': False, 'amr': True, 'serotype': False}})
-    r = beautify(single_dict, amr_gene_dict)
+    r = beautify(amr_gene_dict, single_dict)
+    assert isinstance(r, list)
     assert len(r) > 1
 
 def test_beautify_json_r_amr_only():
@@ -60,7 +64,7 @@ def test_beautify_json_r_amr_only():
     assert type(gene_dict) == dict
     assert len(gene_dict.keys()) == 1
     assert 'Antimicrobial Resistance' in gene_dict.keys()
-    r = json_return(single_dict, gene_dict)
+    r = json_return(gene_dict=gene_dict, args_dict=single_dict)
     assert len(r) > 1
 
     ## test some pandas stuff on the json_r

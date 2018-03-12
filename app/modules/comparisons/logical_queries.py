@@ -3,10 +3,10 @@ import config
 import logging
 import time
 from modules.loggingFunctions import initialize_logging
-from modules.turtleGrapher.turtle_utils import generate_uri as gu
-from modules.groupComparisons.sparql_utils import generate_prefixes
-from modules.decorators import toset, tolist, tostring, prefix, submit
-from modules.groupComparisons.frontend_queries import is_group
+from middleware.graphers.turtle_utils import generate_uri as gu
+from modules.comparisons.sparql_utils import generate_prefixes
+from middleware.decorators import toset, tolist, tostring, prefix, submit
+from modules.comparisons.frontend_queries import is_group
 
 # logging
 log_file = initialize_logging()

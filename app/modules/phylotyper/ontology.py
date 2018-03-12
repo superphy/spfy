@@ -11,9 +11,9 @@ import os
 from rdflib import Graph, Literal, XSD
 
 from modules.phylotyper.exceptions import ValuesError, DatabaseError
-from modules.turtleGrapher.turtle_utils import generate_uri as gu
-from modules.decorators import submit, prefix, tojson
-from modules.blazeUploader.upload_graph import upload_turtle, upload_graph
+from middleware.graphers.turtle_utils import generate_uri as gu
+from middleware.decorators import submit, prefix, tojson
+from middleware.blazegraph.upload_graph import upload_turtle, upload_graph
 
 from modules.phylotyper.graph_refs import graph_refs
 

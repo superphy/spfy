@@ -2,7 +2,7 @@ import logging
 import config
 import redis
 from rq import Queue
-from modules.groupComparisons.groupcomparisons import groupcomparisons
+from modules.comparisons.groupcomparisons import groupcomparisons
 from modules.loggingFunctions import initialize_logging
 
 # logging

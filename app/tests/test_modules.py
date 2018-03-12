@@ -3,16 +3,19 @@
 
 import pytest
 import os
+import subprocess
 import cPickle as pickle
+import pandas as pd
 
 from modules.qc.qc import qc, check_header_parsing, check_ecoli
-from modules.blazeUploader.reserve_id import write_reserve_id
-from modules.ectyper.call_ectyper import call_ectyper
+from middleware.blazegraph.reserve_id import write_reserve_id
+from modules.ectyper.call_ectyper import call_ectyper_vf, call_ectyper_serotype
 from modules.amr.amr import amr
 from modules.amr.amr_to_dict import amr_to_dict
-from modules.beautify.beautify import beautify
-from modules.turtleGrapher.datastruct_savvy import datastruct_savvy
-from modules.turtleGrapher.turtle_grapher import turtle_grapher
+from middleware.display.beautify import beautify, model_to_json
+from middleware.graphers.datastruct_savvy import datastruct_savvy
+from middleware.graphers.turtle_grapher import turtle_grapher
+from middleware.models import unpickle
 
 from tests.constants import ARGS_DICT
 
@@ -57,18 +60,69 @@ def test_qc():
     for non_ecoli_genome in GENOMES_LIST_NOT_ECOLI:
         assert qc(non_ecoli_genome) == False
 
-def test_ectyper():
+def test_ectyper_vf(return_one=False):
+    """Check the ECTyper from `superphy` which is used for virulance factor
+    identification. Installed as a submodule in the `modules` directory.
+    """
     for ecoli_genome in GENOMES_LIST_ECOLI:
         # basic ECTyper check
         single_dict = dict(ARGS_DICT)
         single_dict.update({'i':ecoli_genome})
-        pickled_ectyper_dict = call_ectyper(single_dict)
+        pickled_ectyper_dict = call_ectyper_vf(single_dict)
         ectyper_dict = pickle.load(open(pickled_ectyper_dict,'rb'))
         assert type(ectyper_dict) == dict
 
         # beautify ECTyper check
-        json_return = beautify(single_dict, pickled_ectyper_dict)
+        json_return = beautify(pickled_ectyper_dict, single_dict)
         assert type(json_return) == list
+        if return_one:
+            return json_return
+
+def _validate_model(model):
+    # Validate (throws error if invalidate).
+    # model.validate()
+    # Check that the return rows is not some random empty list.
+    # assert model.rows
+    # Check the conversion for the front-end.
+    # r = model_to_json(model)
+    # This is not really json; more like a list than a dict structure.
+    assert isinstance(model, list)
+    # Check that this isn't empty.
+    assert model
+
+def test_ectyper_serotype_direct():
+    """Check the ECTyper from `master` which only performs serotyping.
+    Installed in the conda environment.
+    """
+    for ecoli_genome in GENOMES_LIST_ECOLI:
+        # Check that the conda env can run ectyper.
+        ret_code = subprocess.call(['ectyper', '-i', ecoli_genome])
+        assert ret_code == 0
+
+def test_ectyper_serotype_call_nopickle():
+    """
+    Check the actual call from Spfy's code.
+    """
+    for ecoli_genome in GENOMES_LIST_ECOLI:
+        single_dict = dict(ARGS_DICT)
+        single_dict.update({'i':ecoli_genome})
+        # Have the call return the model without pickling.
+        serotype_model = call_ectyper_serotype(single_dict, pickle=False)
+        _validate_model(serotype_model)
+
+def test_ectyper_serotype_call_pickle(return_one=False):
+    """
+    Check the actual call from Spfy's code.
+    """
+    for ecoli_genome in GENOMES_LIST_ECOLI:
+        single_dict = dict(ARGS_DICT)
+        single_dict.update({'i':ecoli_genome})
+        # Pickle the model, and return the path to the file.
+        pickled_serotype_model = call_ectyper_serotype(single_dict)
+        ectyper_serotype_model = unpickle(pickled_serotype_model)
+        _validate_model(ectyper_serotype_model)
+        if return_one:
+            return ectyper_serotype_model
 
 def test_amr():
         ecoli_genome = GENOMES_LIST_ECOLI[0]
@@ -85,5 +139,5 @@ def test_amr():
         # beautify amr check
         single_dict = dict(ARGS_DICT)
         single_dict.update({'i':ecoli_genome})
-        json_return = beautify(single_dict,pickled_amr_dict)
+        json_return = beautify(pickled_amr_dict, single_dict)
         assert type(json_return) == list

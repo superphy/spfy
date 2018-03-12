@@ -1,6 +1,6 @@
 import logging
 from modules.loggingFunctions import initialize_logging
-from modules.decorators import tojson, prefix, submit
+from middleware.decorators import tojson, prefix, submit
 
 # logging
 log_file = initialize_logging()

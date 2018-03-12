@@ -7,7 +7,7 @@ ENV YARN_VERSION 0.17.6
 RUN mkdir /app
 
 # Install app dependencies & build
-COPY ./reactapp /app
+COPY ./grouch /app
 WORKDIR /app
 # part of a bug fix; see https://github.com/sass/node-sass/issues/1579
 RUN yarn add node-sass

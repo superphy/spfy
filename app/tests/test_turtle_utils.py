@@ -1,7 +1,7 @@
 from hashlib import sha1
 from rdflib import URIRef
-from modules.turtleGrapher.turtle_utils import generate_uri as gu
-from modules.turtleGrapher.turtle_utils import actual_filename
+from middleware.graphers.turtle_utils import generate_uri as gu
+from middleware.graphers.turtle_utils import actual_filename
 
 def test_generate_uri():
     # test generate usage:
