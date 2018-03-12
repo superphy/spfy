@@ -31,10 +31,8 @@ logger = logging.getLogger(__name__)
 
 def _check_tsv(pt_file):
     pt_results = pd.read_table(pt_file)
-    try:
-        assert pt_results
-    except:
-        raise Exception('_check_tsv() failed (df is empty) for pt_file: ' + pt_file)
+    if pt_results.empty:
+        raise Exception('_check_tsv() failed as pt_results.empty == true for pt_file: {0} with df content: {1}'.format(pt_file, str(pt_results)))
 
 def phylotyper(uriIsolate, subtype, result_file, id_file=None):
     """ Wrapper for Phylotyper
