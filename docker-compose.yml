@@ -12,8 +12,8 @@ services:
     - redis
     volumes:
     - /datastore
-    # networks:
-    #   - dockernet
+    networks:
+      - dockernet
 
   # The ReactJS app for the frontend.
   grouch:
@@ -25,8 +25,8 @@ services:
     - "8090:5000"
     depends_on:
     - webserver
-    # networks:
-    #   - dockernet
+    networks:
+      - dockernet
 
   # The main set of RQ workers.
   worker:
@@ -40,8 +40,8 @@ services:
     - webserver
     depends_on:
     - webserver
-    # networks:
-    #   - dockernet
+    networks:
+      - dockernet
 
   # The small set of workers specific to phylotyper's env.
   worker-phylotyper:
@@ -66,8 +66,8 @@ services:
     - webserver
     depends_on:
     - webserver
-    # networks:
-    #   - dockernet
+    networks:
+      - dockernet
 
   # Extra priority workers serving the frontend.
   worker-priority:
@@ -79,23 +79,21 @@ services:
     - webserver
     depends_on:
     - webserver
+    networks:
+      - dockernet
 
   # Redis DB for the RQ workers + some frontend tasks.
   redis:
     image: redis:3.2
-    # networks:
-    #   - dockernet
+    networks:
+      - dockernet
 
-  # Blazegraph DB for LTS.
-  blazegraph:
-    build:
-      context: ./docker-blazegraph/2.1.4-inferencing
-      dockerfile: Dockerfile # inherits the context from above.
-    image: blazegraph
-    ports:
-      - "8080:8080"
-    volumes:
-      - /var/lib/jetty/
+  # blazegraph:
+  #   image: superphy/blazegraph:2.1.4-inferencing
+  #   ports:
+  #     - "8080:8080"
+  #   volumes:
+  #     - /var/lib/jetty/
 
   # MongoDB for token based accounts.
   mongodb:
@@ -105,11 +103,13 @@ services:
       - MONGO_LOG_DIR=/dev/null
     volumes:
       - /data/db
+    networks:
+      - dockernet
 
-# networks:
-#   dockernet:
-#     driver: bridge
-#     ipam:
-#       config:
-#         - subnet: 192.168.0.0/24
-#           gateway: 192.168.0.1
+networks:
+  dockernet:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.0.0/24
+          gateway: 192.168.0.1
