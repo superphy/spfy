@@ -1,6 +1,6 @@
 #this is for RQ for service worker
 
-FROM superphy/docker-flask-conda:latest
+FROM superphy/docker-flask-conda:master-6.1.0
 
 COPY ./app /app
 
