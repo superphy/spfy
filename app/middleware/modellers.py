@@ -69,7 +69,7 @@ def model_phylotyper(lst):
     """
     phylotyper_list = [
         {
-            'analysis:':d['subtype_gene'],
+            'analysis':d['subtype_gene'],
             'contigid':d['contig'],
             'filename':d['genome'],
             'hitcutoff':'n/a',
@@ -80,5 +80,5 @@ def model_phylotyper(lst):
             'probability':d['probability']
         }
     for d in lst]
-    
+
     return phylotyper_list
