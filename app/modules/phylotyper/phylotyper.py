@@ -120,12 +120,12 @@ def to_dict(pt_file, subtype, pickle_file):
     pt_results = pd.read_table(pt_file)
 
     if pt_results['phylotyper_assignment'].empty or pt_results['phylotyper_assignment'].values[0] == 'Subtype loci not found in genome':
-        raise Exception("phylotyper.to_dict() couldnt find loci for file: {0}, subtype: {1}, pickle_file, {2}, with dataframe {3}".format(
-            pt_file,
-            subtype,
-            pickle_file,
-            str(pt_results)
-        ))
+        # raise Exception("phylotyper.to_dict() couldnt find loci for file: {0}, subtype: {1}, pickle_file, {2}, with dataframe {3}".format(
+        #     pt_file,
+        #     subtype,
+        #     pickle_file,
+        #     str(pt_results)
+        # ))
         pt_results = {
             'subtype': 'No loci',
         }
@@ -331,7 +331,7 @@ def ignorant(genome_uri, subtype, pickle_file):
         pt_dict['stop'][k].append(row['endPos'])
 
     if not results:
-        raise Exception("ignorant() could not find phylotyper results for genome_uri: {0}, subtype: {1}, with pickle_file: {2}".format(genome_uri, subtype, pickle_file))
+        # raise Exception("ignorant() could not find phylotyper results for genome_uri: {0}, subtype: {1}, with pickle_file: {2}".format(genome_uri, subtype, pickle_file))
         pt_dict = {
             'subtype': 'No loci'
         }
