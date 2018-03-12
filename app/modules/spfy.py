@@ -53,7 +53,7 @@ if config.BACKLOG_ENABLED:
     backlog_multiples_q = Queue(
         'backlog_multiples', connection=redis_conn, default_timeout=config.DEFAULT_TIMEOUT)
 
-def _ectyper_pipeline_vf(query_file, single_dict, pipeline=None, backlog=False):
+def _ectyper_pipeline_vf(query_file, single_dict, display_vf=True, pipeline=None, backlog=False):
     """
     Enqueue all the jobs required for VF.
     """
@@ -132,7 +132,7 @@ def _ectyper_pipeline_vf(query_file, single_dict, pipeline=None, backlog=False):
                 name='job_ectyper_beautify_vf',
                 transitory=False,
                 backlog=backlog,
-                display=True
+                display=display_vf
             )
         })
     return d
@@ -416,12 +416,24 @@ def blob_savvy_enqueue(single_dict, pipeline):
         )
     })
 
+    # A check to allow hiding of VF results if only Phylotyper chosen.
+    if single_dict['options']['stx1'] or single_dict['options']['stx2'] or single_dict['options']['eae']:
+        chose_phylotyper = True
+    else:
+        chose_phylotyper = False
+    # Didn't choose VF, but chose phylotyper.
+    if not single_dict['options']['vf'] and chose_phylotyper:
+        # Don't display VF.
+        display_vf = False
+    else:
+        display_vf = True
     ## ECTyper (VF & Serotype)
     # VF
     if single_dict['options']['vf']:
         ectyper_vf_jobs = _ectyper_pipeline_vf(
             query_file,
             single_dict,
+            display_vf=display_vf,
             pipeline=pipeline
         )
         # pipeline.jobs.update(ectyper_vf_jobs)
