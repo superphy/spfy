@@ -72,6 +72,8 @@ def _ectyper_pipeline_vf(query_file, single_dict, display_vf=True, pipeline=None
     # This copy is passed to the old ECTyper.
     single_dict_vf = copy.deepcopy(single_dict)
     single_dict_vf['options']['serotype'] = False
+    # Rewrite the VF option too, case called this for Phylotyper.
+    single_dict_vf['options']['vf'] = True
     # Enqueue the old ECTyper
     job_ectyper_vf = singles.enqueue(
         call_ectyper_vf,
