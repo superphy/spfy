@@ -49,8 +49,6 @@ services:
       context: .
       dockerfile: Dockerfile-rq-phylotyper
     image: backend-rq-phylotyper
-    ports:
-    - "9181:9181" #this is for debugging, drop a shell and run rq-dashboard if you need to see jobs
     volumes_from:
     - webserver
     depends_on:
