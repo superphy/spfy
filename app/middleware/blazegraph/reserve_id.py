@@ -1,8 +1,8 @@
 import os
 import logging
 from datetime import datetime
-from modules.turtleGrapher.turtle_utils import generate_hash, generate_uri as gu, link_uris
-from modules.blazeUploader.upload_graph import upload_graph
+from middleware.graphers.turtle_utils import generate_hash, generate_uri as gu, link_uris
+from middleware.blazegraph.upload_graph import upload_graph
 from SPARQLWrapper import SPARQLWrapper, JSON
 from rdflib import Literal, Graph
 import config

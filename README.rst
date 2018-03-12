@@ -7,11 +7,10 @@
 Live: https://lfz.corefacility.ca/superphy/spfy/
 
 Platform for predicting Serotype & Virulence Factors (via
-`ECTyper <https://github.com/phac-nml/ecoli_serotyping>`__) and
+`ECTyper <https://github.com/phac-nml/ecoli_serotyping>`__),
 Antimicrobial Resistance (via
 `CARD <https://card.mcmaster.ca/analyze/rgi>`__) from E.coli genome
-sequences bundled using task queues (RQ) and a SPA front-end
-(React/Flask).
+sequences, and builds graph data from results + metadata for population-wide comparative analyses.
 
 .. image:: screenshots/screen-results_list.png
     :align: center

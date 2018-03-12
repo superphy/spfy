@@ -1,6 +1,6 @@
 import logging
 from modules.loggingFunctions import initialize_logging
-from modules.groupComparisons.logical_queries import resolve_spfyids, resolve_spfyids_negated
+from modules.comparisons.logical_queries import resolve_spfyids, resolve_spfyids_negated
 
 # logging
 log_file = initialize_logging()

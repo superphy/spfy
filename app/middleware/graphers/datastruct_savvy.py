@@ -1,11 +1,39 @@
 import cPickle as pickle
 from rdflib import BNode, Literal, Graph
-from modules.turtleGrapher.turtle_utils import generate_uri as gu, generate_hash, link_uris
-from modules.turtleGrapher.turtle_grapher import generate_graph
-from modules.blazeUploader.upload_graph import queue_upload
+from middleware.graphers.turtle_utils import generate_uri as gu, generate_hash, link_uris
+from middleware.graphers.turtle_grapher import generate_graph
+from middleware.blazegraph.upload_graph import queue_upload
 from modules.PanPredic.pan_utils import contig_name_parse
+from middleware.models import SubtypingResult, unpickle
 # working with Serotype, Antimicrobial Resistance, & Virulence Factor data
 # structures
+
+def _graph_subtyping(graph, model, uriIsolate):
+    # Convert the model to a graph.
+    # struct = model.to_struct()
+    rows_list = model
+    for row in rows_list:
+        o_type, h_type = row['hitname'].split(':')
+        graph.add((
+            uriIsolate,
+            gu('ge:0001076'),
+            Literal(o_type)
+        ))
+        graph.add((
+            uriIsolate,
+            gu('ge:0001077'),
+            Literal(h_type)
+        ))
+    return graph
+
+def model_to_graph(graph, model, uriIsolate):
+    # Validate the model submitted before processing.
+    # model.validate()
+    # Conversion.
+    if isinstance(model, list):
+        return _graph_subtyping(graph, model, uriIsolate)
+    else:
+        raise Exception('model_to_graph() called for a model without a handler.')
 
 def parse_serotype(graph, serotyper_dict, uriIsolate):
     if 'O type' in serotyper_dict:
@@ -74,6 +102,10 @@ def parse_gene_dict(graph, gene_dict, uriGenome, geneType):
             # some gene names, esp those which are effectively a description,
             # have spaces
             gene_name = gene_record['GENE_NAME'].replace(' ', '_')
+            # Workaround to assume all eae alleles are just eae.
+            # See https://github.com/superphy/spfy/pull/274
+            if gene_name.startswith('eae'):
+                gene_name = 'eae'
             uriGene = gu(':' + gene_name)
             # define the object type of the gene
             graph.add((uriGene, gu('rdf:type'), gu(':' + geneType)))
@@ -148,7 +180,7 @@ def parse_gene_dict(graph, gene_dict, uriGenome, geneType):
 
 def generate_datastruct(query_file, id_file, pickled_dictionary):
     '''
-    This is simply to decouple the graph generation code from the
+    Separates the graph generation code from the
     upload code. In RQ backend, the datastruct_savvy() method is called
     where-as in savvy.py (without RQ or Blazegraph) only compute_datastruct()
     is called. The return type must be the same in datastruct_savvy to
@@ -168,22 +200,29 @@ def generate_datastruct(query_file, id_file, pickled_dictionary):
         spfyid = int(l)
     uriIsolate = gu(':spfy' + str(spfyid))
 
-    # results dict retrieval
-    results_dict = pickle.load(open(pickled_dictionary, 'rb'))
-
-    # graphing functions
-    for key in results_dict.keys():
-        if key == 'Serotype':
-            graph = parse_serotype(graph,results_dict['Serotype'],uriIsolate)
-        elif key == 'Virulence Factors':
-            graph = parse_gene_dict(graph, results_dict['Virulence Factors'], uriGenome, 'VirulenceFactor')
-        elif key == 'Antimicrobial Resistance':
-            graph = parse_gene_dict(graph, results_dict['Antimicrobial Resistance'], uriGenome,
-                                    'AntimicrobialResistanceGene')
-        #elif key == 'PanGenomeRegion':
-         #   graph = parse_gene_dict(graph, results_dict[key], uriGenome, key)
-
-    return graph
+    # Unpickle.
+    results = unpickle(pickled_dictionary)
+    # Ensure this isn't empty.
+    assert results
+    # Check if we have a model or a dictionary.
+    if isinstance(results, dict):
+        # graphing functions
+        for key in results:
+            if key == 'Serotype':
+                graph = parse_serotype(graph,results['Serotype'],uriIsolate)
+            elif key == 'Virulence Factors':
+                graph = parse_gene_dict(graph, results['Virulence Factors'], uriGenome, 'VirulenceFactor')
+            elif key == 'Antimicrobial Resistance':
+                graph = parse_gene_dict(graph, results['Antimicrobial Resistance'], uriGenome,
+                                        'AntimicrobialResistanceGene')
+            else:
+                raise Exception("generate_datastruct() failed to find key for query_file: {0}, pickled_dictionary: {1}, with results dictionary: {2}".format(query_file, pickled_dictionary, str(results)))
+        return graph
+    elif isinstance(results, list):
+        graph = model_to_graph(graph, results, uriIsolate)
+        return graph
+    else:
+        raise Exception("generate_datastruct() could not handle pickled file: {0}.".format(pickled_dictionary))
 
 def datastruct_savvy(query_file, id_file, pickled_dictionary):
     """

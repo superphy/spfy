@@ -1,7 +1,7 @@
 #!/usr/bin/env python2
 # -*- coding: UTF-8 -*-
 
-# use: python -m modules.savvy -i /home/kevin/Desktop/nonGenBankEcoli/ECI-2866_lcl.fasta
+# use: python -m scripts.savvy -i /home/kevin/Desktop/nonGenBankEcoli/ECI-2866_lcl.fasta
 
 # S:erotype
 # A:ntimicrobial Resistance
@@ -16,16 +16,16 @@ import tempfile
 import shutil
 import json
 from modules.qc.qc import qc
-from modules.blazeUploader.reserve_id import write_reserve_id
-from modules.ectyper.call_ectyper import call_ectyper
+from middleware.blazegraph.reserve_id import write_reserve_id
+from modules.ectyper.call_ectyper import call_ectyper_vf, call_ectyper_serotype
 from modules.amr.amr import amr
 from modules.amr.amr_to_dict import amr_to_dict
-from modules.beautify.beautify import beautify
-from modules.turtleGrapher.datastruct_savvy import generate_datastruct
-from modules.turtleGrapher.turtle_grapher import generate_turtle_skeleton
-from modules.turtleGrapher.turtle_utils import generate_hash, generate_uri as gu
+from middleware.display.beautify import beautify
+from middleware.graphers.datastruct_savvy import generate_datastruct
+from middleware.graphers.turtle_grapher import generate_turtle_skeleton
+from middleware.graphers.turtle_utils import generate_hash, generate_uri as gu
 from modules.loggingFunctions import initialize_logging
-from modules.blazeUploader.reserve_id import reservation_triple
+from middleware.blazegraph.reserve_id import reservation_triple
 
 log_file = initialize_logging()
 log = logging.getLogger(__name__)
@@ -119,16 +119,16 @@ def savvy(args_dict, return_graphs=False):
     reservation_ttl = write_graph(reservation_graph, 'reservation')
 
     # (3) ECTyper Step:
-    ectyper_p = call_ectyper(args_dict)
+    ectyper_p = call_ectyper_vf(args_dict) # call_ectyper_vf is the older ver.
     log.debug("Pickled ECTyper File: " + ectyper_p)
 
     # (4) ECTyper Beautify Step:
-    ectyper_beautify = beautify(args_dict, ectyper_p)
+    ectyper_beautify = beautify(ectyper_p, args_dict)
     log.debug('Beautified ECTyper Result: ' + str(ectyper_beautify))
     ectyper_json = write_json(ectyper_beautify, 'ectyper')
 
     # (5) Graphing ECTyper Result:
-    ectyper_graph = generate_datastruct(query_file, query_file + '_id.txt', query_file + '_ectyper.p')
+    ectyper_graph = generate_datastruct(query_file, query_file + '_id.txt', ectyper_p)
 
     ectyper_ttl = write_graph(ectyper_graph, 'ectyper')
     log.debug('Graph Result for ECtyper: ' + ectyper_ttl)
@@ -142,7 +142,7 @@ def savvy(args_dict, return_graphs=False):
     log.debug("Pickled AMR Results File: " + amr_p)
 
     # (8) AMR Beautify Step:
-    amr_beautify = beautify(args_dict, amr_p)
+    amr_beautify = beautify(amr_p, args_dict)
     log.debug('Beautified AMR Result: ' + str(amr_beautify))
     amr_json = write_json(amr_beautify, 'rgi')
 

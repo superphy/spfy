@@ -14,6 +14,8 @@ MAX_TIME_TO_WAIT = 10
 # enqueued function to complete before terminating it with and ERROR
 # If note specified, jobs must execute within 3 mins
 DEFAULT_TIMEOUT = 600 # in seconds (ie. 10 mins)
+# Defines how long results are kept in Redis. 500 is the default for RQ.
+DEFAULT_RESULT_TTL=500
 PAN_TIMEOUT = 100000
 # if BACKLOG_ENABLED = True, then all analyses modules will be run in the
 # in the background for every submitted file
