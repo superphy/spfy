@@ -2,6 +2,7 @@
 # allows bypassing of reactapp front-end to load genome files into RQ
 import os
 from modules.spfy import spfy
+from middleware.models import Pipeline
 
 def create_request(f):
     '''
@@ -20,7 +21,7 @@ def create_request(f):
         'vf': True,
         'serotype': True,
         'bulk': True,
-        'groupresults': False,
+        'groupresults': True,
         'prob': 90,
         'stx1': True,
         'stx2': True,
@@ -43,7 +44,8 @@ def load(directory='/datastore'):
     p = 0
     while p < len_files:
         d = create_request(list_files[p])
-        spfy(d)
+        pipeline = Pipeline()
+        spfy(d, pipeline)
         p += 1
         print str(p) + '/' + str(len_files) + ' enqueued'
 
