@@ -15,17 +15,30 @@ def create_request(f):
     # add defaults for options
     pi = 90
     d['pi'] = pi
+    # options = {
+    #     'pi': pi,
+    #     'amr': True,
+    #     'vf': True,
+    #     'serotype': True,
+    #     'bulk': True,
+    #     'groupresults': True,
+    #     'prob': 90,
+    #     'stx1': True,
+    #     'stx2': True,
+    #     'eae': True,
+    #     'pan': True
+    # }
     options = {
         'pi': pi,
-        'amr': True,
-        'vf': True,
-        'serotype': True,
+        'amr': False,
+        'vf': False,
+        'serotype': False,
         'bulk': True,
         'groupresults': True,
         'prob': 90,
-        'stx1': True,
-        'stx2': True,
-        'eae': True,
+        'stx1': False,
+        'stx2': False,
+        'eae': False,
         'pan': True
     }
     d['options'] = options
