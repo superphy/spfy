@@ -57,7 +57,11 @@ def load(directory='/datastore'):
     p = 0
     while p < len_files:
         d = create_request(list_files[p])
-        pipeline = Pipeline()
+        pipeline = = Pipeline(
+            files = list_files[p],
+            func = spfy,
+            options = d
+        )
         spfy(d, pipeline)
         p += 1
         print str(p) + '/' + str(len_files) + ' enqueued'
