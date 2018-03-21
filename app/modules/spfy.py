@@ -52,6 +52,8 @@ if config.BACKLOG_ENABLED:
     backlog_singles_q = Queue('backlog_singles', connection=redis_conn)
     backlog_multiples_q = Queue(
         'backlog_multiples', connection=redis_conn, default_timeout=config.DEFAULT_TIMEOUT)
+    backlog_phylotyper_q = Queue('backlog_phylotyper', connection=redis_conn,
+                        default_timeout=config.DEFAULT_TIMEOUT)
 
 def _ectyper_pipeline_vf(query_file, single_dict, display_vf=True, pipeline=None, backlog=False):
     """
@@ -308,14 +310,16 @@ def _phylotyper_pipeline(subtype, query_file, pipeline=None, backlog=False):
     # Alias queues.
     if not backlog:
         multiples = multiples_q
+        phylo = phylotyper_q
     else:
         multiples = backlog_multiples_q
+        phylo = backlog_phylotyper_q
 
     jobname = '_pt' +subtype
     tsvfile = query_file + jobname + '.tsv'
     picklefile = query_file + jobname + '.p'
 
-    job_pt = phylotyper_q.enqueue(
+    job_pt = phylo.enqueue(
         phylotyper.phylotyper,
         None,
         subtype,
