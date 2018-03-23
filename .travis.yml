@@ -6,6 +6,8 @@ python:
   - "2.7"
 before_install:
   - sudo apt-get update
+  # Turn off O_NONBLOCK. See https://github.com/travis-ci/travis-ci/issues/4704#issuecomment-348435959
+  - python -c 'import os,sys,fcntl; flags = fcntl.fcntl(sys.stdout, fcntl.F_GETFL); fcntl.fcntl(sys.stdout, fcntl.F_SETFL, flags&~os.O_NONBLOCK);'
   #### Docker:
   - docker build -t superphy/backend:2.0.0 -f Dockerfile-spfy .
   - docker build -t superphy/backend-rq:2.0.0 -f Dockerfile-rq .
