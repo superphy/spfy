@@ -8,6 +8,8 @@ before_install:
   - sudo apt-get update
   # Turn off O_NONBLOCK. See https://github.com/travis-ci/travis-ci/issues/4704#issuecomment-348435959
   - python -c 'import os,sys,fcntl; flags = fcntl.fcntl(sys.stdout, fcntl.F_GETFL); fcntl.fcntl(sys.stdout, fcntl.F_SETFL, flags&~os.O_NONBLOCK);'
+  # Increase workers for NODE DNS resolution. https://stackoverflow.com/questions/35387264/node-js-request-module-getting-etimedout-and-esockettimedout
+  - export UV_THREADPOOL_SIZE=128
   #### Docker:
   - docker-compose up -d
   - docker ps -a
