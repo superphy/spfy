@@ -45,6 +45,8 @@ install:
   - conda env update -q -f environment-webserver.yml
   # Install pytest
   - pip install pytest
+  # Install any additional requirements for tests.
+  - pip install -r tests/test_requirements.txt
 script:
   #### Run Pytest
   - python -m pytest --ignore modules/ectyper/ecoli_serotyping -v
