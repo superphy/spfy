@@ -37,3 +37,12 @@ def test_rq_ttl_finished():
     assert result_ttl_job.is_finished == 'cats'
     assert result_ttl_job.is_failed == 'cats'
     assert result_ttl_job.result == 'cats'
+
+def test_rq_job_stats():
+    '''Check timings from RQ Jobs.
+    '''
+    for s in range(0,16,5):
+        job = queue.enqueue(_mock_complete,s)
+        start = job.started_at
+        stop = job.ended_at
+        assert 'start: {0}, stop: {1}'.format(start,stop) == 'cats'
