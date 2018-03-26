@@ -89,7 +89,7 @@ def job_status_reactapp(job_id):
     '''
     This provides an endpoint for the reactapp to poll results. We leave job_status() intact to maintain backwards compatibility with the AngularJS app.
     '''
-    # start a redis connection
+    # Start a redis connection.
     redis_url = current_app.config['REDIS_URL']
     redis_connection = redis.from_url(redis_url)
     # new to 4.2.0
