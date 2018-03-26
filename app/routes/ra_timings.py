@@ -16,5 +16,5 @@ def job_timings(job_id):
 
     start = job.started_at
     stop = job.ended_at
-    s = start - stop
-    return jsonify(s)
+    timedelta = start - stop
+    return jsonify(str(timedelta))
