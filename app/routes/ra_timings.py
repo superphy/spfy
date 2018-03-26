@@ -5,7 +5,11 @@ bp_ra_timings = Blueprint('reactapp_timings', __name__)
 
 @bp_ra_timings.route('/api/v0/timings/<job_id>')
 def job_timings(job_id):
-    job = fetch_job()
+    # Start a redis connection.
+    redis_url = current_app.config['REDIS_URL']
+    redis_connection = redis.from_url(redis_url)
+
+    job = fetch_job(job_id, redis_connection)
     assert job.is_finished
 
     start = job.started_at
