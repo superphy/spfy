@@ -1,3 +1,5 @@
+import redis
+
 from flask import Blueprint, jsonify, current_app
 from routes.job_utils import fetch_job
 
