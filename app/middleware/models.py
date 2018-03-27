@@ -142,6 +142,13 @@ class Job():
         self.backlog = backlog
         self.display = display
 
+    def time(self):
+        assert self.rq_job.is_finished
+        start = self.rq_job.started_at
+        stop = self.rq_job.ended_at
+        timedelta = stop - start
+        return timedelta.total_seconds()
+
 class Pipeline():
     def __init__(self, jobs=None, files=None, func=None, options=None):
         if not jobs:
@@ -203,6 +210,13 @@ class Pipeline():
                 return False
         return True
 
+    def _completed_jobs(self):
+        completed_jobs = [
+            j for j in self.final_jobs
+            if j.display and not j.backlog and j.rq_job.is_finished and not j.rq_job.is_failed
+        ]
+        return completed_jobs
+
     def to_json(self):
         """
         Reduces all results from self.jobs to json for return. Note: currently
@@ -210,10 +224,7 @@ class Pipeline():
         to dict a some point.
         """
         # Gather all the jobs that have finished and haven't failed.
-        completed_jobs = [
-            j for j in self.final_jobs
-            if j.display and not j.backlog and j.rq_job.is_finished and not j.rq_job.is_failed
-        ]
+        completed_jobs = _completed_jobs()
         print("to_json() completed_jobs: {0}".format(str(completed_jobs)))
         # Merge the json lists together.
         l = []
@@ -228,6 +239,11 @@ class Pipeline():
             list_json = model_to_json(model)
             l += list_json
         return jsonify(l)
+
+    def timings(self):
+        completed_jobs = _completed_jobs()
+        l = [{j.name: j.time()} for j in completed_jobs]
+        return l
 
     def _function_signature(self):
         """
