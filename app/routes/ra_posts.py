@@ -236,9 +236,10 @@ def upload():
         jobs_dict = {}
 
         pipeline = Pipeline(
-            files = uploaded_files,
+            files = str(uploaded_files.sorted()),
             func = spfy,
-            options = options
+            options = options,
+            date = now
         )
 
         for file in uploaded_files:

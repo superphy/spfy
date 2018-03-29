@@ -8,6 +8,7 @@ from dis import dis
 from StringIO import StringIO
 from jsonmodels import models, fields
 from flask import jsonify
+from datetime import datetime
 from middleware.graphers.turtle_utils import actual_filename
 
 # def _convert_model(model):
@@ -150,13 +151,17 @@ class Job():
         return timedelta.total_seconds()
 
 class Pipeline():
-    def __init__(self, jobs=None, files=None, func=None, options=None):
+    def __init__(self, jobs=None, files=None, func=None, options=None, date=None):
         if not jobs:
             jobs = {}
         if not files:
             files = []
         if not options:
             options = {}
+        if not date:
+            now = datetime.now()
+            now = now.strftime("%Y-%m-%d-%H-%M-%S-%f")
+            date = now
         self.jobs = {} # {'somename': instance of RQ.Job} Only used when enqueing.
         self.final_jobs = [] # Jobs for every file in the request.
         self.cache = [] # For temporary storage of RQ.Jobs.
@@ -165,6 +170,7 @@ class Pipeline():
         self.func = func # Additional attribute for storing pipeline function.
         self.options = options
         self.signature() # Create & Store a signature for the pipeline.
+        self.date = date
 
     def cache_jobs(self):
         """
@@ -173,7 +179,7 @@ class Pipeline():
         self.cache += [self.jobs]
         self.jobs = {}
 
-    def merge_jobs(self):
+    def merge_jobs(self, drop=True):
         """
 
         """
@@ -186,6 +192,14 @@ class Pipeline():
             for d in self.cache
             for j in d.values()
         ]
+
+        # Drop the backlog jobs, makes for faster status checking.
+        if drop:
+            self.final_jobs = [
+                j
+                for j in self.final_jobs
+                if not j.backlog
+            ]
 
     def complete(self):
         """
