@@ -278,8 +278,8 @@ class Pipeline():
         # l is the actual return list.
         l = [{j.name: j.time()} for j in self.cache]
         # Tabulate starts and stops.
-        starts = [i[0] for i in l.values() if i[0]]
-        stops = [i[1] for i in l.values() if i[1]]
+        starts = [i.values()[0][0] for i in l if i.values()[0][0]]
+        stops = [i.values()[0][1] for i in l if i.values()[0][1]]
         # Calculate min/max datetime.date values.
         mn = starts[0]
         for i in starts:
