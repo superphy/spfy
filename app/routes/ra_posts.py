@@ -231,7 +231,8 @@ def upload():
         for file in uploaded_files:
             print(str(file))
             print(secure_filename(file.filename))
-        names = [secure_filename(file.filename) for file in uploaded_files if file]
+        names = [secure_filename(file.filename) for file in uploaded_files]
+        print('upload(), names: {0}'.format(names))
         names = names.sort()
         print('upload(), names: {0}'.format(names))
 
