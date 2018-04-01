@@ -149,7 +149,7 @@ class Job():
         redis_url = config.REDIS_URL
         redis_connection = redis.from_url(redis_url)
 
-        job = fetch_job(str(self.rq_job), redis_connection)
+        job = fetch_job(self.rq_job.get_id(), redis_connection)
 
         assert job.is_finished
         start = job.started_at
