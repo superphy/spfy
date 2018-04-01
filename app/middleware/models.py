@@ -153,7 +153,7 @@ class Job():
 
         assert job.is_finished
         start = job.started_at
-        stop = job.rq_job.ended_at
+        stop = job.ended_at
         try:
             timedelta = stop - start
             return timedelta.total_seconds()
