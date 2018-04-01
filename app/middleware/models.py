@@ -149,6 +149,8 @@ class Job():
         redis_url = config.REDIS_URL
         redis_connection = redis.from_url(redis_url)
 
+        # While you can call rq_job.result without refetching, you must refetch
+        # do get the start and stop times.
         job = fetch_job(self.rq_job.get_id(), redis_connection)
 
         assert job.is_finished
@@ -156,10 +158,11 @@ class Job():
         stop = job.ended_at
         try:
             timedelta = stop - start
-            return timedelta.total_seconds()
+            sec = timedelta.total_seconds()
         except:
             print('model.Job.time(): could not calculate time for {0} of type {1} with content {2}'.format(self.name, type(self.rq_job), self.rq_job))
-            return 0
+            sec = 0
+        return (start,stop,sec)
 
 class Pipeline():
     def __init__(self, jobs=None, files=None, func=None, options=None, date=None):
@@ -272,7 +275,22 @@ class Pipeline():
         return jsonify(l)
 
     def timings(self):
+        # l is the actual return list.
         l = [{j.name: j.time()} for j in self.cache]
+        # Tabulate starts and stops.
+        starts = [i[0] for i in l.values() if i[0]]
+        stops = [i[1] for i in l.values() if i[1]]
+        # Calculate min/max datetime.date values.
+        mn = starts[0]
+        for i in starts:
+            if i < mn:
+                mn = i
+        mx = stops[0]
+        for i in stops:
+            if i > mx:
+                mx = i
+        # Append total runtime.
+        l.append({'total': (mx-mn).total_seconds()})
         return l
 
     def _function_signature(self):
