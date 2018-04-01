@@ -1,5 +1,6 @@
 import os
 import requests
+import argparse
 from time import sleep
 import json
 
@@ -11,7 +12,7 @@ def get(identifier, barcode, dl_folder):
             fl.write(f.text)
             print('wrote ' + fn)
 
-def enterobase():
+def enterobase(c=None):
     '''
     Downloads all the E.coli genomes from Enterobase.
     '''
@@ -76,6 +77,11 @@ def enterobase():
                 try:
                     get(identifier, barcode, dl_folder)
                     i = 10
+                    # If a max # genomes was supplied.
+                    if c and c=1:
+                        return 0
+                    elif c:
+                        c -= 1
                 except:
                     print('sleeping ' + str(i) + ' min')
                     sleep(60 * i)
@@ -84,4 +90,13 @@ def enterobase():
 
 
 if __name__ == '__main__':
-    enterobase()
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "-c",
+        help="# of Genomes to Download (default = all available).",
+        required=False
+    )
+    args = parser.parse_args()
+
+    enterobase(args.c)
