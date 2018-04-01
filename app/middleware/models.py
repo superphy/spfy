@@ -147,7 +147,10 @@ class Job():
         assert self.rq_job.is_finished
         start = self.rq_job.started_at
         stop = self.rq_job.ended_at
-        timedelta = stop - start
+        try:
+            timedelta = stop - start
+        except:
+            raise Exception('model.Job.time(): could not calculate time for {0}'.format(self.name))
         return timedelta.total_seconds()
 
 class Pipeline():
@@ -256,6 +259,7 @@ class Pipeline():
 
     def timings(self):
         completed_jobs = self._completed_jobs()
+        print(str(completed_jobs))
         l = [{j.name: j.time()} for j in completed_jobs]
         return l
 
