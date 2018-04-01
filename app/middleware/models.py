@@ -8,7 +8,9 @@ from dis import dis
 from StringIO import StringIO
 from jsonmodels import models, fields
 from flask import jsonify
+from datetime import datetime
 from middleware.graphers.turtle_utils import actual_filename
+from routes.job_utils import fetch_job
 
 # def _convert_model(model):
 #     # Convert the model to a generic JSON structure.
@@ -142,14 +144,38 @@ class Job():
         self.backlog = backlog
         self.display = display
 
+    def time(self):
+        # Start a Redis connection.
+        redis_url = config.REDIS_URL
+        redis_connection = redis.from_url(redis_url)
+
+        # While you can call rq_job.result without refetching, you must refetch
+        # do get the start and stop times.
+        job = fetch_job(self.rq_job.get_id(), redis_connection)
+
+        assert job.is_finished
+        start = job.started_at
+        stop = job.ended_at
+        try:
+            timedelta = stop - start
+            sec = timedelta.total_seconds()
+        except:
+            print('model.Job.time(): could not calculate time for {0} of type {1} with content {2}'.format(self.name, type(self.rq_job), self.rq_job))
+            sec = 0
+        return (start,stop,sec)
+
 class Pipeline():
-    def __init__(self, jobs=None, files=None, func=None, options=None):
+    def __init__(self, jobs=None, files=None, func=None, options=None, date=None):
         if not jobs:
             jobs = {}
         if not files:
             files = []
         if not options:
             options = {}
+        if not date:
+            now = datetime.now()
+            now = now.strftime("%Y-%m-%d-%H-%M-%S-%f")
+            date = now
         self.jobs = {} # {'somename': instance of RQ.Job} Only used when enqueing.
         self.final_jobs = [] # Jobs for every file in the request.
         self.cache = [] # For temporary storage of RQ.Jobs.
@@ -158,6 +184,7 @@ class Pipeline():
         self.func = func # Additional attribute for storing pipeline function.
         self.options = options
         self.signature() # Create & Store a signature for the pipeline.
+        self.date = date
 
     def cache_jobs(self):
         """
@@ -166,7 +193,7 @@ class Pipeline():
         self.cache += [self.jobs]
         self.jobs = {}
 
-    def merge_jobs(self):
+    def merge_jobs(self, drop=True):
         """
 
         """
@@ -179,6 +206,20 @@ class Pipeline():
             for d in self.cache
             for j in d.values()
         ]
+
+        # Drop the backlog jobs, makes for faster status checking.
+        if drop:
+            self.final_jobs = [
+                j
+                for j in self.final_jobs
+                if not j.backlog
+            ]
+            self.cache = [
+                j
+                for d in self.cache
+                for j in d.values()
+                if not j.backlog
+            ]
 
     def complete(self):
         """
@@ -203,6 +244,13 @@ class Pipeline():
                 return False
         return True
 
+    def _completed_jobs(self):
+        completed_jobs = [
+            j for j in self.final_jobs
+            if j.display and not j.backlog and j.rq_job.is_finished and not j.rq_job.is_failed
+        ]
+        return completed_jobs
+
     def to_json(self):
         """
         Reduces all results from self.jobs to json for return. Note: currently
@@ -210,10 +258,7 @@ class Pipeline():
         to dict a some point.
         """
         # Gather all the jobs that have finished and haven't failed.
-        completed_jobs = [
-            j for j in self.final_jobs
-            if j.display and not j.backlog and j.rq_job.is_finished and not j.rq_job.is_failed
-        ]
+        completed_jobs = self._completed_jobs()
         print("to_json() completed_jobs: {0}".format(str(completed_jobs)))
         # Merge the json lists together.
         l = []
@@ -228,6 +273,26 @@ class Pipeline():
             list_json = model_to_json(model)
             l += list_json
         return jsonify(l)
+
+    def timings(self):
+        # l is the actual return list.
+        l = [{j.name: j.time()} for j in self.cache]
+        # Tabulate starts and stops.
+        starts = [i.values()[0][0] for i in l if i.values()[0][0]]
+        stops = [i.values()[0][1] for i in l if i.values()[0][1]]
+        # Calculate min/max datetime.date values.
+        mn = starts[0]
+        for i in starts:
+            if i < mn:
+                mn = i
+        mx = stops[0]
+        for i in stops:
+            if i > mx:
+                mx = i
+        # Append total runtime.
+        sec = (mx-mn).total_seconds()
+        l.append({'total': (mn,mx,sec)})
+        return l
 
     def _function_signature(self):
         """

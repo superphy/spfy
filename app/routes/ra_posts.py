@@ -225,9 +225,10 @@ def upload():
                 if key =='options.prob':
                     options['prob']=float(value)
 
-        # get a list of files submitted
+        # Get a list of files submitted.
         uploaded_files = request.files.getlist("file")
-        print uploaded_files
+        names = [secure_filename(file.filename) for file in uploaded_files]
+        names = sorted(names)
 
         print 'upload(): about to enqueue files'
         #set up constants for identifying this sessions
@@ -236,9 +237,10 @@ def upload():
         jobs_dict = {}
 
         pipeline = Pipeline(
-            files = uploaded_files,
+            files = str(names),
             func = spfy,
-            options = options
+            options = options,
+            date = now
         )
 
         for file in uploaded_files:
