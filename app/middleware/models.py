@@ -204,6 +204,12 @@ class Pipeline():
                 for j in self.final_jobs
                 if not j.backlog
             ]
+            self.cache = [
+                j
+                for d in self.cache
+                for j in d.values()
+                if not j.backlog
+            ]
 
     def complete(self):
         """
@@ -259,9 +265,7 @@ class Pipeline():
         return jsonify(l)
 
     def timings(self):
-        completed_jobs = self._completed_jobs()
-        print(str(completed_jobs))
-        l = [{j.name: j.time()} for j in completed_jobs]
+        l = [{j.name: j.time()} for j in self.cache]
         return l
 
     def _function_signature(self):
