@@ -151,7 +151,7 @@ class Job():
             timedelta = stop - start
             return timedelta.total_seconds()
         except:
-            print('model.Job.time(): could not calculate time for {0}'.format(self.name))
+            print('model.Job.time(): could not calculate time for {0} of type {1} with content {2}'.format(self.name, type(self.rq_job), self.rq_job))
             return 0
 
 class Pipeline():
