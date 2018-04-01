@@ -149,9 +149,10 @@ class Job():
         stop = self.rq_job.ended_at
         try:
             timedelta = stop - start
+            return timedelta.total_seconds()
         except:
-            raise Exception('model.Job.time(): could not calculate time for {0}'.format(self.name))
-        return timedelta.total_seconds()
+            print('model.Job.time(): could not calculate time for {0}'.format(self.name))
+            return 0
 
 class Pipeline():
     def __init__(self, jobs=None, files=None, func=None, options=None, date=None):
