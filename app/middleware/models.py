@@ -10,6 +10,7 @@ from jsonmodels import models, fields
 from flask import jsonify
 from datetime import datetime
 from middleware.graphers.turtle_utils import actual_filename
+from routes.job_utils import fetch_job
 
 # def _convert_model(model):
 #     # Convert the model to a generic JSON structure.
@@ -144,9 +145,15 @@ class Job():
         self.display = display
 
     def time(self):
-        assert self.rq_job.is_finished
-        start = self.rq_job.started_at
-        stop = self.rq_job.ended_at
+        # Start a Redis connection.
+        redis_url = config.REDIS_URL
+        redis_connection = redis.from_url(redis_url)
+
+        job = fetch_job(str(self.rq_job), redis_connection)
+
+        assert job.is_finished
+        start = job.started_at
+        stop = job.rq_job.ended_at
         try:
             timedelta = stop - start
             return timedelta.total_seconds()
