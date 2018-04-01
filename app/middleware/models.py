@@ -238,7 +238,7 @@ class Pipeline():
         to dict a some point.
         """
         # Gather all the jobs that have finished and haven't failed.
-        completed_jobs = _completed_jobs()
+        completed_jobs = self._completed_jobs()
         print("to_json() completed_jobs: {0}".format(str(completed_jobs)))
         # Merge the json lists together.
         l = []
@@ -255,7 +255,7 @@ class Pipeline():
         return jsonify(l)
 
     def timings(self):
-        completed_jobs = _completed_jobs()
+        completed_jobs = self._completed_jobs()
         l = [{j.name: j.time()} for j in completed_jobs]
         return l
 
