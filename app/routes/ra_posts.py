@@ -227,7 +227,10 @@ def upload():
 
         # get a list of files submitted
         uploaded_files = request.files.getlist("file")
-        print uploaded_files
+        print('upload(), uploaded_files: {0}'.format(uploaded_files))
+        names = [f.name for f in uploaded_files]
+        names = names.sort()
+        print('upload(), names: {0}'.format(names))
 
         print 'upload(): about to enqueue files'
         #set up constants for identifying this sessions
@@ -236,7 +239,7 @@ def upload():
         jobs_dict = {}
 
         pipeline = Pipeline(
-            files = str(uploaded_files.sorted()),
+            files = str(names),
             func = spfy,
             options = options,
             date = now
