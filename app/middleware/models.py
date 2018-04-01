@@ -290,7 +290,8 @@ class Pipeline():
             if i > mx:
                 mx = i
         # Append total runtime.
-        l.append({'total': (mx-mn).total_seconds()})
+        sec = (mx-mn).total_seconds()
+        l.append({'total': (mn,mx,sec)})
         return l
 
     def _function_signature(self):
