@@ -78,7 +78,7 @@ def enterobase(c=None):
                     get(identifier, barcode, dl_folder)
                     i = 10
                     # If a max # genomes was supplied.
-                    if c and c=1:
+                    if c and c==1:
                         return 0
                     elif c:
                         c -= 1
