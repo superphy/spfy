@@ -65,9 +65,8 @@ def _strains():
                     raise Warning('no assembly barcode found')
             strains[index]['assembly_barcode'] = assembly_barcode
         print("Finish mapping assembly barcode")
-        with open("strains.json", 'w') as outfile:
-            json.dump(strains, outfile, indent=4, separators=(',', ': '))
-        print("Modified strains file stored as strains.json")
+        pickle.dump(open(p, 'wb'))
+        print("Modified strains file stored as strains.p")
     return strains
 
 def enterobase(c=None):
