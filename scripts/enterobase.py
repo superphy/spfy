@@ -65,7 +65,7 @@ def _strains():
                     raise Warning('no assembly barcode found')
             strains[index]['assembly_barcode'] = assembly_barcode
         print("Finish mapping assembly barcode")
-        pickle.dump(open(p, 'wb'))
+        pickle.dump(strains, open(p, 'wb'))
         print("Modified strains file stored as strains.p")
     return strains
 
