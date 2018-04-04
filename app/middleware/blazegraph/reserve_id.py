@@ -127,7 +127,13 @@ def reserve_id(query_file):
         duplicate = int(uid=mongo_find(uriGenome), collection=config.MONGO_SPFYIDSCOLLECTION)
     except:
         # Otherwise, check from Blazegraph.
-        duplicate = check_duplicates(uriGenome)
+        if config.DATABASE_EXISTING:
+            duplicate = check_duplicates(uriGenome)
+            # Add the Blazegraph result to MongoDB for caching.
+            mongo_update(uid=uriGenome, json=duplicate, collection=config.MONGO_SPFYIDSCOLLECTION)
+        else:
+            # Restrict lookups to MongoDB, thus return no duplicates.
+            duplicate = None
     log.debug('check_duplicates() returned: ' + str(duplicate))
 
     # No duplicates were found, check the current largest spfyID.
@@ -136,12 +142,21 @@ def reserve_id(query_file):
         try:
             largest = int(uid=mongo_find('spfyid'), collection=config.MONGO_SPFYIDSCOLLECTION)
         except:
-            # If nothing found, find largest from Blazegraph.
-            largest = check_largest_spfyid()
-            # Store the ID that will be created.
-            mongo_update(uid='spfyid', json=largest+1, collection=config.MONGO_SPFYIDSCOLLECTION)
-            # Store the hash as well.
-            mongo_update(uid=uriGenome, json=largest+1, collection=config.MONGO_SPFYIDSCOLLECTION)
+            if config.DATABASE_BYPASS:
+                # Bypass Blazegraph, an start from an arbitrary id. The try:
+                # block will work after this run.
+                largest = config.DATABASE_BYPASS_START
+            if config.DATABASE_EXISTING:
+                # If no duplicate found, find largest from Blazegraph.
+                largest = check_largest_spfyid()
+            else:
+                # This is a fresh install; there is no cache in MongoDB and
+                # we're also not working from an existing Blazegraph DB.
+                largest = 0
+        # Store the ID that will be created.
+        mongo_update(uid='spfyid', json=largest+1, collection=config.MONGO_SPFYIDSCOLLECTION)
+        # Store the hash as well.
+        mongo_update(uid=uriGenome, json=largest+1, collection=config.MONGO_SPFYIDSCOLLECTION)
 
         # Create a rdflib.graph object with the new spfyID.
         graph = Graph()

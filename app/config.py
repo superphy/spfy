@@ -51,6 +51,16 @@ namespaces = {
 
 # Blazegraph defaults
 DATABASE_ENABLED = True
+# Normally, the spfyid:genomehash mapping is cached in MongoDB. Define
+# DATABASE_EXISTING = True to have spfyids looked up from Blazegraph if not
+# cached.
+DATABASE_EXISTING = False
+# Allows bypassing Blazegraph for ID lookups. If True, uses DATABASE_BYPASS_START
+# as the arbitrary starting spfyid.
+DATABASE_BYPASS = False
+DATABASE_BYPASS_START = 20000
+# Blazegraph URL.
+# TODO: use a var instead of a dict.
 database = {}
 #database['blazegraph_url'] = 'http://blazegraph:8080/bigdata/sparql'
 #database['blazegraph_url'] = 'http://localhost:9000/blazegraph/namespace/superphy/sparql'
