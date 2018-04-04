@@ -46,7 +46,7 @@ multiples_q = Queue('multiples', connection=redis_conn,
                     default_timeout=config.DEFAULT_TIMEOUT)
 phylotyper_q = Queue('phylotyper', connection=redis_conn,
                     default_timeout=config.DEFAULT_TIMEOUT)
-blazegraph_q = Queue('blazegraph', connection=redis_conn)
+blazegraph_q = Queue('blazegraph', connection=redis_conn, default_timeout=config.DEFAULT_TIMEOUT)
 if config.BACKLOG_ENABLED:
     # backlog queues
     backlog_singles_q = Queue('backlog_singles', connection=redis_conn)

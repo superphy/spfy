@@ -7,6 +7,7 @@ from SPARQLWrapper import SPARQLWrapper, JSON
 from rdflib import Literal, Graph
 import config
 from modules.loggingFunctions import initialize_logging
+from middleware.mongo import mongo_find, mongo_update
 
 log_file = initialize_logging()
 log = logging.getLogger(__name__)
@@ -123,8 +124,17 @@ def reserve_id(query_file):
     duplicate = check_duplicates(uriGenome)
     log.debug('check_duplicates() returned: ' + str(duplicate))
     if not duplicate:
-        # no duplicates were found, check the current largest spfyID
-        largest = check_largest_spfyid()
+        # No duplicates were found, check the current largest spfyID.
+        # Try from MongoDB cache first.
+        largest = mongo_find('spfyid')
+        if largest:
+            # Cast.
+            largest = int(largest)
+        else:
+            # If nothing found, find largest from Blazegraph.
+            largest = check_largest_spfyid()
+            # Store the ID that will be created.
+            mongo_update('spfyid', largest+1)
         # create a rdflib.graph object with the spfyID we want the new file to use
         graph = Graph()
         graph = reservation_triple(graph, uriGenome, largest+1)
