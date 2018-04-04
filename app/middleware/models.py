@@ -242,7 +242,7 @@ class Pipeline():
                 # Job finished, but the result_ttl timed out.
                 print("complete(): job {0} is finished but the result_ttl timed out.".format(j.name))
                 continue
-            elif not rq_job.is_finished:
+            elif not j.transitory and not rq_job.is_finished:
                 # One of the jobs hasn't finished.
                 print("complete(): job {0} is still pending with var: {1}.".format(j.name, rq_job.is_finished))
                 return False

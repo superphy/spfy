@@ -364,7 +364,8 @@ def _phylotyper_pipeline(subtype, query_file, pipeline=None, backlog=False):
             name='job'+jobname+'_datastruct',
             transitory=True,
             backlog=backlog,
-            display=False
+            display=False,
+            result_ttl=-1
         )
     })
 
