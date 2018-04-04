@@ -7,7 +7,7 @@ REDIS_URL = 'redis://redis:6379/0'
 # this is done to isolate the RQ-Blazegraph worker to avoid race conditions
 QUEUES = ['default']
 # QUEUES_SPFY is for spfy web-app to poll
-QUEUES_SPFY = ['singles', 'blazegraph', 'multiples', 'phylotyper', 'priority']
+QUEUES_SPFY = ['singles', 'blazegraph', 'multiples', 'amr', 'phylotyper', 'priority']
 BOOTSTRAP_SERVE_LOCAL = True
 MAX_TIME_TO_WAIT = 10
 # DEFAULT_TIMEOUT is used to tell the rq-workers tha maximum time to wait for an
@@ -51,6 +51,16 @@ namespaces = {
 
 # Blazegraph defaults
 DATABASE_ENABLED = True
+# Normally, the spfyid:genomehash mapping is cached in MongoDB. Define
+# DATABASE_EXISTING = True to have spfyids looked up from Blazegraph if not
+# cached.
+DATABASE_EXISTING = False
+# Allows bypassing Blazegraph for ID lookups. If True, uses DATABASE_BYPASS_START
+# as the arbitrary starting spfyid.
+DATABASE_BYPASS = False
+DATABASE_BYPASS_START = 20000
+# Blazegraph URL.
+# TODO: use a var instead of a dict.
 database = {}
 #database['blazegraph_url'] = 'http://blazegraph:8080/bigdata/sparql'
 #database['blazegraph_url'] = 'http://localhost:9000/blazegraph/namespace/superphy/sparql'
@@ -80,3 +90,4 @@ ALGORITHMS = ["RS256"]
 MONGO_DBNAME = 'spfydb'
 MONGO_URI = 'mongodb://mongodb:27017/'
 MONGO_ACCOUNTSCOLLECTION = 'accounts'
+MONGO_SPFYIDSCOLLECTION = 'spfyids'

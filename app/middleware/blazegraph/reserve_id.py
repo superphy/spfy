@@ -7,6 +7,7 @@ from SPARQLWrapper import SPARQLWrapper, JSON
 from rdflib import Literal, Graph
 import config
 from modules.loggingFunctions import initialize_logging
+from middleware.mongo import mongo_find, mongo_update
 
 log_file = initialize_logging()
 log = logging.getLogger(__name__)
@@ -120,12 +121,44 @@ def reserve_id(query_file):
     uriGenome = gu(':' + file_hash)
     log.debug(uriGenome)
 
-    duplicate = check_duplicates(uriGenome)
+    # Check if the genome hash is in the db.
+    try:
+        # Try to check duplicate from MongoDB cache first.
+        duplicate = int(uid=mongo_find(uriGenome), collection=config.MONGO_SPFYIDSCOLLECTION)
+    except:
+        # Otherwise, check from Blazegraph.
+        if config.DATABASE_EXISTING:
+            duplicate = check_duplicates(uriGenome)
+            # Add the Blazegraph result to MongoDB for caching.
+            mongo_update(uid=uriGenome, json=duplicate, collection=config.MONGO_SPFYIDSCOLLECTION)
+        else:
+            # Restrict lookups to MongoDB, thus return no duplicates.
+            duplicate = None
     log.debug('check_duplicates() returned: ' + str(duplicate))
+
+    # No duplicates were found, check the current largest spfyID.
     if not duplicate:
-        # no duplicates were found, check the current largest spfyID
-        largest = check_largest_spfyid()
-        # create a rdflib.graph object with the spfyID we want the new file to use
+        # Try from MongoDB cache first.
+        try:
+            largest = int(uid=mongo_find('spfyid'), collection=config.MONGO_SPFYIDSCOLLECTION)
+        except:
+            if config.DATABASE_BYPASS:
+                # Bypass Blazegraph, an start from an arbitrary id. The try:
+                # block will work after this run.
+                largest = config.DATABASE_BYPASS_START
+            if config.DATABASE_EXISTING:
+                # If no duplicate found, find largest from Blazegraph.
+                largest = check_largest_spfyid()
+            else:
+                # This is a fresh install; there is no cache in MongoDB and
+                # we're also not working from an existing Blazegraph DB.
+                largest = 0
+        # Store the ID that will be created.
+        mongo_update(uid='spfyid', json=largest+1, collection=config.MONGO_SPFYIDSCOLLECTION)
+        # Store the hash as well.
+        mongo_update(uid=uriGenome, json=largest+1, collection=config.MONGO_SPFYIDSCOLLECTION)
+
+        # Create a rdflib.graph object with the new spfyID.
         graph = Graph()
         graph = reservation_triple(graph, uriGenome, largest+1)
         # uploading the reservation graph secures the file->spfyID link
