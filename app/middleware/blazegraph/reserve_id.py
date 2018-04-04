@@ -121,10 +121,17 @@ def reserve_id(query_file):
     uriGenome = gu(':' + file_hash)
     log.debug(uriGenome)
 
-    duplicate = check_duplicates(uriGenome)
+    # Check if the genome hash is in the db.
+    try:
+        # Try to check duplicate from MongoDB cache first.
+        duplicate = int(mongo_find(uriGenome))
+    except:
+        # Otherwise, check from Blazegraph.
+        duplicate = check_duplicates(uriGenome)
     log.debug('check_duplicates() returned: ' + str(duplicate))
+    
+    # No duplicates were found, check the current largest spfyID.
     if not duplicate:
-        # No duplicates were found, check the current largest spfyID.
         # Try from MongoDB cache first.
         try:
             largest = int(mongo_find('spfyid'))
@@ -133,7 +140,10 @@ def reserve_id(query_file):
             largest = check_largest_spfyid()
             # Store the ID that will be created.
             mongo_update('spfyid', largest+1)
-        # create a rdflib.graph object with the spfyID we want the new file to use
+            # Store the hash as well.
+            mongo_update(uriGenome, largest+1)
+
+        # Create a rdflib.graph object with the new spfyID.
         graph = Graph()
         graph = reservation_triple(graph, uriGenome, largest+1)
         # uploading the reservation graph secures the file->spfyID link
