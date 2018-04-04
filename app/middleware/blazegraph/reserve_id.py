@@ -126,11 +126,9 @@ def reserve_id(query_file):
     if not duplicate:
         # No duplicates were found, check the current largest spfyID.
         # Try from MongoDB cache first.
-        largest = mongo_find('spfyid')
-        if largest:
-            # Cast.
-            largest = int(largest)
-        else:
+        try:
+            largest = int(mongo_find('spfyid'))
+        except:
             # If nothing found, find largest from Blazegraph.
             largest = check_largest_spfyid()
             # Store the ID that will be created.
