@@ -124,24 +124,24 @@ def reserve_id(query_file):
     # Check if the genome hash is in the db.
     try:
         # Try to check duplicate from MongoDB cache first.
-        duplicate = int(mongo_find(uriGenome))
+        duplicate = int(uid=mongo_find(uriGenome), collection=config.MONGO_SPFYIDSCOLLECTION)
     except:
         # Otherwise, check from Blazegraph.
         duplicate = check_duplicates(uriGenome)
     log.debug('check_duplicates() returned: ' + str(duplicate))
-    
+
     # No duplicates were found, check the current largest spfyID.
     if not duplicate:
         # Try from MongoDB cache first.
         try:
-            largest = int(mongo_find('spfyid'))
+            largest = int(uid=mongo_find('spfyid'), collection=config.MONGO_SPFYIDSCOLLECTION)
         except:
             # If nothing found, find largest from Blazegraph.
             largest = check_largest_spfyid()
             # Store the ID that will be created.
-            mongo_update('spfyid', largest+1)
+            mongo_update(uid='spfyid', json=largest+1, collection=config.MONGO_SPFYIDSCOLLECTION)
             # Store the hash as well.
-            mongo_update(uriGenome, largest+1)
+            mongo_update(uid=uriGenome, json=largest+1, collection=config.MONGO_SPFYIDSCOLLECTION)
 
         # Create a rdflib.graph object with the new spfyID.
         graph = Graph()

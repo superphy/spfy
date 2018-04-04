@@ -80,3 +80,4 @@ ALGORITHMS = ["RS256"]
 MONGO_DBNAME = 'spfydb'
 MONGO_URI = 'mongodb://mongodb:27017/'
 MONGO_ACCOUNTSCOLLECTION = 'accounts'
+MONGO_SPFYIDSCOLLECTION = 'spfyids'
