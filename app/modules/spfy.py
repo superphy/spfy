@@ -54,6 +54,8 @@ if config.BACKLOG_ENABLED:
     backlog_singles_q = Queue('backlog_singles', connection=redis_conn)
     backlog_multiples_q = Queue(
         'backlog_multiples', connection=redis_conn, default_timeout=config.DEFAULT_TIMEOUT)
+    backlog_amr_q = Queue(
+        'backlog_amr', connection=redis_conn, default_timeout=config.DEFAULT_TIMEOUT*2)
     backlog_phylotyper_q = Queue('backlog_phylotyper', connection=redis_conn,
                         default_timeout=config.DEFAULT_TIMEOUT)
 
@@ -226,11 +228,13 @@ def _amr_pipeline(query_file, single_dict, pipeline=None, backlog=False, bulk=Fa
     # Alias.
     job_id = pipeline.jobs['job_id'].rq_job
     if not backlog:
+        amrq = amr_q
         multiples = multiples_q
     else:
+        amrq = backlog_amr_q
         multiples = backlog_multiples_q
 
-    job_amr = amr_q.enqueue(amr, query_file, depends_on=job_id)
+    job_amr = amrq.enqueue(amr, query_file, depends_on=job_id)
     pipeline.jobs.update({
         'job_amr': Job(
             rq_job=job_amr,

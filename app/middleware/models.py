@@ -225,23 +225,28 @@ class Pipeline():
         """
         Check if all jobs are completed
         """
-        print("complete() checking status for: {0}".format(str(self.final_jobs)))
+        print("complete() checking status for: {0} with {1} # of final jobs.".format(self.sig, len(self.final_jobs)))
         for j in self.final_jobs:
             # Type check.
             assert isinstance(j, Job)
             rq_job = j.rq_job
             if j.backlog:
                 # Some backlog job, we don't care (though Sentry will catch it).
-                print("complete(): job {0} is in backlog.".format(j.name))
+                # print("complete(): job {0} is in backlog.".format(j.name))
                 continue
             elif rq_job.is_failed:
                 # If the job failed, return the error.
                 print("complete(): job {0} is failed with exc_info {1}.".format(j.name, rq_job.exc_info))
                 return rq_job.exc_info
+            elif rq_job.is_finished == None:
+                # Job finished, but the result_ttl timed out.
+                print("complete(): job {0} is finished but the result_ttl timed out.".format(j.name))
+                continue
             elif not rq_job.is_finished:
                 # One of the jobs hasn't finished.
-                print("complete(): job {0} is finished.".format(j.name))
+                print("complete(): job {0} is still pending with var: {1}.".format(j.name, rq_job.is_finished))
                 return False
+        print("complete() pipeline {0} is complete.".format(self.sig))
         return True
 
     def _completed_jobs(self):
