@@ -47,7 +47,7 @@ multiples_q = Queue('multiples', connection=redis_conn,
 amr_q = Queue('amr', connection=redis_conn,
                     default_timeout=config.DEFAULT_TIMEOUT*2)
 phylotyper_q = Queue('phylotyper', connection=redis_conn,
-                    default_timeout=config.DEFAULT_TIMEOUT)
+                    default_timeout=config.DEFAULT_TIMEOUT*2)
 blazegraph_q = Queue('blazegraph', connection=redis_conn, default_timeout=config.DEFAULT_TIMEOUT)
 if config.BACKLOG_ENABLED:
     # backlog queues
@@ -57,7 +57,7 @@ if config.BACKLOG_ENABLED:
     backlog_amr_q = Queue(
         'backlog_amr', connection=redis_conn, default_timeout=config.DEFAULT_TIMEOUT*2)
     backlog_phylotyper_q = Queue('backlog_phylotyper', connection=redis_conn,
-                        default_timeout=config.DEFAULT_TIMEOUT)
+                        default_timeout=config.DEFAULT_TIMEOUT*2)
 
 def _ectyper_pipeline_vf(query_file, single_dict, display_vf=True, pipeline=None, backlog=False):
     """
