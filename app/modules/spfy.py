@@ -44,6 +44,8 @@ redis_conn = redis.from_url(redis_url)
 singles_q = Queue('singles', connection=redis_conn)
 multiples_q = Queue('multiples', connection=redis_conn,
                     default_timeout=config.DEFAULT_TIMEOUT)
+amr_q = Queue('amr', connection=redis_conn,
+                    default_timeout=config.DEFAULT_TIMEOUT)
 phylotyper_q = Queue('phylotyper', connection=redis_conn,
                     default_timeout=config.DEFAULT_TIMEOUT)
 blazegraph_q = Queue('blazegraph', connection=redis_conn, default_timeout=config.DEFAULT_TIMEOUT)
@@ -228,7 +230,7 @@ def _amr_pipeline(query_file, single_dict, pipeline=None, backlog=False, bulk=Fa
     else:
         multiples = backlog_multiples_q
 
-    job_amr = multiples.enqueue(amr, query_file, depends_on=job_id)
+    job_amr = amr_q.enqueue(amr, query_file, depends_on=job_id)
     pipeline.jobs.update({
         'job_amr': Job(
             rq_job=job_amr,

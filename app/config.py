@@ -7,7 +7,7 @@ REDIS_URL = 'redis://redis:6379/0'
 # this is done to isolate the RQ-Blazegraph worker to avoid race conditions
 QUEUES = ['default']
 # QUEUES_SPFY is for spfy web-app to poll
-QUEUES_SPFY = ['singles', 'blazegraph', 'multiples', 'phylotyper', 'priority']
+QUEUES_SPFY = ['singles', 'blazegraph', 'multiples', 'amr', 'phylotyper', 'priority']
 BOOTSTRAP_SERVE_LOCAL = True
 MAX_TIME_TO_WAIT = 10
 # DEFAULT_TIMEOUT is used to tell the rq-workers tha maximum time to wait for an
