@@ -45,7 +45,7 @@ singles_q = Queue('singles', connection=redis_conn)
 multiples_q = Queue('multiples', connection=redis_conn,
                     default_timeout=config.DEFAULT_TIMEOUT)
 amr_q = Queue('amr', connection=redis_conn,
-                    default_timeout=config.DEFAULT_TIMEOUT)
+                    default_timeout=config.DEFAULT_TIMEOUT*2)
 phylotyper_q = Queue('phylotyper', connection=redis_conn,
                     default_timeout=config.DEFAULT_TIMEOUT)
 blazegraph_q = Queue('blazegraph', connection=redis_conn, default_timeout=config.DEFAULT_TIMEOUT)
