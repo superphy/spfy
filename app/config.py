@@ -19,7 +19,7 @@ DEFAULT_RESULT_TTL=500
 PAN_TIMEOUT = 100000
 # if BACKLOG_ENABLED = True, then all analyses modules will be run in the
 # in the background for every submitted file
-BACKLOG_ENABLED = True
+BACKLOG_ENABLED = False
 
 DATASTORE = '/datastore'
 if not os.path.isdir(DATASTORE):
