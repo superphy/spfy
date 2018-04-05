@@ -28,11 +28,12 @@ def model_to_json(model):
     """
     Converts models to json for the front-end.
     """
+    #TODO: can access the list directly, no longer need this.
     # Validate the model submitted before processing.
     assert isinstance(model, list)
     # model.validate()
     # Conversion.
-    print("model_to_json() called with model: {0}".format(str(model)))
+    # print("model_to_json() called with model: {0}".format(str(model)))
     return model
     # if isinstance(model, models.Base):
     #     return _convert_model(model)
@@ -143,6 +144,7 @@ class Job():
         self.transitory = transitory
         self.backlog = backlog
         self.display = display
+        self.times = None
 
     def refetch(self):
         # Start a Redis connection.
@@ -155,19 +157,27 @@ class Job():
         self.rq_job = job
 
     def time(self):
-        self.refetch()
-        job = self.rq_job
+        # Only necessary if called from Pipeline.cache.
+        if not self.times:
+            self.refetch()
 
-        assert job.is_finished
-        start = job.started_at
-        stop = job.ended_at
-        try:
-            timedelta = stop - start
-            sec = timedelta.total_seconds()
-        except:
-            print('model.Job.time(): could not calculate time for {0} of type {1} with content {2}'.format(self.name, type(self.rq_job), self.rq_job))
-            sec = 0
-        return (start,stop,sec)
+        # If we've already saved the timings.
+        if self.times:
+            return self.times
+        else:
+            # Alias.
+            job = self.rq_job
+            assert job.is_finished
+            start = job.started_at
+            stop = job.ended_at
+            try:
+                timedelta = stop - start
+                sec = timedelta.total_seconds()
+            except:
+                print('model.Job.time(): could not calculate time for {0} of type {1} with content {2}'.format(self.name, type(self.rq_job), self.rq_job))
+                sec = 0
+            self.times = (start,stop,sec)
+            return (start,stop,sec)
 
 class Pipeline():
     def __init__(self, jobs=None, files=None, func=None, options=None, date=None):
@@ -237,6 +247,7 @@ class Pipeline():
             if not j.rq_job.exc_info == 'job not found':
                 new_finals.append(j)
         self.final_jobs = new_finals
+        # TODO: below may no longer be needed.
         new_cache = []
         for j in self.cache:
             j.refetch()
@@ -252,13 +263,15 @@ class Pipeline():
             return True
         else:
             print("complete() checking status for: {0} with {1} # of final jobs.".format(self.sig, len(self.final_jobs)))
+            self.refetch()
             for j in self.final_jobs:
-                # Refetch job status.
-                j.refetch()
                 # Type check.
                 assert isinstance(j, Job)
                 rq_job = j.rq_job
-                if j.backlog:
+                if j.times:
+                    # We've checked this before and its complete.
+                    continue
+                elif j.backlog:
                     # Some backlog job, we don't care (though Sentry will catch it).
                     # print("complete(): job {0} is in backlog.".format(j.name))
                     continue
@@ -274,14 +287,18 @@ class Pipeline():
                     # One of the jobs hasn't finished.
                     print("complete(): job {0} is still pending with var: {1}.".format(j.name, rq_job.is_finished))
                     return False
+                else:
+                    # The job is done, save timings.
+                    j.time()
             print("complete() pipeline {0} is complete.".format(self.sig))
-            # Pipeline complete, update + save jobs.
-            self.refetch()
+            # Pipeline complete.
             self.done = True
             store(self)
             return True
 
     def _completed_jobs(self):
+        '''Returns jobs that are required for frontend and are complete.
+        '''
         completed_jobs = [
             j for j in self.final_jobs
             if j.display and not j.backlog and j.rq_job.is_finished and not j.rq_job.is_failed
@@ -312,9 +329,12 @@ class Pipeline():
         return jsonify(l)
 
     def timings(self):
+        '''Looks through Pipeline.final_jobs and return timings, also finds the
+        overall runtime from start to finish.
+        '''
         assert self.done
         # l is the actual return list.
-        l = [{j.name: j.time()} for j in self.cache]
+        l = [{j.name: j.time()} for j in self.final_jobs]
         # Tabulate starts and stops.
         starts = [i.values()[0][0] for i in l if i.values()[0][0]]
         stops = [i.values()[0][1] for i in l if i.values()[0][1]]
