@@ -164,20 +164,23 @@ class Job():
         # If we've already saved the timings.
         if self.times:
             return self.times
+        elif self.rq_job.exc_info == 'job not found':
+            # If called on a job who's result_ttl has elapsed.
+            print('model.Job.time(): job {0} could not be found.'.format(self.name))
         else:
-            # Alias.
-            job = self.rq_job
-            assert job.is_finished
-            start = job.started_at
-            stop = job.ended_at
             try:
+                job = self.rq_job
+                assert job.is_finished
+                start = job.started_at
+                stop = job.ended_at
                 timedelta = stop - start
                 sec = timedelta.total_seconds()
+                self.times = (start,stop,sec)
+                return (start,stop,sec)
             except:
                 print('model.Job.time(): could not calculate time for {0} of type {1} with content {2}'.format(self.name, type(self.rq_job), self.rq_job))
-                sec = 0
-            self.times = (start,stop,sec)
-            return (start,stop,sec)
+                self.times = (0,0,0)
+                return self.times
 
 class Pipeline():
     def __init__(self, jobs=None, files=None, func=None, options=None, date=None):
