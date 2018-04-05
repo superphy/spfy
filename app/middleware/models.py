@@ -234,13 +234,13 @@ class Pipeline():
         new_finals = []
         for j in self.final_jobs:
             j.refetch()
-            if not j.is_failed == 'job not found':
+            if not j.exc_info == 'job not found':
                 new_finals.append(j)
         self.final_jobs = new_finals
         new_cache = []
         for j in self.cache:
             j.refetch()
-            if not j.is_failed == 'job not found':
+            if not j.exc_info == 'job not found':
                 new_cache.append(j)
         self.cache = new_cache
         store(self)
@@ -263,7 +263,7 @@ class Pipeline():
                     # Some backlog job, we don't care (though Sentry will catch it).
                     # print("complete(): job {0} is in backlog.".format(j.name))
                     continue
-                elif rq_job.is_failed == 'job not found':
+                elif rq_job.exc_info == 'job not found':
                     # Job finished, but the result_ttl timed out.
                     print("complete(): job {0} is finished but the result_ttl timed out.".format(j.name))
                     continue
