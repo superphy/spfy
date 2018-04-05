@@ -243,7 +243,6 @@ class Pipeline():
             if not j.rq_job.exc_info == 'job not found':
                 new_cache.append(j)
         self.cache = new_cache
-        store(self)
 
     def complete(self):
         """
@@ -279,6 +278,7 @@ class Pipeline():
             # Pipeline complete, update + save jobs.
             self.refetch()
             self.done = True
+            store(self)
             return True
 
     def _completed_jobs(self):
