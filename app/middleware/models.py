@@ -144,7 +144,7 @@ class Job():
         self.backlog = backlog
         self.display = display
 
-    def time(self):
+    def refetch(self):
         # Start a Redis connection.
         redis_url = config.REDIS_URL
         redis_connection = redis.from_url(redis_url)
@@ -152,6 +152,11 @@ class Job():
         # While you can call rq_job.result without refetching, you must refetch
         # do get the start and stop times.
         job = fetch_job(self.rq_job.get_id(), redis_connection)
+        self.rq_job = job
+
+    def time(self):
+        self.refetch()
+        job = self.rq_job
 
         assert job.is_finished
         start = job.started_at
@@ -185,6 +190,7 @@ class Pipeline():
         self.options = options
         self.signature() # Create & Store a signature for the pipeline.
         self.date = date
+        self.done = False # Bypass for the self.complete() method.
 
     def cache_jobs(self):
         """
@@ -221,33 +227,59 @@ class Pipeline():
                 if not j.backlog
             ]
 
+    def refetch(self):
+        '''Refetch method for the Pipeline class. Removes jobs that are finished
+        and can no longer be found. Also updates itself on Redis DB.
+        '''
+        new_finals = []
+        for j in self.final_jobs:
+            j.refetch()
+            if not j.exc_info == 'job not found':
+                new_finals.append(j)
+        self.final_jobs = new_finals
+        new_cache = []
+        for j in self.cache:
+            j.refetch()
+            if not j.exc_info == 'job not found':
+                new_cache.append(j)
+        self.cache = new_cache
+        store(self)
+
     def complete(self):
         """
         Check if all jobs are completed
         """
-        print("complete() checking status for: {0} with {1} # of final jobs.".format(self.sig, len(self.final_jobs)))
-        for j in self.final_jobs:
-            # Type check.
-            assert isinstance(j, Job)
-            rq_job = j.rq_job
-            if j.backlog:
-                # Some backlog job, we don't care (though Sentry will catch it).
-                # print("complete(): job {0} is in backlog.".format(j.name))
-                continue
-            elif rq_job.is_failed:
-                # If the job failed, return the error.
-                print("complete(): job {0} is failed with exc_info {1}.".format(j.name, rq_job.exc_info))
-                return rq_job.exc_info
-            elif rq_job.is_finished == None:
-                # Job finished, but the result_ttl timed out.
-                print("complete(): job {0} is finished but the result_ttl timed out.".format(j.name))
-                continue
-            elif not j.transitory and not rq_job.is_finished:
-                # One of the jobs hasn't finished.
-                print("complete(): job {0} is still pending with var: {1}.".format(j.name, rq_job.is_finished))
-                return False
-        print("complete() pipeline {0} is complete.".format(self.sig))
-        return True
+        if self.done:
+            return True
+        else:
+            print("complete() checking status for: {0} with {1} # of final jobs.".format(self.sig, len(self.final_jobs)))
+            for j in self.final_jobs:
+                # Refetch job status.
+                j.refetch()
+                # Type check.
+                assert isinstance(j, Job)
+                rq_job = j.rq_job
+                if j.backlog:
+                    # Some backlog job, we don't care (though Sentry will catch it).
+                    # print("complete(): job {0} is in backlog.".format(j.name))
+                    continue
+                elif rq_job.exc_info == 'job not found':
+                    # Job finished, but the result_ttl timed out.
+                    print("complete(): job {0} is finished but the result_ttl timed out.".format(j.name))
+                    continue
+                elif rq_job.is_failed:
+                    # If the job failed, return the error.
+                    print("complete(): job {0} is failed with exc_info {1}.".format(j.name, rq_job.exc_info))
+                    return rq_job.exc_info
+                elif not j.transitory and not rq_job.is_finished:
+                    # One of the jobs hasn't finished.
+                    print("complete(): job {0} is still pending with var: {1}.".format(j.name, rq_job.is_finished))
+                    return False
+            print("complete() pipeline {0} is complete.".format(self.sig))
+            # Pipeline complete, update + save jobs.
+            self.refetch()
+            self.done = True
+            return True
 
     def _completed_jobs(self):
         completed_jobs = [
@@ -280,6 +312,7 @@ class Pipeline():
         return jsonify(l)
 
     def timings(self):
+        assert self.done
         # l is the actual return list.
         l = [{j.name: j.time()} for j in self.cache]
         # Tabulate starts and stops.

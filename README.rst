@@ -2,15 +2,9 @@
 
 |Build Status| |GitHub license| |Docs|
 
-**Spfy**: speedy `superphy <https://github.com/superphy/semantic>`__
+**Spfy**: Platform for predicting subtypes from E.coli whole genome sequences, and builds graph data for population-wide comparative analyses.
 
 Live: https://lfz.corefacility.ca/superphy/spfy/
-
-Platform for predicting Serotype & Virulence Factors (via
-`ECTyper <https://github.com/phac-nml/ecoli_serotyping>`__),
-Antimicrobial Resistance (via
-`CARD <https://card.mcmaster.ca/analyze/rgi>`__) from E.coli genome
-sequences, and builds graph data from results + metadata for population-wide comparative analyses.
 
 .. image:: screenshots/screen-results_list.png
     :align: center
@@ -47,6 +41,101 @@ Docker Image for Conda:
 
 .. image:: https://travis-ci.org/superphy/docker-flask-conda.svg?branch=master
     :target: https://travis-ci.org/superphy/docker-flask-conda
+
+Stats:
+------
+
+Comparing different population groups:
+
+|fo|
+
+.. |fg| image:: screenshots/fishers_genomes.png
+    :width: 20%
+    :alt: As a factor of # Genomes per Target
+
+.. |ft| image:: screenshots/fishers_targets.png
+    :width: 20%
+    :alt: As a factor of # Targets Retrieved per Genome
+
+.. |fo| image:: screenshots/fishers_overall.png
+    :width: 20%
+    :alt: Overall Performance
+
+Runtimes of subtyping modules:
+
+.. image:: screenshots/spfy_indivs.png
+    :width: 20%
+    :alt: Runtimes of individual analyses
+
+CLI: Generate Graph Files:
+--------------------------
+
+-  If you wish to only create rdf graphs (serialized as turtle files):
+
+1. First install miniconda and activate the environment from
+   https://raw.githubusercontent.com/superphy/docker-flask-conda/master/app/environment.yml
+2. cd into the app folder (where RQ workers typically run from):
+   ``cd app/``
+3. Run savvy.py like so:
+   ``python -m modules/savvy -i tests/ecoli/GCA_001894495.1_ASM189449v1_genomic.fna``
+   where the argument after the ``-i`` is your genome (FASTA) file.
+
+CLI: Generate Ontology:
+-----------------------
+.. image:: screenshots/ontology.png
+    :align: center
+    :alt: screenshot of the results page
+
+The ontology for Spfy is available at:
+https://raw.githubusercontent.com/superphy/backend/master/app/scripts/spfy\_ontology.ttl
+It was generated using
+https://raw.githubusercontent.com/superphy/backend/master/app/scripts/generate\_ontology.py
+with shared functions from Spfy's backend code. If you wish to run it,
+do: 1. ``cd app/`` 2. ``python -m scripts/generate_ontology`` which will
+put the ontology in ``app/``
+
+You can generate a pretty diagram from the .ttl file using http://www.visualdataweb.de/webvowl/
+
+CLI: Enqueue Subtyping Tasks w/o Reactapp:
+------------------------------------------
+
+.. note:: currently setup for just .fna files
+
+You can bypass the front-end website and still enqueue subtyping jobs by:
+
+1. First, mount the host directory with all your genome files to ``/datastore`` in the containers.
+
+  For example, if you keep your files at ``/home/bob/ecoli-genomes/``, you'd
+  edit the ``docker-compose.yml`` file and replace:
+
+  .. code-block:: yaml
+
+    volumes:
+    - /datastore
+
+  with:
+
+  .. code-block:: yaml
+
+    volumes:
+    - /home/bob/ecoli-genomes:/datastore
+
+2. Then take down your docker composition (if it's up) and restart it
+
+  .. code-block:: shell
+
+    docker-compose down
+    docker-compose up -d
+
+3. Drop and shell into your webserver container (though the worker containers would work too) and run the script.
+
+  .. code-block:: shell
+
+    docker exec -it backend_webserver_1 sh
+    python -m scripts/sideload
+    exit
+
+Note that reisdues may be created in your genome folder.
 
 Architecture:
 -------------
@@ -157,76 +246,6 @@ Blazegraph:
    See `#63 <https://github.com/superphy/backend/issues/63>`__
    Alternatively, modify the endpoint accordingly under
    ``database['blazegraph_url']`` in ``/app/config.py``
-
-CLI: Generate Graph Files:
---------------------------
-
--  If you wish to only create rdf graphs (serialized as turtle files):
-
-1. First install miniconda and activate the environment from
-   https://raw.githubusercontent.com/superphy/docker-flask-conda/master/app/environment.yml
-2. cd into the app folder (where RQ workers typically run from):
-   ``cd app/``
-3. Run savvy.py like so:
-   ``python -m modules/savvy -i tests/ecoli/GCA_001894495.1_ASM189449v1_genomic.fna``
-   where the argument after the ``-i`` is your genome (FASTA) file.
-
-CLI: Generate Ontology:
------------------------
-.. image:: screenshots/ontology.svg
-    :align: center
-    :alt: screenshot of the results page
-
-The ontology for Spfy is available at:
-https://raw.githubusercontent.com/superphy/backend/master/app/scripts/spfy\_ontology.ttl
-It was generated using
-https://raw.githubusercontent.com/superphy/backend/master/app/scripts/generate\_ontology.py
-with shared functions from Spfy's backend code. If you wish to run it,
-do: 1. ``cd app/`` 2. ``python -m scripts/generate_ontology`` which will
-put the ontology in ``app/``
-
-You can generate a pretty diagram from the .ttl file using http://www.visualdataweb.de/webvowl/
-
-CLI: Enqueue Subtyping Tasks w/o Reactapp:
-------------------------------------------
-
-.. note:: currently setup for just .fna files
-
-You can bypass the front-end website and still enqueue subtyping jobs by:
-
-1. First, mount the host directory with all your genome files to ``/datastore`` in the containers.
-
-  For example, if you keep your files at ``/home/bob/ecoli-genomes/``, you'd
-  edit the ``docker-compose.yml`` file and replace:
-
-  .. code-block:: yaml
-
-    volumes:
-    - /datastore
-
-  with:
-
-  .. code-block:: yaml
-
-    volumes:
-    - /home/bob/ecoli-genomes:/datastore
-
-2. Then take down your docker composition (if it's up) and restart it
-
-  .. code-block:: shell
-
-    docker-compose down
-    docker-compose up -d
-
-3. Drop and shell into your webserver container (though the worker containers would work too) and run the script.
-
-  .. code-block:: shell
-
-    docker exec -it backend_webserver_1 sh
-    python -m scripts/sideload
-    exit
-
-Note that reisdues may be created in your genome folder.
 
 Contributing:
 -------------
