@@ -234,16 +234,15 @@ class Pipeline():
         new_finals = []
         for j in self.final_jobs:
             j.refetch()
-            if not j.exc_info == 'job not found':
+            if not j.rq_job.exc_info == 'job not found':
                 new_finals.append(j)
         self.final_jobs = new_finals
         new_cache = []
         for j in self.cache:
             j.refetch()
-            if not j.exc_info == 'job not found':
+            if not j.rq_job.exc_info == 'job not found':
                 new_cache.append(j)
         self.cache = new_cache
-        store(self)
 
     def complete(self):
         """
@@ -279,6 +278,7 @@ class Pipeline():
             # Pipeline complete, update + save jobs.
             self.refetch()
             self.done = True
+            store(self)
             return True
 
     def _completed_jobs(self):
