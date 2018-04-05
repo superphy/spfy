@@ -146,7 +146,7 @@ def reserve_id(query_file):
                 # Bypass Blazegraph, an start from an arbitrary id. The try:
                 # block will work after this run.
                 largest = config.DATABASE_BYPASS_START
-            if config.DATABASE_EXISTING:
+            elif config.DATABASE_EXISTING:
                 # If no duplicate found, find largest from Blazegraph.
                 largest = check_largest_spfyid()
             else:

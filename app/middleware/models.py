@@ -144,7 +144,7 @@ class Job():
         self.backlog = backlog
         self.display = display
 
-    def time(self):
+    def refetch(self):
         # Start a Redis connection.
         redis_url = config.REDIS_URL
         redis_connection = redis.from_url(redis_url)
@@ -152,6 +152,11 @@ class Job():
         # While you can call rq_job.result without refetching, you must refetch
         # do get the start and stop times.
         job = fetch_job(self.rq_job.get_id(), redis_connection)
+        self.rq_job = job
+
+    def time(self):
+        self.refetch()
+        job = self.rq_job
 
         assert job.is_finished
         start = job.started_at
@@ -227,6 +232,8 @@ class Pipeline():
         """
         print("complete() checking status for: {0} with {1} # of final jobs.".format(self.sig, len(self.final_jobs)))
         for j in self.final_jobs:
+            # Refetch job status.
+            j.refetch()
             # Type check.
             assert isinstance(j, Job)
             rq_job = j.rq_job
