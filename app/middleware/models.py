@@ -1,5 +1,5 @@
 import sys
-import copy
+import traceback
 import config
 import redis
 import dill
@@ -150,6 +150,11 @@ class Job():
         if self.times:
             # If timings exist, the job is done. Don't refetch.
             pass
+        elif not self.rq_job.is_finished:
+            print('model.Job.refetch(): was called for an unfinished job named {0} of type {1} with content {2}'.format(self.name, type(self.rq_job), self.rq_job))
+        elif self.rq_job.exc_info == 'job not found':
+            # If called on a job who's result_ttl has elapsed.
+            print('model.Job.refetch(): job {0} was already determined to not be found.'.format(self.name))
         else:
             # Start a Redis connection.
             redis_url = config.REDIS_URL
@@ -173,6 +178,9 @@ class Job():
             print('model.Job.time(): job {0} could not be found.'.format(self.name))
             self.times = (0,0,0)
             return self.times
+        elif not self.rq_job.is_finished:
+            print('model.Job.time(): time was called for an unfinished job named {0} of type {1} with content {2}'.format(self.name, type(self.rq_job), self.rq_job))
+            return (0,0,0)
         else:
             try:
                 job = self.rq_job
@@ -183,8 +191,14 @@ class Job():
                 sec = timedelta.total_seconds()
                 self.times = (start,stop,sec)
                 return (start,stop,sec)
-            except:
-                print('model.Job.time(): could not calculate time for {0} of type {1} with content {2}'.format(self.name, type(self.rq_job), self.rq_job))
+            except Exception, e:
+                # Try and grab the traceback.
+                try:
+                    exc_info = sys.exc_info()
+                finally:
+                    print('model.Job.time(): could not calculate time for {0} of type {1} with content {2}'.format(self.name, type(self.rq_job), self.rq_job))
+                    traceback.print_exception(*exc_info)
+                    del exc_info
                 self.times = (0,0,0)
                 return self.times
 
