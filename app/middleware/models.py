@@ -150,8 +150,6 @@ class Job():
         if self.times:
             # If timings exist, the job is done. Don't refetch.
             pass
-        elif not self.rq_job.is_finished:
-            print('model.Job.refetch(): was called for an unfinished job named {0} of type {1} with content {2}'.format(self.name, type(self.rq_job), self.rq_job))
         elif self.rq_job.exc_info == 'job not found':
             # If called on a job who's result_ttl has elapsed.
             print('model.Job.refetch(): job {0} was already determined to not be found.'.format(self.name))
