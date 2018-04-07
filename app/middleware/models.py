@@ -147,14 +147,18 @@ class Job():
         self.times = None
 
     def refetch(self):
-        # Start a Redis connection.
-        redis_url = config.REDIS_URL
-        redis_connection = redis.from_url(redis_url)
+        if self.times:
+            # If timings exist, the job is done. Don't refetch.
+            pass
+        else:
+            # Start a Redis connection.
+            redis_url = config.REDIS_URL
+            redis_connection = redis.from_url(redis_url)
 
-        # While you can call rq_job.result without refetching, you must refetch
-        # do get the start and stop times.
-        job = fetch_job(self.rq_job.get_id(), redis_connection)
-        self.rq_job = job
+            # While you can call rq_job.result without refetching, you must refetch
+            # do get the start and stop times.
+            job = fetch_job(self.rq_job.get_id(), redis_connection)
+            self.rq_job = job
 
     def time(self):
         # Only necessary if called from Pipeline.cache.
@@ -167,6 +171,8 @@ class Job():
         elif self.rq_job.exc_info == 'job not found':
             # If called on a job who's result_ttl has elapsed.
             print('model.Job.time(): job {0} could not be found.'.format(self.name))
+            self.times = (0,0,0)
+            return self.times
         else:
             try:
                 job = self.rq_job
