@@ -62,7 +62,7 @@ def store(pipeline):
     d[pipeline_id]['analysis'] = "Subtyping"
 
     d[pipeline_id]['file'] = pipeline.files
-    print '_store_pipeline(): finished'
+    print('_store_pipeline(): storing pipeline with id {0} containing {1} # of files with {2} # of final jobs has finished.'.format(pipeline.sig, len(pipeline.files), len(pipeline.final_jobs)))
     return d
 
 def load(pipeline_id):
