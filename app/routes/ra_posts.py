@@ -237,7 +237,7 @@ def upload():
         jobs_dict = {}
 
         pipeline = Pipeline(
-            files = str(names),
+            files = names,
             func = spfy,
             options = options,
             date = now
