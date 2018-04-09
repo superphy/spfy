@@ -173,12 +173,14 @@ class Job():
             return self.times
         elif self.rq_job.exc_info == 'job not found':
             # If called on a job who's result_ttl has elapsed.
+            # Should only ever see this called once per job.
             print('model.Job.time(): job {0} could not be found.'.format(self.name))
             self.times = (0,0,0)
             return self.times
         elif not self.rq_job.is_finished:
+            # Should never see this.
             print('model.Job.time(): time was called for an unfinished job named {0} of type {1} with content {2}'.format(self.name, type(self.rq_job), self.rq_job))
-            return (0,0,0)
+            return (-1,-1,-1)
         else:
             try:
                 job = self.rq_job
@@ -191,6 +193,7 @@ class Job():
                 return (start,stop,sec)
             except Exception, e:
                 # Try and grab the traceback.
+                # This doesn't really happen do to above tests beforehand.
                 try:
                     exc_info = sys.exc_info()
                 finally:
@@ -251,6 +254,7 @@ class Pipeline():
                 for j in self.final_jobs
                 if not j.backlog
             ]
+            # TODO: don't think the below is required anymore.
             self.cache = [
                 j
                 for d in self.cache
@@ -287,7 +291,7 @@ class Pipeline():
                     continue
                 elif j.backlog:
                     # Some backlog job, we don't care (though Sentry will catch it).
-                    # print("complete(): job {0} is in backlog.".format(j.name))
+                    # This doesn't really get called due to dropping backlog by default.
                     continue
                 elif rq_job.exc_info == 'job not found':
                     # Job finished, but the result_ttl timed out.
@@ -295,20 +299,55 @@ class Pipeline():
                     continue
                 elif rq_job.is_failed:
                     # If the job failed, return the error.
+                    # Failed jobs last forever (result_ttl=-1) in RQ.
                     print("complete(): job {0} is failed with exc_info {1}.".format(j.name, rq_job.exc_info))
                     return rq_job.exc_info
                 elif not j.transitory and not rq_job.is_finished:
                     # One of the jobs hasn't finished.
+                    # The only reason this works is that there's always a non-
+                    # transitory job to be run after w/e this job is.
                     print("complete(): job {0} is still pending with var: {1}.".format(j.name, rq_job.is_finished))
                     return False
-                else:
+                elif rq_job.is_finished:
                     # The job is done, save timings.
+                    print("complete(): saving timing for job {0}.".format(j.name))
                     j.time()
+                elif j.transitory and rq_job.is_finished:
+                    # Some of the elif is extra, but checks that this is
+                    # a transitory job that is finished.
+                    print("complete(): job {0} is j.transitory and rq_job.is_finished.".format(j.name))
+                    continue
             print("complete() pipeline {0} is complete.".format(self.sig))
             # Pipeline complete.
             self.done = True
             store(self)
             return True
+
+    def timings(self):
+        '''Looks through Pipeline.final_jobs and return timings, also finds the
+        overall runtime from start to finish.
+        '''
+        assert self.done
+        # l is the actual return list.
+        l = [{j.name: j.time()} for j in self.final_jobs]
+        # Sanity check.
+        assert len(l) == len(self.final_jobs)
+        # Tabulate starts and stops.
+        starts = [i.values()[0][0] for i in l if i.values()[0][0]]
+        stops = [i.values()[0][1] for i in l if i.values()[0][1]]
+        # Calculate min/max datetime.date values.
+        mn = starts[0]
+        for i in starts:
+            if i < mn:
+                mn = i
+        mx = stops[0]
+        for i in stops:
+            if i > mx:
+                mx = i
+        # Append total runtime.
+        sec = (mx-mn).total_seconds()
+        l.append({'total': (mn,mx,sec)})
+        return l
 
     def _completed_jobs(self):
         '''Returns jobs that are required for frontend and are complete.
@@ -341,30 +380,6 @@ class Pipeline():
             list_json = model_to_json(model)
             l += list_json
         return jsonify(l)
-
-    def timings(self):
-        '''Looks through Pipeline.final_jobs and return timings, also finds the
-        overall runtime from start to finish.
-        '''
-        assert self.done
-        # l is the actual return list.
-        l = [{j.name: j.time()} for j in self.final_jobs]
-        # Tabulate starts and stops.
-        starts = [i.values()[0][0] for i in l if i.values()[0][0]]
-        stops = [i.values()[0][1] for i in l if i.values()[0][1]]
-        # Calculate min/max datetime.date values.
-        mn = starts[0]
-        for i in starts:
-            if i < mn:
-                mn = i
-        mx = stops[0]
-        for i in stops:
-            if i > mx:
-                mx = i
-        # Append total runtime.
-        sec = (mx-mn).total_seconds()
-        l.append({'total': (mn,mx,sec)})
-        return l
 
     def _function_signature(self):
         """
