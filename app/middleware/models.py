@@ -62,7 +62,7 @@ def store(pipeline):
     d[pipeline_id]['analysis'] = "Subtyping"
 
     d[pipeline_id]['file'] = pipeline.files
-    print('_store_pipeline(): storing pipeline with id {0} containing {1} # of files with {2} # of final jobs has finished.'.format(pipeline.sig, len(pipeline.files), len(pipeline._expand())))
+    print('store(): storing pipeline with id {0} containing {1} # of files with {2} # of final jobs has finished.'.format(pipeline.sig, len(pipeline.files), len(pipeline._expand())))
     return d
 
 def load(pipeline_id):
@@ -281,6 +281,8 @@ class Pipeline():
         else:
             print("complete() checking status for: {0} with {1} # of final jobs.".format(self.sig, len(self._expand())))
             self.refetch()
+            failed = None
+            notcomplete = False
             for j in self._expand():
                 # Type check.
                 assert isinstance(j, Job)
@@ -296,17 +298,6 @@ class Pipeline():
                     # Job finished, but the result_ttl timed out.
                     print("complete(): job {0} is finished but the result_ttl timed out.".format(j.name))
                     continue
-                elif rq_job.is_failed:
-                    # If the job failed, return the error.
-                    # Failed jobs last forever (result_ttl=-1) in RQ.
-                    print("complete(): job {0} is failed with exc_info {1}.".format(j.name, rq_job.exc_info))
-                    return rq_job.exc_info
-                elif not j.transitory and not rq_job.is_finished:
-                    # One of the jobs hasn't finished.
-                    # The only reason this works is that there's always a non-
-                    # transitory job to be run after w/e this job is.
-                    print("complete(): job {0} is still pending with var: {1}.".format(j.name, rq_job.is_finished))
-                    return False
                 elif rq_job.is_finished and not j.times:
                     # The job is done, save timings.
                     print("complete(): saving timing for job {0}.".format(j.name))
@@ -316,11 +307,29 @@ class Pipeline():
                     # a transitory job that is finished.
                     print("complete(): job {0} is j.transitory and rq_job.is_finished.".format(j.name))
                     continue
-            print("complete(): pipeline {0} is complete.".format(self.sig))
-            # Pipeline complete.
-            self.done = True
+                elif rq_job.is_failed:
+                    # If the job failed, return the error.
+                    # Failed jobs last forever (result_ttl=-1) in RQ.
+                    print("complete(): job {0} is failed with exc_info {1}.".format(j.name, rq_job.exc_info))
+                    failed = rq_job.exc_info
+                elif not j.transitory and not rq_job.is_finished:
+                    # One of the jobs hasn't finished.
+                    # The only reason this works is that there's always a non-
+                    # transitory job to be run after w/e this job is.
+                    print("complete(): job {0} is still pending with var: {1}.".format(j.name, rq_job.is_finished))
+                    notcomplete = True
+            # Always store what has been updated for timings.
             store(self)
-            return True
+            if failed:
+                return failed:
+            elif notcomplete:
+                # complete() is not complete
+                return False
+            else:
+                print("complete(): pipeline {0} is complete.".format(self.sig))
+                # Pipeline complete.
+                self.done = True
+                return True
 
     def timings(self):
         '''Looks through Pipeline.final_jobs and return timings, also finds the
