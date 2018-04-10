@@ -216,7 +216,7 @@ class Pipeline():
             now = now.strftime("%Y-%m-%d-%H-%M-%S-%f")
             date = now
         self.jobs = {} # {'somename': instance of RQ.Job} Only used when enqueing.
-        self.final_jobs = [] # Jobs for every file in the request.
+        self.final_jobs = {} # Jobs for every file in the request.
         self.cache = [] # For temporary storage of RQ.Jobs.
         self.sig = None
         self.files = []
@@ -226,48 +226,43 @@ class Pipeline():
         self.date = date
         self.done = False # Bypass for the self.complete() method.
 
-    def cache_jobs(self):
+    def cache_jobs(self, filename):
         """
-        Copy current jobs to cache.
+        Copy current jobs to cache. Called on every iteration of a file.
         """
-        self.cache += [self.jobs]
+        self.cache += [{filename:self.jobs}]
         self.jobs = {}
 
     def merge_jobs(self, drop=True):
-        """
-
+        """Merges all the jobs into a self.final_jobs of form {filename:[models.Job]}.
         """
         # If the jobs dictionary is not empty.
         if self.jobs:
-            self.cache_jobs()
-        # Actual merge. Notice were converting to list.
-        self.final_jobs = [
-            j # Where j is our custom Job class, not an rq_job
-            for d in self.cache
-            for j in d.values()
-        ]
+            raise Exception('models.Pipeline.merge_jobs(): called before caching all jobs.')
 
-        # Drop the backlog jobs, makes for faster status checking.
-        if drop:
-            self.final_jobs = [
-                j
-                for j in self.final_jobs
-                if not j.backlog
-            ]
-            # TODO: don't think the below is required anymore.
-            self.cache = [
-                j
-                for d in self.cache
-                for j in d.values()
-                if not j.backlog
-            ]
+        for outer_d in self.cache:
+            new_l = []
+            # {filename: {(str)func: Job}} should only have 1 inner dict/filename.
+            assert len(outer_d.keys()) == 1
+            assert len(outer_d.values()) == 1
+            filename = outer_d.keys()[0]
+            inner_d = outer_d.values()[0]
+            # Gather the models.Job instances.
+            for j in inner_d.values:
+                if not j.drop:
+                    new_l.append(j)
+                elif j.drop and not j.backlog:
+                    new_l.append(j)
+            self.final_jobs.update({filename:new_l})
+        ret = { f:len(l) for f,l in self.final_jobs.items() }
+        print("merge_jobs(): merged with {0}.".format(ret))
 
     def refetch(self):
         '''Refetch method for the Pipeline class. Removes jobs that are finished
         and can no longer be found. Also updates itself on Redis DB.
         '''
         # new_finals = []
-        for j in self.final_jobs:
+        for j in self.final_jobs.values():
             j.refetch()
             # if not j.rq_job.exc_info == 'job not found':
             #     new_finals.append(j)
@@ -280,9 +275,9 @@ class Pipeline():
         if self.done:
             return True
         else:
-            print("complete() checking status for: {0} with {1} # of final jobs.".format(self.sig, len(self.final_jobs)))
+            print("complete() checking status for: {0} with {1} # of final jobs.".format(self.sig, len(self.final_jobs.values())))
             self.refetch()
-            for j in self.final_jobs:
+            for j in self.final_jobs.values():
                 # Type check.
                 assert isinstance(j, Job)
                 rq_job = j.rq_job
@@ -308,7 +303,7 @@ class Pipeline():
                     # transitory job to be run after w/e this job is.
                     print("complete(): job {0} is still pending with var: {1}.".format(j.name, rq_job.is_finished))
                     return False
-                elif rq_job.is_finished:
+                elif rq_job.is_finished and not j.times:
                     # The job is done, save timings.
                     print("complete(): saving timing for job {0}.".format(j.name))
                     j.time()
@@ -317,7 +312,7 @@ class Pipeline():
                     # a transitory job that is finished.
                     print("complete(): job {0} is j.transitory and rq_job.is_finished.".format(j.name))
                     continue
-            print("complete() pipeline {0} is complete.".format(self.sig))
+            print("complete(): pipeline {0} is complete.".format(self.sig))
             # Pipeline complete.
             self.done = True
             store(self)
@@ -329,9 +324,9 @@ class Pipeline():
         '''
         assert self.done
         # l is the actual return list.
-        l = [{j.name: j.time()} for j in self.final_jobs]
+        l = [{'{0}|{1}'.format(f,j.name): j.time()} for f,j in self.final_jobs.items()]
         # Sanity check.
-        assert len(l) == len(self.final_jobs)
+        assert len(l) == len(self.final_jobs.values())
         # Tabulate starts and stops.
         starts = [i.values()[0][0] for i in l if i.values()[0][0]]
         stops = [i.values()[0][1] for i in l if i.values()[0][1]]
@@ -353,7 +348,7 @@ class Pipeline():
         '''Returns jobs that are required for frontend and are complete.
         '''
         completed_jobs = [
-            j for j in self.final_jobs
+            j for j in self.final_jobs.values()
             if j.display and not j.backlog and j.rq_job.is_finished and not j.rq_job.is_failed
         ]
         return completed_jobs
