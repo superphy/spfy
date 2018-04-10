@@ -249,9 +249,9 @@ class Pipeline():
             inner_d = outer_d.values()[0]
             # Gather the models.Job instances.
             for j in inner_d.values():
-                if not j.drop:
+                if not drop:
                     new_l.append(j)
-                elif j.drop and not j.backlog:
+                elif drop and not j.backlog:
                     new_l.append(j)
             self.final_jobs.update({filename:new_l})
         ret = { f:len(l) for f,l in self.final_jobs.items() }
