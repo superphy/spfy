@@ -215,14 +215,18 @@ class Pipeline():
             now = datetime.now()
             now = now.strftime("%Y-%m-%d-%H-%M-%S-%f")
             date = now
-        self.jobs = {} # {'somename': instance of RQ.Job} Only used when enqueing.
-        self.final_jobs = {} # Jobs for every file in the request.
-        self.cache = [] # For temporary storage of RQ.Jobs.
+
+        # Variables for generating run signature.
         self.sig = None
         self.files = files
         self.func = func # Additional attribute for storing pipeline function.
         self.options = options
         self.signature() # Create & Store a signature for the pipeline.
+
+        # Addition variables.
+        self.jobs = {} # {'somename': instance of RQ.Job} Only used when enqueing.
+        self.final_jobs = {} # Jobs for every file in the request.
+        self.cache = [] # For temporary storage of RQ.Jobs.
         self.date = date
         self.done = False # Bypass for the self.complete() method.
 

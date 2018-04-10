@@ -283,7 +283,7 @@ def upload():
                 pipeline = pipeline
             )
             jobs_dict.update(jobs_enqueued)
-            pipeline.cache_jobs(filename)
+            pipeline.cache_jobs(f)
 
         print 'upload(): all files enqueued, returning...'
         pipeline.merge_jobs()
