@@ -281,7 +281,7 @@ class Pipeline():
         else:
             print("complete() checking status for: {0} with {1} # of final jobs.".format(self.sig, len(self._expand())))
             self.refetch()
-            failed = None
+            exc_info = None
             notcomplete = False
             for j in self._expand():
                 # Type check.
@@ -311,7 +311,7 @@ class Pipeline():
                     # If the job failed, return the error.
                     # Failed jobs last forever (result_ttl=-1) in RQ.
                     print("complete(): job {0} is failed with exc_info {1}.".format(j.name, rq_job.exc_info))
-                    failed = rq_job.exc_info
+                    exc_info = rq_job.exc_info
                 elif not j.transitory and not rq_job.is_finished:
                     # One of the jobs hasn't finished.
                     # The only reason this works is that there's always a non-
@@ -320,8 +320,8 @@ class Pipeline():
                     notcomplete = True
             # Always store what has been updated for timings.
             store(self)
-            if failed:
-                return failed:
+            if exc_info:
+                return exc_info:
             elif notcomplete:
                 # complete() is not complete
                 return False
