@@ -219,7 +219,7 @@ class Pipeline():
         self.final_jobs = {} # Jobs for every file in the request.
         self.cache = [] # For temporary storage of RQ.Jobs.
         self.sig = None
-        self.files = []
+        self.files = files
         self.func = func # Additional attribute for storing pipeline function.
         self.options = options
         self.signature() # Create & Store a signature for the pipeline.
