@@ -62,7 +62,7 @@ def store(pipeline):
     d[pipeline_id]['analysis'] = "Subtyping"
 
     d[pipeline_id]['file'] = pipeline.files
-    print('_store_pipeline(): storing pipeline with id {0} containing {1} # of files with {2} # of final jobs has finished.'.format(pipeline.sig, len(pipeline.files), len(pipeline.final_jobs)))
+    print('_store_pipeline(): storing pipeline with id {0} containing {1} # of files with {2} # of final jobs has finished.'.format(pipeline.sig, len(pipeline.files), len(pipeline._expand())))
     return d
 
 def load(pipeline_id):
@@ -257,12 +257,16 @@ class Pipeline():
         ret = { f:len(l) for f,l in self.final_jobs.items() }
         print("merge_jobs(): merged with {0}.".format(ret))
 
+    def _expand(self):
+        r = [j for l in self.final_jobs.values() for j in l]
+        return r
+
     def refetch(self):
         '''Refetch method for the Pipeline class. Removes jobs that are finished
         and can no longer be found. Also updates itself on Redis DB.
         '''
         # new_finals = []
-        for j in self.final_jobs.values():
+        for j in self._expand():
             j.refetch()
             # if not j.rq_job.exc_info == 'job not found':
             #     new_finals.append(j)
@@ -275,9 +279,9 @@ class Pipeline():
         if self.done:
             return True
         else:
-            print("complete() checking status for: {0} with {1} # of final jobs.".format(self.sig, len(self.final_jobs.values())))
+            print("complete() checking status for: {0} with {1} # of final jobs.".format(self.sig, len(self._expand())))
             self.refetch()
-            for j in self.final_jobs.values():
+            for j in self._expand():
                 # Type check.
                 assert isinstance(j, Job)
                 rq_job = j.rq_job
@@ -324,9 +328,9 @@ class Pipeline():
         '''
         assert self.done
         # l is the actual return list.
-        l = [{'{0}|{1}'.format(f,j.name): j.time()} for f,j in self.final_jobs.items()]
+        l = [{'{0}|{1}'.format(f,j.name): j.time()} for f,l in self.final_jobs.items() for j in l]
         # Sanity check.
-        assert len(l) == len(self.final_jobs.values())
+        assert len(l) == len(self._expand())
         # Tabulate starts and stops.
         starts = [i.values()[0][0] for i in l if i.values()[0][0]]
         stops = [i.values()[0][1] for i in l if i.values()[0][1]]
@@ -348,7 +352,7 @@ class Pipeline():
         '''Returns jobs that are required for frontend and are complete.
         '''
         completed_jobs = [
-            j for j in self.final_jobs.values()
+            j for j in self._expand()
             if j.display and not j.backlog and j.rq_job.is_finished and not j.rq_job.is_failed
         ]
         return completed_jobs
