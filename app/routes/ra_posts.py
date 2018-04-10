@@ -229,6 +229,7 @@ def upload():
         uploaded_files = request.files.getlist("file")
         names = [secure_filename(file.filename) for file in uploaded_files]
         names = sorted(names)
+        print('upload(): {0}'.format(names))
 
         print 'upload(): about to enqueue files'
         #set up constants for identifying this sessions
@@ -244,26 +245,42 @@ def upload():
         )
 
         for file in uploaded_files:
+            # Sanity check.
             if file:
-                # for saving file
+                # For saving file.
                 filename = os.path.join(current_app.config[
                                         'DATASTORE'], now + '-' + secure_filename(file.filename))
                 file.save(filename)
                 print 'Uploaded File Saved at', str(filename)
 
+                # Handle compressed files.
                 if tarfile.is_tarfile(filename):
                     # set filename to dir for spfy call
                     filename = handle_tar(filename, now)
                 elif zipfile.is_zipfile(filename):
                     filename = handle_zip(filename, now)
 
-                # for enqueing task
-                jobs_enqueued = spfy(
-                    args_dict = {'i': filename, 'pi':options['pi'], 'options':options},
-                    pipeline = pipeline
-                )
-                jobs_dict.update(jobs_enqueued)
-                pipeline.cache_jobs(filename)
+                # Create a list to iterate spfy calls.
+                l = []
+                # The compressed file was extracted.
+                if os.path.isdir(filename):
+                    # Walk and append.
+                    for bname in os.listdir(filename):
+                        f = os.path.join(filename, bname)
+                        l.append(f)
+                else:
+                    # Add the single file.
+                    l.append(filename)
+
+                # Iterate.
+                for f in l:
+                    # for enqueing task
+                    jobs_enqueued = spfy(
+                        args_dict = {'i': f, 'pi':options['pi'], 'options':options},
+                        pipeline = pipeline
+                    )
+                    jobs_dict.update(jobs_enqueued)
+                    pipeline.cache_jobs(filename)
         print 'upload(): all files enqueued, returning...'
         pipeline.merge_jobs()
         print("upload() pipeline jobs: {0}".format(str(pipeline.final_jobs)))
