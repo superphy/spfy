@@ -585,27 +585,6 @@ def blob_savvy_enqueue(single_dict, pipeline):
     return jobs
 
 
-def blob_savvy(args_dict, pipeline):
-    '''
-    Handles enqueuing of all files in a given directory or just a single file.
-    '''
-    d = {}
-    if os.path.isdir(args_dict['i']):
-        for f in os.listdir(args_dict['i']):
-            single_dict = dict(args_dict.items() +
-                               {'i': os.path.join(args_dict['i'], f)}.items())
-            d.update(
-                blob_savvy_enqueue(
-                    single_dict,
-                    pipeline
-                )
-            )
-    else:
-        d.update(blob_savvy_enqueue(args_dict, pipeline))
-
-    return d
-
-
 def spfy(args_dict, pipeline):
     '''
     '''
@@ -614,6 +593,6 @@ def spfy(args_dict, pipeline):
 
     #print 'Starting blob_savvy call'
     #logger.info('args_dict: ' + str(args_dict))
-    jobs_dict = blob_savvy(args_dict, pipeline)
+    jobs_dict = blob_savvy_enqueue(args_dict, pipeline)
 
     return jobs_dict
