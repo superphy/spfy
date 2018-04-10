@@ -318,17 +318,19 @@ class Pipeline():
                     # transitory job to be run after w/e this job is.
                     print("complete(): job {0} is still pending with var: {1}.".format(j.name, rq_job.is_finished))
                     notcomplete = True
-            # Always store what has been updated for timings.
-            store(self)
+            # Will always store what has been updated for timings.
             if exc_info:
+                store(self)
                 return exc_info
             elif notcomplete:
                 # complete() is not complete
+                store(self)
                 return False
             else:
                 print("complete(): pipeline {0} is complete.".format(self.sig))
                 # Pipeline complete.
                 self.done = True
+                store(self)
                 return True
 
     def timings(self):

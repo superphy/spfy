@@ -227,9 +227,6 @@ def upload():
 
         # Get a list of files submitted.
         uploaded_files = request.files.getlist("file")
-        names = [secure_filename(file.filename) for file in uploaded_files]
-        names = sorted(names)
-        print('upload(): {0}'.format(names))
 
         print 'upload(): about to enqueue files'
         #set up constants for identifying this sessions
@@ -237,13 +234,8 @@ def upload():
         now = now.strftime("%Y-%m-%d-%H-%M-%S-%f")
         jobs_dict = {}
 
-        pipeline = Pipeline(
-            files = names,
-            func = spfy,
-            options = options,
-            date = now
-        )
-
+        # Create a list to iterate spfy calls.
+        l = []
         for file in uploaded_files:
             # Sanity check.
             if file:
@@ -260,27 +252,39 @@ def upload():
                 elif zipfile.is_zipfile(filename):
                     filename = handle_zip(filename, now)
 
-                # Create a list to iterate spfy calls.
-                l = []
+
                 # The compressed file was extracted.
                 if os.path.isdir(filename):
                     # Walk and append.
                     for bname in os.listdir(filename):
-                        f = os.path.join(filename, bname)
+                        f = os.path.join(filename, secure_filename(bname))
                         l.append(f)
                 else:
                     # Add the single file.
                     l.append(filename)
 
-                # Iterate.
-                for f in l:
-                    # for enqueing task
-                    jobs_enqueued = spfy(
-                        args_dict = {'i': f, 'pi':options['pi'], 'options':options},
-                        pipeline = pipeline
-                    )
-                    jobs_dict.update(jobs_enqueued)
-                    pipeline.cache_jobs(filename)
+        # Gather names for Pipeline creation.
+        names = [secure_filename(f) for f in l]
+        names = sorted(names)
+        print('upload(): {0}'.format(names))
+
+        pipeline = Pipeline(
+            files = names,
+            func = spfy,
+            options = options,
+            date = now
+        )
+
+        # Iterate.
+        for f in l:
+            # for enqueing task
+            jobs_enqueued = spfy(
+                args_dict = {'i': f, 'pi':options['pi'], 'options':options},
+                pipeline = pipeline
+            )
+            jobs_dict.update(jobs_enqueued)
+            pipeline.cache_jobs(filename)
+
         print 'upload(): all files enqueued, returning...'
         pipeline.merge_jobs()
         print("upload() pipeline jobs: {0}".format(str(pipeline.final_jobs)))
