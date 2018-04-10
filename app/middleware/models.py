@@ -321,7 +321,7 @@ class Pipeline():
             # Always store what has been updated for timings.
             store(self)
             if exc_info:
-                return exc_info:
+                return exc_info
             elif notcomplete:
                 # complete() is not complete
                 return False
