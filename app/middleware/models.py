@@ -248,7 +248,7 @@ class Pipeline():
             filename = outer_d.keys()[0]
             inner_d = outer_d.values()[0]
             # Gather the models.Job instances.
-            for j in inner_d.values:
+            for j in inner_d.values():
                 if not j.drop:
                     new_l.append(j)
                 elif j.drop and not j.backlog:
