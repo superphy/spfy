@@ -34,7 +34,7 @@ def _check_tsv(pt_file):
     if pt_results.empty:
         raise Exception('_check_tsv() failed as pt_results.empty == true for pt_file: {0} with df content: {1}'.format(pt_file, str(pt_results)))
 
-def phylotyper(uriIsolate, subtype, result_file, id_file=None):
+def phylotyper(uriIsolate, subtype, result_file, id_file=None, query_file=None):
     """ Wrapper for Phylotyper
 
     Args:
@@ -42,6 +42,7 @@ def phylotyper(uriIsolate, subtype, result_file, id_file=None):
         subtype (str): Phylotyper recognized subtype (e.g. stx1)
         result_file (str): File location to write phylotyper tab-delim result to
         id_file (str)[OPTIONAL]: Read uriIsolate from file
+        query_file (str): Overides VF lookup and runs on the genome directly.
 
     Returns:
         file to tab-delimited text results
@@ -71,18 +72,18 @@ def phylotyper(uriIsolate, subtype, result_file, id_file=None):
     loci = [ gu(l['locus']) for l in sorted(loci_results, key=lambda k: k['i'])]
 
     # Get alleles for this genome
-    markerseqs = MarkerSequences(loci)
-    fasta = markerseqs.fasta(uriIsolate)
+    # markerseqs = MarkerSequences(loci)
+    # fasta = markerseqs.fasta(uriIsolate)
     # fasta =
 
     temp_dir = mkdtemp(prefix='pt'+subtype, dir=config.DATASTORE)
-    query_file = os.path.join(temp_dir, 'query.fasta')
+    # query_file = os.path.join(temp_dir, 'query.fasta')
     output_file = os.path.join(temp_dir, 'subtype_predictions.tsv')
 
-    if fasta:
+    if query_file:
         # Run phylotyper
-        with open(query_file, 'w') as fh:
-            fh.write(fasta)
+        # with open(query_file, 'w') as fh:
+        #     fh.write(fasta)
 
         subprocess.check_call(['phylotyper', 'genome', '--noplots',
                          subtype,
