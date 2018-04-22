@@ -26,6 +26,8 @@ def handle_tar(filename, now):
             os.rename(extracted_dir +'/' + fn, extracted_dir +'/'+ now + '-' + fn)
         tar.close()
 
+        os.remove(filename)
+
         # set filename to dir for spfy call
         return extracted_dir
 
@@ -41,6 +43,8 @@ def handle_zip(filename,now):
     for fn in os.listdir(extracted_dir):
         os.rename(extracted_dir +'/' + fn, extracted_dir +'/'+ now + '-' + fn)
     z.close()
+
+    os.remove(filename)
 
     # set filename to dir for spfy call
     return extracted_dir
