@@ -34,7 +34,7 @@ def _check_tsv(pt_file):
     if pt_results.empty:
         raise Exception('_check_tsv() failed as pt_results.empty == true for pt_file: {0} with df content: {1}'.format(pt_file, str(pt_results)))
 
-def phylotyper(uriIsolate, subtype, result_file, id_file=None, query_file=None):
+def phylotyper(uriIsolate, subtype, result_file, id_file=None, job_id=None, job_turtle=None, job_ectyper_datastruct_vf=None):
     """ Wrapper for Phylotyper
 
     Args:
@@ -72,18 +72,17 @@ def phylotyper(uriIsolate, subtype, result_file, id_file=None, query_file=None):
     loci = [ gu(l['locus']) for l in sorted(loci_results, key=lambda k: k['i'])]
 
     # Get alleles for this genome
-    # markerseqs = MarkerSequences(loci)
-    # fasta = markerseqs.fasta(uriIsolate)
-    # fasta =
+    markerseqs = MarkerSequences(loci, job_id, job_turtle, job_ectyper_datastruct_vf)
+    fasta = markerseqs.fasta(uriIsolate)
 
     temp_dir = mkdtemp(prefix='pt'+subtype, dir=config.DATASTORE)
-    # query_file = os.path.join(temp_dir, 'query.fasta')
+    query_file = os.path.join(temp_dir, 'query.fasta')
     output_file = os.path.join(temp_dir, 'subtype_predictions.tsv')
 
     if query_file:
         # Run phylotyper
-        # with open(query_file, 'w') as fh:
-        #     fh.write(fasta)
+        with open(query_file, 'w') as fh:
+            fh.write(fasta)
 
         subprocess.check_call(['phylotyper', 'genome', '--noplots',
                          subtype,

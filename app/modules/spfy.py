@@ -17,7 +17,7 @@ from rq import Queue
 from rdflib import Graph
 
 from modules.qc.qc import qc
-from middleware.blazegraph.reserve_id import write_reserve_id
+from middleware.blazegraph.reserve_id import reserve_id
 from modules.ectyper.call_ectyper import call_ectyper_vf, call_ectyper_serotype
 from modules.amr.amr import amr
 from modules.amr.amr_to_dict import amr_to_dict
@@ -418,12 +418,25 @@ def blob_savvy_enqueue(single_dict, pipeline):
         )
     })
     job_id = blazegraph_q.enqueue(
-        write_reserve_id, query_file, depends_on=job_qc, result_ttl=-1)
+        reserve_id, query_file, depends_on=job_qc, result_ttl=-1)
     pipeline.jobs.update({
         'job_id': Job(
             rq_job=job_id,
             name='job_id',
             transitory=False,
+            backlog=False,
+            display=False
+        )
+    })
+
+    # The base file data for blazegraph.
+    job_turtle = multiples_q.enqueue(
+        turtle_grapher, query_file, depends_on=job_qc)
+    pipeline.jobs.update({
+        'job_turtle': Job(
+            rq_job=job_turtle,
+            name='job_turtle',
+            transitory=True,
             backlog=False,
             display=False
         )
@@ -542,19 +555,6 @@ def blob_savvy_enqueue(single_dict, pipeline):
     elif config.BACKLOG_ENABLED:
         _phylotyper_pipeline('eae', query_file=query_file, pipeline=pipeline, backlog=True)
     # END Phylotyper pipeline
-
-    # the base file data for blazegraph
-    job_turtle = multiples_q.enqueue(
-        turtle_grapher, query_file, depends_on=job_qc)
-    pipeline.jobs.update({
-        'job_turtle': Job(
-            rq_job=job_turtle,
-            name='job_turtle',
-            transitory=True,
-            backlog=False,
-            display=False
-        )
-    })
 
     jobs[job_qc.get_id()] = {'file': single_dict['i'],
                              'analysis': 'Quality Control'}

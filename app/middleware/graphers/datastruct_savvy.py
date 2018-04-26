@@ -231,4 +231,5 @@ def datastruct_savvy(query_file, id_file, pickled_dictionary):
     :return:
     """
     graph = generate_datastruct(query_file, id_file, pickled_dictionary)
-    return queue_upload(graph)
+    queue_upload(graph)
+    return graph

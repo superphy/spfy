@@ -104,23 +104,7 @@ def reservation_triple(graph, uriGenome, spfyid):
     graph.add((uriGenome, gu('ge:0000024'), Literal(now_accurate)))
     return graph
 
-def reserve_id(query_file):
-    '''
-    given some fasta file:
-    (1) Check for duplicates in blazegraph
-    (2) If no duplicate is found, check for largest current spfyID
-    (3) Create a triple (with associated timestamp) that links the fasta file hash to the spfyID
-    (4) Upload that file to Blazegraph to reserve that spfyID
-    (5) Return the spfyID to use in proceeding pipeline
-    -> If a duplicate is found, just return that spfyID
-    '''
-
-    # uriGenome generation
-    file_hash = generate_hash(query_file)
-    log.debug(file_hash)
-    uriGenome = gu(':' + file_hash)
-    log.debug(uriGenome)
-
+def _check(uriGenome):
     # Check if the genome hash is in the db.
     try:
         # Try to check duplicate from MongoDB cache first.
@@ -158,29 +142,45 @@ def reserve_id(query_file):
         # Store the hash as well.
         mongo_update(uid=uriGenome, json=largest+1, collection=config.MONGO_SPFYIDSCOLLECTION)
 
-        # Create a rdflib.graph object with the new spfyID.
-        graph = Graph()
-        graph = reservation_triple(graph, uriGenome, largest+1)
-        # uploading the reservation graph secures the file->spfyID link
-        upload_graph(graph)
         # returns the (int) of the spfyID we want the new file to use
-        return largest+1
+        return largest+1, False
     else:
         # a duplicate was found, return the (int) of it's spfyID
-        return duplicate
+        return duplicate, True
 
-def write_reserve_id(query_file):
+def reserve_id(query_file):
     '''
-    A write function for pipeline in spfy.py to write out file.
-    :param query_file:
-    :return:
+    given some fasta file:
+    (1) Check for duplicates in blazegraph
+    (2) If no duplicate is found, check for largest current spfyID
+    (3) Create a triple (with associated timestamp) that links the fasta file hash to the spfyID
+    (4) Upload that file to Blazegraph to reserve that spfyID
+    (5) Return the spfyID to use in proceeding pipeline
+    -> If a duplicate is found, just return that spfyID
     '''
-    spfyid = reserve_id(query_file)
+
+    # uriGenome generation
+    file_hash = generate_hash(query_file)
+    log.debug(file_hash)
+    uriGenome = gu(':' + file_hash)
+    log.debug(uriGenome)
+
+    spfyid, duplicate = _check(uriGenome)
+
+    # Create a rdflib.graph object with the spfyID.
+    graph = Graph()
+    graph = reservation_triple(graph, uriGenome, largest+1)
+
+    if not duplicate:
+        # Uploading the reservation graph secures the file->spfyID link
+        upload_graph(graph)
+
     log.info('SpfyID #:' + str(spfyid))
     id_file = os.path.abspath(query_file) + '_id.txt'
     with open(id_file, 'w+') as f:
         f.write(str(spfyid))
-    return id_file
+
+    return graph
 
 if __name__ == '__main__':
     import argparse
