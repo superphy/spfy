@@ -19,6 +19,7 @@ import cPickle as pickle
 from rdflib import Graph, BNode, Literal, XSD
 import re
 from collections import OrderedDict
+from redis import Redis
 
 
 import config
@@ -28,6 +29,9 @@ from modules.phylotyper import ontology, exceptions
 from modules.phylotyper.sequences import MarkerSequences, phylotyper_query, genename_query
 
 logger = logging.getLogger(__name__)
+
+redis_url = config.REDIS_URL
+redis_conn = redis.from_url(redis_url)
 
 def _check_tsv(pt_file):
     pt_results = pd.read_table(pt_file)
@@ -72,7 +76,7 @@ def phylotyper(uriIsolate, subtype, result_file, id_file=None, job_id=None, job_
     loci = [ gu(l['locus']) for l in sorted(loci_results, key=lambda k: k['i'])]
 
     # Get alleles for this genome
-    markerseqs = MarkerSequences(loci, job_id, job_turtle, job_ectyper_datastruct_vf)
+    markerseqs = MarkerSequences(loci, job_id, job_turtle, job_ectyper_datastruct_vf, redis_conn)
     fasta = markerseqs.fasta(uriIsolate)
 
     temp_dir = mkdtemp(prefix='pt'+subtype, dir=config.DATASTORE)

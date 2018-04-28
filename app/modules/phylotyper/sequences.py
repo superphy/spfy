@@ -8,13 +8,14 @@ Example:
 
 from middleware.decorators import submit, prefix, tojson
 from middleware.graphers import turtle_utils
+from routes.job_utils import fetch_job
 
 @submit
 @prefix
 def marker_query(marker_uris):
 
   query = '''
-  SELECT ?m 
+  SELECT ?m
   WHERE {{
     ?m rdf:type :Marker .
     VALUES ?m {{ {} }}
@@ -46,8 +47,8 @@ def sequence_query(marker_rdf, isolate_rdf):
                 faldo:end ?e .
             ?b faldo:position ?beginPos .
             ?e faldo:position ?endPos .
-            BIND( IF(?beginPos < ?endPos,?beginPos,?endPos) as ?start) 
-            BIND( IF(?beginPos < ?endPos,?endPos-?beginPos+1,?beginPos-?endPos+1) as ?len) 
+            BIND( IF(?beginPos < ?endPos,?beginPos,?endPos) as ?start)
+            BIND( IF(?beginPos < ?endPos,?endPos-?beginPos+1,?beginPos-?endPos+1) as ?len)
             BIND( SUBSTR( ?dna, ?start, ?len ) as ?seq )
         }}
     '''.format(isolate_rdf, ' '.join(marker_rdf))
@@ -61,7 +62,7 @@ def sequence_query(marker_rdf, isolate_rdf):
 def phylotyper_query(subtypescheme_rdf, isolate_rdf):
 
     query = '''
-    
+
         SELECT DISTINCT ?pt ?typeLabel ?score ?region ?contigid ?beginPos ?endPos
         WHERE {{
             ?pt a subt:PTST ;
@@ -109,7 +110,7 @@ class MarkerSequences(object):
 
     """
 
-    def __init__(self, markers=[':stx2A',':stx2B']):
+    def __init__(self, markers=[':stx2A',':stx2B'], job_id, job_turtle, job_ectyper_datastruct_vf, redis_conn):
         """Constructor
 
         Args:
@@ -119,7 +120,9 @@ class MarkerSequences(object):
 
         # convert to proper RDF terms
         self.marker_uris = [turtle_utils.normalize_rdfterm(m) for m in markers]
-        
+        # Retrieve and merge graphs from pre-req. jobs.
+        self.graph = fetch_job(job_id, redis_conn) + fetch_job(job_turtle redis_conn) + fetch_job(job_ectyper_datastruct_vf, redis_conn)
+
 
     def sequences(self, genome_uri):
         """Retrieve sequences for object alleles
@@ -137,7 +140,7 @@ class MarkerSequences(object):
 
         # Unroll result into dictionary with fasta-like keys
         seqdict = { "spfy|{}| {}:{}..{}".format(
-            turtle_utils.fulluri_to_basename(r['region']), 
+            turtle_utils.fulluri_to_basename(r['region']),
             r['contigid'], r['start'], r['start']+r['len']-1): r['seq'] for r in query_result }
 
         return seqdict
@@ -182,6 +185,6 @@ if __name__=='__main__':
         required=True
     )
     args = parser.parse_args()
-    
+
     ms = MarkerSequences(args.m)
     print ms.sequences(args.g)

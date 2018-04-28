@@ -67,6 +67,8 @@ def _ectyper_pipeline_vf(query_file, single_dict, display_vf=True, pipeline=None
     d = {}
     # Alias.
     job_id = pipeline.jobs['job_id'].rq_job
+    job_turtle = pipeline.jobs['job_turtle'].rq_job
+
     if not backlog:
         singles = singles_q
         multiples = multiples_q
@@ -84,7 +86,7 @@ def _ectyper_pipeline_vf(query_file, single_dict, display_vf=True, pipeline=None
     job_ectyper_vf = singles.enqueue(
         call_ectyper_vf,
         single_dict_vf,
-        depends_on=job_id)
+        depends_on=job_turtle)
     # TODO: this is double, switch everything to pipeline once tested
     d['job_ectyper_vf'] = job_ectyper_vf
     pipeline.jobs.update({
@@ -331,7 +333,9 @@ def _phylotyper_pipeline(subtype, query_file, pipeline=None, backlog=False):
         subtype,
         tsvfile,
         id_file=query_file + '_id.txt',
-        query_file=query_file,
+        job_id=pipeline.jobs['job_id'].rq_job,
+        job_turtle=pipeline.jobs['job_turtle'].rq_job,
+        job_ectyper_datastruct_vf=pipeline.jobs['job_ectyper_datastruct_vf'].rq_job,
         depends_on=job_ectyper_datastruct_vf)
     pipeline.jobs.update({
         'job'+jobname: Job(
