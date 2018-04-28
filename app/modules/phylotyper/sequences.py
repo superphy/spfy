@@ -24,8 +24,6 @@ def marker_query(marker_uris):
 
   return query
 
-@tojson
-@submit
 @prefix
 def sequence_query(marker_rdf, isolate_rdf):
 
@@ -136,7 +134,10 @@ class MarkerSequences(object):
         """
 
         genome_rdf = turtle_utils.normalize_rdfterm(genome_uri)
-        query_result = sequence_query(self.marker_uris, genome_rdf)
+        query = sequence_query(self.marker_uris, genome_rdf)
+        # query_result = sequence_query(self.marker_uris, genome_rdf)
+        query_result self.graph.query(query)
+        print(query_result)
 
         # Unroll result into dictionary with fasta-like keys
         seqdict = { "spfy|{}| {}:{}..{}".format(
