@@ -168,8 +168,10 @@ def reserve_id(query_file):
     spfyid, duplicate = _check(uriGenome)
 
     # Create a rdflib.graph object with the spfyID.
+    # We create this outside of the duplicate check because phylotyper
+    # requires it regardless.
     graph = Graph()
-    graph = reservation_triple(graph, uriGenome, largest+1)
+    graph = reservation_triple(graph, uriGenome, spfyid)
 
     if not duplicate:
         # Uploading the reservation graph secures the file->spfyID link
