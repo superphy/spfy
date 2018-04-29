@@ -108,7 +108,7 @@ class MarkerSequences(object):
 
     """
 
-    def __init__(self, markers=[':stx2A',':stx2B'], job_id, job_turtle, job_ectyper_datastruct_vf, redis_conn):
+    def __init__(self, markers=[':stx2A',':stx2B'], job_id=None, job_turtle=None, job_ectyper_datastruct_vf=None, redis_conn=None):
         """Constructor
 
         Args:
@@ -119,7 +119,7 @@ class MarkerSequences(object):
         # convert to proper RDF terms
         self.marker_uris = [turtle_utils.normalize_rdfterm(m) for m in markers]
         # Retrieve and merge graphs from pre-req. jobs.
-        self.graph = fetch_job(job_id, redis_conn) + fetch_job(job_turtle redis_conn) + fetch_job(job_ectyper_datastruct_vf, redis_conn)
+        self.graph = fetch_job(job_id, redis_conn) + fetch_job(job_turtle, redis_conn) + fetch_job(job_ectyper_datastruct_vf, redis_conn)
 
 
     def sequences(self, genome_uri):
@@ -136,7 +136,7 @@ class MarkerSequences(object):
         genome_rdf = turtle_utils.normalize_rdfterm(genome_uri)
         query = sequence_query(self.marker_uris, genome_rdf)
         # query_result = sequence_query(self.marker_uris, genome_rdf)
-        query_result self.graph.query(query)
+        query_result = self.graph.query(query)
         print(query_result)
 
         # Unroll result into dictionary with fasta-like keys
