@@ -333,9 +333,9 @@ def _phylotyper_pipeline(subtype, query_file, pipeline=None, backlog=False):
         subtype,
         tsvfile,
         query_file + '_id.txt',
-        pipeline.jobs['job_id'].rq_job,
-        pipeline.jobs['job_turtle'].rq_job,
-        pipeline.jobs['job_ectyper_datastruct_vf'].rq_job,
+        pipeline.jobs['job_id'].rq_job.get_id(),
+        pipeline.jobs['job_turtle'].rq_job.get_id(),
+        pipeline.jobs['job_ectyper_datastruct_vf'].rq_job.get_id(),
         depends_on=job_ectyper_datastruct_vf)
     pipeline.jobs.update({
         'job'+jobname: Job(

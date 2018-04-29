@@ -48,6 +48,9 @@ def phylotyper(uriIsolate, subtype, result_file, id_file=None, job_id=None, job_
         result_file (str): File location to write phylotyper tab-delim result to
         id_file (str)[OPTIONAL]: Read uriIsolate from file
         query_file (str): Overides VF lookup and runs on the genome directly.
+        job_id (str): the rq.job.Job.get_id() for the SpfyID job.
+        job_turtle (str)
+        job_ectyper_datastruct_vf (str)
 
     Returns:
         file to tab-delimited text results
