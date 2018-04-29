@@ -18,6 +18,7 @@ import pandas as pd
 import cPickle as pickle
 from rdflib import Graph, BNode, Literal, XSD
 import re
+import redis
 from collections import OrderedDict
 from redis import Redis
 
