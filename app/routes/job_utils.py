@@ -14,8 +14,8 @@ def fetch_job(job_id, redis_connection=None):
     Iterates through all queues looking for the job.
     '''
     if not redis_connection:
-        redis_connection = redis.from_url(config['REDIS_URL'])
-    queues = config['QUEUES_SPFY']
+        redis_connection = redis.from_url(config.REDIS_URL)
+    queues = config.QUEUES_SPFY
     for queue in queues:
         q = Queue(queue, connection=redis_connection)
         job = q.fetch_job(job_id)
