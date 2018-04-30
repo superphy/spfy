@@ -135,7 +135,7 @@ def to_dict(pt_file, subtype, pickle_file):
         #     str(pt_results)
         # ))
         pt_results = {
-            'subtype': 'No loci',
+            'subtype': '{0}: No loci'.format(subtype),
         }
 
     else:
