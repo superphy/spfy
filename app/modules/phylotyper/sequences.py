@@ -58,6 +58,8 @@ def sequence_query(marker_rdf, isolate_rdf):
         WHERE {{
             ?g a :spfyId .
             VALUES ?g {{ {} }}
+            ?contig a g:Contig ;
+    #           g:Identifier ?contigid .
         }}
     '''.format(isolate_rdf)
 
