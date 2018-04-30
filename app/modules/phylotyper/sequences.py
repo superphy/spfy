@@ -54,11 +54,12 @@ def sequence_query(marker_rdf, isolate_rdf):
     #     '''.format(isolate_rdf, ' '.join(marker_rdf))
 
     query = '''
-        SELECT ?g
+        SELECT *
         WHERE {{
             ?g a :spfyId .
+            VALUES ?g {{ {} }}
         }}
-    '''
+    '''.format(isolate_rdf)
 
     return query
 
