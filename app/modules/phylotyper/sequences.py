@@ -139,7 +139,7 @@ class MarkerSequences(object):
             dictionary
 
         """
-        raise Exception('graph: {0}'.format(self.graph.serialize(format="turtle")))
+        #raise Exception('graph: {0}'.format(self.graph.serialize(format="turtle")))
         genome_rdf = turtle_utils.normalize_rdfterm(genome_uri)
         query = sequence_query(self.marker_uris, genome_rdf)
         # query_result = sequence_query(self.marker_uris, genome_rdf)
