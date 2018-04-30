@@ -166,7 +166,6 @@ class MarkerSequences(object):
             }
             for tup in query_result
         ]
-        raise Exception('sequences() query_result: {0}'.format(l))
 
         # Unroll result into dictionary with fasta-like keys
         seqdict = { "spfy|{}| {}:{}..{}".format(
