@@ -154,6 +154,17 @@ class MarkerSequences(object):
         self.graph = g + fetch_job(job_id, redis_conn).result + fetch_job(job_turtle, redis_conn).result + fetch_job(job_ectyper_datastruct_vf, redis_conn).result
 
 
+    def _unroll(self, query_result):
+        '''
+        Custom method to convert query results into the same dictionary format as decorators.to_json().
+        :param query_result: 
+        :return: 
+        '''
+        l = []
+        for tup in query_result:
+
+
+
     def sequences(self, genome_uri):
         """Retrieve sequences for object alleles
 
@@ -170,7 +181,19 @@ class MarkerSequences(object):
         # query_result = sequence_query(self.marker_uris, genome_rdf)
         query_result = self.graph.query(query)
         query_result = [row for row in query_result]
-        raise Exception('sequences() query_result: {0}'.format(query_result))
+        # ?contig ?contigid ?region ?start ?len ?seq
+        l = [
+            {
+                'contig': tup[0].toPython(),
+                'contigid': tup[1].toPython(),
+                'region': tup[2].toPython(),
+                'start': tup[3].toPython(),
+                'len': tup[4].toPython(),
+                'seq': tup[5].toPython()
+            }
+            for tup in query_result
+        ]
+        raise Exception('sequences() query_result: {0}'.format(l))
 
         # Unroll result into dictionary with fasta-like keys
         seqdict = { "spfy|{}| {}:{}..{}".format(
