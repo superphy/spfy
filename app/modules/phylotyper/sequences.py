@@ -5,10 +5,13 @@ Example:
     $ python sequences.py -s stx1
 
 """
-
+import os
+from rdflib import Graph
 from middleware.decorators import submit, prefix, tojson
 from middleware.graphers import turtle_utils
 from routes.job_utils import fetch_job
+
+__location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
 @submit
 @prefix
@@ -118,8 +121,12 @@ class MarkerSequences(object):
 
         # convert to proper RDF terms
         self.marker_uris = [turtle_utils.normalize_rdfterm(m) for m in markers]
+        # Read the phylotyper ontology as a starter graph.
+        g = Graph()
+        ontology_turtle_file = os.path.join(__location__, 'superphy_subtyping.ttl')
+        g.parse(ontology_turtle_file, format="turtle")
         # Retrieve and merge graphs from pre-req. jobs.
-        self.graph = fetch_job(job_id, redis_conn).result + fetch_job(job_turtle, redis_conn).result + fetch_job(job_ectyper_datastruct_vf, redis_conn).result
+        self.graph = g + fetch_job(job_id, redis_conn).result + fetch_job(job_turtle, redis_conn).result + fetch_job(job_ectyper_datastruct_vf, redis_conn).result
 
 
     def sequences(self, genome_uri):
