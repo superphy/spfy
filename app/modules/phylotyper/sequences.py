@@ -170,7 +170,7 @@ class MarkerSequences(object):
         # Unroll result into dictionary with fasta-like keys
         seqdict = { "spfy|{}| {}:{}..{}".format(
             turtle_utils.fulluri_to_basename(r['region']),
-            r['contigid'], r['start'], r['start']+r['len']-1): r['seq'] for r in query_result }
+            r['contigid'], r['start'], r['start']+r['len']-1): r['seq'] for r in l }
 
         return seqdict
 
