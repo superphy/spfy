@@ -137,7 +137,7 @@ class MarkerSequences(object):
         query = sequence_query(self.marker_uris, genome_rdf)
         # query_result = sequence_query(self.marker_uris, genome_rdf)
         query_result = self.graph.query(query)
-        print('sequences() query_result: {0}'.format(query_result))
+        raise Exception('sequences() query_result: {0}'.format(query_result))
 
         # Unroll result into dictionary with fasta-like keys
         seqdict = { "spfy|{}| {}:{}..{}".format(
