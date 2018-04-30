@@ -13,20 +13,6 @@ from routes.job_utils import fetch_job
 
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
-@submit
-@prefix
-def marker_query(marker_uris):
-
-  query = '''
-  SELECT ?m
-  WHERE {{
-    ?m rdf:type :Marker .
-    VALUES ?m {{ {} }}
-  }}
-  '''.format(' '.join(marker_uris))
-
-  return query
-
 @prefix
 def sequence_query(marker_rdf, isolate_rdf):
     # query = '''
@@ -174,8 +160,8 @@ class MarkerSequences(object):
                 'contig': str(tup[0].toPython()),
                 'contigid': str(tup[1].toPython()),
                 'region': str(tup[2].toPython()),
-                'start': int(tup[3].toPython().strip('L')),
-                'len': int(tup[4].toPython().strip('L')),
+                'start': int(tup[3].toPython()),
+                'len': int(tup[4].toPython()),
                 'seq': str(tup[5].toPython())
             }
             for tup in query_result
