@@ -115,4 +115,5 @@ def generate_turtle_skeleton(query_file):
 
 def turtle_grapher(query_file):
     graph = generate_turtle_skeleton(query_file)
-    return queue_upload(graph)
+    queue_upload(graph)
+    return graph

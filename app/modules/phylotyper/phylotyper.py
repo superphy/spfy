@@ -18,7 +18,9 @@ import pandas as pd
 import cPickle as pickle
 from rdflib import Graph, BNode, Literal, XSD
 import re
+import redis
 from collections import OrderedDict
+from redis import Redis
 
 
 import config
@@ -29,12 +31,15 @@ from modules.phylotyper.sequences import MarkerSequences, phylotyper_query, gene
 
 logger = logging.getLogger(__name__)
 
+redis_url = config.REDIS_URL
+redis_conn = redis.from_url(redis_url)
+
 def _check_tsv(pt_file):
     pt_results = pd.read_table(pt_file)
     if pt_results.empty:
         raise Exception('_check_tsv() failed as pt_results.empty == true for pt_file: {0} with df content: {1}'.format(pt_file, str(pt_results)))
 
-def phylotyper(uriIsolate, subtype, result_file, id_file=None):
+def phylotyper(uriIsolate, subtype, result_file, id_file=None, job_id=None, job_turtle=None, job_ectyper_datastruct_vf=None):
     """ Wrapper for Phylotyper
 
     Args:
@@ -42,6 +47,10 @@ def phylotyper(uriIsolate, subtype, result_file, id_file=None):
         subtype (str): Phylotyper recognized subtype (e.g. stx1)
         result_file (str): File location to write phylotyper tab-delim result to
         id_file (str)[OPTIONAL]: Read uriIsolate from file
+        query_file (str): Overides VF lookup and runs on the genome directly.
+        job_id (str): the rq.job.Job.get_id() for the SpfyID job.
+        job_turtle (str)
+        job_ectyper_datastruct_vf (str)
 
     Returns:
         file to tab-delimited text results
@@ -71,15 +80,14 @@ def phylotyper(uriIsolate, subtype, result_file, id_file=None):
     loci = [ gu(l['locus']) for l in sorted(loci_results, key=lambda k: k['i'])]
 
     # Get alleles for this genome
-    markerseqs = MarkerSequences(loci)
+    markerseqs = MarkerSequences(loci, job_id, job_turtle, job_ectyper_datastruct_vf, redis_conn)
     fasta = markerseqs.fasta(uriIsolate)
-    # fasta =
 
     temp_dir = mkdtemp(prefix='pt'+subtype, dir=config.DATASTORE)
     query_file = os.path.join(temp_dir, 'query.fasta')
     output_file = os.path.join(temp_dir, 'subtype_predictions.tsv')
 
-    if fasta:
+    if query_file:
         # Run phylotyper
         with open(query_file, 'w') as fh:
             fh.write(fasta)
@@ -127,7 +135,7 @@ def to_dict(pt_file, subtype, pickle_file):
         #     str(pt_results)
         # ))
         pt_results = {
-            'subtype': 'No loci',
+            'subtype': '{0}: No loci'.format(subtype),
         }
 
     else:
@@ -178,11 +186,11 @@ def beautify(p_file, genome):
 
     #print(pt_dict)
 
-    if pt_dict['subtype'] == 'No loci':
+    if 'No loci' in pt_dict['subtype']:
         table_rows = [
             {
                 'genome': genome,
-                'subtype_gene': 'N/A',
+                'subtype_gene': pt_dict['subtype'].split(':')[0],
                 'start': 'N/A',
                 'stop': 'N/A',
                 'contig': 'N/A',
@@ -236,7 +244,7 @@ def savvy(p_file, subtype):
     # Load data
     pt_dict = pickle.load(open(p_file, 'rb'))
 
-    if pt_dict['subtype'] != 'No loci':
+    if 'No loci' not in pt_dict['subtype']:
 
         # Phylotyper scheme
         phylotyper_uri = gu('subt:'+subtype)
@@ -333,7 +341,7 @@ def ignorant(genome_uri, subtype, pickle_file):
     if not results:
         # raise Exception("ignorant() could not find phylotyper results for genome_uri: {0}, subtype: {1}, with pickle_file: {2}".format(genome_uri, subtype, pickle_file))
         pt_dict = {
-            'subtype': 'No loci'
+            'subtype': '{0}: No loci'.format(subtype)
         }
 
     pickle.dump(pt_dict, open(pickle_file, 'wb'))

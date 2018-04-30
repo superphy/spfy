@@ -16,7 +16,7 @@ from rq import Queue
 from rdflib import Graph
 
 from modules.qc.qc import qc
-from middleware.blazegraph.reserve_id import write_reserve_id
+from middleware.blazegraph.reserve_id import reserve_id
 from modules.amr.amr import amr
 from modules.amr.amr_to_dict import amr_to_dict
 from middleware.display.beautify import beautify
@@ -111,7 +111,7 @@ def blob_savvy_enqueue(single_dict):
         query_file = single_dict['i'][0]
         for file in query_list:
             job_qc = multiples_q.enqueue(qc, file, result_ttl=-1)
-            job_id = blazegraph_q.enqueue(write_reserve_id, file, depends_on=job_qc, result_ttl=-1)
+            job_id = blazegraph_q.enqueue(reserve_id, file, depends_on=job_qc, result_ttl=-1)
             pan_jobs[job_qc.get_id()] = {'file': file, 'analysis': 'Quality Control'}
             pan_jobs[job_id.get_id()] = {'file': file, 'analysis': 'ID Reservation'}
 

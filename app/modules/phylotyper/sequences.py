@@ -5,52 +5,65 @@ Example:
     $ python sequences.py -s stx1
 
 """
-
+import os
+from rdflib import Graph
 from middleware.decorators import submit, prefix, tojson
 from middleware.graphers import turtle_utils
+from routes.job_utils import fetch_job
 
-@submit
-@prefix
-def marker_query(marker_uris):
+__location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
-  query = '''
-  SELECT ?m 
-  WHERE {{
-    ?m rdf:type :Marker .
-    VALUES ?m {{ {} }}
-  }}
-  '''.format(' '.join(marker_uris))
-
-  return query
-
-@tojson
-@submit
 @prefix
 def sequence_query(marker_rdf, isolate_rdf):
+    # query = '''
+    #         SELECT ?contig ?contigid ?region ?start ?len ?seq
+    #         WHERE {{
+    #             ?g a :spfyId .
+    #             VALUES ?g {{ {} }}
+    #             ?contig a g:Contig ;
+    #                 g:Identifier ?contigid .
+    #             ?m a :VirulenceFactor .
+    #             ?contig g:DNASequence ?dna .
+    #             VALUES ?m {{ {} }} .
+    #             ?region a faldo:Region ;
+    #                 :hasPart ?m ;
+    #                 :isFoundIn ?contig ;
+    #                 :isFoundIn ?g ;
+    #                 faldo:begin ?b ;
+    #                 faldo:end ?e .
+    #             ?b faldo:position ?beginPos .
+    #             ?e faldo:position ?endPos .
+    #             BIND( IF(?beginPos < ?endPos,?beginPos,?endPos) as ?start)
+    #             BIND( IF(?beginPos < ?endPos,?endPos-?beginPos+1,?beginPos-?endPos+1) as ?len)
+    #             BIND( SUBSTR( ?dna, ?start, ?len ) as ?seq )
+    #         }}
+    #     '''.format(isolate_rdf, ' '.join(marker_rdf))
 
     query = '''
-        SELECT ?contig ?contigid ?region ?start ?len ?seq
-        WHERE {{
-            ?g a :spfyId .
-            VALUES ?g {{ {} }}
-            ?contig a g:Contig ;
-                g:Identifier ?contigid .
-            ?m a :VirulenceFactor .
-            ?contig g:DNASequence ?dna .
-            VALUES ?m {{ {} }} .
-            ?region a faldo:Region ;
-                :hasPart ?m ;
-                :isFoundIn ?contig ;
-                :isFoundIn ?g ;
-                faldo:begin ?b ;
-                faldo:end ?e .
-            ?b faldo:position ?beginPos .
-            ?e faldo:position ?endPos .
-            BIND( IF(?beginPos < ?endPos,?beginPos,?endPos) as ?start) 
-            BIND( IF(?beginPos < ?endPos,?endPos-?beginPos+1,?beginPos-?endPos+1) as ?len) 
-            BIND( SUBSTR( ?dna, ?start, ?len ) as ?seq )
-        }}
-    '''.format(isolate_rdf, ' '.join(marker_rdf))
+            SELECT ?contig ?contigid ?region ?start ?len ?seq
+            WHERE {{
+                ?g a :spfyId .
+                VALUES ?g {{ {} }}
+                ?contig a g:Contig ;
+                    g:Identifier ?contigid .
+                ?m a :VirulenceFactor .
+                ?contig g:DNASequence ?dna .
+                VALUES ?m {{ {} }} .
+                ?region a faldo:Region ;
+                    :hasPart ?m ;
+                    faldo:begin ?b ;
+                    faldo:end ?e .
+                ?b faldo:position ?beginPos .
+                ?e faldo:position ?endPos .
+                ?region :isFoundIn ?contig .
+                ?contig :isFoundIn ?bagOfContigs .
+                ?bagOfContigs :isFoundIn ?genomeHash .
+                ?genomeHash :isFoundIn ?g .
+                BIND( IF(?beginPos < ?endPos,?beginPos,?endPos) as ?start)
+                BIND( IF(?beginPos < ?endPos,?endPos-?beginPos+1,?beginPos-?endPos+1) as ?len)
+                BIND( SUBSTR( ?dna, ?start, ?len ) as ?seq )
+            }}
+        '''.format(isolate_rdf, ' '.join(marker_rdf))
 
     return query
 
@@ -61,7 +74,7 @@ def sequence_query(marker_rdf, isolate_rdf):
 def phylotyper_query(subtypescheme_rdf, isolate_rdf):
 
     query = '''
-    
+
         SELECT DISTINCT ?pt ?typeLabel ?score ?region ?contigid ?beginPos ?endPos
         WHERE {{
             ?pt a subt:PTST ;
@@ -109,7 +122,7 @@ class MarkerSequences(object):
 
     """
 
-    def __init__(self, markers=[':stx2A',':stx2B']):
+    def __init__(self, markers=[':stx2A',':stx2B'], job_id=None, job_turtle=None, job_ectyper_datastruct_vf=None, redis_conn=None):
         """Constructor
 
         Args:
@@ -119,7 +132,12 @@ class MarkerSequences(object):
 
         # convert to proper RDF terms
         self.marker_uris = [turtle_utils.normalize_rdfterm(m) for m in markers]
-        
+        # Read the phylotyper ontology as a starter graph.
+        g = Graph()
+        ontology_turtle_file = os.path.join(__location__, 'superphy_subtyping.ttl')
+        g.parse(ontology_turtle_file, format="turtle")
+        # Retrieve and merge graphs from pre-req. jobs.
+        self.graph = g + fetch_job(job_id, redis_conn).result + fetch_job(job_turtle, redis_conn).result + fetch_job(job_ectyper_datastruct_vf, redis_conn).result
 
     def sequences(self, genome_uri):
         """Retrieve sequences for object alleles
@@ -131,14 +149,28 @@ class MarkerSequences(object):
             dictionary
 
         """
-
+        #raise Exception('graph: {0}'.format(self.graph.serialize(format="turtle")))
         genome_rdf = turtle_utils.normalize_rdfterm(genome_uri)
-        query_result = sequence_query(self.marker_uris, genome_rdf)
+        query = sequence_query(self.marker_uris, genome_rdf)
+        # query_result = sequence_query(self.marker_uris, genome_rdf)
+        query_result = self.graph.query(query)
+        # ?contig ?contigid ?region ?start ?len ?seq
+        l = [
+            {
+                'contig': str(tup[0].toPython()),
+                'contigid': str(tup[1].toPython()),
+                'region': str(tup[2].toPython()),
+                'start': int(tup[3].toPython()),
+                'len': int(tup[4].toPython()),
+                'seq': str(tup[5].toPython())
+            }
+            for tup in query_result
+        ]
 
         # Unroll result into dictionary with fasta-like keys
         seqdict = { "spfy|{}| {}:{}..{}".format(
-            turtle_utils.fulluri_to_basename(r['region']), 
-            r['contigid'], r['start'], r['start']+r['len']-1): r['seq'] for r in query_result }
+            turtle_utils.fulluri_to_basename(r['region']),
+            r['contigid'], r['start'], r['start']+r['len']-1): r['seq'] for r in l }
 
         return seqdict
 
@@ -182,6 +214,6 @@ if __name__=='__main__':
         required=True
     )
     args = parser.parse_args()
-    
+
     ms = MarkerSequences(args.m)
     print ms.sequences(args.g)

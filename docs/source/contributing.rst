@@ -289,7 +289,7 @@ Directly Adding a New Module
 
 .. code-block:: python
 
-  from middleware.blazegraph.reserve_id import write_reserve_id
+  from middleware.blazegraph.reserve_id import reserve_id
 
 The top-most directory is used to build Docker Images and copies the contents of ``/app`` to run inside the containers. This is done as the apps (Flask, Reactapp) themselves don't need copies of the Dockerfiles, other apps, etc.
 

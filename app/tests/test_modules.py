@@ -8,7 +8,7 @@ import cPickle as pickle
 import pandas as pd
 
 from modules.qc.qc import qc, check_header_parsing, check_ecoli
-from middleware.blazegraph.reserve_id import write_reserve_id
+from middleware.blazegraph.reserve_id import reserve_id
 from modules.ectyper.call_ectyper import call_ectyper_vf, call_ectyper_serotype
 from modules.amr.amr import amr
 from modules.amr.amr_to_dict import amr_to_dict
