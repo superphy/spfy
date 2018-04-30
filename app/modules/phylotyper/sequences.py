@@ -119,7 +119,7 @@ class MarkerSequences(object):
         # convert to proper RDF terms
         self.marker_uris = [turtle_utils.normalize_rdfterm(m) for m in markers]
         # Retrieve and merge graphs from pre-req. jobs.
-        self.graph = fetch_job(job_id, redis_conn) + fetch_job(job_turtle, redis_conn) + fetch_job(job_ectyper_datastruct_vf, redis_conn)
+        self.graph = fetch_job(job_id, redis_conn).result + fetch_job(job_turtle, redis_conn).result + fetch_job(job_ectyper_datastruct_vf, redis_conn).result
 
 
     def sequences(self, genome_uri):
