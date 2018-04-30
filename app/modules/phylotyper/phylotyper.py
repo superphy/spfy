@@ -186,11 +186,11 @@ def beautify(p_file, genome):
 
     #print(pt_dict)
 
-    if pt_dict['subtype'] == 'No loci':
+    if 'No loci' in pt_dict['subtype']:
         table_rows = [
             {
                 'genome': genome,
-                'subtype_gene': 'N/A',
+                'subtype_gene': pt_dict['subtype'].split(':')[0],
                 'start': 'N/A',
                 'stop': 'N/A',
                 'contig': 'N/A',
@@ -341,7 +341,7 @@ def ignorant(genome_uri, subtype, pickle_file):
     if not results:
         # raise Exception("ignorant() could not find phylotyper results for genome_uri: {0}, subtype: {1}, with pickle_file: {2}".format(genome_uri, subtype, pickle_file))
         pt_dict = {
-            'subtype': 'No loci'
+            'subtype': '{0}: No loci'.format(subtype)
         }
 
     pickle.dump(pt_dict, open(pickle_file, 'wb'))
