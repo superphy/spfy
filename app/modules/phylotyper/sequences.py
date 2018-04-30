@@ -54,14 +54,30 @@ def sequence_query(marker_rdf, isolate_rdf):
     #     '''.format(isolate_rdf, ' '.join(marker_rdf))
 
     query = '''
-        SELECT *
-        WHERE {{
-            ?g a :spfyId .
-            VALUES ?g {{ {} }}
-            ?contig a g:Contig ;
-    #           g:Identifier ?contigid .
-        }}
-    '''.format(isolate_rdf)
+            SELECT ?contig ?contigid ?region ?start ?len ?seq
+            WHERE {{
+                ?g a :spfyId .
+                VALUES ?g {{ {} }}
+                ?contig a g:Contig ;
+                    g:Identifier ?contigid .
+                ?m a :VirulenceFactor .
+                ?contig g:DNASequence ?dna .
+                VALUES ?m {{ {} }} .
+                ?region a faldo:Region ;
+                    :hasPart ?m ;
+                    faldo:begin ?b ;
+                    faldo:end ?e .
+                ?b faldo:position ?beginPos .
+                ?e faldo:position ?endPos .
+                ?region :isFoundIn ?contig .
+                ?contig :isFoundIn ?bagOfContigs .
+                ?bagOfContigs :isFoundIn ?genomeHash .
+                ?genomeHash :isFoundIn ?g .
+                BIND( IF(?beginPos < ?endPos,?beginPos,?endPos) as ?start)
+                BIND( IF(?beginPos < ?endPos,?endPos-?beginPos+1,?beginPos-?endPos+1) as ?len)
+                BIND( SUBSTR( ?dna, ?start, ?len ) as ?seq )
+            }}
+        '''.format(isolate_rdf, ' '.join(marker_rdf))
 
     return query
 
