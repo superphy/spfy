@@ -153,18 +153,6 @@ class MarkerSequences(object):
         # Retrieve and merge graphs from pre-req. jobs.
         self.graph = g + fetch_job(job_id, redis_conn).result + fetch_job(job_turtle, redis_conn).result + fetch_job(job_ectyper_datastruct_vf, redis_conn).result
 
-
-    def _unroll(self, query_result):
-        '''
-        Custom method to convert query results into the same dictionary format as decorators.to_json().
-        :param query_result: 
-        :return: 
-        '''
-        l = []
-        for tup in query_result:
-
-
-
     def sequences(self, genome_uri):
         """Retrieve sequences for object alleles
 
