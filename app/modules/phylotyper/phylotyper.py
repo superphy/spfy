@@ -244,7 +244,7 @@ def savvy(p_file, subtype):
     # Load data
     pt_dict = pickle.load(open(p_file, 'rb'))
 
-    if pt_dict['subtype'] != 'No loci':
+    if 'No loci' not in pt_dict['subtype']:
 
         # Phylotyper scheme
         phylotyper_uri = gu('subt:'+subtype)
