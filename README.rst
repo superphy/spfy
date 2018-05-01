@@ -16,8 +16,8 @@ Use:
 1. Install Docker (& Docker-Compose separately if you're on Linux,
    `link <https://docs.docker.com/compose/install/>`__). mac/windows
    users have Compose bundled with Docker Engine.
-2. ``git clone --recursive https://github.com/superphy/backend.git``
-3. ``cd backend/``
+2. ``git clone --recursive https://github.com/superphy/spfy.git``
+3. ``cd spfy/``
 4. ``docker-compose up``
 5. Visit http://localhost:8090
 6. Eat cake :cake:
