@@ -11,7 +11,7 @@ log = logging.getLogger(__name__)
 
 redis_url = config.REDIS_URL
 redis_conn = redis.from_url(redis_url)
-priority_q = Queue('priority', connection=redis_conn, default_timeout=600)
+priority_q = Queue('priority', connection=redis_conn, default_timeout=config.DEFAULT_TIMEOUT)
 
 def blob_gc_enqueue(query, target):
     job_gc = priority_q.enqueue(groupcomparisons, query, target, result_ttl=-1)

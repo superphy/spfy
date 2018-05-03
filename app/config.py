@@ -13,7 +13,7 @@ MAX_TIME_TO_WAIT = 10
 # DEFAULT_TIMEOUT is used to tell the rq-workers tha maximum time to wait for an
 # enqueued function to complete before terminating it with and ERROR
 # If note specified, jobs must execute within 3 mins
-DEFAULT_TIMEOUT = 600 # in seconds (ie. 10 mins)
+DEFAULT_TIMEOUT = 1200 # in seconds (ie. 10 mins)
 # Defines how long results are kept in Redis. 500 is the default for RQ.
 DEFAULT_RESULT_TTL=500
 PAN_TIMEOUT = 100000
