@@ -435,7 +435,7 @@ def blob_savvy_enqueue(single_dict, pipeline):
 
     # The base file data for blazegraph.
     job_turtle = multiples_q.enqueue(
-        turtle_grapher, query_file, depends_on=job_qc)
+        turtle_grapher, query_file, depends_on=job_id)
     pipeline.jobs.update({
         'job_turtle': Job(
             rq_job=job_turtle,
