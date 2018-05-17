@@ -28,13 +28,13 @@ def query_db_status():
 
 @tojson
 @submit
-@prefix
+@prefix2
 def query_db_summary():
     '''
     '''
     query = """
-    SELECT (COUNT(DISTINCT ?spfyIdObject) AS ?count) WHERE {{
-        ?spfyIdObject a :spfyId .
+    SELECT (COUNT(DISTINCT ?GenomeObject) AS ?NumberGenomes) WHERE {{
+        ?GenomeObject a g:Genome .
     }}
     """
     return query
