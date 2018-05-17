@@ -28,7 +28,7 @@ def query_db_status():
 
 @tojson
 @submit
-@prefix2
+@prefix
 def query_db_summary():
     '''
     '''
