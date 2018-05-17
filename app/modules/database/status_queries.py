@@ -33,7 +33,7 @@ def query_db_summary():
     '''
     '''
     query = """
-    SELECT COUNT(DISTINCT ?spfyIdObject) AS ?count WHERE {{
+    SELECT (COUNT(DISTINCT ?spfyIdObject) AS ?count) WHERE {{
         ?spfyIdObject a :spfyId .
     }}
     """
