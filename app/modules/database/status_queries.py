@@ -26,5 +26,15 @@ def query_db_status():
     """
     return query
 
-if __name__ == "__main__":
-    print query_everything()
+@tojson
+@submit
+@prefix
+def query_db_summary():
+    '''
+    '''
+    query = """
+    SELECT (COUNT(DISTINCT ?GenomeObject) AS ?NumberGenomes) WHERE {{
+        ?GenomeObject a g:Genome .
+    }}
+    """
+    return query

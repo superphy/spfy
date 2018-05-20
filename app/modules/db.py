@@ -2,7 +2,7 @@ import logging
 import config
 import redis
 from rq import Queue
-from modules.database.status_queries import query_db_status
+from modules.database.status_queries import query_db_status, query_db_summary
 from modules.loggingFunctions import initialize_logging
 
 # logging
@@ -15,5 +15,10 @@ priority_q = Queue('priority', connection=redis_conn, default_timeout=config.DEF
 
 def blob_db_enqueue():
     job_db = priority_q.enqueue(query_db_status, result_ttl=-1)
+    log.info('JOB ID IS: ' + job_db.get_id())
+    return job_db.get_id()
+
+def blob_db_summary_enqueue():
+    job_db = priority_q.enqueue(query_db_summary, result_ttl=-1)
     log.info('JOB ID IS: ' + job_db.get_id())
     return job_db.get_id()
