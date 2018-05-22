@@ -9,9 +9,6 @@ def _mock_complete(s=0):
     sleep(s)
     return 'cats'
 
-def _mock_failed():
-    raise Exception('This Job is suppose to fail')
-
 def test_rq_responses():
     """Tests basic responses of RQ and Job statuses.
     """
@@ -20,10 +17,6 @@ def test_rq_responses():
     finished_job = queue.enqueue(_mock_complete, s)
     sleep(s+1)
     assert finished_job.is_finished
-
-    # Failure Check.
-    failed_job = queue.enqueue(_mock_failed)
-    assert failed_job.is_failed
 
 def test_rq_ttl_finished():
     # result_ttl Expired Check.
