@@ -87,7 +87,7 @@ def phylotyper(uriIsolate, subtype, result_file, id_file=None, job_id=None, job_
     query_file = os.path.join(temp_dir, 'query.fasta')
     output_file = os.path.join(temp_dir, 'subtype_predictions.tsv')
 
-    if query_file:
+    if fasta:
         # Run phylotyper
         with open(query_file, 'w') as fh:
             fh.write(fasta)
