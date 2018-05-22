@@ -10,11 +10,6 @@ before_install:
   - python -c 'import os,sys,fcntl; flags = fcntl.fcntl(sys.stdout, fcntl.F_GETFL); fcntl.fcntl(sys.stdout, fcntl.F_SETFL, flags&~os.O_NONBLOCK);'
   # Increase workers for NODE DNS resolution. https://stackoverflow.com/questions/35387264/node-js-request-module-getting-etimedout-and-esockettimedout
   - export UV_THREADPOOL_SIZE=16
-  #### Docker:
-  - docker-compose up -d
-  - docker ps -a
-  - docker-compose logs webserver
-  - ls
   #### miniconda install:
   # We do this conditionally because it saves us some downloading if the
   # version is the same.
@@ -50,7 +45,17 @@ install:
   - pip install -r tests/test_requirements.txt
 script:
   #### Run Pytest
-  - python -m pytest --ignore modules/ectyper/ecoli_serotyping -v
+  - python -m pytest -v --ignore modules/ectyper/ecoli_serotyping --ignore tests/docker/
+  # Teardown conda
+  - source deactivate
+  - conda env remove -n backend
+  #### Docker:
+  - docker-compose up -d
+  - docker ps -a
+  - docker-compose logs webserver
+  - ls
+  #### Run Pytest on Docker env
+  - python -m pytest -v tests/docker/
 after_failure:
   # Check the logs if tests fail.
   - docker-compose logs webserver
