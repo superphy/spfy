@@ -1,13 +1,13 @@
 lanugage: python
-sudo: required
-services:
-  - docker
 matrix:
   include:
     - python: 2.7.15
       env: TO_TEST=CONDA
     - python: 2.7.15
       env: TO_TEST=DOCKER
+sudo: required
+services:
+  - docker
 before_install:
   - sudo apt-get update
   # Check Python version.
