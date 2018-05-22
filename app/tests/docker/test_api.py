@@ -14,7 +14,7 @@ def test_api():
 import subprocess
 import config
 
-WEBSERVER = 'backend_webserver_1'
+WEBSERVER = 'spfy_webserver_1'
 blazegraph_url = config.database['blazegraph_url']
 
 exc = """docker exec -i {webserver} sh -c""".format(webserver=WEBSERVER)
