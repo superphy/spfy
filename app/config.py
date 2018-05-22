@@ -66,7 +66,7 @@ database = {}
 #database['blazegraph_url'] = 'http://localhost:9000/blazegraph/namespace/superphy/sparql'
 database['blazegraph_url'] = os.getenv(
     'SUPERPHY_RDF_URL',
-    'http://blazegraph:8080/bigdata/sparql'
+    'http://blazegraph:8080/blazegraph/sparql'
 )
 # database['blazegraph_url'] = os.getenv(
 #     'SUPERPHY_RDF_URL',
