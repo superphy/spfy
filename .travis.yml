@@ -1,11 +1,13 @@
 lanugage: python
 
-python: 2.7
-
 matrix:
   include:
-    - env: TO_TEST=CONDA
-    - env: TO_TEST=DOCKER
+    - python: 2.6
+      env: TO_TEST=CONDA
+    - python: 2.7
+      env: TO_TEST=CONDA
+    - python: 2.7
+      env: TO_TEST=DOCKER
 
 sudo: required
 services:
