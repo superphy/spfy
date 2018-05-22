@@ -39,7 +39,7 @@ install:
       wget https://raw.githubusercontent.com/superphy/docker-flask-conda/master/app/environment.yml;
       conda env create -q -f environment.yml -n backend;
       source activate backend;
-      wget https://raw.githubusercontent.com/superphy/docker-flask-conda/webserver/app/environment.yml -O; environment-webserver.yml;
+      wget https://raw.githubusercontent.com/superphy/docker-flask-conda/webserver/app/environment.yml -O environment-webserver.yml;
       conda env update -q -f environment-webserver.yml;
     fi
   # Install pytest
