@@ -10,6 +10,9 @@ matrix:
       env: TO_TEST=DOCKER
 before_install:
   - sudo apt-get update
+  # Upgrade pip
+  - python --version
+  - pip install --upgrade pip
   # Turn off O_NONBLOCK. See https://github.com/travis-ci/travis-ci/issues/4704#issuecomment-348435959
   - python -c 'import os,sys,fcntl; flags = fcntl.fcntl(sys.stdout, fcntl.F_GETFL); fcntl.fcntl(sys.stdout, fcntl.F_SETFL, flags&~os.O_NONBLOCK);'
   # Increase workers for NODE DNS resolution. https://stackoverflow.com/questions/35387264/node-js-request-module-getting-etimedout-and-esockettimedout
