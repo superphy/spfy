@@ -1,12 +1,13 @@
+lanugage: python
 sudo: required
 services:
   - docker
-lanugage: python
-python:
-  - "2.7"
-env:
-  - TO_TEST=CONDA
-  - TO_TEST=DOCKER
+matrix:
+  include:
+    - python: 2.7
+      env: TO_TEST=CONDA
+    - python: 2.7
+      env: TO_TEST=DOCKER
 before_install:
   - sudo apt-get update
   # Turn off O_NONBLOCK. See https://github.com/travis-ci/travis-ci/issues/4704#issuecomment-348435959
