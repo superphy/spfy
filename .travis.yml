@@ -3,12 +3,6 @@ python: 2.7.15
 env:
   - TO_TEST=CONDA
   - TO_TEST=DOCKER
-matrix:
-  include:
-    - python: 2.7.15
-      env: TO_TEST=CONDA
-    - python: 2.7.15
-      env: TO_TEST=DOCKER
 sudo: required
 services:
   - docker
