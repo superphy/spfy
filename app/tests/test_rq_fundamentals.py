@@ -7,7 +7,7 @@ queue = Queue(async=False, connection=FakeStrictRedis())
 
 def _mock_complete(s=0):
     sleep(s)
-    return True
+    return 'cats'
 
 def _mock_failed():
     raise Exception('This Job is suppose to fail')
@@ -35,15 +35,5 @@ def test_rq_ttl_finished():
     sleep(10)
     # Check various job statuses.
     assert result_ttl_job.is_finished == True
-    assert result_ttl_job.is_failed == 'cats'
+    assert result_ttl_job.is_failed == False
     assert result_ttl_job.result == 'cats'
-
-def test_rq_job_stats():
-    '''Check timings from RQ Jobs.
-    '''
-    for s in range(0,16,5):
-        job = queue.enqueue(_mock_complete,s)
-        sleep(s+1)
-        start = job.started_at
-        stop = job.ended_at
-        assert 'start: {0}, stop: {1}'.format(start,stop) == 'cats'

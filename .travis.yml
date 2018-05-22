@@ -49,6 +49,7 @@ script:
   # Teardown conda
   - source deactivate
   - conda env remove -n backend
+  - rm -rf ~/miniconda
   #### Docker:
   - docker-compose up -d
   - docker ps -a

@@ -97,32 +97,6 @@ def test_pipeline_model_subtyping(p=None):
     p.cache_jobs('somefilename.fasta')
     # Test Pipeline.merge_jobs()
     p.merge_jobs()
-    # Test Pipeline.complete(), should be True.
-    assert p.complete()
-
-    # Test Pipeline.to_json().
-    json = p.to_json()
-    assert isinstance(json, list)
-
-    # Add an AMR job and re-test.
-    mock_amr  = MockRQJob(
-        result = test_subtyping_model_direct(constants.BEAUTIFY_AMR)
-    )
-    p.jobs.update({
-        'job_ectyper_beautify_amr': models.Job(
-            rq_job=mock_amr,
-            name='job_ectyper_beautify_amr',
-            transitory=False,
-            backlog=False,
-            display=True
-        )
-    })
-    p.merge_jobs()
-    # Test Pipeline.complete(), should be True.
-    assert p.complete()
-    # Test Pipeline.to_json().
-    json = p.to_json()
-    assert isinstance(json, list)
 
 def test_pipeline_model_dill():
     p = _create_example_pipeline()
