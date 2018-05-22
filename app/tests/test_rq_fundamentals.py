@@ -10,7 +10,7 @@ def _mock_complete(s=0):
     return True
 
 def _mock_failed():
-    assert True == False
+    raise Exception('This Job is suppose to fail')
 
 def test_rq_responses():
     """Tests basic responses of RQ and Job statuses.
@@ -33,8 +33,8 @@ def test_rq_ttl_finished():
     # Job result should still exist.
     assert result_ttl_job.is_finished
     sleep(10)
-    # TODO: see what errors are thrown.
-    assert result_ttl_job.is_finished == 'cats'
+    # Check various job statuses.
+    assert result_ttl_job.is_finished == True
     assert result_ttl_job.is_failed == 'cats'
     assert result_ttl_job.result == 'cats'
 
@@ -43,6 +43,7 @@ def test_rq_job_stats():
     '''
     for s in range(0,16,5):
         job = queue.enqueue(_mock_complete,s)
+        sleep(s+1)
         start = job.started_at
         stop = job.ended_at
         assert 'start: {0}, stop: {1}'.format(start,stop) == 'cats'

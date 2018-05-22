@@ -94,7 +94,7 @@ def test_pipeline_model_subtyping(p=None):
         assert isinstance(p.jobs[k], models.Job)
 
     # Test Pipeline.cache_jobs()
-    p.cache_jobs()
+    p.cache_jobs('somefilename.fasta')
     # Test Pipeline.merge_jobs()
     p.merge_jobs()
     # Test Pipeline.complete(), should be True.
