@@ -1,2 +1,4 @@
 # Additional requirements for testing.
 fakeredis==0.10.1
+requests
+pytest

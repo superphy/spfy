@@ -1,58 +1,70 @@
+language: python
+
+matrix:
+  include:
+    - python: 2.7
+      env: TO_TEST=CONDA
+    - python: 2.7
+      env: TO_TEST=DOCKER
+
 sudo: required
 services:
   - docker
-lanugage: python
-python:
-  - "2.7"
+
 before_install:
   - sudo apt-get update
+  # Check Python version.
+  - python --version
   # Turn off O_NONBLOCK. See https://github.com/travis-ci/travis-ci/issues/4704#issuecomment-348435959
   - python -c 'import os,sys,fcntl; flags = fcntl.fcntl(sys.stdout, fcntl.F_GETFL); fcntl.fcntl(sys.stdout, fcntl.F_SETFL, flags&~os.O_NONBLOCK);'
   # Increase workers for NODE DNS resolution. https://stackoverflow.com/questions/35387264/node-js-request-module-getting-etimedout-and-esockettimedout
   - export UV_THREADPOOL_SIZE=16
-  #### Docker:
-  - docker-compose up -d
-  - docker ps -a
-  - docker-compose logs webserver
-  - ls
   #### miniconda install:
-  # We do this conditionally because it saves us some downloading if the
-  # version is the same.
-  # this isn't exactly required for the repo to work (because the docker-flask-conda image is built sepeartely)
-  - if [[ "$TRAVIS_PYTHON_VERSION" == "2.7" ]]; then
+  - if [ "$TO_TEST" = "CONDA" ]; then
       wget https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh -O miniconda.sh;
-    else
-      wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
+      bash miniconda.sh -b -p $HOME/miniconda;
+      export PATH="$HOME/miniconda/bin:$PATH";
+      hash -r;
+      conda config --set always_yes yes --set changeps1 no;
+      conda config --add channels bioconda;
+      conda config --add channels conda-forge;
+      conda update -q conda;
+      conda info -a;
     fi
-  - bash miniconda.sh -b -p $HOME/miniconda
-  - export PATH="$HOME/miniconda/bin:$PATH"
-  - hash -r
-  - conda config --set always_yes yes --set changeps1 no
-  - conda config --add channels bioconda
-  - conda config --add channels conda-forge
-  - conda update -q conda
-  # Useful for debugging any issues with conda
-  - conda info -a
+  - if [ "$TO_TEST" = "DOCKER" ]; then
+      docker-compose up -d;
+      docker ps -a;
+      docker-compose logs webserver;
+      ls;
+    fi
 install:
   - cd app/
   - ls
   #### Recreate our Conda env for testing
-  - wget https://raw.githubusercontent.com/superphy/docker-flask-conda/master/app/environment.yml
-  - conda env create -q -f environment.yml -n backend
-  - source activate backend
-  # Get our webserver environment.yml
-  - wget https://raw.githubusercontent.com/superphy/docker-flask-conda/webserver/app/environment.yml -O environment-webserver.yml
-  # Update the backend env with the dependencies for the webserver
-  - conda env update -q -f environment-webserver.yml
+  - if [ "$TO_TEST" = "CONDA" ]; then
+      wget https://raw.githubusercontent.com/superphy/docker-flask-conda/master/app/environment.yml;
+      conda env create -q -f environment.yml -n backend;
+      source activate backend;
+      wget https://raw.githubusercontent.com/superphy/docker-flask-conda/webserver/app/environment.yml -O environment-webserver.yml;
+      conda env update -q -f environment-webserver.yml;
+    fi
   # Install pytest
   - pip install pytest
   # Install any additional requirements for tests.
   - pip install -r tests/test_requirements.txt
 script:
   #### Run Pytest
-  - python -m pytest --ignore modules/ectyper/ecoli_serotyping -v
+  - if [ "$TO_TEST" = "CONDA" ]; then
+      python -m pytest -v --ignore modules/ectyper/ecoli_serotyping --ignore tests/docker/;
+    fi
+  - if [ "$TO_TEST" = "DOCKER" ]; then
+      python -m pytest -v tests/docker/;
+    fi
 after_failure:
   # Check the logs if tests fail.
-  - docker-compose logs webserver
+  - if [ "$TO_TEST" = "DOCKER" ]; then
+      docker-compose logs webserver;
+      docker-compose logs blazegraph;
+    fi
 notifications:
   email: false
