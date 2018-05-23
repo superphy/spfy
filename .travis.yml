@@ -64,6 +64,7 @@ after_failure:
   # Check the logs if tests fail.
   - if [ "$TO_TEST" = "DOCKER" ]; then
       docker-compose logs webserver;
+      docker-compose logs blazegraph;
     fi
 notifications:
   email: false
