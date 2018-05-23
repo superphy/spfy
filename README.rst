@@ -252,10 +252,10 @@ Steps required to add new modules are documented in the `Developer Guide`_.
 
 .. _`Developer Guide`: http://superphy.readthedocs.io/en/latest/contributing.html
 
-.. |Build Status| image:: https://travis-ci.org/superphy/backend.svg?branch=master
-   :target: https://travis-ci.org/superphy/backend
+.. |Build Status| image:: https://travis-ci.org/superphy/spfy.svg?branch=master
+   :target: https://travis-ci.org/superphy/spfy
 .. |GitHub license| image:: https://img.shields.io/badge/license-Apache%202-blue.svg
-   :target: https://raw.githubusercontent.com/superphy/backend/master/LICENSE
+   :target: https://raw.githubusercontent.com/superphy/spfy/master/LICENSE
 .. |Docs| image:: https://readthedocs.org/projects/superphy/badge/?version=latest
    :target: http://superphy.readthedocs.io/en/latest/?badge=latest
    :alt: Documentation Status
