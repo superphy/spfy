@@ -1,6 +1,6 @@
 #this is for RQ for service worker-priority
 
-FROM superphy/docker-flask-conda:latest
+FROM superphy/docker-flask-conda:sep-pip
 
 COPY ./app /app
 
