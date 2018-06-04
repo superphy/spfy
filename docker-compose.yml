@@ -22,7 +22,7 @@ services:
       dockerfile: Dockerfile-grouch
     image: grouch
     ports:
-    - "8090:5000"
+    - "8090:3000"
     depends_on:
     - webserver
     # networks:
