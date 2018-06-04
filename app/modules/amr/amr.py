@@ -16,15 +16,19 @@ def amr(query_file):
 
     # differs from ectyper as we dont care about the temp results, just the final .tsv
     # direct (the main) call
-    subprocess.call(['rgi',
-                     '-i', query_file,
-                     '-o', outputname])
+    subprocess.call([
+        'rgi',
+        'main',
+        '-i', query_file,
+        '-o', query_file])
 
     # the rgi_json call in rgitool.py isn't needed for us
     # this generates the '.tsv' we want (named as a '.txt')
-    subprocess.call(['rgi_jsontab',
-                     '-i', outputname + '.json',
-                     '-o', outputname])
+    subprocess.call([
+        'rgi',
+        'tab',
+        '-i', outputname + '.json',
+        '-o', outputname])
 
     # rename and move the tsv to the original directory, if applicable
     amr_file = query_file + '_rgi.tsv'
