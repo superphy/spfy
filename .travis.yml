@@ -61,6 +61,10 @@ script:
       python -m pytest -v tests/docker/;
     fi
 after_failure:
+  - if [ "$TO_TEST" = "CONDA" ]; then
+      rgi -h;
+      ectyper -h;
+    fi
   # Check the logs if tests fail.
   - if [ "$TO_TEST" = "DOCKER" ]; then
       docker-compose logs webserver;
