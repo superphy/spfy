@@ -12,7 +12,7 @@ def amr(query_file):
     '''
     # we use this to address the bug in RGI
     # also, if you don't specify a '-o' in RGI call, it will try to save the final output as Report.json in your working directory (which breaks our multiprocessing (through RQ) use of RGI.
-    outputname = os.path.basename(query_file)
+    #outputname = os.path.basename(query_file)
 
     # differs from ectyper as we dont care about the temp results, just the final .tsv
     # direct (the main) call
@@ -27,12 +27,12 @@ def amr(query_file):
     subprocess.check_call([
         'rgi',
         'tab',
-        '-i', outputname + '.json',
-        '-o', outputname])
+        '-i', query_file + '.json',
+        '-o', query_file])
 
     # rename and move the tsv to the original directory, if applicable
     amr_file = query_file + '_rgi.tsv'
-    shutil.move(outputname+'.txt', amr_file)
+    shutil.move(query_file+'.txt', amr_file)
 
     return amr_file
 
