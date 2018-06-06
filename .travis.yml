@@ -6,6 +6,7 @@ matrix:
       env:
         - TO_TEST=CONDA
         - ENV_BRANCH=sep-pip
+        - CARD=broadstreet-v2.0.1.tar.gz
     - python: 2.7
       env: TO_TEST=DOCKER
 
@@ -51,6 +52,12 @@ install:
       conda env update -q -f environment-webserver.yml;
       wget https://raw.githubusercontent.com/superphy/docker-flask-conda/$ENV_BRANCH/app/requirements.txt;
       pip install -r requirements.txt;
+    fi
+  # Additional setup for conda.
+  - if [ "$TO_TEST" = "CONDA" ]; then
+      wget --quiet https://card.mcmaster.ca/download/0/$card;
+      tar -xf $card;
+      rgi load --afile card.json;
     fi
   # Install pytest
   - pip install pytest
