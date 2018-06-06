@@ -3,7 +3,9 @@ language: python
 matrix:
   include:
     - python: 2.7
-      env: TO_TEST=CONDA
+      env:
+        - TO_TEST=CONDA
+        - ENV_BRANCH=sep-pip
     - python: 2.7
       env: TO_TEST=DOCKER
 
@@ -42,11 +44,13 @@ install:
   - ls
   #### Recreate our Conda env for testing
   - if [ "$TO_TEST" = "CONDA" ]; then
-      wget https://raw.githubusercontent.com/superphy/docker-flask-conda/master/app/environment.yml;
+      wget https://raw.githubusercontent.com/superphy/docker-flask-conda/$ENV_BRANCH/app/environment.yml;
       conda env create -q -f environment.yml -n backend;
       source activate backend;
       wget https://raw.githubusercontent.com/superphy/docker-flask-conda/webserver/app/environment.yml -O environment-webserver.yml;
       conda env update -q -f environment-webserver.yml;
+      wget https://raw.githubusercontent.com/superphy/docker-flask-conda/$ENV_BRANCH/app/requirements.txt;
+      pip install -r requirements.txt
     fi
   # Install pytest
   - pip install pytest
