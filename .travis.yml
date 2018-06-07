@@ -55,7 +55,7 @@ install:
     fi
   # Additional setup for conda.
   - if [ "$TO_TEST" = "CONDA" ]; then
-      wget https://card.mcmaster.ca/download/0/$card;
+      wget https://card.mcmaster.ca/download/0/$CARD;
       tar -xf $CARD;
       rgi load --afile card.json;
     fi
