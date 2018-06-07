@@ -132,7 +132,7 @@ def test_amr():
         assert file_extension == '.tsv'
 
         # Indices check.
-        df = pd.readtable(amr_file)
+        df = pd.read_table(amr_file)
         indices = df.index.values
         assert set(AMR_INDICES).issubset(set(indices))
 
