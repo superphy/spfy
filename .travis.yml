@@ -56,7 +56,7 @@ install:
   # Additional setup for conda.
   - if [ "$TO_TEST" = "CONDA" ]; then
       wget --quiet https://card.mcmaster.ca/download/0/$card;
-      tar -xf $card;
+      tar -xf $CARD;
       rgi load --afile card.json;
     fi
   # Install pytest
