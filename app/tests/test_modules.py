@@ -17,7 +17,7 @@ from middleware.graphers.datastruct_savvy import datastruct_savvy
 from middleware.graphers.turtle_grapher import turtle_grapher
 from middleware.models import unpickle
 
-from tests.constants import ARGS_DICT, AMR_INDICES
+from tests.constants import ARGS_DICT, AMR_HEADERS
 
 # utility function to generate full path (still relative to root, not absoulte) for files in directories
 def listdir_fullpath(d):
