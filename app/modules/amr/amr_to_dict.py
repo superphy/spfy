@@ -6,8 +6,16 @@ def amr_to_dict(amr_file):
     amr_results = pd.read_table(amr_file)
     amr_results = amr_results[['ORF_ID', 'START', 'STOP', 'ORIENTATION', 'CUT_OFF', 'Best_Hit_ARO']]
 
+    # Drop the 'CUT_OFF': (Perfect, Strict) column. We're going to use the
+    # percent identity instead.
+    amr_results.drop(columns=['CUT_OFF'])
+
     amr_results.rename(
-        columns={'ORF_ID': 'contig_id', 'Best_Hit_ARO': 'GENE_NAME'}, inplace=True)
+        columns={
+            'ORF_ID': 'contig_id',
+            'Best_Hit_ARO': 'GENE_NAME',
+            'Best_Identities': 'CUT_OFF'},
+        inplace=True)
 
     # sometimes there are spaces at the end of the contig id, also we remove
     # the additional occurance tag that RGI adds to contig ids
