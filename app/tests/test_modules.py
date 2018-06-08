@@ -133,8 +133,8 @@ def test_amr():
 
         # Indices check.
         df = pd.read_table(pickled_amr_tsv)
-        indices = df.index.values
-        assert set(AMR_INDICES).issubset(set(indices))
+        headers = df.columns.values
+        assert set(AMR_HEADERS).issubset(set(headers))
 
         # convert the tsv to a directory
         pickled_amr_dict = amr_to_dict(pickled_amr_tsv)

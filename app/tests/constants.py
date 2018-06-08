@@ -1,4 +1,4 @@
-AMR_INDICES = ['ORF_ID', 'START', 'STOP', 'ORIENTATION', 'CUT_OFF', 'Best_Hit_ARO']
+AMR_HEADERS = ['ORF_ID', 'START', 'STOP', 'ORIENTATION', 'CUT_OFF', 'Best_Hit_ARO']
 
 ARGS_DICT={'disable_serotype':False,'disable_vf':False,'pi':90, 'options':{'vf': True, 'amr': True, 'serotype': True}}
 
