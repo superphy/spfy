@@ -4,7 +4,7 @@ import cPickle as pickle
 
 def amr_to_dict(amr_file):
     amr_results = pd.read_table(amr_file)
-    amr_results = amr_results[['ORF_ID', 'START', 'STOP', 'ORIENTATION', 'Best_Identities', 'Best_Hit_ARO']]
+    amr_results = amr_results[['ORF_ID', 'Start', 'Stop', 'Orientation', 'Best_Identities', 'Best_Hit_ARO']]
 
     amr_results.rename(
         columns={
@@ -30,7 +30,7 @@ def amr_to_dict(amr_file):
         if contig_id not in amr_dict.keys():
             amr_dict[contig_id] = []
         amr_dict[contig_id].append(dict((keys, amr_results[i][keys]) for keys in (
-            'START', 'STOP', 'GENE_NAME', 'ORIENTATION', 'CUT_OFF')))
+            'Start', 'Stop', 'GENE_NAME', 'Orientation', 'CUT_OFF')))
 
     amr_dict = {'Antimicrobial Resistance':amr_dict}
 
