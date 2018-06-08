@@ -4,11 +4,7 @@ import cPickle as pickle
 
 def amr_to_dict(amr_file):
     amr_results = pd.read_table(amr_file)
-    amr_results = amr_results[['ORF_ID', 'START', 'STOP', 'ORIENTATION', 'CUT_OFF', 'Best_Hit_ARO']]
-
-    # Drop the 'CUT_OFF': (Perfect, Strict) column. We're going to use the
-    # percent identity instead.
-    amr_results.drop(columns=['CUT_OFF'])
+    amr_results = amr_results[['ORF_ID', 'START', 'STOP', 'ORIENTATION', 'Best_Identities', 'Best_Hit_ARO']]
 
     amr_results.rename(
         columns={
