@@ -17,7 +17,7 @@ from middleware.graphers.datastruct_savvy import datastruct_savvy
 from middleware.graphers.turtle_grapher import turtle_grapher
 from middleware.models import unpickle
 
-from tests.constants import ARGS_DICT
+from tests.constants import ARGS_DICT, AMR_HEADERS
 
 # utility function to generate full path (still relative to root, not absoulte) for files in directories
 def listdir_fullpath(d):
@@ -130,6 +130,11 @@ def test_amr():
         pickled_amr_tsv = amr(ecoli_genome)
         filename, file_extension = os.path.splitext(pickled_amr_tsv)
         assert file_extension == '.tsv'
+
+        # Indices check.
+        df = pd.read_table(pickled_amr_tsv)
+        headers = df.columns.values
+        assert set(AMR_HEADERS).issubset(set(headers))
 
         # convert the tsv to a directory
         pickled_amr_dict = amr_to_dict(pickled_amr_tsv)

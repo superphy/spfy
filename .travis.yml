@@ -3,7 +3,10 @@ language: python
 matrix:
   include:
     - python: 2.7
-      env: TO_TEST=CONDA
+      env:
+        - TO_TEST=CONDA
+        - ENV_BRANCH=master
+        - CARD=broadstreet-v2.0.1.tar.gz
     - python: 2.7
       env: TO_TEST=DOCKER
 
@@ -42,11 +45,19 @@ install:
   - ls
   #### Recreate our Conda env for testing
   - if [ "$TO_TEST" = "CONDA" ]; then
-      wget https://raw.githubusercontent.com/superphy/docker-flask-conda/master/app/environment.yml;
+      wget https://raw.githubusercontent.com/superphy/docker-flask-conda/$ENV_BRANCH/app/environment.yml;
       conda env create -q -f environment.yml -n backend;
       source activate backend;
       wget https://raw.githubusercontent.com/superphy/docker-flask-conda/webserver/app/environment.yml -O environment-webserver.yml;
       conda env update -q -f environment-webserver.yml;
+      wget https://raw.githubusercontent.com/superphy/docker-flask-conda/$ENV_BRANCH/app/requirements.txt;
+      pip install -r requirements.txt;
+    fi
+  # Additional setup for conda.
+  - if [ "$TO_TEST" = "CONDA" ]; then
+      wget https://card.mcmaster.ca/download/0/$CARD;
+      tar -xf $CARD;
+      rgi load --afile card.json;
     fi
   # Install pytest
   - pip install pytest
@@ -61,6 +72,10 @@ script:
       python -m pytest -v tests/docker/;
     fi
 after_failure:
+  - if [ "$TO_TEST" = "CONDA" ]; then
+      rgi -h;
+      ectyper -h;
+    fi
   # Check the logs if tests fail.
   - if [ "$TO_TEST" = "DOCKER" ]; then
       docker-compose logs webserver;

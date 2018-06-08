@@ -1,21 +1,13 @@
 #!/usr/bin/env python2
 # -*- coding: UTF-8 -*-
-
-import os
 import copy
-
 import redis
 import config
+import logging
 
-from flask import current_app
-
-# Redis Queue
-from redis import Redis
+# Redis Queue.
 from rq import Queue
-
-# other libraries for rdflib
-from rdflib import Graph
-
+# Code.
 from modules.qc.qc import qc
 from middleware.blazegraph.reserve_id import reserve_id
 from modules.ectyper.call_ectyper import call_ectyper_vf, call_ectyper_serotype
@@ -27,11 +19,9 @@ from middleware.graphers.turtle_grapher import turtle_grapher
 from middleware.graphers.turtle_utils import actual_filename
 from modules.phylotyper import phylotyper
 from middleware.models import Job
-
 from modules.loggingFunctions import initialize_logging
-import logging
 
-# logging
+# Logging.
 initialize_logging()
 logger = logging.getLogger(__name__)
 

@@ -1,14 +1,10 @@
-import json
-from six.moves.urllib.request import urlopen
+import hashlib
+import random
+
 from functools import wraps
-
+from datetime import datetime
 from flask import Flask, request, jsonify, _app_ctx_stack
-from flask_cors import cross_origin
-from jose import jwt
-
-from config import AUTH0_DOMAIN, API_AUDIENCE, ALGORITHMS
-
-from middleware.mongo import mongo_find
+from middleware.mongo import mongo_find, mongo_update
 
 # Auth0
 # Error handler
@@ -47,7 +43,8 @@ def get_token_auth_header():
     return token
 
 def validate_simple(token):
-    """Checks that the given token exists.
+    """Checks that the given token exists
+    in MongoDB.
     """
     status = mongo_find(token, 'status')
     return status == "active"
@@ -68,71 +65,29 @@ def requires_simple_auth(f):
         return f(*args, **kwargs)
     return decorated
 
-def requires_auth(f):
-    """Determines if the access token is valid
+def _generate_token():
     """
-    @wraps(f)
-    def decorated(*args, **kwargs):
-        token = get_token_auth_header()
-        jsonurl = urlopen("https://"+AUTH0_DOMAIN+"/.well-known/jwks.json")
-        jwks = json.loads(jsonurl.read())
-        unverified_header = jwt.get_unverified_header(token)
-        rsa_key = {}
-        for key in jwks["keys"]:
-            if key["kid"] == unverified_header["kid"]:
-                rsa_key = {
-                    "kty": key["kty"],
-                    "kid": key["kid"],
-                    "use": key["use"],
-                    "n": key["n"],
-                    "e": key["e"]
-                }
-        if rsa_key:
-            try:
-                payload = jwt.decode(
-                    token,
-                    rsa_key,
-                    algorithms=ALGORITHMS,
-                    audience=API_AUDIENCE,
-                    issuer="https://"+AUTH0_DOMAIN+"/"
-                )
-            except jwt.ExpiredSignatureError:
-                raise AuthError({"code": "token_expired",
-                                "description": "token is expired"}, 401)
-            except jwt.JWTClaimsError:
-                raise AuthError({"code": "invalid_claims",
-                                "description":
-                                    "incorrect claims,"
-                                    "please check the audience and issuer"}, 401)
-            except Exception:
-                raise AuthError({"code": "invalid_header",
-                                "description":
-                                    "Unable to parse authentication"
-                                    " token."}, 400)
-
-            _app_ctx_stack.top.current_user = payload
-            return f(*args, **kwargs)
-        raise AuthError({"code": "invalid_header",
-                        "description": "Unable to find appropriate key"}, 400)
-    return decorated
-
-def requires_scope(required_scope):
-    """Determines if the required scope is present in the access token
-    Args:
-        required_scope (str): The scope required to access the resource
+    Generates a bearer token for use by the front-end.
+    Not actually secure, but suffices for our uses.
     """
-    token = get_token_auth_header()
-    unverified_claims = jwt.get_unverified_claims(token)
-    if unverified_claims.get("scope"):
-            token_scopes = unverified_claims["scope"].split()
-            for token_scope in token_scopes:
-                if token_scope == required_scope:
-                    return True
-    return False
+    now = datetime.now()
+    now = now.strftime("%Y-%m-%d-%H-%M-%S-%f")
+    salt = random.randint(100000,999999)
+    seed = "{0}{1}".format(now,salt)
+    token = hashlib.sha1(seed).hexdigest()
+    return token
 
-def get_sub_claim():
-    """Retrieves the sub claim in the access token. Used as a user-id.
+def _store(token):
     """
-    token = get_token_auth_header()
-    unverified_claims = jwt.get_unverified_claims(token)
-    return unverified_claims.get("sub")
+    Stores the bearer token to MongoDB.
+    """
+    # We should add a check for collision, but it's unlikely we'll see any.
+    # Add the account to mongo.
+    mongo_update(token, 'active', 'status')
+    # Create an empty jobs dictionary for the account.
+    mongo_update(token)
+
+def bearer():
+    token = _generate_token()
+    _store(token)
+    return token

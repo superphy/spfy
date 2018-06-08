@@ -4,10 +4,17 @@ import cPickle as pickle
 
 def amr_to_dict(amr_file):
     amr_results = pd.read_table(amr_file)
-    amr_results = amr_results[['ORF_ID', 'START', 'STOP', 'ORIENTATION', 'CUT_OFF', 'Best_Hit_ARO']]
+    amr_results = amr_results[['ORF_ID', 'Start', 'Stop', 'Orientation', 'Best_Identities', 'Best_Hit_ARO']]
 
     amr_results.rename(
-        columns={'ORF_ID': 'contig_id', 'Best_Hit_ARO': 'GENE_NAME'}, inplace=True)
+        columns={
+            'ORF_ID': 'contig_id',
+            'Best_Hit_ARO': 'GENE_NAME',
+            'Best_Identities': 'CUT_OFF',
+            'Orientation': 'ORIENTATION',
+            'Start': 'START',
+            'Stop': 'STOP'},
+        inplace=True)
 
     # sometimes there are spaces at the end of the contig id, also we remove
     # the additional occurance tag that RGI adds to contig ids

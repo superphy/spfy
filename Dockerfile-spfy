@@ -1,5 +1,5 @@
 # This builds the 'webserver' image which is our Flask API.
-FROM superphy/docker-flask-conda:webserver
+FROM superphy/docker-flask-conda:ws.v6.3.1
 
 ## Nginx:
 # Make NGINX run on the foreground

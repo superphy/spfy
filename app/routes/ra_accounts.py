@@ -1,5 +1,5 @@
 from flask import Blueprint
-from middleware.bearer import bearer
+from middleware.auth import bearer
 
 bp_ra_accounts = Blueprint('reactapp_accounts', __name__)
 
