@@ -10,7 +10,10 @@ def amr_to_dict(amr_file):
         columns={
             'ORF_ID': 'contig_id',
             'Best_Hit_ARO': 'GENE_NAME',
-            'Best_Identities': 'CUT_OFF'},
+            'Best_Identities': 'CUT_OFF',
+            'Orientation': 'ORIENTATION',
+            'Start': 'START',
+            'Stop': 'STOP'},
         inplace=True)
 
     # sometimes there are spaces at the end of the contig id, also we remove
@@ -30,7 +33,7 @@ def amr_to_dict(amr_file):
         if contig_id not in amr_dict.keys():
             amr_dict[contig_id] = []
         amr_dict[contig_id].append(dict((keys, amr_results[i][keys]) for keys in (
-            'Start', 'Stop', 'GENE_NAME', 'Orientation', 'CUT_OFF')))
+            'START', 'STOP', 'GENE_NAME', 'ORIENTATION', 'CUT_OFF')))
 
     amr_dict = {'Antimicrobial Resistance':amr_dict}
 
