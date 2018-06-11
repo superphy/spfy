@@ -143,7 +143,7 @@ def check_alleles(converted_json):
     # Step 3.
     # We've updated the db for VF so an allele check is only needed for AMR.
     if 'Antimicrobial Resistance' in hits.analysis.unique():
-        # We will also
+        # We will also return the full name.
         hits['longname'] = deepcopy(hits['hitname'])
         # Strip allele info from data.
         # Assumes if an underscore is in a gene name, that anything after the
@@ -151,6 +151,7 @@ def check_alleles(converted_json):
         hits['hitname'] = hits['hitname'].apply(lambda x: x.split('_')[0].split('-I')[0].split('-V')[0])
         hits = substring_cut(hits)
 
-    #this checks for alleles overlap
+    # Step 4.
+    # Check for overlapping alleles.
     new_hits = check_alleles_multiple(hits, new_hits)
     return new_hits
