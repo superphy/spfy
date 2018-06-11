@@ -1,6 +1,7 @@
 import logging
 import pandas as pd
 from itertools import tee, izip
+from copy import deepcopy
 from modules.loggingFunctions import initialize_logging
 
 # logging
@@ -48,13 +49,14 @@ def check_alleles_multiple(hits, new_hits):
     if hits.empty:
         return new_hits
 
-    #this checks for alleles overlap
+    # Sort, mainly for hitstart/hitstop.
     hits.sort_values(['analysis','filename','contigid','hitname','hitstart','hitstop'], inplace=True)
 
-    # set the reading_frame to the first row
+    # Set the reading_frame to the first row.
     reading_list = []
     reading_window = {'min':min(hits.iloc[0].hitstart,hits.iloc[0].hitstop),'max':max(hits.iloc[0].hitstart,hits.iloc[0].hitstop)}
 
+    # Pairwise iteration.
     for (i1, row1), (i2, row2) in pairwise(hits.iterrows()):
         if row1.analysis != row2.analysis:
             # at intersection between two hits
@@ -73,8 +75,9 @@ def check_alleles_multiple(hits, new_hits):
 
         if at_intersection:
             if not reading_list:
-                #ie reading_list is empty
-                # in this case since we're already at an intersection, then row1 is unique
+                # ie. reading_list is empty.
+                # In this case since we're already at an intersection, then row1
+                # is unique.
                 new_hits.append(dict(row1))
             else:
                 new_hits.append(dict(widest(reading_list)))
@@ -120,28 +123,35 @@ def check_alleles(converted_json):
     Args:
         converted_json : a list of dictionaries that have removed results not specific to the user's requests.
     '''
-    #we are working with the new dict format that is directly converted to json
+    # Step 1.
+    # We are working with the new dict format that is directly converted to json.
     hits = pd.DataFrame(converted_json)
     if hits.empty:
         raise Exception('The Panadas DF from gene_dict is empty.')
     new_hits = []
 
-    log.debug('Pandas DF in check_alleles(): ' + str(hits))
+    #log.debug('Pandas DF in check_alleles(): ' + str(hits))
 
-    # we're not interested in checking serotype, so we drop it
+    # Step 2.
+    # We're not interested in checking serotype, so we drop it.
     if 'Serotype' in hits.analysis.unique():
         new_hits.append(dict(hits[hits['analysis']=='Serotype'].iloc[0]))
         hits = hits[hits['analysis'] != 'Serotype']
 
-    log.debug(new_hits)
+    #log.debug(new_hits)
 
-    #we've update the db for VF so an allele check is only needed for AMR
+    # Step 3.
+    # We've updated the db for VF so an allele check is only needed for AMR.
     if 'Antimicrobial Resistance' in hits.analysis.unique():
-        #strip allele info from data
-        # assumes if an underscore is in a gene name, that anything after the underscore refers to an allele
+        # We will also return the full name.
+        hits['longname'] = deepcopy(hits['hitname'])
+        # Strip allele info from data.
+        # Assumes if an underscore is in a gene name, that anything after the
+        # underscore refers to an allele
         hits['hitname'] = hits['hitname'].apply(lambda x: x.split('_')[0].split('-I')[0].split('-V')[0])
         hits = substring_cut(hits)
 
-    #this checks for alleles overlap
+    # Step 4.
+    # Check for overlapping alleles.
     new_hits = check_alleles_multiple(hits, new_hits)
     return new_hits

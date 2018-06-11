@@ -139,13 +139,13 @@ def beautify(gene_dict, args_dict=None):
 def display_subtyping(pickled_result, args_dict=None):
     result = unpickle(pickled_result)
     if isinstance(result, dict):
-        # VF
+        # VF.
         list_return = beautify(gene_dict=result, args_dict=args_dict)
         assert isinstance(list_return, list)
         model = model_vf(list_return)
         return model_to_json(model)
     elif isinstance(result, list):
-        # Serotyping
+        # Serotyping.
         return model_to_json(result)
     else:
         raise Exception("beautify() could not handle pickled file: {0}.".format(pickled_result))
