@@ -20,7 +20,7 @@ from routes.alive import bp_alive
 from routes.ra_restricted import bp_ra_restricted
 from routes.ra_accounts import bp_ra_accounts
 from routes.ra_timings import bp_ra_timings
-from modules.ra_search import bp_ra_search
+from routes.ra_search import bp_ra_search
 
 # Auth0
 # Error handler
