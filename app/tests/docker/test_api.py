@@ -38,7 +38,7 @@ def test_simple_auth():
     # Retrieve a bearer token from the api.
     r = requests.get("""http://localhost:{port}/{api_root}accounts""".format(port=WEBSERVER_PORT,api_root=API_ROOT))
     token = r.text
-    assert type(token) in (str, unicode)
+    assert isinstance(token, (str, unicode))
 
     # Check the bearer token allows access to a protected ping.
     headers = {
@@ -46,3 +46,12 @@ def test_simple_auth():
     }
     r = requests.get("""http://localhost:{port}/{api_root}secured/simple/ping""".format(port=WEBSERVER_PORT,api_root=API_ROOT), headers=headers)
     assert r.text == "All good. You only get this message if you're authenticated"
+
+def test_search(f='GCA_001894495.1_ASM189449v1_genomic'):
+    d = {'st':f}
+    r = requests.post(
+        """http://localhost:{port}/{api_root}search""".format(
+            port=WEBSERVER_PORT,
+            api_root=API_ROOT),
+        data=d)
+    assert isinstance(r.json(), (list, dict))
