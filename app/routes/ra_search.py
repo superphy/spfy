@@ -3,12 +3,13 @@ import flask
 import werkzeug
 from datetime import datetime
 from flask import Blueprint, request, jsonify, current_app
+from flask_recaptcha import ReCaptcha
 from werkzeug.utils import secure_filename
 from modules.search import blob_search_enqueue
 
 bp_ra_search = Blueprint('reactapp_search', __name__)
 
-@bp_ra_posts.route('/api/v0/search', methods=['POST'])
+@bp_ra_search.route('/api/v0/search', methods=['POST'])
 def search_file():
     recaptcha = ReCaptcha(app=current_app)
     if not recaptcha.verify():
