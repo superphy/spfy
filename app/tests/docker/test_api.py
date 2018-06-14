@@ -54,4 +54,5 @@ def test_search(f='GCA_001894495.1_ASM189449v1_genomic'):
             port=WEBSERVER_PORT,
             api_root=API_ROOT),
         data=d)
-    assert isinstance(r.json(), (list, dict))
+    jobid = r.text
+    assert len(jobid) == 36
