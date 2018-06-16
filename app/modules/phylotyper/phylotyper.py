@@ -91,11 +91,14 @@ def phylotyper(uriIsolate, subtype, result_file, id_file=None, job_id=None, job_
         # Run phylotyper
         with open(query_file, 'w') as fh:
             fh.write(fasta)
-
-        subprocess.check_call(['phylotyper', 'genome', '--noplots',
-                         subtype,
-                         temp_dir,
-                         query_file])
+        subprocess.check_call(
+            ['phylotyper',
+            'genome',
+            '--noplots',
+            subtype,
+            temp_dir,
+            query_file],
+            stderr=subprocess.STDOUT)
 
     else:
         # No loci
