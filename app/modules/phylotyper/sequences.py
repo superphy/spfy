@@ -248,7 +248,10 @@ class MarkerSequences(object):
         """
         # Check for existance of schema Marker components
         for l in LOCI[subtype]:
-            return self._find_object(l, ':Marker'):
+            if not self._find_object(l, ':Marker'):
+                print('validate(): loci {0} not found.'.format(l))
+                return False
+        return True
 
 if __name__=='__main__':
     import argparse
