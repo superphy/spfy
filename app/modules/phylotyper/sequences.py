@@ -212,8 +212,8 @@ class MarkerSequences(object):
         query = '''
             SELECT ?subtype
             WHERE {{
-                ?region rdf:type faldo:Region ; :hasPart ?subtype .
-                ?subtype rdf:type  {} .
+                ?region a faldo:Region ; :hasPart ?subtype .
+                ?subtype a :VirulenceFactor .
                 VALUES ?subtype {{ {} }}
             }}
             '''.format(rdftype, subtype)
