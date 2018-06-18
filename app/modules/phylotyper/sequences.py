@@ -235,7 +235,6 @@ class MarkerSequences(object):
         for tup in query_result:
             # Convert hits into python.
             r = tup[0].toPython()
-            raise Exception('_find_object(): {0} R: {1}'.format(tup, r))
             # If none.
             if not r:
                 return False
@@ -249,7 +248,6 @@ class MarkerSequences(object):
         # Check for existance of schema Marker components
         for l in LOCI[subtype]:
             if not self._find_object(l, ':Marker'):
-                print('validate(): loci {0} not found.'.format(l))
                 return False
         return True
 

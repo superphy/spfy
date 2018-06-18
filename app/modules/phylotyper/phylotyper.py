@@ -92,7 +92,6 @@ def phylotyper(uriIsolate, subtype, result_file, id_file=None, job_id=None, job_
     markerseqs = MarkerSequences(loci, job_id, job_turtle, job_ectyper_datastruct_vf, redis_conn)
     # Validation all the alleles required are in this genome.
     if not markerseqs.validate(subtype):
-        raise Exception('phylotyper(): validation failed for makerseqs')
         _noloci(output_file)
     else:
         fasta = markerseqs.fasta(uriIsolate)
@@ -111,7 +110,6 @@ def phylotyper(uriIsolate, subtype, result_file, id_file=None, job_id=None, job_
 
         else:
             # No loci
-            raise Exception('phylotyper(): no loci found for {0}'.format(subtype))
             _noloci(output_file)
 
     shutil.move(output_file, result_file)
