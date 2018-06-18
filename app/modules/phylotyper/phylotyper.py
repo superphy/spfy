@@ -102,12 +102,6 @@ def phylotyper(uriIsolate, subtype, result_file, id_file=None, job_id=None, job_
 
     else:
         # No loci
-        # raise Exception('phylotyper.phylotyper() could not retrieve reference sequences for loci: {0}, uriIsolate: {1}, subtype: {2}'.format(
-        #     str(loci),
-        #     str(uriIsolate),
-        #     subtype
-        # ))
-        # Report no loci status in output
         with open(output_file, 'w') as fh:
             fh.write('\t'.join(['genome','tree_label','subtype','probability','phylotyper_assignment','loci']))
             fh.write('\t'.join(['lcl|query|','not applicable','not applicable','not applicable','Subtype loci not found in genome','not applicable']))

@@ -10,6 +10,7 @@ from rdflib import Graph
 from middleware.decorators import submit, prefix, tojson
 from middleware.graphers import turtle_utils
 from routes.job_utils import fetch_job
+from modules.phylotyper.ontology import stx1_graph, stx2_graph, eae_graph
 
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
@@ -136,8 +137,10 @@ class MarkerSequences(object):
         g = Graph()
         ontology_turtle_file = os.path.join(__location__, 'superphy_subtyping.ttl')
         g.parse(ontology_turtle_file, format="turtle")
+        # Add Phylotyper ontology graphs.
+        g = g + stx1_graph() + stx2_graph() + eae_graph()
         # Retrieve and merge graphs from pre-req. jobs.
-        self.graph = g + fetch_job(job_id, redis_conn).result + fetch_job(job_turtle, redis_conn).result + fetch_job(job_ectyper_datastruct_vf, redis_conn).result
+        self.graph = g + fetch_job(job_id, redis_conn).result +  fetch_job(job_turtle, redis_conn).result + fetch_job(job_ectyper_datastruct_vf, redis_conn).result
 
     def sequences(self, genome_uri):
         """Retrieve sequences for object alleles

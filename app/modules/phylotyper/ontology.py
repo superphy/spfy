@@ -158,9 +158,9 @@ def generate_graph(uri, loci, values):
     subtype = uri.split(':')[1]
 
     # Check for existance of schema Marker components
-    for l in loci:
-        if not find_object(l, ':Marker'):
-            raise DatabaseError(uri, l)
+    # for l in loci:
+    #     if not find_object(l, ':Marker'):
+    #         raise DatabaseError(uri, l)
 
     # Proceed with creating subtype schema
     graph = Graph()
