@@ -232,6 +232,7 @@ class MarkerSequences(object):
         query = self._subtype_query(rdftype)
 
         query_result = self.graph.query(query)
+        print('_find_object(): {0}'.format(query_result))
         for tup in query_result:
             # Convert hits into python.
             r = tup[0].toPython()
@@ -248,6 +249,7 @@ class MarkerSequences(object):
         # Check for existance of schema Marker components
         for l in LOCI[subtype]:
             if not self._find_object(l, ':Marker'):
+                print('validate(): loci {0} not found.'.format(l))
                 return False
 
 if __name__=='__main__':
