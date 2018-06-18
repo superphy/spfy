@@ -10,7 +10,7 @@ from rdflib import Graph
 from middleware.decorators import submit, prefix, tojson
 from middleware.graphers import turtle_utils
 from routes.job_utils import fetch_job
-from modules.phylotyper.ontology import stx1_graph, stx2_graph, eae_graph
+from modules.phylotyper.ontology import stx1_graph, stx2_graph, eae_graph, LOCI
 
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
@@ -200,6 +200,55 @@ class MarkerSequences(object):
 
         return fasta_string
 
+    @prefix
+    def _subtype_query(self, subtype, rdftype='subt:Phylotyper'):
+        """
+        Queries for a specific URI of given type
+
+        Returns:
+            dictionary
+
+        """
+        query = '''
+            SELECT ?subtype
+            WHERE {{
+                ?subtype rdf:type  {} .
+                VALUES ?subtype {{ {} }}
+            }}
+            '''.format(rdftype, subtype)
+
+        return query
+
+    def _find_object(self, uri, rdftype):
+        """
+        Returns true if URI is already in database
+
+        Args:
+            uri(str): URI with prefix defined in config.py
+            rdftype(str): the URI linked by a rdf:type relationship to URI
+
+        """
+
+        query = self._subtype_query(rdftype)
+
+        query_result = self.graph.query(query)
+        for tup in query_result:
+            # Convert hits into python.
+            r = tup[0].toPython()
+            # If none.
+            if not r:
+                return False
+        return True
+
+    def validate(self, subtype):
+        """Checks that the MakerSequence.graph has all the alleles required
+        for phylotyper analysis. Returns False if not (& Phylotyper should
+        not be run).
+        """
+        # Check for existance of schema Marker components
+        for l in LOCI[subtype]:
+            if not self._find_object(l, ':Marker'):
+                return False
 
 if __name__=='__main__':
     import argparse
