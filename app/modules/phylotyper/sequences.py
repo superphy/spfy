@@ -232,10 +232,10 @@ class MarkerSequences(object):
         query = self._subtype_query(rdftype)
 
         query_result = self.graph.query(query)
-        raise Exception('_find_object(): {0}'.format(query_result))
         for tup in query_result:
             # Convert hits into python.
             r = tup[0].toPython()
+            raise Exception('_find_object(): {0} R: {1}'.format(tup, r))
             # If none.
             if not r:
                 return False
