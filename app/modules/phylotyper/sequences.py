@@ -236,7 +236,7 @@ class MarkerSequences(object):
 
         st = [tup[0].toPython() for tup in query_result]
 
-        raise Exception('_find_object() for type {0}: {1}'.format(rdftype, st))
+        raise Exception('_find_object() for uri {0} type {1}: {2}'.format(uri, rdftype, st))
 
         for tup in query_result:
             # Convert hits into python.
