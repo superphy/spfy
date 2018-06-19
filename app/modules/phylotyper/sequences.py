@@ -11,6 +11,7 @@ from middleware.decorators import submit, prefix, tojson
 from middleware.graphers import turtle_utils
 from routes.job_utils import fetch_job
 from modules.phylotyper.ontology import stx1_graph, stx2_graph, eae_graph, LOCI
+from middleware.graphers.turtle_utils import generate_uri as gu
 
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
@@ -233,9 +234,10 @@ class MarkerSequences(object):
 
         query_result = self.graph.query(query)
 
-        st = [tup[0].toPython() for tup in query_result]
+        l = [tup[0].toPython() for tup in query_result]
+        full_uri = gu(uri)
 
-        raise Exception('_find_object() for uri {0} type {1}: {2}'.format(uri, rdftype, st))
+        raise Exception('_find_object() for uri {0} full_uri {1} type {2} bool {3}: {4}'.format(uri, full_uri, rdftype, full_uri in l, l))
 
         for tup in query_result:
             # Convert hits into python.
