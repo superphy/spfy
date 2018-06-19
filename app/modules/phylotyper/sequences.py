@@ -230,7 +230,7 @@ class MarkerSequences(object):
 
         """
 
-        query = self._subtype_query(rdftype)
+        query = self._subtype_query(uri, rdftype)
 
         query_result = self.graph.query(query)
 
