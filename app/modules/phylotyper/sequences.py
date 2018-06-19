@@ -235,7 +235,7 @@ class MarkerSequences(object):
         query_result = self.graph.query(query)
 
         l = [tup[0].toPython() for tup in query_result]
-        full_uri = gu(uri)
+        full_uri = str(gu(uri))
 
         raise Exception('_find_object() for uri {0} full_uri {1} type {2} bool {3}: {4}'.format(uri, full_uri, rdftype, full_uri in l, l))
 
