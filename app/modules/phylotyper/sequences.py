@@ -234,7 +234,7 @@ class MarkerSequences(object):
 
         query_result = self.graph.query(query)
 
-        st = (tup[0].toPython() for tup in query_result)
+        st = [tup[0].toPython() for tup in query_result]
 
         raise Exception('_find_object(): {0}'.format(st))
 
