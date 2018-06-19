@@ -202,7 +202,7 @@ class MarkerSequences(object):
         return fasta_string
 
     @prefix
-    def _subtype_query(self, subtype, rdftype='subt:Phylotyper'):
+    def _subtype_query(self):
         """
         Queries for a specific URI of given type
 
@@ -216,11 +216,11 @@ class MarkerSequences(object):
                 ?region a faldo:Region ; :hasPart ?subtype .
                 ?subtype a :VirulenceFactor .
             }}
-            '''.format(rdftype, subtype)
+            '''
 
         return query
 
-    def _find_object(self, uri, rdftype):
+    def _find_object(self, uri):
         """
         Returns true if URI is already in database
 
@@ -230,22 +230,14 @@ class MarkerSequences(object):
 
         """
 
-        query = self._subtype_query(uri, rdftype)
+        query = self._subtype_query()
 
         query_result = self.graph.query(query)
 
         l = [tup[0].toPython() for tup in query_result]
         full_uri = str(gu(uri))
 
-        raise Exception('_find_object() for uri {0} full_uri {1} type {2} bool {3}: {4}'.format(uri, full_uri, rdftype, full_uri in l, l))
-
-        for tup in query_result:
-            # Convert hits into python.
-            r = tup[0].toPython()
-            # If none.
-            if not r:
-                return False
-        return True
+        return full_uri in l
 
     def validate(self, subtype):
         """Checks that the MakerSequence.graph has all the alleles required
@@ -254,7 +246,7 @@ class MarkerSequences(object):
         """
         # Check for existance of schema Marker components
         for l in LOCI[subtype]:
-            if not self._find_object(l, ':Marker'):
+            if not self._find_object(l):
                 return False
         return True
 
