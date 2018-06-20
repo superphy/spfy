@@ -24,8 +24,12 @@ def query_db_accession(recordid):
         OPTIONAL {{
             ?spfyIdObject ge:0001076 ?otype .
             ?spfyIdObject ge:0001077 ?htype .
+        }}
+        OPTIONAL {{
             ?uriContig :hasPart ?vf.
             ?vf a :VirulenceFactor.
+        }}
+        OPTIONAL {{
             ?uriContig :hasPart ?amr.
             ?amr a :AntimicrobialResistanceGene.
         }}
