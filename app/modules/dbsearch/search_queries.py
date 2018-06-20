@@ -16,7 +16,7 @@ def query_db_accession(recordid):
     query = """
     SELECT DISTINCT ?Genome ?submitted ?otype ?htype ?recordid ?vf ?amr WHERE {{
         ?uriContig a g:Contig ; g:Identifier ?recordid .
-        VALUES ?recordid {{ {} }} .
+        VALUES ?recordid {{ "{}" }} .
         ?uriContig :isFoundIn ?GenomeObject .
         ?GenomeObject a g:Genome ; dc:description ?Genome; dc:date ?submitted .
         ?GenomeObject :isFoundIn ?spfyIdObject .
