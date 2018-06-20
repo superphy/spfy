@@ -21,7 +21,11 @@ log = logging.getLogger(__name__)
 typing_ontology_version = '<https://www.github.com/superphy/typing/1.0.0>'
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
-
+LOCI = {
+    'stx1': [':stx1A', ':stx1B'],
+    'stx2': [':stx2A', ':stx2B'],
+    'eae': [':eae']
+}
 
 @submit
 @prefix
@@ -158,9 +162,9 @@ def generate_graph(uri, loci, values):
     subtype = uri.split(':')[1]
 
     # Check for existance of schema Marker components
-    for l in loci:
-        if not find_object(l, ':Marker'):
-            raise DatabaseError(uri, l)
+    # for l in loci:
+    #     if not find_object(l, ':Marker'):
+    #         raise DatabaseError(uri, l)
 
     # Proceed with creating subtype schema
     graph = Graph()
@@ -214,7 +218,7 @@ def stx1_graph():
 
     """
 
-    return generate_graph('subt:stx1', [':stx1A',':stx1B'], ['a','c','d','untypeable'])
+    return generate_graph('subt:stx1', LOCI['stx1'], ['a','c','d','untypeable'])
 
 
 
@@ -224,7 +228,7 @@ def stx2_graph():
 
     """
 
-    return generate_graph('subt:stx2', [':stx2A',':stx2B'], ['a','b','c','d','e','f','g','untypeable'])
+    return generate_graph('subt:stx2', LOCI['stx2'], ['a','b','c','d','e','f','g','untypeable'])
 
 
 def eae_graph():
@@ -233,7 +237,7 @@ def eae_graph():
 
     """
 
-    return generate_graph('subt:eae', [':eae'],
+    return generate_graph('subt:eae', LOCI['eae'],
         ["alpha-1","alpha-2","beta-1","beta-2","epsilon-1","epsilon-2","eta-1","eta-2",
         "gamma-1","iota-1","iota-2","kappa-1","lambda-1","mu-1","nu-1","omicron-1","pi-1",
         "rho-1","sigma-1","theta-2","xi-1","zeta-1","untypeable"])
