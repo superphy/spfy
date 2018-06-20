@@ -14,7 +14,7 @@ def query_db_accession(recordid):
     Searches the graph database and finds results for a given record.id
     '''
     query = """
-    SELECT DISTINCT ?Genome ?submitted ?otype ?htype ?recordid ?vf ?amr WHERE {{
+    SELECT DISTINCT ?Genome ?submitted ?otype ?htype ?recordid ?subclass ?marker WHERE {{
         ?uriContig a g:Contig ; g:Identifier ?recordid .
         VALUES ?recordid {{ "{}" }} .
         ?uriContig :isFoundIn ?GenomeObject .
@@ -26,12 +26,10 @@ def query_db_accession(recordid):
             ?spfyIdObject ge:0001077 ?htype .
         }}
         OPTIONAL {{
-            ?uriContig :hasPart ?vf.
-            ?vf a :VirulenceFactor.
-        }}
-        OPTIONAL {{
-            ?uriContig :hasPart ?amr.
-            ?amr a :AntimicrobialResistanceGene.
+            ?uriContig :hasPart ?marker.
+            ?marker a :Marker .
+            ?subclass rdfs:subClassOf :Marker .
+            ?marker a ?subclass .
         }}
     }}
     """.format(recordid)
