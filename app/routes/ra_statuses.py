@@ -105,7 +105,7 @@ def job_status_reactapp(job_id):
             r = job.result
             # subtyping results come in the form of a list and must
             # be conv to json otherwise, you get a 500 error (isa)
-            if isinstance(r, (list, dict)):
+            if isinstance(r, (list)):
                 return jsonify(r)
             # fishers results come in the form of a df.to_json object
             # and should be returned directly
