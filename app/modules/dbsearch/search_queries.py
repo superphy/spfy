@@ -21,14 +21,14 @@ def query_db_accession(recordid):
         ?GenomeObject a g:Genome ; dc:description ?Genome; dc:date ?submitted .
         ?GenomeObject :isFoundIn ?spfyIdObject .
         ?spfyIdObject a :spfyId .
-        OPTIONAL {
+        OPTIONAL {{
             ?spfyIdObject ge:0001076 ?otype .
             ?spfyIdObject ge:0001077 ?htype .
             ?uriContig :hasPart ?vf.
             ?vf a :VirulenceFactor.
             ?uriContig :hasPart ?amr.
             ?amr a :AntimicrobialResistanceGene.
-        }
+        }}
     }}
     """.format(recordid)
     return query
