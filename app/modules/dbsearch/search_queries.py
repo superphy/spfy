@@ -101,7 +101,7 @@ def search_accession(recordid):
         _row(
             genome=first['Genome'],
             contigid='n/a',
-            marker='{0}/{1}'.format(first['otype'],first['htype']),
+            marker='{0}:{1}'.format(first['otype'],first['htype']),
             submitted=first['submitted'],
             analysis='Serotype'
         )
