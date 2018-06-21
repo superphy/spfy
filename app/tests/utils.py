@@ -4,7 +4,7 @@ def listdir_fullpath(d):
     '''Utility function to generate full path (still relative to root, not
     absoulte) for files in directories
     '''
-    valid_extensions = ('.fasta', '.fna', '.fa')
+    valid_extensions = ('.fasta', '.fna')
     l = []
     for f in os.listdir(d):
         filename, file_extension = os.path.splitext(f)
