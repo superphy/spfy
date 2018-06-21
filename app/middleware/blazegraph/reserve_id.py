@@ -108,7 +108,12 @@ def _check(uriGenome):
     # Check if the genome hash is in the db.
     try:
         # Try to check duplicate from MongoDB cache first.
-        duplicate = int(uid=mongo_find(uriGenome), collection=config.MONGO_SPFYIDSCOLLECTION)
+        duplicate = int(
+            mongo_find(
+                uid=uriGenome,
+                collection=config.MONGO_SPFYIDSCOLLECTION,
+                )
+            )
     except:
         # Otherwise, check from Blazegraph.
         if config.DATABASE_EXISTING:
@@ -124,7 +129,12 @@ def _check(uriGenome):
     if not duplicate:
         # Try from MongoDB cache first.
         try:
-            largest = int(uid=mongo_find('spfyid'), collection=config.MONGO_SPFYIDSCOLLECTION)
+            largest = int(
+                mongo_find(
+                    uid='spfyid',
+                    collection=config.MONGO_SPFYIDSCOLLECTION
+                    )
+                )
         except:
             if config.DATABASE_BYPASS:
                 # Bypass Blazegraph, an start from an arbitrary id. The try:

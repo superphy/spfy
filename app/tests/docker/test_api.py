@@ -66,3 +66,20 @@ def test_grouch():
     e = '<title>Spfy: Grouch</title>'
     r = requests.get('http://localhost:{}/'.format(GROUCH_PORT))
     assert e in r.text
+
+class MockMongo():
+    def __init__():
+        self.d = {
+            'spfyid':0
+        }
+    def mongo_find(uid, collection):
+        return d[uid]
+    def mongo_update(uid, json, collection):
+        d.update({uid: json})
+
+def test_duplicate_defaults():
+    from middleware.blazegraph.reserve_id import _check
+    # Disable Blazegraph lookup
+    config.DATABASE_EXISTING = False
+    # Disable force Mongo Spfyid at specific value.
+    config.DATABASE_BYPASS = False
