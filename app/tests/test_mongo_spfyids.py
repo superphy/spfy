@@ -26,7 +26,8 @@ class TestDuplicateDefaults(object):
 
     m = MockMongo()
 
-    @mock.patch('mongo_find', side_effect=m.mongo_find)
+    @mock.patch('middleware.mongo.mongo_find', side_effect=m.mongo_find)
+    @mock.patch('middleware.mongo.mongo_update', side_effect=m.mongo_update)
     def test_duplicate_defaults(self):
         '''Should start spfyids at 0 and inrement by 1.
         '''
