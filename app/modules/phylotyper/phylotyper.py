@@ -34,10 +34,14 @@ logger = logging.getLogger(__name__)
 redis_url = config.REDIS_URL
 redis_conn = redis.from_url(redis_url)
 
-def _check_tsv(pt_file):
-    pt_results = pd.read_table(pt_file)
-    if pt_results.empty:
-        raise Exception('_check_tsv() failed as pt_results.empty == true for pt_file: {0} with df content: {1}'.format(pt_file, str(pt_results)))
+def _noloci(output_file):
+    """Writes out no loci found.
+    """
+    with open(output_file, 'w') as fh:
+            fh.write('\t'.join(['genome', 'tree_label', 'subtype',
+                                'probability', 'phylotyper_assignment', 'loci']))
+            fh.write('\t'.join(['lcl|query|', 'not applicable', 'not applicable',
+                                'not applicable', 'Subtype loci not found in genome', 'not applicable']))
 
 def phylotyper(uriIsolate, subtype, result_file, id_file=None, job_id=None, job_turtle=None, job_ectyper_datastruct_vf=None):
     """ Wrapper for Phylotyper
@@ -79,40 +83,37 @@ def phylotyper(uriIsolate, subtype, result_file, id_file=None, job_id=None, job_
     loci_results = ontology.schema_query(uri)
     loci = [ gu(l['locus']) for l in sorted(loci_results, key=lambda k: k['i'])]
 
-    # Get alleles for this genome
-    markerseqs = MarkerSequences(loci, job_id, job_turtle, job_ectyper_datastruct_vf, redis_conn)
-    fasta = markerseqs.fasta(uriIsolate)
-
-    temp_dir = mkdtemp(prefix='pt'+subtype, dir=config.DATASTORE)
+    # Temp files.
+    temp_dir = mkdtemp(prefix='pt' + subtype, dir=config.DATASTORE)
     query_file = os.path.join(temp_dir, 'query.fasta')
     output_file = os.path.join(temp_dir, 'subtype_predictions.tsv')
 
-    if fasta:
-        # Run phylotyper
-        with open(query_file, 'w') as fh:
-            fh.write(fasta)
-
-        subprocess.check_call(['phylotyper', 'genome', '--noplots',
-                         subtype,
-                         temp_dir,
-                         query_file])
-
+    # Get alleles for this genome
+    markerseqs = MarkerSequences(loci, job_id, job_turtle, job_ectyper_datastruct_vf, redis_conn)
+    # Validation all the alleles required are in this genome.
+    if not markerseqs.validate(subtype):
+        _noloci(output_file)
     else:
-        # No loci
-        # raise Exception('phylotyper.phylotyper() could not retrieve reference sequences for loci: {0}, uriIsolate: {1}, subtype: {2}'.format(
-        #     str(loci),
-        #     str(uriIsolate),
-        #     subtype
-        # ))
-        # Report no loci status in output
-        with open(output_file, 'w') as fh:
-            fh.write('\t'.join(['genome','tree_label','subtype','probability','phylotyper_assignment','loci']))
-            fh.write('\t'.join(['lcl|query|','not applicable','not applicable','not applicable','Subtype loci not found in genome','not applicable']))
+        fasta = markerseqs.fasta(uriIsolate)
+        if fasta:
+            # Run phylotyper
+            with open(query_file, 'w') as fh:
+                fh.write(fasta)
+            subprocess.check_call(
+                ['phylotyper',
+                'genome',
+                '--noplots',
+                subtype,
+                temp_dir,
+                query_file],
+                stderr=subprocess.STDOUT)
+
+        else:
+            # No loci
+            _noloci(output_file)
 
     shutil.move(output_file, result_file)
     shutil.rmtree(temp_dir)
-
-    # _check_tsv(result_file)
 
     return result_file
 

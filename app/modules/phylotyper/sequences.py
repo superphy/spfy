@@ -10,6 +10,8 @@ from rdflib import Graph
 from middleware.decorators import submit, prefix, tojson
 from middleware.graphers import turtle_utils
 from routes.job_utils import fetch_job
+from modules.phylotyper.ontology import stx1_graph, stx2_graph, eae_graph, LOCI
+from middleware.graphers.turtle_utils import generate_uri as gu
 
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
@@ -136,8 +138,10 @@ class MarkerSequences(object):
         g = Graph()
         ontology_turtle_file = os.path.join(__location__, 'superphy_subtyping.ttl')
         g.parse(ontology_turtle_file, format="turtle")
+        # Add Phylotyper ontology graphs.
+        g = g + stx1_graph() + stx2_graph() + eae_graph()
         # Retrieve and merge graphs from pre-req. jobs.
-        self.graph = g + fetch_job(job_id, redis_conn).result + fetch_job(job_turtle, redis_conn).result + fetch_job(job_ectyper_datastruct_vf, redis_conn).result
+        self.graph = g + fetch_job(job_id, redis_conn).result +  fetch_job(job_turtle, redis_conn).result + fetch_job(job_ectyper_datastruct_vf, redis_conn).result
 
     def sequences(self, genome_uri):
         """Retrieve sequences for object alleles
@@ -197,6 +201,54 @@ class MarkerSequences(object):
 
         return fasta_string
 
+    @prefix
+    def _subtype_query(self):
+        """
+        Queries for a specific URI of given type
+
+        Returns:
+            dictionary
+
+        """
+        query = '''
+            SELECT ?subtype
+            WHERE {{
+                ?region a faldo:Region ; :hasPart ?subtype .
+                ?subtype a :VirulenceFactor .
+            }}
+            '''
+
+        return query
+
+    def _find_object(self, uri):
+        """
+        Returns true if URI is already in database
+
+        Args:
+            uri(str): URI with prefix defined in config.py
+            rdftype(str): the URI linked by a rdf:type relationship to URI
+
+        """
+
+        query = self._subtype_query()
+
+        query_result = self.graph.query(query)
+
+        l = [tup[0].toPython() for tup in query_result]
+        full_uri = str(gu(uri))
+
+        return full_uri in l
+
+    def validate(self, subtype):
+        """Checks that the MakerSequence.graph has all the alleles required
+        for phylotyper analysis. Returns False if not (& Phylotyper should
+        not be run).
+        """
+        # Check for existance of schema Marker components
+        for l in LOCI[subtype]:
+            if not self._find_object(l):
+                return False
+        return True
 
 if __name__=='__main__':
     import argparse
