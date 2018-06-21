@@ -34,7 +34,7 @@ def query_db_accession(recordid):
     Searches the graph database and finds results for a given record.id
     '''
     query = """
-    SELECT DISTINCT ?Genome ?submitted ?otype ?htype ?recordid ?subclass ?marker WHERE {{
+    SELECT DISTINCT ?Genome ?submitted ?otype ?htype ?recordid ?uriContig ?subclass ?marker WHERE {{
         ?uriContig a g:Contig ; g:Identifier ?recordid .
         VALUES ?recordid {{ "{}" }} .
         ?uriContig :isFoundIn ?GenomeObject .
@@ -50,7 +50,7 @@ def query_db_accession(recordid):
             ?marker a :Marker .
             ?subclass rdfs:subClassOf :Marker .
             ?marker a ?subclass .
-            FILTER (?type == "http://purl.phyloviz.net/ontology/typon#Locus" || ?type == "https://www.github.com/superphy#Marker")
+            FILTER (?subclass != typon:Locus && ?subclass != :Marker)
         }}
     }}
     """.format(recordid)
