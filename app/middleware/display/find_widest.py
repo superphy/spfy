@@ -125,7 +125,7 @@ def _aro_url(longname):
     '''Tries to find the CARD ontology url
     for a given AMR gene.
     '''
-    cvterm_id = DF_ARO['cvterm_id'][df['name'] == longname]
+    cvterm_id = DF_ARO['cvterm_id'][DF_ARO['name'] == longname]
     base = 'https://card.mcmaster.ca/ontology/'
     if cvterm_id.empty:
         # Couldn't find a match.
