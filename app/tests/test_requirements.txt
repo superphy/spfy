@@ -2,3 +2,4 @@
 fakeredis==0.10.1
 requests
 pytest
+mock==2.0.0

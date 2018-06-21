@@ -17,17 +17,8 @@ from middleware.graphers.datastruct_savvy import datastruct_savvy
 from middleware.graphers.turtle_grapher import turtle_grapher
 from middleware.models import unpickle
 
+from tests.utils import listdir_fullpath
 from tests.constants import ARGS_DICT, AMR_HEADERS
-
-# utility function to generate full path (still relative to root, not absoulte) for files in directories
-def listdir_fullpath(d):
-    valid_extensions = ('.fasta','.fna')
-    l = []
-    for f in os.listdir(d):
-        filename, file_extension = os.path.splitext(f)
-        if file_extension in valid_extensions:
-            l.append(os.path.join(d, f))
-    return l
 
 # globals for testing
 GENOMES_LIST_NOT_ECOLI = listdir_fullpath('tests/notEcoli')

@@ -3,6 +3,9 @@ import pandas as pd
 from itertools import tee, izip
 from copy import deepcopy
 from modules.loggingFunctions import initialize_logging
+from modules.amr.aro import ARO_ACCESSIONS
+
+DF_ARO = pd.DataFrame(ARO_ACCESSIONS)
 
 # logging
 log_file = initialize_logging()
@@ -118,6 +121,18 @@ def substring_cut(hits):
                     hits.loc[i2, 'hitname']=row1.hitname
     return hits
 
+def _aro_url(longname):
+    '''Tries to find the CARD ontology url
+    for a given AMR gene.
+    '''
+    cvterm_id = DF_ARO['cvterm_id'][DF_ARO['name'] == longname]
+    base = 'https://card.mcmaster.ca/ontology/'
+    if cvterm_id.empty:
+        # Couldn't find a match.
+        return ''
+    else:
+        return '{0}{1}'.format(base, int(cvterm_id))
+
 def check_alleles(converted_json):
     '''
     Args:
@@ -145,6 +160,8 @@ def check_alleles(converted_json):
     if 'Antimicrobial Resistance' in hits.analysis.unique():
         # We will also return the full name.
         hits['longname'] = deepcopy(hits['hitname'])
+        # Add the ARO url.
+        hits['aro'] = hits['longname'].apply(lambda x: _aro_url(x))
         # Strip allele info from data.
         # Assumes if an underscore is in a gene name, that anything after the
         # underscore refers to an allele

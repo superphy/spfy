@@ -1,7 +1,13 @@
 import requests
+import subprocess
+import config
 
 WEBSERVER_PORT = '8000'
 API_ROOT = 'api/v0/'
+GROUCH_PORT = '8090'
+
+WEBSERVER = 'spfy_webserver_1'
+blazegraph_url = config.database['blazegraph_url']
 
 def test_api():
     '''
@@ -11,11 +17,7 @@ def test_api():
     # There is a route defined in the Flask API that returns the string 'true' when queried.
     assert r.text == 'true'
 
-import subprocess
-import config
 
-WEBSERVER = 'spfy_webserver_1'
-blazegraph_url = config.database['blazegraph_url']
 
 exc = """docker exec -i {webserver} sh -c""".format(webserver=WEBSERVER)
 
@@ -38,7 +40,7 @@ def test_simple_auth():
     # Retrieve a bearer token from the api.
     r = requests.get("""http://localhost:{port}/{api_root}accounts""".format(port=WEBSERVER_PORT,api_root=API_ROOT))
     token = r.text
-    assert type(token) in (str, unicode)
+    assert isinstance(token, (str, unicode))
 
     # Check the bearer token allows access to a protected ping.
     headers = {
@@ -46,3 +48,23 @@ def test_simple_auth():
     }
     r = requests.get("""http://localhost:{port}/{api_root}secured/simple/ping""".format(port=WEBSERVER_PORT,api_root=API_ROOT), headers=headers)
     assert r.text == "All good. You only get this message if you're authenticated"
+
+def test_search(f='gi|1370526529|gb|CP027599.1|'):
+    '''Checks the search api returns some jobid.
+    '''
+    d = {'st':f}
+    r = requests.post(
+        """http://localhost:{port}/{api_root}search""".format(
+            port=WEBSERVER_PORT,
+            api_root=API_ROOT),
+        data=d)
+    jobid = r.text
+    assert len(jobid) == 36
+
+def test_grouch():
+    '''Checks that Grouch (the React app) is running on the expected port.
+    '''
+    e = '<title>Spfy: Grouch</title>'
+    r = requests.get('http://localhost:{}/'.format(GROUCH_PORT))
+    assert e in r.text
+

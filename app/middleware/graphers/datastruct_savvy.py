@@ -91,7 +91,13 @@ def parse_gene_dict(graph, gene_dict, uriGenome, geneType):
             uriContigs = gu(uriGenomes, "/contigs")
             # recreating the contig uri
 
-            uriContig = gu(uriContigs, '/' + contig_id)
+            # RGIv4 returns a contigid appended with additional information.
+            # Must retrieve actual contigid.
+            if geneType == 'AntimicrobialResistanceGene':
+                cid = contig_id.split('_')[0]
+                uriContig = gu(uriContigs, '/' + cid)
+            else:
+                uriContig = gu(uriContigs, '/' + contig_id)
 
 
 
