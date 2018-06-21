@@ -125,6 +125,7 @@ def test_amr():
         # Indices check.
         df = pd.read_table(pickled_amr_tsv)
         headers = df.columns.values
+        raise Exception('RGI headers: {0}'.format(headers))
         assert set(AMR_HEADERS).issubset(set(headers))
 
         # convert the tsv to a directory
