@@ -9,6 +9,8 @@ db = client[MONGO_DBNAME]
 collection_accounts = db[MONGO_ACCOUNTSCOLLECTION]
 collection_spfyids = db[MONGO_SPFYIDSCOLLECTION]
 
+# Note: though 'store' refers to Redux Store, we use the same
+# key for spfyids.
 def mongo_update(uid, json=[], key='store', collection=MONGO_ACCOUNTSCOLLECTION):
     '''By default, updates the 'store' document in the accounts collection.
     '''
@@ -17,6 +19,8 @@ def mongo_update(uid, json=[], key='store', collection=MONGO_ACCOUNTSCOLLECTION)
     elif collection == MONGO_SPFYIDSCOLLECTION:
         collection_spfyids.update_one({'_id':uid},{'$set':{key:json}},upsert=True)
 
+# Note: though 'store' refers to Redux Store, we use the same
+# key for spfyids.
 def mongo_find(uid, key='store', collection=MONGO_ACCOUNTSCOLLECTION):
     if collection == MONGO_ACCOUNTSCOLLECTION:
         doc = collection_accounts.find_one({'_id':uid})
