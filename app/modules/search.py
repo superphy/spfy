@@ -2,7 +2,7 @@ import logging
 import config
 import redis
 from rq import Queue
-from modules.dbsearch.search_queries import query_db_accession
+from modules.dbsearch.search_queries import  search_accession
 from modules.loggingFunctions import initialize_logging
 
 # logging
@@ -15,7 +15,7 @@ priority_q = Queue('priority', connection=redis_conn, default_timeout=config.DEF
 
 def blob_search_enqueue(s):
     job_db = priority_q.enqueue(
-        query_db_accession,
+        search_accession,
         s,
         result_ttl=-1)
     log.info('JOB ID IS: ' + job_db.get_id())
