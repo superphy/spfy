@@ -123,7 +123,7 @@ def _ectyper_pipeline_vf(query_file, single_dict, display_vf=True, pipeline=None
             query_file + '_ectyper_vf.p',
             single_dict,
             depends_on=job_ectyper_vf,
-            result_ttl=ttl_value
+            result_ttl=-1
         )
         d['job_ectyper_beautify_vf'] = job_ectyper_beautify_vf
         pipeline.jobs.update({
@@ -201,7 +201,7 @@ def _ectyper_pipeline_serotype(query_file, single_dict, pipeline=None, backlog=F
             display_subtyping,
             query_file + '_ectyper_serotype.model',
             depends_on=job_ectyper_serotype,
-            result_ttl=ttl_value
+            result_ttl=-1
         )
         d['job_ectyper_beautify_serotype'] = job_ectyper_beautify_serotype
         pipeline.jobs.update({
