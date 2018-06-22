@@ -142,7 +142,7 @@ def check_alleles(converted_json):
     # We are working with the new dict format that is directly converted to json.
     hits = pd.DataFrame(converted_json)
     if hits.empty:
-        raise Exception('The Panadas DF from gene_dict is empty.')
+        return []
     new_hits = []
 
     #log.debug('Pandas DF in check_alleles(): ' + str(hits))
