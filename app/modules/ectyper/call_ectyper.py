@@ -55,9 +55,22 @@ def call_ectyper_vf(args_dict):
 
         ectyper_dict = literal_eval(ectyper_dict)
 
-        # TODO: edit ectyper so we're not using this ducktape approach
-        # we are calling tools_controller on only one file, so grab that dict
-        key, ectyper_dict = ectyper_dict.popitem()
+        # See #317
+        if len(ectyper_dict.keys()) == 1:
+            # This is the normal case where the key is the filename.
+            key, ectyper_dict = ectyper_dict.popitem()
+        else:
+            # This is a bug when there is no filename mapping.
+            td = {}
+            for k in ectyper_dict:
+                l = ectyper_dict[k]['Virulence Factors'].values()
+                if l:
+                    td[k] = l[0]
+            ectyper_dict = {
+                'Virulence Factors': td
+            }
+    
+        
         assert isinstance(ectyper_dict, dict)
         # TODO: convert this to a VF model.
         # Path for the pickle dump.
