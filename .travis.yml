@@ -43,8 +43,9 @@ before_install:
       ls;
     fi
 install:
-  - cd app/
-  - ls
+  - if [ "$TO_TEST" = "CONDA" ] || [ "$TO_TEST" = "DOCKER" ]; then
+      cd app/
+    fi
   #### Recreate our Conda env for testing
   - if [ "$TO_TEST" = "CONDA" ]; then
       wget https://raw.githubusercontent.com/superphy/docker-flask-conda/$ENV_BRANCH/app/environment.yml;
