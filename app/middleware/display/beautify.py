@@ -71,8 +71,9 @@ def json_return(gene_dict, args_dict):
                         if 'RAW' in item:
                             # Search the GI.
                             pattern = r'gi:\d*'
-                            gi = re.search(pattern, item['RAW']).group()
-                            if gi:
+                            a = re.search(pattern, item['RAW'])
+                            if a:
+                                gi = a.group()
                                 # Calling it 'aro' for now.
                                 # TODO: rename to something generic (have to modify grouch).
                                 instance_dict['aro'] = 'https://www.ncbi.nlm.nih.gov/protein/' + gi
