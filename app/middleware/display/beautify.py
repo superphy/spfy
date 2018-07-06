@@ -4,7 +4,7 @@ import cPickle as pickle
 from modules.loggingFunctions import initialize_logging
 from middleware.display.find_widest import check_alleles
 from middleware.graphers.turtle_utils import actual_filename
-from middleware.models import SubtypingResult, model_to_json, unpickle
+from middleware.models import unpickle
 from middleware.modellers import model_vf
 
 # logging
@@ -68,7 +68,7 @@ def json_return(gene_dict, args_dict):
                         instance_dict['hitstop'] = item['STOP']
                         # For VF.
                         if 'RAW' in item:
-                            instance_dict['raws'] = item['RAW']
+                            instance_dict['raw'] = item['RAW']
                         if analysis == 'Antimicrobial Resistance':
                             instance_dict['hitcutoff'] = item['CUT_OFF']
                         else:
@@ -135,9 +135,6 @@ def beautify(gene_dict, args_dict=None):
         return handle_failed(json_r, args_dict)
     else:
         return json_r
-        # Everything worked, cast result into a model.
-        # model = model_vf(json_r)
-        # return model_to_json(model)
 
 def display_subtyping(pickled_result, args_dict=None):
     result = unpickle(pickled_result)
@@ -145,10 +142,10 @@ def display_subtyping(pickled_result, args_dict=None):
         # VF.
         list_return = beautify(gene_dict=result, args_dict=args_dict)
         assert isinstance(list_return, list)
-        model = model_vf(list_return)
-        return model_to_json(model)
+        l = model_vf(list_return)
+        return l
     elif isinstance(result, list):
         # Serotyping.
-        return model_to_json(result)
+        return result
     else:
         raise Exception("beautify() could not handle pickled file: {0}.".format(pickled_result))

@@ -12,34 +12,6 @@ from datetime import datetime
 from middleware.graphers.turtle_utils import actual_filename
 from routes.job_utils import fetch_job
 
-# def _convert_model(model):
-#     # Convert the model to a generic JSON structure.
-#     struct = model.to_struct()
-#     # Check that struct isn't empty.
-#     assert struct
-#     if 'rows' in struct:
-#         # This is not strictly json; more like a list than a dict structure.
-#         rows_list = struct['rows']
-#         return rows_list
-#     else:
-#         return struct
-
-def model_to_json(model):
-    """
-    Converts models to json for the front-end.
-    """
-    #TODO: can access the list directly, no longer need this.
-    # Validate the model submitted before processing.
-    assert isinstance(model, list)
-    # model.validate()
-    # Conversion.
-    # print("model_to_json() called with model: {0}".format(str(model)))
-    return model
-    # if isinstance(model, models.Base):
-    #     return _convert_model(model)
-    # else:
-    #     raise Exception('model_to_json() called for a model without a handler.')
-
 def store(pipeline):
     """
     Stores the pipeline (via Pickle) to Redis DB and creates a pipeline id for return.
@@ -94,13 +66,6 @@ def unpickle(pickled_file):
 
 def dump(obj, path):
     dill.dump(obj, open(path, 'wb'))
-
-
-class SubtypingResult(models.Base):
-    def __init__(self, rows=None):
-        if not rows:
-            rows = []
-        self.rows = rows
 
 class Job():
     def __init__(self, rq_job, name="", transitory=True, backlog=True, display=False):
@@ -359,14 +324,12 @@ class Pipeline():
         l = []
         for j in completed_jobs:
             rq_job = j.rq_job
-            model = rq_job.result
+            lr = rq_job.result
             try:
-                # TODO: This is not correct as while the new ECTYper call does return a model, the display_subtyping() call that the return job is associated with will already convert the result to a list and return it.
-                assert isinstance(model, (models.Base,list))
+                assert isinstance(l, (models.Base,list))
             except:
                 raise Exception("to_json() called for job {0}  with result of type {1} and info {2}".format(j.name, type(model), str(model)))
-            list_json = model_to_json(model)
-            l += list_json
+            l += lr
         return jsonify(l)
 
     def _function_signature(self):
