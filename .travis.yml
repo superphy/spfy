@@ -44,7 +44,7 @@ before_install:
     fi
 install:
   - if [ "$TO_TEST" = "CONDA" ] || [ "$TO_TEST" = "DOCKER" ]; then
-      cd app/
+      cd app/;
     fi
   #### Recreate our Conda env for testing
   - if [ "$TO_TEST" = "CONDA" ]; then
