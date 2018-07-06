@@ -80,6 +80,9 @@ def json_return(gene_dict, args_dict):
                                 # Find the longname.
                                 longname = item['RAW'].split(gi)[-1][2:]
                                 instance_dict['longnamme'] = longname
+                            else:
+                                instance_dict['aro'] = 'n/a'
+                                instance_dict['longname'] = item['RAW']
                         if analysis == 'Antimicrobial Resistance':
                             instance_dict['hitcutoff'] = item['CUT_OFF']
                         else:

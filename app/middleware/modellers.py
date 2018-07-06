@@ -50,7 +50,8 @@ def model_vf(lst):
             'hitstart':item['hitstart'],
             'hitstop':item['hitstop'],
             'probability':'n/a',
-            'raw':item['raw']
+            'longname':item['longname'],
+            'aro': item['aro']
         }
     for item in lst]
     return subtyping_list
