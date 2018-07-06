@@ -76,6 +76,10 @@ def json_return(gene_dict, args_dict):
                             if not a:
                                 pattern = r'gi\|\d*'
                                 a = re.search(pattern, item['RAW'])
+                            # Try searching for GB.
+                            if not a:
+                                pattern = r'gi\|\d*'
+                                b = re.search(pattern, item['RAW'])
                             if a:
                                 gi = a.group()
                                 # Calling it 'aro' for now.
@@ -84,6 +88,13 @@ def json_return(gene_dict, args_dict):
                                 # Find the longname.
                                 longname = item['RAW'].split(gi)[-1][2:]
                                 instance_dict['longname'] = longname
+                            elif b:
+                                s = b.group()
+                                gb = s.split('|')[-1]
+                                instance_dict[
+                                    'aro'] = 'https://www.ncbi.nlm.nih.gov/nuccore/' + gb
+                                # Too many cases to parse.
+                                instance_dict['longname'] = item['RAW']
                             else:
                                 instance_dict['aro'] = 'n/a'
                                 instance_dict['longname'] = item['RAW']
