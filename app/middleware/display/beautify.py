@@ -1,4 +1,5 @@
 import logging
+import re
 import pandas as pd
 import cPickle as pickle
 from modules.loggingFunctions import initialize_logging
@@ -68,7 +69,15 @@ def json_return(gene_dict, args_dict):
                         instance_dict['hitstop'] = item['STOP']
                         # For VF.
                         if 'RAW' in item:
-                            instance_dict['raw'] = item['RAW']
+                            # Search the GI.
+                            pattern = r'gi:\d*'
+                            gi = re.search(pattern, item['RAW'])
+                            # Calling it 'aro' for now.
+                            # TODO: rename to something generic (have to modify grouch).
+                            instance_dict['aro'] = 'https://www.ncbi.nlm.nih.gov/protein/' + gi
+                            # Find the longname.
+                            longname = item['RAW'].split(gi)[-1][2:]
+                            instance_dict['longnamme'] = longname
                         if analysis == 'Antimicrobial Resistance':
                             instance_dict['hitcutoff'] = item['CUT_OFF']
                         else:
