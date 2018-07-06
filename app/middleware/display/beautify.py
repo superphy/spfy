@@ -71,13 +71,14 @@ def json_return(gene_dict, args_dict):
                         if 'RAW' in item:
                             # Search the GI.
                             pattern = r'gi:\d*'
-                            gi = re.search(pattern, item['RAW'])
-                            # Calling it 'aro' for now.
-                            # TODO: rename to something generic (have to modify grouch).
-                            instance_dict['aro'] = 'https://www.ncbi.nlm.nih.gov/protein/' + gi
-                            # Find the longname.
-                            longname = item['RAW'].split(gi)[-1][2:]
-                            instance_dict['longnamme'] = longname
+                            gi = re.search(pattern, item['RAW']).group()
+                            if gi:
+                                # Calling it 'aro' for now.
+                                # TODO: rename to something generic (have to modify grouch).
+                                instance_dict['aro'] = 'https://www.ncbi.nlm.nih.gov/protein/' + gi
+                                # Find the longname.
+                                longname = item['RAW'].split(gi)[-1][2:]
+                                instance_dict['longnamme'] = longname
                         if analysis == 'Antimicrobial Resistance':
                             instance_dict['hitcutoff'] = item['CUT_OFF']
                         else:
