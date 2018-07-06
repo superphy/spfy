@@ -24,28 +24,6 @@ def test_subtyping_model_direct(l=constants.BEAUTIFY_VF_SEROTYPE):
     # Return for incorporation into later tests.
     return subtyping_list
 
-# def test_phylotyper_model_direct(l=constants.BEAUTIFY_STX1):
-#     """
-#     Use our dataset to directly create a phylotyper results model and validate it.
-#     """
-#     phylotyper_list = [
-#         models.PhylotyperRow(
-#             contig=d['contig'],
-#             genome=d['genome'],
-#             probability=str(d['probability']),
-#             start=str(d['start']),
-#             stop=str(d['stop']),
-#             subtype=d['subtype'],
-#             subtype_gene=d['subtype_gene']
-#         )
-#     for d in l]
-#     phylotyper_result = models.PhylotyperResult(
-#         rows = phylotyper_list
-#     )
-#     phylotyper_result.validate()
-#     # Return for incorporation into later tests.
-#     return phylotyper_result
-
 def _create_example_pipeline():
     p = models.Pipeline(
         func=spfy,

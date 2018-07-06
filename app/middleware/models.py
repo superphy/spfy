@@ -95,38 +95,12 @@ def unpickle(pickled_file):
 def dump(obj, path):
     dill.dump(obj, open(path, 'wb'))
 
-class SubtypingRow(models.Base):
-    def __init__(self, analysis="", contigid="", filename="", hitcutoff="", hitname="", hitorientation="", hitstart="",hitstop=""):
-        self.analysis = analysis
-        self.contigid = contigid
-        self.filename = filename
-        self.hitcutoff = hitcutoff
-        self.hitname = hitname
-        self.hitorientation = hitorientation
-        self.hitstart = hitstart
-        self.hitstop = hitstop
-
 
 class SubtypingResult(models.Base):
     def __init__(self, rows=None):
         if not rows:
             rows = []
         self.rows = rows
-
-class PhylotyperRow(models.Base):
-    def __init__(self):
-        self.contig = fields.StringField(nullable=True)
-        self.genome = fields.StringField()
-        self.probability = fields.StringField(nullable=True) # actually float
-        self.start = fields.StringField(nullable=True) # actually int
-        self.stop = fields.StringField(nullable=True) # actually int
-        self.subtype = fields.StringField()
-        self.subtype_gene = fields.StringField(nullable=True)
-
-class PhylotyperResult(models.Base):
-    def __init__(self):
-        self.rows = fields.ListField([PhylotyperRow], nullable=True)
-
 
 class Job():
     def __init__(self, rq_job, name="", transitory=True, backlog=True, display=False):

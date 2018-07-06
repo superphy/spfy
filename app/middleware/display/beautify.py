@@ -66,6 +66,9 @@ def json_return(gene_dict, args_dict):
                         instance_dict['hitorientation'] = item['ORIENTATION']
                         instance_dict['hitstart'] = item['START']
                         instance_dict['hitstop'] = item['STOP']
+                        # For VF.
+                        if 'RAWS' in item:
+                            instance_dict['raws'] = item['RAWS']
                         if analysis == 'Antimicrobial Resistance':
                             instance_dict['hitcutoff'] = item['CUT_OFF']
                         else:
