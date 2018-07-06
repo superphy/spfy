@@ -1,6 +1,5 @@
 # We try to keep all model creation in this file so it's easier to reference.
 import pandas as pd
-from middleware.models import SubtypingResult
 from middleware.graphers.turtle_utils import actual_filename
 
 
