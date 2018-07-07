@@ -76,7 +76,7 @@ script:
       python -m pytest -v tests/docker/;
     fi
   - if [ "$TO_TEST" = "BASH" ]; then
-     ./production.sh;
+      bash production.sh;
     fi
 after_failure:
   - if [ "$TO_TEST" = "CONDA" ]; then
