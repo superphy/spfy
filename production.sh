@@ -20,6 +20,11 @@ else
     echo "Docker composition already running. Continuing...";
 fi
 
+# Bring Nginx up.
+echo "Starting Nginx..."
+systemctl start nginx
+echo "Nginx started."
+
 # Bring Jetty up for Blazegraph.
 if [ ! "$(service jetty status | grep pid=)" ]; then
     echo "Jetty not running. Starting Jetty...";
