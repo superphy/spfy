@@ -4,7 +4,7 @@ from middleware.graphers.turtle_utils import generate_uri as gu, generate_hash, 
 from middleware.graphers.turtle_grapher import generate_graph
 from middleware.blazegraph.upload_graph import queue_upload
 from modules.PanPredic.pan_utils import contig_name_parse
-from middleware.models import SubtypingResult, unpickle
+from middleware.models import unpickle
 # working with Serotype, Antimicrobial Resistance, & Virulence Factor data
 # structures
 

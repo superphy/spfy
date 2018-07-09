@@ -1,12 +1,11 @@
 # We try to keep all model creation in this file so it's easier to reference.
 import pandas as pd
-from middleware.models import SubtypingRow, SubtypingResult
 from middleware.graphers.turtle_utils import actual_filename
 
 
 def model_serotype(pi, pl, output_file):
     """
-    Creates a SubtypingResult model from ECTYper's serotyping output.
+    Creates a list from ECTYper's serotyping output.
     """
     # Read the vanilla output_file from ECTyper.
     df = pd.read_csv(output_file)
@@ -28,17 +27,13 @@ def model_serotype(pi, pl, output_file):
         }
     for index, row in df.iterrows()]
 
-    # Convert the list of rows into a SubtypingResult model.
-    # subtyping_result = SubtypingResult(
-    #     rows = subtyping_list
-    # )
     assert subtyping_list
     assert subtyping_list[0]
     return subtyping_list
 
 def model_vf(lst):
     """
-    Casts the output from display.beautify into a SubtypingResult object.
+    Casts the output from display.beautify into a list.
     """
     # Type check.
     assert isinstance(lst, list)
@@ -54,13 +49,11 @@ def model_vf(lst):
             'hitorientation':item['hitorientation'],
             'hitstart':item['hitstart'],
             'hitstop':item['hitstop'],
-            'probability':'n/a'
+            'probability':'n/a',
+            'longname':item['longname'],
+            'aro': item['aro']
         }
     for item in lst]
-    # Convert the list of rows into a SubtypingResult model.
-    # subtyping_result = SubtypingResult(
-    #     rows = subtyping_list
-    # )
     return subtyping_list
 
 def model_phylotyper(lst):

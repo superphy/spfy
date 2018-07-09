@@ -12,7 +12,7 @@ from middleware.blazegraph.reserve_id import reserve_id
 from modules.ectyper.call_ectyper import call_ectyper_vf, call_ectyper_serotype
 from modules.amr.amr import amr
 from modules.amr.amr_to_dict import amr_to_dict
-from middleware.display.beautify import beautify, model_to_json
+from middleware.display.beautify import beautify
 from middleware.graphers.datastruct_savvy import datastruct_savvy
 from middleware.graphers.turtle_grapher import turtle_grapher
 from middleware.models import unpickle
@@ -69,18 +69,6 @@ def test_ectyper_vf(return_one=False):
         if return_one:
             return json_return
 
-def _validate_model(model):
-    # Validate (throws error if invalidate).
-    # model.validate()
-    # Check that the return rows is not some random empty list.
-    # assert model.rows
-    # Check the conversion for the front-end.
-    # r = model_to_json(model)
-    # This is not really json; more like a list than a dict structure.
-    assert isinstance(model, list)
-    # Check that this isn't empty.
-    assert model
-
 def test_ectyper_serotype_direct():
     """Check the ECTyper from `master` which only performs serotyping.
     Installed in the conda environment.
@@ -99,7 +87,7 @@ def test_ectyper_serotype_call_nopickle():
         single_dict.update({'i':ecoli_genome})
         # Have the call return the model without pickling.
         serotype_model = call_ectyper_serotype(single_dict, pickle=False)
-        _validate_model(serotype_model)
+        assert isinstance(serotype_model, list)
 
 def test_ectyper_serotype_call_pickle(return_one=False):
     """
@@ -111,7 +99,7 @@ def test_ectyper_serotype_call_pickle(return_one=False):
         # Pickle the model, and return the path to the file.
         pickled_serotype_model = call_ectyper_serotype(single_dict)
         ectyper_serotype_model = unpickle(pickled_serotype_model)
-        _validate_model(ectyper_serotype_model)
+        assert isinstance(ectyper_serotype_model, list)
         if return_one:
             return ectyper_serotype_model
 

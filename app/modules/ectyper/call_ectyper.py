@@ -99,7 +99,7 @@ def call_ectyper_serotype(args_dict, pickle=True):
     ])
     if ret_code == 0:
         output_file = os.path.join(output_dir, 'output.csv')
-        # Create a SubtypingResult model from the output.
+        # Create a list from the output.
         subtyping_result = model_serotype(
             pi=pi,
             pl=pl,

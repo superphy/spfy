@@ -1,10 +1,11 @@
 import logging
+import re
 import pandas as pd
 import cPickle as pickle
 from modules.loggingFunctions import initialize_logging
 from middleware.display.find_widest import check_alleles
 from middleware.graphers.turtle_utils import actual_filename
-from middleware.models import SubtypingResult, model_to_json, unpickle
+from middleware.models import unpickle
 from middleware.modellers import model_vf
 
 # logging
@@ -66,6 +67,37 @@ def json_return(gene_dict, args_dict):
                         instance_dict['hitorientation'] = item['ORIENTATION']
                         instance_dict['hitstart'] = item['START']
                         instance_dict['hitstop'] = item['STOP']
+                        # For VF.
+                        if 'RAW' in item:
+                            # Search the GI.
+                            pattern = r'gi:\d*'
+                            a = re.search(pattern, item['RAW'])
+                            # Try searching for other format.
+                            if not a:
+                                pattern = r'gi\|\d*'
+                                a = re.search(pattern, item['RAW'])
+                            # Try searching for GB.
+                            if not a:
+                                pattern = r'gi\|\d*'
+                                b = re.search(pattern, item['RAW'])
+                            if a:
+                                gi = a.group()
+                                # Calling it 'aro' for now.
+                                # TODO: rename to something generic (have to modify grouch).
+                                instance_dict['aro'] = 'https://www.ncbi.nlm.nih.gov/protein/' + gi
+                                # Find the longname.
+                                longname = item['RAW'].split(gi)[-1][2:]
+                                instance_dict['longname'] = longname
+                            elif b:
+                                s = b.group()
+                                gb = s.split('|')[-1]
+                                instance_dict[
+                                    'aro'] = 'https://www.ncbi.nlm.nih.gov/nuccore/' + gb
+                                # Too many cases to parse.
+                                instance_dict['longname'] = item['RAW']
+                            else:
+                                instance_dict['aro'] = 'n/a'
+                                instance_dict['longname'] = item['RAW']
                         if analysis == 'Antimicrobial Resistance':
                             instance_dict['hitcutoff'] = item['CUT_OFF']
                         else:
@@ -132,9 +164,6 @@ def beautify(gene_dict, args_dict=None):
         return handle_failed(json_r, args_dict)
     else:
         return json_r
-        # Everything worked, cast result into a model.
-        # model = model_vf(json_r)
-        # return model_to_json(model)
 
 def display_subtyping(pickled_result, args_dict=None):
     result = unpickle(pickled_result)
@@ -142,10 +171,10 @@ def display_subtyping(pickled_result, args_dict=None):
         # VF.
         list_return = beautify(gene_dict=result, args_dict=args_dict)
         assert isinstance(list_return, list)
-        model = model_vf(list_return)
-        return model_to_json(model)
+        l = model_vf(list_return)
+        return l
     elif isinstance(result, list):
         # Serotyping.
-        return model_to_json(result)
+        return result
     else:
         raise Exception("beautify() could not handle pickled file: {0}.".format(pickled_result))
