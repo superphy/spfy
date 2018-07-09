@@ -166,6 +166,17 @@ and then rebuild and redeploy reactapp.
 Deploying to Corefacility
 =========================
 
+Quick-Start
+-----------
+
+Use the ``production.sh`` script.
+This script does a few things:
+
+1. Stops the host Nginx so Docker can bind the ports it'll need for mapping.
+2. Starts the Docker-Composition.
+3. Restarts the host Nginx.
+4. Starts Jetty which runs Blazegraph.
+
 Blazegraph
 ----------
 
