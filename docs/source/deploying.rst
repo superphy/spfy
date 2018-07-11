@@ -160,7 +160,7 @@ and then rebuild and redeploy reactapp.
 	docker-compose up -d
 
 .. note::
-
+e
 	The Flask webserver has Cross-Origin Requests (CORS) enabled, so you can deploy reactapp to another server (that is only running reactapp, and not the webserver, databases, workers). The domain can be ``mydomain.com`` or any domain name you own - you'll just have to setup the A records as appropriate.
 
 Deploying to Corefacility
@@ -176,6 +176,16 @@ This script does a few things:
 2. Starts the Docker-Composition.
 3. Restarts the host Nginx.
 4. Starts Jetty which runs Blazegraph.
+
+Important Volumes
+-----------------
+
+The ``webserver`` Docker container has a ``/datastore`` directory with all submitted files.
+
+The ``mongodb`` Docker container has a ``/data/db`` directory which persists the ``Genome File Hash : SpfyID`` mapping.
+(As well the ``?token=`` user sessions).
+
+If you accidentally delete the MongoDB volume, it can be incrementally (when the same file is submitted, it will be re-cached) recreated from Blazegraph by setting ``DATABASE_EXISTING = True`` and ``DATABASE_BYPASS = False`` in ``app/config.py``.
 
 Blazegraph
 ----------
