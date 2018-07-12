@@ -155,24 +155,7 @@ Looking at the filesystem:
 	tmpfs                      2.4G     0  2.4G   0% /run/user/40151
 	tmpfs                      2.4G     0  2.4G   0% /run/user/40290
 
-``/Warehouse`` is used for long-term data storage and shared across the NML. In order to write to ``/Warehouse``, you need the permissions of either ``claing`` or ``superphy``; there are some problems with passing these permissions into Docker environments, so we run Blazegraph, inside of folder ``/Warehouse/Users/claing/superphy/spfy/docker-blazegraph/2.1.4-inferencing`` and as ``claing``, outside of Docker using:
-
-.. code-block:: sh
-
-	java -server -Xmx4g -Dbigdata.propertyFile=/Warehouse/Users/claing/superphy/spfy/docker-blazegraph/2.1.4-inferencing/RWStore.properties -jar blazegraph.jar
-
-This command is run using ``screen`` allowing us to detach it from our shell.
-
-.. code-block:: sh
-
-	screen
-	CTRL+a, d
-
-and to resume:
-
-.. code-block:: sh
-
-	screen -r
+``/Warehouse`` is used for long-term data storage and shared across the NML. In order to write to ``/Warehouse``, you need the permissions of either ``claing`` or ``superphy``; there are some problems with passing these permissions into Docker environments, so we run Blazegraph, inside of folder ``/Warehouse/Users/claing/superphy/spfy/docker-blazegraph/2.1.4-inferencing`` and as ``claing``, outside of Docker using a jetty server.
 
 See https://github.com/superphy/backend/issues/159
 
@@ -249,6 +232,10 @@ In ``/etc/nginx/nginx.conf``:
 
 .. code-block:: nginx
 
+	# For more information on configuration, see:
+	#   * Official English Documentation: http://nginx.org/en/docs/
+	#   * Official Russian Documentation: http://nginx.org/ru/docs/
+
 	user spfy;
 	worker_processes auto;
 	error_log /var/log/nginx/error.log;
@@ -258,142 +245,158 @@ In ``/etc/nginx/nginx.conf``:
 	include /usr/share/nginx/modules/*.conf;
 
 	events {
-	    worker_connections 1024;
+		worker_connections 1024;
 	}
 
 	http {
-	    log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
-	                      '$status $body_bytes_sent "$http_referer" '
-	                      '"$http_user_agent" "$http_x_forwarded_for"';
+		log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+						'$status $body_bytes_sent "$http_referer" '
+						'"$http_user_agent" "$http_x_forwarded_for"';
 
-	    access_log  /var/log/nginx/access.log  main;
-	    error_log /var/log/nginx/error.log warn;
+		access_log  /var/log/nginx/access.log  main;
+		error_log /var/log/nginx/error.log warn;
 
-	    sendfile            on;
-	    tcp_nopush          on;
-	    tcp_nodelay         on;
-	    keepalive_timeout   2m;
-	    types_hash_max_size 2048;
+		sendfile            on;
+		tcp_nopush          on;
+		tcp_nodelay         on;
+		keepalive_timeout   2m;
+		types_hash_max_size 2048;
 
-	    include             /etc/nginx/mime.types;
-	    default_type        application/octet-stream;
+		include             /etc/nginx/mime.types;
+		default_type        application/octet-stream;
 
-	    # Load modular configuration files from the /etc/nginx/conf.d directory.
-	    # See http://nginx.org/en/docs/ngx_core_module.html#include
-	    # for more information.
-	    include /etc/nginx/conf.d/*.conf;
+		# Load modular configuration files from the /etc/nginx/conf.d directory.
+		# See http://nginx.org/en/docs/ngx_core_module.html#include
+		# for more information.
+		include /etc/nginx/conf.d/*.conf;
 
-	    map $http_upgrade $connection_upgrade {
-	        default upgrade;
-	        ''      close;
-	    }
+		map $http_upgrade $connection_upgrade {
+			default upgrade;
+			''      close;
+		}
 
-	    server {
+		server {
 		client_max_body_size 60g;
 		listen       80 default_server;
 		listen       443 ssl http2 default_server;
-	        listen       [::]:80 default_server;
+			listen       [::]:80 default_server;
 		listen       [::]:443 ssl http2 default_server;
 		server_name  superphy.corefacility.ca;
-	        # Load configuration files for the default server block.
-	        include /etc/nginx/default.d/*.conf;
+			# Load configuration files for the default server block.
+			include /etc/nginx/default.d/*.conf;
 
 
 		location / {
-	            proxy_pass http://127.0.0.1:8081;
+				proxy_pass http://127.0.0.1:8081;
+		}
+			location /grouch {
+				return 301 /superphy/spfy/;
+			}
+		location /superphy/grouch {
+				return 301 /superphy/spfy/;
+			}
+		location /spfyapi/ {
+			rewrite ^/spfyapi/(.*)$ /$1 break;
+				proxy_pass http://localhost:8090;
+				proxy_redirect http://localhost:8090/ $scheme://$host/spfyapi/;
+				proxy_http_version 1.1;
+				proxy_set_header Upgrade $http_upgrade;
+				proxy_set_header Connection $connection_upgrade;
+				proxy_read_timeout 20d;
 		}
 		location /spfy/ {
-		    rewrite ^/spfy/(.*)$ /$1 break;
-	      	    proxy_pass http://localhost:8090;
-	      	    proxy_redirect http://localhost:8090/ $scheme://$host/spfy/;
-	     	    proxy_http_version 1.1;
-	            proxy_set_header Upgrade $http_upgrade;
-	      	    proxy_set_header Connection $connection_upgrade;
-	      	    proxy_read_timeout 20d;
-		}
-		location /grouch/ {
-	            rewrite ^/grouch/(.*)$ /$1 break;
-	            proxy_pass http://localhost:8091;
-	            proxy_redirect http://localhost:8091/ $scheme://$host/grouch/;
-	            proxy_http_version 1.1;
-	            proxy_set_header Upgrade $http_upgrade;
-	            proxy_set_header Connection $connection_upgrade;
-	            proxy_read_timeout 20d;
-	        }
+				rewrite ^/spfy/(.*)$ /$1 break;
+				proxy_pass http://localhost:8091;
+				proxy_redirect http://localhost:8091/ $scheme://$host/spfy/;
+				proxy_http_version 1.1;
+				proxy_set_header Upgrade $http_upgrade;
+				proxy_set_header Connection $connection_upgrade;
+				proxy_read_timeout 20d;
+			}
 		location /shiny/ {
-		    rewrite ^/shiny/(.*)$ /$1 break;
-		    proxy_pass http://127.0.0.1:3838;
-		    proxy_redirect http://127.0.0.1:3838/ $scheme://$host/shiny/;
-		    proxy_http_version 1.1;
-		    proxy_set_header Upgrade $http_upgrade;
-		    proxy_set_header Connection $connection_upgrade;
-		    proxy_read_timeout 950s;
+			rewrite ^/shiny/(.*)$ /$1 break;
+			proxy_pass http://127.0.0.1:3838;
+			proxy_redirect http://127.0.0.1:3838/ $scheme://$host/shiny/;
+			proxy_http_version 1.1;
+			proxy_set_header Upgrade $http_upgrade;
+			proxy_set_header Connection $connection_upgrade;
+			proxy_read_timeout 950s;
 		}
 
-	    }
+		}
 
-	    server {
-	        client_max_body_size 60g;
-	        listen       80;
-	        listen       443 ssl http2;
-	        listen       [::]:80;
-	        listen       [::]:443 ssl http2;
-	        server_name  lfz.corefacility.ca;
-	        # Load configuration files for the default server block.
-	        include /etc/nginx/default.d/*.conf;
+		server {
+			client_max_body_size 60g;
+			listen       80;
+			listen       443 ssl http2;
+			listen       [::]:80;
+			listen       [::]:443 ssl http2;
+			server_name  lfz.corefacility.ca;
+			# Load configuration files for the default server block.
+			include /etc/nginx/default.d/*.conf;
 
 		location / {
-	            proxy_pass http://127.0.0.1:8081;
+				proxy_pass http://127.0.0.1:8081;
 		}
 		location = /spfy {
-		    return 301 /superphy/spfy/;
+			return 301 /superphy/spfy/;
 		}
-		location = /grouch {
-	            return 301 /superphy/grouch/;
-	        }
-	        location = /minio {
-	            return 301 /superphy/minio/;
-	        }
+		location /grouch {
+				return 301 /superphy/spfy/;
+			}
+			location /superphy/grouch {
+				return 301 /superphy/spfy/;
+			}
+			location = /minio {
+				return 301 /superphy/minio/;
+			}
+		location /spfyapi/ {
+				rewrite ^/spfyapi/(.*)$ /$1 break;
+			proxy_pass http://localhost:8090;
+				proxy_redirect http://localhost:8090/superphy/ $scheme://$host/spfyapi/;
+				proxy_http_version 1.1;
+				proxy_set_header Upgrade $http_upgrade;
+				proxy_set_header Connection $connection_upgrade;
+				proxy_read_timeout 20d;
+			}
 		location /spfy/ {
-	            rewrite ^/spfy/(.*)$ /$1 break;
-	            proxy_pass http://localhost:8090;
-	            proxy_redirect http://localhost:8090/superphy/ $scheme://$host/spfy/;
-	            proxy_http_version 1.1;
-	            proxy_set_header Upgrade $http_upgrade;
-	            proxy_set_header Connection $connection_upgrade;
-	            proxy_read_timeout 20d;
-	        }
-		location /grouch/ {
-	            rewrite ^/grouch/(.*)$ /$1 break;
-	            proxy_pass http://localhost:8091;
-	            proxy_redirect http://localhost:8091/superphy/ $scheme://$host/grouch/;
-	            proxy_http_version 1.1;
-	            proxy_set_header Upgrade $http_upgrade;
-	            proxy_set_header Connection $connection_upgrade;
-	            proxy_read_timeout 2h;
-		    proxy_send_timeout 2h;
-	        }
+				#rewrite ^/spfy/(.*)$ https://superphy.github.io/status/ redirect;
+			rewrite ^/spfy/(.*)$ /$1 break;
+				proxy_pass http://localhost:8091;
+				proxy_redirect http://localhost:8091/superphy/ $scheme://$host/spfy/;
+				proxy_http_version 1.1;
+				proxy_set_header Upgrade $http_upgrade;
+				proxy_set_header Connection $connection_upgrade;
+				proxy_read_timeout 2h;
+			proxy_send_timeout 2h;
+			}
+		location /minio/ {
+				rewrite ^/minio/(.*)$ /$1 break;
+				proxy_pass http://localhost:9000;
+				proxy_redirect http://localhost:9000/superphy/ $scheme://$host/minio/;
+				proxy_http_version 1.1;
+				proxy_set_header Upgrade $http_upgrade;
+				proxy_set_header Connection $connection_upgrade;
+				proxy_read_timeout 2h;
+				proxy_send_timeout 2h;
+			}
 		location /shiny/ {
-		    rewrite ^/shiny/(.*)$ /$1 break;
-	            proxy_pass http://127.0.0.1:3838;
-	            proxy_redirect http://127.0.0.1:3838/ $scheme://$host/shiny/;
-	            proxy_http_version 1.1;
-	            proxy_set_header Upgrade $http_upgrade;
-	            proxy_set_header Connection $connection_upgrade;
-		    proxy_read_timeout 950s;
+			rewrite ^/shiny/(.*)$ /$1 break;
+				proxy_pass http://127.0.0.1:3838;
+				proxy_redirect http://127.0.0.1:3838/ $scheme://$host/shiny/;
+				proxy_http_version 1.1;
+				proxy_set_header Upgrade $http_upgrade;
+				proxy_set_header Connection $connection_upgrade;
+			proxy_read_timeout 950s;
 		}
-	    }
+		}
 
 
 	}
 
-Currently, this is setup to run the new Reactapp version of Spfy at https://lfz.corefacility.ca/superphy/grouch/ and the old AngularJS version + all the API endpoint at https://lfz.corefacility.ca/superphy/spfy/
-This will probably change in the future, when backwards-incompatible changes are introduced to Spfy; we will run exclusively out of https://lfz.corefacility.ca/superphy/spfy/
-The old SuperPhy is at https://lfz.corefacility.ca/superphy/
+This is setup to run the ReactJS frontend of Spfy (``grouch``) at https://lfz.corefacility.ca/superphy/spfy/ and the api at https://lfz.corefacility.ca/superphy/spfyapi/
 
-.. note:: There is an http://superphy.corefacility.ca/spfy/ address (but not a http://superphy.corefacility.ca/grouch/ address) that is only accessible from within the NML network (you'd have to VPN in if you're at the CFIA building), but we prefer to focus on the ``lfz.corefacility/superphy/`` routes which are available on both external/internal networks.
-
-Some other points to note:
+Points to note:
 
 * The rewrite rules are critical to operating on Corefacility, as the ``/superphy/`` requirement can be tricky
 * We're unsure if the ``client_max_body_size 60g;`` has any effect when deployed on Corefacility, it might be that there is another Nginx instance ran by the NML to route its VMs. Currently we're capped at ~250 MB uploads at a time on Corefacility, you can see a long debugging log of this at https://github.com/superphy/backend/issues/159
