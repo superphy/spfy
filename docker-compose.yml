@@ -11,7 +11,7 @@ services:
     depends_on:
     - redis
     volumes:
-    - /datastore
+    - datastore_volume:/datastore
     # networks:
     #   - dockernet
 
@@ -104,7 +104,7 @@ services:
       - MONGO_DATA_DIR=/data/db
       - MONGO_LOG_DIR=/dev/null
     volumes:
-      - /data/db
+      - mongo_volume:/data/db
 
 # networks:
 #   dockernet:
@@ -113,3 +113,7 @@ services:
 #       config:
 #         - subnet: 192.168.0.0/24
 #           gateway: 192.168.0.1
+
+volumes:
+  datastore_volume:
+  mongo_volume:
