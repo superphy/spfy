@@ -9,6 +9,8 @@ matrix:
         - CARD=broadstreet-v2.0.1.tar.gz
     - python: 2.7
       env: TO_TEST=DOCKER
+    - python: 2.7
+      env: TO_TEST=BASH
 
 sudo: required
 services:
@@ -41,8 +43,9 @@ before_install:
       ls;
     fi
 install:
-  - cd app/
-  - ls
+  - if [ "$TO_TEST" = "CONDA" ] || [ "$TO_TEST" = "DOCKER" ]; then
+      cd app/;
+    fi
   #### Recreate our Conda env for testing
   - if [ "$TO_TEST" = "CONDA" ]; then
       wget https://raw.githubusercontent.com/superphy/docker-flask-conda/$ENV_BRANCH/app/environment.yml;
@@ -59,10 +62,11 @@ install:
       tar -xf $CARD;
       rgi load --afile card.json;
     fi
-  # Install pytest
-  - pip install pytest
-  # Install any additional requirements for tests.
-  - pip install -r tests/test_requirements.txt
+  # Install pytest and any additional requirements for tests.
+  - if [ "$TO_TEST" = "CONDA" ] || [ "$TO_TEST" = "DOCKER" ]; then
+      pip install pytest;
+      pip install -r tests/test_requirements.txt; 
+    fi
 script:
   #### Run Pytest
   - if [ "$TO_TEST" = "CONDA" ]; then
@@ -70,6 +74,9 @@ script:
     fi
   - if [ "$TO_TEST" = "DOCKER" ]; then
       python -m pytest -v tests/docker/;
+    fi
+  - if [ "$TO_TEST" = "BASH" ]; then
+      bash production.sh;
     fi
 after_failure:
   - if [ "$TO_TEST" = "CONDA" ]; then

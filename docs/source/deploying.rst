@@ -10,79 +10,8 @@ The way we recommend you deploy Spfy is to simply use the Docker composition for
 Deploying in General
 ====================
 
-Let's take a look at the ``docker-compose.yml`` file.
+Most comments are based of the ``docker-compose.yml`` file at the project root.
 
-.. code-block:: yaml
-
-	version: '2'
-	services:
-	  webserver:
-	    build:
-	      context: .
-	      dockerfile: Dockerfile-spfy
-	    image: backend
-	    ports:
-	    - "8000:80"
-	    depends_on:
-	    - redis
-	    - blazegraph
-	    volumes:
-	    - /datastore
-
-	  reactapp:
-	    build:
-	      context: .
-	      dockerfile: Dockerfile-reactapp
-	    image: reactapp
-	    ports:
-	    - "8090:5000"
-	    depends_on:
-	    - webserver
-
-	  worker:
-	    build:
-	      context: .
-	      dockerfile: Dockerfile-rq
-	    image: backend-rq
-	    ports:
-	    - "9181:9181" #this is for debugging, drop a shell and run rq-dashboard if you need to see jobs
-	    volumes_from:
-	    - webserver
-	    depends_on:
-	    - webserver
-
-	  worker-blazegraph-ids:
-	    build:
-	      context: .
-	      dockerfile: Dockerfile-rq-blazegraph
-	    image: backend-rq-blazegraph
-	    volumes_from:
-	    - webserver
-	    depends_on:
-	    - webserver
-
-	  worker-priority:
-	    build:
-	      context: .
-	      dockerfile: Dockerfile-rq-priority
-	    image: backend-rq-priority
-	    volumes_from:
-	    - webserver
-	    depends_on:
-	    - webserver
-
-	  redis:
-	    image: redis:3.2
-	    command: redis-server --appendonly yes # for persistance
-	    volumes:
-	    - /data
-
-	  blazegraph:
-	    image: superphy/blazegraph:2.1.4-inferencing
-	    ports:
-	    - "8080:8080"
-	    volumes:
-	    - /var/lib/jetty/
 	    
 Host to Container Mapping
 -------------------------
@@ -100,28 +29,27 @@ You can also add a host path to volume mappings such as ``/dbbackup/:/var/lib/je
 
 .. warning::
 
-	A caveat to note is that if you do not specify a host folder on volume mappings, running a ``docker-compose down`` will still **wipe** the generic volume. Either run ``docker-compose stop`` instead, or specify a host mapping to persist the data.
+	Generally, you should stop a Docker composition by running ``docker-compose stop`` instead of ``docker-compose down``. As of the most recent Docker versions, a ``docker-compose down`` should not remove the Docker volumes, but this has been inconsistent in the past.
 
 Volume Mapping in Production
 ----------------------------
 
-In production, at minimum we recommend you map Blazegraph's volume to a backup directory. ``/datastore`` also stores all the uploaded genome files and related temporary files generated during analysis. ``/data`` is used to store both the parsed responses to the front-end, and the task queue managing them. If you want the analysis tasks to continue, or existing results shown to the front-end, to persist after running ``docker-compose down`` you'll have to map both volumes - server failures or just running ``docker-compose stop`` will still persist the data without requiring you to map to host.
+In production, at minimum we recommend you map Blazegraph's volume to a backup directory. ``/datastore`` also stores all the uploaded genome files and related temporary files generated during analysis.
 
 Ports
 -----
 
-``reactapp`` is the front-end user interface for Spfy whereas ``webserver`` serves the backend Flask APIs. Without modification, when you run ``docker-compose up`` port 8090 is used to access the app. The front-end then calls port 8000 to submit requests to the backend. This approach is fine for individual users on their own computer, but this setup should not be used for production as it would, at minimum, require opening one additional port.
+``grouch`` is the front-end user interface for Spfy whereas ``webserver`` serves the backend Flask APIs. Without modification, when you run ``docker-compose up`` port 8090 is used to access the app. The front-end then calls port 8000 to submit requests to the backend. This approach is fine for individual users on their own computer, but this setup should not be used for production as it would you would have to open a separate port for api calls to be made to.
 
-Instead, we recommend you change the port for ``reactapp`` to the standard port 80, and also map the ``webserver`` to a subdomain.
-
-Setting the host port mapping can be done by modifying the ``webserver`` config with the below:
+Instead, we recommend you change the port for ``grouch`` to the standard port 80, map the ``webserver`` to a subdomain, and use a reverse-proxy to resolve the subdomain to an internal port. For example, lets say you have a static ip of 137.122.64.157 and a web domain of spfy.ca . You have an A Record that maps spfy.ca to 137.122.64.157. You could then expose port 80 externally on your host and map ``grouch`` to port 80 by setting:
 
 .. code-block:: yaml
 
 	ports:
-	- "80:80"
+	- "80:3000"
 
-For networking the backend APIs, you can keep the webserver running on port 8000 and use a reverse-proxy such as NGINX to map the subdomain to port 8000 on your server. In other words, we'll set it up so requests made by reactapp to the API are sent to ``api.mydomain.com``, for example, which maps to the IP address of your server (ideally via HTTPS). Your reverse-proxy will then redirect the request to port 8000 locally, while serving the reactapp interface on the main domain (``mydomain.com``, in this case).
+Port 8000 for ``webserver`` will still be available on your hosts loopback, but will not be exposed externally.
+Add an A Record for api.spfy.ca to the same IP address, and then you could use an reverse-proxy such as Nginx to resolve api.spfy.ca to localhost:8000.
 
 Setting a Subdomain
 -------------------
@@ -160,11 +88,52 @@ and then rebuild and redeploy reactapp.
 	docker-compose up -d
 
 .. note::
-
+e
 	The Flask webserver has Cross-Origin Requests (CORS) enabled, so you can deploy reactapp to another server (that is only running reactapp, and not the webserver, databases, workers). The domain can be ``mydomain.com`` or any domain name you own - you'll just have to setup the A records as appropriate.
 
 Deploying to Corefacility
 =========================
+
+Quick-Start
+-----------
+
+Use the ``production.sh`` script.
+This script does a few things:
+
+1. Stops the host Nginx so Docker can bind the ports it'll need for mapping.
+2. Starts the Docker-Composition.
+3. Restarts the host Nginx.
+4. Starts Jetty which runs Blazegraph.
+
+Important Volumes
+-----------------
+
+The ``webserver`` Docker container has a ``/datastore`` directory with all submitted files.
+
+The ``mongodb`` Docker container has a ``/data/db`` directory which persists the ``Genome File Hash : SpfyID`` mapping.
+(As well the ``?token=`` user sessions).
+
+If you accidentally delete the MongoDB volume, it can be incrementally (when the same file is submitted, it will be re-cached) recreated from Blazegraph by setting ``DATABASE_EXISTING = True`` and ``DATABASE_BYPASS = False`` in ``app/config.py``.
+
+Merging New Changes Into Production
+-----------------------------------
+
+The production-specific changes are committed to the local git history in corefacility.
+
+Running:
+
+.. code-block:: sh
+
+	git merge origin/somebranch
+
+will be sufficient to merge.
+
+We can then rebuild and restart the composition:
+
+.. code-block:: sh
+
+	docker-compose build --no-cache
+	./production.sh
 
 Blazegraph
 ----------
@@ -186,24 +155,7 @@ Looking at the filesystem:
 	tmpfs                      2.4G     0  2.4G   0% /run/user/40151
 	tmpfs                      2.4G     0  2.4G   0% /run/user/40290
 
-``/Warehouse`` is used for long-term data storage and shared across the NML. In order to write to ``/Warehouse``, you need the permissions of either ``claing`` or ``superphy``; there are some problems with passing these permissions into Docker environments, so we run Blazegraph, inside of folder ``/Warehouse/Users/claing/superphy/spfy/docker-blazegraph/2.1.4-inferencing`` and as ``claing``, outside of Docker using:
-
-.. code-block:: sh
-
-	java -server -Xmx4g -Dbigdata.propertyFile=/Warehouse/Users/claing/superphy/spfy/docker-blazegraph/2.1.4-inferencing/RWStore.properties -jar blazegraph.jar
-
-This command is run using ``screen`` allowing us to detach it from our shell.
-
-.. code-block:: sh
-
-	screen
-	CTRL+a, d
-
-and to resume:
-
-.. code-block:: sh
-
-	screen -r
+``/Warehouse`` is used for long-term data storage and shared across the NML. In order to write to ``/Warehouse``, you need the permissions of either ``claing`` or ``superphy``; there are some problems with passing these permissions into Docker environments, so we run Blazegraph, inside of folder ``/Warehouse/Users/claing/superphy/spfy/docker-blazegraph/2.1.4-inferencing`` and as ``claing``, outside of Docker using a jetty server.
 
 See https://github.com/superphy/backend/issues/159
 
@@ -280,6 +232,10 @@ In ``/etc/nginx/nginx.conf``:
 
 .. code-block:: nginx
 
+	# For more information on configuration, see:
+	#   * Official English Documentation: http://nginx.org/en/docs/
+	#   * Official Russian Documentation: http://nginx.org/ru/docs/
+
 	user spfy;
 	worker_processes auto;
 	error_log /var/log/nginx/error.log;
@@ -289,142 +245,158 @@ In ``/etc/nginx/nginx.conf``:
 	include /usr/share/nginx/modules/*.conf;
 
 	events {
-	    worker_connections 1024;
+		worker_connections 1024;
 	}
 
 	http {
-	    log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
-	                      '$status $body_bytes_sent "$http_referer" '
-	                      '"$http_user_agent" "$http_x_forwarded_for"';
+		log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+						'$status $body_bytes_sent "$http_referer" '
+						'"$http_user_agent" "$http_x_forwarded_for"';
 
-	    access_log  /var/log/nginx/access.log  main;
-	    error_log /var/log/nginx/error.log warn;
+		access_log  /var/log/nginx/access.log  main;
+		error_log /var/log/nginx/error.log warn;
 
-	    sendfile            on;
-	    tcp_nopush          on;
-	    tcp_nodelay         on;
-	    keepalive_timeout   2m;
-	    types_hash_max_size 2048;
+		sendfile            on;
+		tcp_nopush          on;
+		tcp_nodelay         on;
+		keepalive_timeout   2m;
+		types_hash_max_size 2048;
 
-	    include             /etc/nginx/mime.types;
-	    default_type        application/octet-stream;
+		include             /etc/nginx/mime.types;
+		default_type        application/octet-stream;
 
-	    # Load modular configuration files from the /etc/nginx/conf.d directory.
-	    # See http://nginx.org/en/docs/ngx_core_module.html#include
-	    # for more information.
-	    include /etc/nginx/conf.d/*.conf;
+		# Load modular configuration files from the /etc/nginx/conf.d directory.
+		# See http://nginx.org/en/docs/ngx_core_module.html#include
+		# for more information.
+		include /etc/nginx/conf.d/*.conf;
 
-	    map $http_upgrade $connection_upgrade {
-	        default upgrade;
-	        ''      close;
-	    }
+		map $http_upgrade $connection_upgrade {
+			default upgrade;
+			''      close;
+		}
 
-	    server {
+		server {
 		client_max_body_size 60g;
 		listen       80 default_server;
 		listen       443 ssl http2 default_server;
-	        listen       [::]:80 default_server;
+			listen       [::]:80 default_server;
 		listen       [::]:443 ssl http2 default_server;
 		server_name  superphy.corefacility.ca;
-	        # Load configuration files for the default server block.
-	        include /etc/nginx/default.d/*.conf;
+			# Load configuration files for the default server block.
+			include /etc/nginx/default.d/*.conf;
 
 
 		location / {
-	            proxy_pass http://127.0.0.1:8081;
+				proxy_pass http://127.0.0.1:8081;
+		}
+			location /grouch {
+				return 301 /superphy/spfy/;
+			}
+		location /superphy/grouch {
+				return 301 /superphy/spfy/;
+			}
+		location /spfyapi/ {
+			rewrite ^/spfyapi/(.*)$ /$1 break;
+				proxy_pass http://localhost:8090;
+				proxy_redirect http://localhost:8090/ $scheme://$host/spfyapi/;
+				proxy_http_version 1.1;
+				proxy_set_header Upgrade $http_upgrade;
+				proxy_set_header Connection $connection_upgrade;
+				proxy_read_timeout 20d;
 		}
 		location /spfy/ {
-		    rewrite ^/spfy/(.*)$ /$1 break;
-	      	    proxy_pass http://localhost:8090;
-	      	    proxy_redirect http://localhost:8090/ $scheme://$host/spfy/;
-	     	    proxy_http_version 1.1;
-	            proxy_set_header Upgrade $http_upgrade;
-	      	    proxy_set_header Connection $connection_upgrade;
-	      	    proxy_read_timeout 20d;
-		}
-		location /grouch/ {
-	            rewrite ^/grouch/(.*)$ /$1 break;
-	            proxy_pass http://localhost:8091;
-	            proxy_redirect http://localhost:8091/ $scheme://$host/grouch/;
-	            proxy_http_version 1.1;
-	            proxy_set_header Upgrade $http_upgrade;
-	            proxy_set_header Connection $connection_upgrade;
-	            proxy_read_timeout 20d;
-	        }
+				rewrite ^/spfy/(.*)$ /$1 break;
+				proxy_pass http://localhost:8091;
+				proxy_redirect http://localhost:8091/ $scheme://$host/spfy/;
+				proxy_http_version 1.1;
+				proxy_set_header Upgrade $http_upgrade;
+				proxy_set_header Connection $connection_upgrade;
+				proxy_read_timeout 20d;
+			}
 		location /shiny/ {
-		    rewrite ^/shiny/(.*)$ /$1 break;
-		    proxy_pass http://127.0.0.1:3838;
-		    proxy_redirect http://127.0.0.1:3838/ $scheme://$host/shiny/;
-		    proxy_http_version 1.1;
-		    proxy_set_header Upgrade $http_upgrade;
-		    proxy_set_header Connection $connection_upgrade;
-		    proxy_read_timeout 950s;
+			rewrite ^/shiny/(.*)$ /$1 break;
+			proxy_pass http://127.0.0.1:3838;
+			proxy_redirect http://127.0.0.1:3838/ $scheme://$host/shiny/;
+			proxy_http_version 1.1;
+			proxy_set_header Upgrade $http_upgrade;
+			proxy_set_header Connection $connection_upgrade;
+			proxy_read_timeout 950s;
 		}
 
-	    }
+		}
 
-	    server {
-	        client_max_body_size 60g;
-	        listen       80;
-	        listen       443 ssl http2;
-	        listen       [::]:80;
-	        listen       [::]:443 ssl http2;
-	        server_name  lfz.corefacility.ca;
-	        # Load configuration files for the default server block.
-	        include /etc/nginx/default.d/*.conf;
+		server {
+			client_max_body_size 60g;
+			listen       80;
+			listen       443 ssl http2;
+			listen       [::]:80;
+			listen       [::]:443 ssl http2;
+			server_name  lfz.corefacility.ca;
+			# Load configuration files for the default server block.
+			include /etc/nginx/default.d/*.conf;
 
 		location / {
-	            proxy_pass http://127.0.0.1:8081;
+				proxy_pass http://127.0.0.1:8081;
 		}
 		location = /spfy {
-		    return 301 /superphy/spfy/;
+			return 301 /superphy/spfy/;
 		}
-		location = /grouch {
-	            return 301 /superphy/grouch/;
-	        }
-	        location = /minio {
-	            return 301 /superphy/minio/;
-	        }
+		location /grouch {
+				return 301 /superphy/spfy/;
+			}
+			location /superphy/grouch {
+				return 301 /superphy/spfy/;
+			}
+			location = /minio {
+				return 301 /superphy/minio/;
+			}
+		location /spfyapi/ {
+				rewrite ^/spfyapi/(.*)$ /$1 break;
+			proxy_pass http://localhost:8090;
+				proxy_redirect http://localhost:8090/superphy/ $scheme://$host/spfyapi/;
+				proxy_http_version 1.1;
+				proxy_set_header Upgrade $http_upgrade;
+				proxy_set_header Connection $connection_upgrade;
+				proxy_read_timeout 20d;
+			}
 		location /spfy/ {
-	            rewrite ^/spfy/(.*)$ /$1 break;
-	            proxy_pass http://localhost:8090;
-	            proxy_redirect http://localhost:8090/superphy/ $scheme://$host/spfy/;
-	            proxy_http_version 1.1;
-	            proxy_set_header Upgrade $http_upgrade;
-	            proxy_set_header Connection $connection_upgrade;
-	            proxy_read_timeout 20d;
-	        }
-		location /grouch/ {
-	            rewrite ^/grouch/(.*)$ /$1 break;
-	            proxy_pass http://localhost:8091;
-	            proxy_redirect http://localhost:8091/superphy/ $scheme://$host/grouch/;
-	            proxy_http_version 1.1;
-	            proxy_set_header Upgrade $http_upgrade;
-	            proxy_set_header Connection $connection_upgrade;
-	            proxy_read_timeout 2h;
-		    proxy_send_timeout 2h;
-	        }
+				#rewrite ^/spfy/(.*)$ https://superphy.github.io/status/ redirect;
+			rewrite ^/spfy/(.*)$ /$1 break;
+				proxy_pass http://localhost:8091;
+				proxy_redirect http://localhost:8091/superphy/ $scheme://$host/spfy/;
+				proxy_http_version 1.1;
+				proxy_set_header Upgrade $http_upgrade;
+				proxy_set_header Connection $connection_upgrade;
+				proxy_read_timeout 2h;
+			proxy_send_timeout 2h;
+			}
+		location /minio/ {
+				rewrite ^/minio/(.*)$ /$1 break;
+				proxy_pass http://localhost:9000;
+				proxy_redirect http://localhost:9000/superphy/ $scheme://$host/minio/;
+				proxy_http_version 1.1;
+				proxy_set_header Upgrade $http_upgrade;
+				proxy_set_header Connection $connection_upgrade;
+				proxy_read_timeout 2h;
+				proxy_send_timeout 2h;
+			}
 		location /shiny/ {
-		    rewrite ^/shiny/(.*)$ /$1 break;
-	            proxy_pass http://127.0.0.1:3838;
-	            proxy_redirect http://127.0.0.1:3838/ $scheme://$host/shiny/;
-	            proxy_http_version 1.1;
-	            proxy_set_header Upgrade $http_upgrade;
-	            proxy_set_header Connection $connection_upgrade;
-		    proxy_read_timeout 950s;
+			rewrite ^/shiny/(.*)$ /$1 break;
+				proxy_pass http://127.0.0.1:3838;
+				proxy_redirect http://127.0.0.1:3838/ $scheme://$host/shiny/;
+				proxy_http_version 1.1;
+				proxy_set_header Upgrade $http_upgrade;
+				proxy_set_header Connection $connection_upgrade;
+			proxy_read_timeout 950s;
 		}
-	    }
+		}
 
 
 	}
 
-Currently, this is setup to run the new Reactapp version of Spfy at https://lfz.corefacility.ca/superphy/grouch/ and the old AngularJS version + all the API endpoint at https://lfz.corefacility.ca/superphy/spfy/
-This will probably change in the future, when backwards-incompatible changes are introduced to Spfy; we will run exclusively out of https://lfz.corefacility.ca/superphy/spfy/
-The old SuperPhy is at https://lfz.corefacility.ca/superphy/
+This is setup to run the ReactJS frontend of Spfy (``grouch``) at https://lfz.corefacility.ca/superphy/spfy/ and the api at https://lfz.corefacility.ca/superphy/spfyapi/
 
-.. note:: There is an http://superphy.corefacility.ca/spfy/ address (but not a http://superphy.corefacility.ca/grouch/ address) that is only accessible from within the NML network (you'd have to VPN in if you're at the CFIA building), but we prefer to focus on the ``lfz.corefacility/superphy/`` routes which are available on both external/internal networks.
-
-Some other points to note:
+Points to note:
 
 * The rewrite rules are critical to operating on Corefacility, as the ``/superphy/`` requirement can be tricky
 * We're unsure if the ``client_max_body_size 60g;`` has any effect when deployed on Corefacility, it might be that there is another Nginx instance ran by the NML to route its VMs. Currently we're capped at ~250 MB uploads at a time on Corefacility, you can see a long debugging log of this at https://github.com/superphy/backend/issues/159

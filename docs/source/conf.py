@@ -50,7 +50,7 @@ source_suffix = ['.rst', '.md']
 master_doc = 'index'
 
 # General information about the project.
-project = u'Superphy'
+project = u'Spfy'
 copyright = u'2017, NML'
 author = u'kevinkle'
 
@@ -104,7 +104,7 @@ html_static_path = ['_static']
 # -- Options for HTMLHelp output ------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'Superphydoc'
+htmlhelp_basename = 'Spfydoc'
 
 
 # -- Options for LaTeX output ---------------------------------------------
@@ -131,7 +131,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'Superphy.tex', u'Superphy Documentation',
+    (master_doc, 'Spfy.tex', u'Spfy Documentation',
      u'kevinkle', 'manual'),
 ]
 
@@ -141,7 +141,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'superphy', u'Superphy Documentation',
+    (master_doc, 'spfy', u'Superphy Documentation',
      [author], 1)
 ]
 
@@ -152,8 +152,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'Superphy', u'Superphy Documentation',
-     author, 'Superphy', 'One line description of project.',
+    (master_doc, 'Spfy', u'Spfy Documentation',
+     author, 'Spfy', 'One line description of project.',
      'Miscellaneous'),
 ]
 
