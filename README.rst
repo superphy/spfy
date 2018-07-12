@@ -256,8 +256,8 @@ Steps required to add new modules are documented in the `Developer Guide`_.
    :target: https://travis-ci.org/superphy/spfy
 .. |GitHub license| image:: https://img.shields.io/badge/license-Apache%202-blue.svg
    :target: https://raw.githubusercontent.com/superphy/spfy/master/LICENSE
-.. |Docs| image:: https://readthedocs.org/projects/superphy/badge/?version=latest
-   :target: http://superphy.readthedocs.io/en/latest/?badge=latest
+.. |Docs| image:: https://readthedocs.org/projects/spfy/badge/?version=latest
+   :target: http://spfy.readthedocs.io/en/latest/?badge=latest
    :alt: Documentation Status
 
 .. tag:intro-end
