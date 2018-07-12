@@ -187,6 +187,26 @@ The ``mongodb`` Docker container has a ``/data/db`` directory which persists the
 
 If you accidentally delete the MongoDB volume, it can be incrementally (when the same file is submitted, it will be re-cached) recreated from Blazegraph by setting ``DATABASE_EXISTING = True`` and ``DATABASE_BYPASS = False`` in ``app/config.py``.
 
+Merging New Changes Into Production
+-----------------------------------
+
+The production-specific changes are committed to the local git history in corefacility.
+
+Running:
+
+.. code-block:: sh
+
+	git merge origin/somebranch
+
+will be sufficient to merge.
+
+We can then rebuild and restart the composition:
+
+.. code-block:: sh
+
+	docker-compose build --no-cache
+	./production.sh
+
 Blazegraph
 ----------
 
