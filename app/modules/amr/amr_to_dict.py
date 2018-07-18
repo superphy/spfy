@@ -4,7 +4,8 @@ import cPickle as pickle
 
 def amr_to_dict(amr_file):
     amr_results = pd.read_table(amr_file)
-    amr_results = amr_results[['ORF_ID', 'Start', 'Stop', 'Orientation', 'Best_Identities', 'Best_Hit_ARO']]
+    amr_results = amr_results[['ORF_ID', 'Start', 'Stop', 'Orientation', 'Best_Identities', 'Best_Hit_ARO', 'Cut_Off']]
+    amr_results = amr_results[amr_results.Cut_Off != 'Loose']
 
     amr_results.rename(
         columns={
