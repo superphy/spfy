@@ -25,13 +25,9 @@ echo "Starting Nginx..."
 systemctl start nginx
 echo "Nginx started."
 
+
 # Bring Jetty up for Blazegraph.
-if ! pgrep -x "jetty" > /dev/null; then
-    echo "Jetty not running. Starting Jetty...";
-    service jetty start;
-    echo "Started Jetty.";
-else
-    echo "Jetty already running."
-fi
+echo "Starting jetty..."
+su -c "service jetty start" claing
 
 echo "Done production setup."
