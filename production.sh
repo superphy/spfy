@@ -3,7 +3,7 @@
 echo "Staring production setup..."
 
 # Nginx must be stopped first or Docker can't unbind ports.
-if pgrep -x "gedit" > /dev/null; then
+if pgrep -x "nginx" > /dev/null; then
     echo "Nginx running. Stopping Nginx...";
     systemctl stop nginx;
     echo "Stopped Nginx.";
@@ -26,7 +26,7 @@ systemctl start nginx
 echo "Nginx started."
 
 # Bring Jetty up for Blazegraph.
-if pgrep -x "gedit" > /dev/null; then
+if ! pgrep -x "jetty" > /dev/null; then
     echo "Jetty not running. Starting Jetty...";
     service jetty start;
     echo "Started Jetty.";
