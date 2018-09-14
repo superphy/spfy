@@ -4,7 +4,7 @@
 
 **Spfy**: Platform for predicting subtypes from E.coli whole genome sequences, and builds graph data for population-wide comparative analyses.
 
-Slated for publication as **Spfy: an integrated graph database for real-time prediction of bacterial phenotypes and downstream comparative analyses. DATABASE. doi: 10.1093/database/bay086**.
+Published as: Le,K.K., Whiteside,M.D., Hopkins,J.E., Gannon,V.P.J., Laing,C.R. Spfy: an integrated graph database for real-time prediction of bacterial phenotypes and downstream comparative analyses. Database (2018) Vol. 2018: article ID bay086; doi:10.1093/database/bay086
 
 Live: https://lfz.corefacility.ca/superphy/spfy/
 
